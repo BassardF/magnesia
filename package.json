@@ -1,0 +1,24 @@
+{
+  "name": "magnesia",
+  "version": "1.0.0",
+  "description": "Advanced collaborative mind map",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BassardF/magnesia.git"
+  },
+  "keywords": [
+    "Collaborative",
+    "Mind",
+    "Map"
+  ],
+  "author": "Frank Bassard",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BassardF/magnesia/issues"
+  },
+  "homepage": "https://github.com/BassardF/magnesia"
+}
