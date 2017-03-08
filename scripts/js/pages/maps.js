@@ -63,7 +63,7 @@ var MapsPageComp = function (_React$Component) {
 			if (this.props.user && this.props.user.maps) {
 				for (var kid in this.props.user.maps) {
 					firebase.database().ref('maps/' + kid).once("value", function (snap) {
-						if (snap && snap.val()) _this2.props.addMap(snap.val());
+						if (snap && snap.val()) _this2.props.addMap(new _map2.default(snap.val()));
 					});
 				}
 			}
@@ -89,6 +89,7 @@ var MapsPageComp = function (_React$Component) {
 			//Uploading our new Map
 			var newMapRef = firebase.database().ref('maps').push();
 			var newMapkey = newMapRef.key;
+			newMap.mid = newMapkey;
 			newMapRef.set(newMap, function (error) {
 				if (!error) {
 					_this3.props.replaceMaps(_this3.props.maps ? _this3.props.maps.concat(newMap) : [newMap]);
@@ -104,8 +105,21 @@ var MapsPageComp = function (_React$Component) {
 			});
 		}
 	}, {
+		key: 'goToMap',
+		value: function goToMap(mid) {
+			_reactRouter.browserHistory.push('/map/' + mid);
+		}
+	}, {
 		key: 'render',
 		value: function render() {
+			var maps = [];
+			for (var i = 0; i < this.props.maps.length; i++) {
+				maps.push(_react2.default.createElement(
+					'div',
+					{ onClick: this.goToMap.bind(this, this.props.maps[i].mid), key: "map-line-" + i },
+					this.props.maps[i].title
+				));
+			}
 			return _react2.default.createElement(
 				'div',
 				{ id: 'maps-page' },
@@ -117,6 +131,13 @@ var MapsPageComp = function (_React$Component) {
 						null,
 						'Maps'
 					),
+					_react2.default.createElement(
+						'h2',
+						null,
+						'Welcome, ',
+						this.props.user.name
+					),
+					maps,
 					_react2.default.createElement(
 						'button',
 						{ onClick: this.createMap },
@@ -133,7 +154,6 @@ var MapsPageComp = function (_React$Component) {
 ;
 
 var mapStateToProps = function mapStateToProps(state) {
-	console.log("nst", state);
 	return {
 		user: state.user,
 		maps: state.maps
@@ -146,7 +166,6 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 			dispatch((0, _maps.replaceMaps)(maps));
 		},
 		addMap: function addMap(map) {
-			console.log("dispatch", map);
 			dispatch((0, _maps.addMap)(map));
 		},
 		replaceUser: function replaceUser(user) {

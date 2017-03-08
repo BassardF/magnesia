@@ -28,6 +28,10 @@ var _maps3 = require('./maps');
 
 var _maps4 = _interopRequireDefault(_maps3);
 
+var _map = require('./map');
+
+var _map2 = _interopRequireDefault(_map);
+
 var _root = require('./root');
 
 var _root2 = _interopRequireDefault(_root);
@@ -49,6 +53,7 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 						_reactRouter.Route,
 						{ path: '/', component: _root2.default },
 						_react2.default.createElement(_reactRouter.Route, { path: '/maps', component: _maps4.default }),
+						_react2.default.createElement(_reactRouter.Route, { path: '/map/:mid', component: _map2.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '*', component: _register2.default })
 				)
 		)

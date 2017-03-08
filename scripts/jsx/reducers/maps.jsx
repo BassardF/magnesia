@@ -1,5 +1,4 @@
 export default function mapsReducers(state = [], action) {
-	console.log("mapsReducers", state, action);
 	switch (action.type) {
 		case 'SET_MAPS':
 			return action.maps

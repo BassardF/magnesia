@@ -24,11 +24,10 @@ class MapsPageComp extends React.Component {
 		if(this.props.user && this.props.user.maps){
 			for(var kid in this.props.user.maps){
 				firebase.database().ref('maps/' + kid).once("value", (snap) => {
-					if(snap && snap.val()) this.props.addMap(snap.val());
+					if(snap && snap.val()) this.props.addMap(new Map(snap.val()));
 				});
 			}
 		}
-		
 	}
 
 	createMap(){
@@ -48,6 +47,7 @@ class MapsPageComp extends React.Component {
 		//Uploading our new Map
 		let newMapRef = firebase.database().ref('maps').push();
   		let newMapkey = newMapRef.key;
+  		newMap.mid = newMapkey;
 		newMapRef.set(newMap, (error) => {
 			if(!error){
 				this.props.replaceMaps(this.props.maps ? this.props.maps.concat(newMap) : [newMap]);
@@ -61,14 +61,23 @@ class MapsPageComp extends React.Component {
 				});
 			}
 		});
+	}
 
+	goToMap(mid){
+		browserHistory.push('/map/' + mid);
 	}
 
 	render() {
+		var maps = [];
+		for (var i = 0; i < this.props.maps.length; i++) {
+			maps.push(<div onClick={this.goToMap.bind(this, this.props.maps[i].mid)} key={"map-line-" + i}>{this.props.maps[i].title}</div>)
+		}
 		return (
 			<div id="maps-page">
 				<div>
 					<h1>Maps</h1>
+					<h2>Welcome, {this.props.user.name}</h2>
+					{maps}
 					<button onClick={this.createMap}>Create map</button>
 				</div>
 			</div>
@@ -77,7 +86,6 @@ class MapsPageComp extends React.Component {
 };
 
 const mapStateToProps = (state) => {
-	console.log("nst", state);
 	return {
 		user : state.user,
 		maps : state.maps
@@ -90,7 +98,6 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(replaceMaps(maps));
     },
     addMap: (map) => {
-      console.log("dispatch", map);
       dispatch(addMap(map));
     },
     replaceUser: (user) => {

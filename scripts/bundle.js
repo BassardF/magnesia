@@ -27444,6 +27444,10 @@ var _maps3 = require('./maps');
 
 var _maps4 = _interopRequireDefault(_maps3);
 
+var _map = require('./map');
+
+var _map2 = _interopRequireDefault(_map);
+
 var _root = require('./root');
 
 var _root2 = _interopRequireDefault(_root);
@@ -27465,12 +27469,116 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 						_reactRouter.Route,
 						{ path: '/', component: _root2.default },
 						_react2.default.createElement(_reactRouter.Route, { path: '/maps', component: _maps4.default }),
+						_react2.default.createElement(_reactRouter.Route, { path: '/map/:mid', component: _map2.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '*', component: _register2.default })
 				)
 		)
 ), document.getElementById('root'));
 
-},{"../reducers/maps":287,"../reducers/users":288,"./maps":283,"./register":284,"./root":285,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],283:[function(require,module,exports){
+},{"../reducers/maps":288,"../reducers/users":289,"./map":283,"./maps":284,"./register":285,"./root":286,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],283:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = require('react-redux');
+
+var _reactRouter = require('react-router');
+
+var _map = require('../models/map');
+
+var _map2 = _interopRequireDefault(_map);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var MapPageComp = function (_React$Component) {
+	_inherits(MapPageComp, _React$Component);
+
+	function MapPageComp(props) {
+		_classCallCheck(this, MapPageComp);
+
+		var _this = _possibleConstructorReturn(this, (MapPageComp.__proto__ || Object.getPrototypeOf(MapPageComp)).call(this, props));
+
+		_this.state = {};
+		return _this;
+	}
+
+	_createClass(MapPageComp, [{
+		key: 'componentWillMount',
+		value: function componentWillMount() {
+			if (this.props.routeParams && this.props.routeParams.mid) {
+				console.log(this.props.routeParams.mid);
+			}
+		}
+	}, {
+		key: 'componentWillUnMount',
+		value: function componentWillUnMount() {}
+	}, {
+		key: 'render',
+		value: function render() {
+			return _react2.default.createElement(
+				'div',
+				{ id: 'maps-page' },
+				_react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'h1',
+						null,
+						'Map'
+					)
+				)
+			);
+		}
+	}]);
+
+	return MapPageComp;
+}(_react2.default.Component);
+
+;
+
+var mapStateToProps = function mapStateToProps(state) {
+	return {
+		user: state.user
+	};
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	return {
+		replaceUser: function (_replaceUser) {
+			function replaceUser(_x) {
+				return _replaceUser.apply(this, arguments);
+			}
+
+			replaceUser.toString = function () {
+				return _replaceUser.toString();
+			};
+
+			return replaceUser;
+		}(function (user) {
+			dispatch(replaceUser(user));
+		})
+	};
+};
+
+var MapPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MapPageComp);
+
+exports.default = MapPage;
+
+},{"../models/map":280,"react":255,"react-redux":182,"react-router":224}],284:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27536,7 +27644,7 @@ var MapsPageComp = function (_React$Component) {
 			if (this.props.user && this.props.user.maps) {
 				for (var kid in this.props.user.maps) {
 					firebase.database().ref('maps/' + kid).once("value", function (snap) {
-						if (snap && snap.val()) _this2.props.addMap(snap.val());
+						if (snap && snap.val()) _this2.props.addMap(new _map2.default(snap.val()));
 					});
 				}
 			}
@@ -27562,6 +27670,7 @@ var MapsPageComp = function (_React$Component) {
 			//Uploading our new Map
 			var newMapRef = firebase.database().ref('maps').push();
 			var newMapkey = newMapRef.key;
+			newMap.mid = newMapkey;
 			newMapRef.set(newMap, function (error) {
 				if (!error) {
 					_this3.props.replaceMaps(_this3.props.maps ? _this3.props.maps.concat(newMap) : [newMap]);
@@ -27577,8 +27686,21 @@ var MapsPageComp = function (_React$Component) {
 			});
 		}
 	}, {
+		key: 'goToMap',
+		value: function goToMap(mid) {
+			_reactRouter.browserHistory.push('/map/' + mid);
+		}
+	}, {
 		key: 'render',
 		value: function render() {
+			var maps = [];
+			for (var i = 0; i < this.props.maps.length; i++) {
+				maps.push(_react2.default.createElement(
+					'div',
+					{ onClick: this.goToMap.bind(this, this.props.maps[i].mid), key: "map-line-" + i },
+					this.props.maps[i].title
+				));
+			}
 			return _react2.default.createElement(
 				'div',
 				{ id: 'maps-page' },
@@ -27590,6 +27712,13 @@ var MapsPageComp = function (_React$Component) {
 						null,
 						'Maps'
 					),
+					_react2.default.createElement(
+						'h2',
+						null,
+						'Welcome, ',
+						this.props.user.name
+					),
+					maps,
 					_react2.default.createElement(
 						'button',
 						{ onClick: this.createMap },
@@ -27606,7 +27735,6 @@ var MapsPageComp = function (_React$Component) {
 ;
 
 var mapStateToProps = function mapStateToProps(state) {
-	console.log("nst", state);
 	return {
 		user: state.user,
 		maps: state.maps
@@ -27619,7 +27747,6 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 			dispatch((0, _maps.replaceMaps)(maps));
 		},
 		addMap: function addMap(map) {
-			console.log("dispatch", map);
 			dispatch((0, _maps.addMap)(map));
 		},
 		replaceUser: function replaceUser(user) {
@@ -27632,7 +27759,7 @@ var MapsPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Map
 
 exports.default = MapsPage;
 
-},{"../actions/maps":278,"../actions/users":279,"../models/map":280,"../services/auth":289,"react":255,"react-redux":182,"react-router":224}],284:[function(require,module,exports){
+},{"../actions/maps":278,"../actions/users":279,"../models/map":280,"../services/auth":290,"react":255,"react-redux":182,"react-router":224}],285:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27759,7 +27886,7 @@ var RegisterPage = function (_React$Component) {
 
 exports.default = RegisterPage;
 
-},{"react":255}],285:[function(require,module,exports){
+},{"react":255}],286:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27867,7 +27994,7 @@ var RootPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Roo
 
 exports.default = RootPage;
 
-},{"../actions/users":279,"../services/auth":289,"react":255,"react-redux":182,"react-router":224}],286:[function(require,module,exports){
+},{"../actions/users":279,"../services/auth":290,"react":255,"react-redux":182,"react-router":224}],287:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27883,7 +28010,7 @@ var PROPERTIES = {
 
 exports.default = Map;
 
-},{}],287:[function(require,module,exports){
+},{}],288:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27894,7 +28021,6 @@ function mapsReducers() {
 	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 	var action = arguments[1];
 
-	console.log("mapsReducers", state, action);
 	switch (action.type) {
 		case 'SET_MAPS':
 			return action.maps;
@@ -27905,7 +28031,7 @@ function mapsReducers() {
 	}
 }
 
-},{}],288:[function(require,module,exports){
+},{}],289:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27924,7 +28050,7 @@ function usersReducers() {
 	}
 }
 
-},{}],289:[function(require,module,exports){
+},{}],290:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27979,4 +28105,4 @@ var AuthServices = function () {
 
 exports.default = AuthServices;
 
-},{"../models/user":281}]},{},[278,279,280,281,282,283,284,285,286,287,288,289]);
+},{"../models/user":281}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290]);

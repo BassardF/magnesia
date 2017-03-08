@@ -9,6 +9,7 @@ import mapsReducers from '../reducers/maps'
 
 import RegisterPage from './register'
 import MapsPage 	from './maps'
+import MapPage 		from './map'
 import RootPage		from './root'
 
 const store = createStore(combineReducers({
@@ -20,7 +21,8 @@ render((
 	<Provider store={store}>
 	  <Router history={browserHistory}>
 	    <Route path="/" component={RootPage}>
-	      <Route path="/maps" component={MapsPage}/>	
+	      <Route path="/maps" component={MapsPage}/>
+	      <Route path="/map/:mid" component={MapPage}/>
 	      <Route path="*" component={RegisterPage}/>
 	    </Route>
 	  </Router>
