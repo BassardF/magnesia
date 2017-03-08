@@ -10,9 +10,7 @@ function usersReducers() {
 
 	switch (action.type) {
 		case 'SET_USER':
-			return Object.assign({}, state, {
-				user: action.user
-			});
+			return action.user;
 		default:
 			return state;
 	}

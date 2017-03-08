@@ -27347,9 +27347,15 @@ module.exports = warning;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.default = replaceMaps;
+exports.replaceMaps = replaceMaps;
+exports.addMap = addMap;
 function replaceMaps(maps) {
-	if (user) return { type: 'SET_MAPS', maps: maps };
+	if (maps) return { type: 'SET_MAPS', maps: maps };
+	return {};
+}
+
+function addMap(map) {
+	if (map) return { type: 'ADD_MAP', map: map };
 	return {};
 }
 
@@ -27426,13 +27432,17 @@ var _users = require('../reducers/users');
 
 var _users2 = _interopRequireDefault(_users);
 
+var _maps = require('../reducers/maps');
+
+var _maps2 = _interopRequireDefault(_maps);
+
 var _register = require('./register');
 
 var _register2 = _interopRequireDefault(_register);
 
-var _maps = require('./maps');
+var _maps3 = require('./maps');
 
-var _maps2 = _interopRequireDefault(_maps);
+var _maps4 = _interopRequireDefault(_maps3);
 
 var _root = require('./root');
 
@@ -27440,25 +27450,28 @@ var _root2 = _interopRequireDefault(_root);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var store = (0, _redux.createStore)(_users2.default);
+var store = (0, _redux.createStore)((0, _redux.combineReducers)({
+		user: _users2.default,
+		maps: _maps2.default
+}));
 
 (0, _reactDom.render)(_react2.default.createElement(
-	_reactRedux.Provider,
-	{ store: store },
-	_react2.default.createElement(
-		_reactRouter.Router,
-		{ history: _reactRouter.browserHistory },
+		_reactRedux.Provider,
+		{ store: store },
 		_react2.default.createElement(
-			_reactRouter.Route,
-			{ path: '/', component: _root2.default },
-			_react2.default.createElement(_reactRouter.Route, { path: '/maps', component: _maps2.default }),
-			_react2.default.createElement(_reactRouter.Route, { path: '*', component: _register2.default })
+				_reactRouter.Router,
+				{ history: _reactRouter.browserHistory },
+				_react2.default.createElement(
+						_reactRouter.Route,
+						{ path: '/', component: _root2.default },
+						_react2.default.createElement(_reactRouter.Route, { path: '/maps', component: _maps4.default }),
+						_react2.default.createElement(_reactRouter.Route, { path: '*', component: _register2.default })
+				)
 		)
-	)
 ), document.getElementById('root'));
 
-},{"../reducers/users":287,"./maps":283,"./register":284,"./root":285,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],283:[function(require,module,exports){
-"use strict";
+},{"../reducers/maps":287,"../reducers/users":288,"./maps":283,"./register":284,"./root":285,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],283:[function(require,module,exports){
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -27466,9 +27479,27 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = require('react-redux');
+
+var _reactRouter = require('react-router');
+
+var _maps = require('../actions/maps');
+
+var _users = require('../actions/users');
+
+var _users2 = _interopRequireDefault(_users);
+
+var _auth = require('../services/auth');
+
+var _auth2 = _interopRequireDefault(_auth);
+
+var _map = require('../models/map');
+
+var _map2 = _interopRequireDefault(_map);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27478,45 +27509,130 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var MapsPage = function (_React$Component) {
-	_inherits(MapsPage, _React$Component);
+var MapsPageComp = function (_React$Component) {
+	_inherits(MapsPageComp, _React$Component);
 
-	function MapsPage(props) {
-		_classCallCheck(this, MapsPage);
+	function MapsPageComp(props) {
+		_classCallCheck(this, MapsPageComp);
 
-		var _this = _possibleConstructorReturn(this, (MapsPage.__proto__ || Object.getPrototypeOf(MapsPage)).call(this, props));
+		var _this = _possibleConstructorReturn(this, (MapsPageComp.__proto__ || Object.getPrototypeOf(MapsPageComp)).call(this, props));
 
+		_this.refreshMaps = _this.refreshMaps.bind(_this);
+		_this.createMap = _this.createMap.bind(_this);
 		_this.state = {};
 		return _this;
 	}
 
-	_createClass(MapsPage, [{
-		key: "render",
+	_createClass(MapsPageComp, [{
+		key: 'componentWillMount',
+		value: function componentWillMount() {
+			this.refreshMaps();
+		}
+	}, {
+		key: 'refreshMaps',
+		value: function refreshMaps() {
+			var _this2 = this;
+
+			if (this.props.user && this.props.user.maps) {
+				for (var kid in this.props.user.maps) {
+					firebase.database().ref('maps/' + kid).once("value", function (snap) {
+						if (snap && snap.val()) _this2.props.addMap(snap.val());
+					});
+				}
+			}
+		}
+	}, {
+		key: 'createMap',
+		value: function createMap() {
+			var _this3 = this;
+
+			var creationTimestamp = new Date().getTime();
+			var newMap = new _map2.default({
+				title: "Map Name",
+				description: "description",
+				events: [{
+					uid: _auth2.default.getUid(),
+					timestamp: creationTimestamp,
+					type: 0
+				}]
+			});
+			newMap.users = {};
+			newMap.users[_auth2.default.getUid()] = this.props.user.name;
+
+			//Uploading our new Map
+			var newMapRef = firebase.database().ref('maps').push();
+			var newMapkey = newMapRef.key;
+			newMapRef.set(newMap, function (error) {
+				if (!error) {
+					_this3.props.replaceMaps(_this3.props.maps ? _this3.props.maps.concat(newMap) : [newMap]);
+					//Adding the Map to the user
+					firebase.database().ref('users/' + _auth2.default.getUid() + '/maps/' + newMapkey).set(creationTimestamp, function (error2) {
+						if (!error2) {
+							if (!_this3.props.user.maps) _this3.props.user.maps = {};
+							_this3.props.user.maps[newMapkey] = creationTimestamp;
+							_this3.props.replaceUser(_this3.props.user);
+						}
+					});
+				}
+			});
+		}
+	}, {
+		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
-				"div",
-				{ id: "maps-page" },
+				'div',
+				{ id: 'maps-page' },
 				_react2.default.createElement(
-					"div",
+					'div',
 					null,
 					_react2.default.createElement(
-						"h1",
+						'h1',
 						null,
-						"Maps"
+						'Maps'
+					),
+					_react2.default.createElement(
+						'button',
+						{ onClick: this.createMap },
+						'Create map'
 					)
 				)
 			);
 		}
 	}]);
 
-	return MapsPage;
+	return MapsPageComp;
 }(_react2.default.Component);
 
 ;
 
+var mapStateToProps = function mapStateToProps(state) {
+	console.log("nst", state);
+	return {
+		user: state.user,
+		maps: state.maps
+	};
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	return {
+		replaceMaps: function replaceMaps(maps) {
+			dispatch((0, _maps.replaceMaps)(maps));
+		},
+		addMap: function addMap(map) {
+			console.log("dispatch", map);
+			dispatch((0, _maps.addMap)(map));
+		},
+		replaceUser: function replaceUser(user) {
+			dispatch((0, _users2.default)(user));
+		}
+	};
+};
+
+var MapsPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MapsPageComp);
+
 exports.default = MapsPage;
 
-},{"react":255}],284:[function(require,module,exports){
+},{"../actions/maps":278,"../actions/users":279,"../models/map":280,"../services/auth":289,"react":255,"react-redux":182,"react-router":224}],284:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27751,7 +27867,23 @@ var RootPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Roo
 
 exports.default = RootPage;
 
-},{"../actions/users":279,"../services/auth":288,"react":255,"react-redux":182,"react-router":224}],286:[function(require,module,exports){
+},{"../actions/users":279,"../services/auth":289,"react":255,"react-redux":182,"react-router":224}],286:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var PROPERTIES = {
+
+	EVENTS: {
+		0: "Map created"
+	}
+
+};
+
+exports.default = Map;
+
+},{}],287:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27759,20 +27891,21 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = mapsReducers;
 function mapsReducers() {
-	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 	var action = arguments[1];
 
+	console.log("mapsReducers", state, action);
 	switch (action.type) {
 		case 'SET_MAPS':
-			return Object.assign({}, state, {
-				maps: action.maps
-			});
+			return action.maps;
+		case 'ADD_MAP':
+			return state.concat(action.map);
 		default:
 			return state;
 	}
 }
 
-},{}],287:[function(require,module,exports){
+},{}],288:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27785,15 +27918,13 @@ function usersReducers() {
 
 	switch (action.type) {
 		case 'SET_USER':
-			return Object.assign({}, state, {
-				user: action.user
-			});
+			return action.user;
 		default:
 			return state;
 	}
 }
 
-},{}],288:[function(require,module,exports){
+},{}],289:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27821,7 +27952,8 @@ var AuthServices = function () {
 
       var newUser = new _user2.default({
         email: email,
-        register_date: new Date().getTime()
+        register_date: new Date().getTime(),
+        name: "placeholder name"
       });
       firebase.database().ref('users/' + uid).set(newUser, function (error) {
         if (callback) callback(error ? null : newUser);
@@ -27835,6 +27967,11 @@ var AuthServices = function () {
         if (callback) callback(snap && snap.val() ? new _user2.default(snap.val()) : null);
       });
     }
+  }, {
+    key: 'getUid',
+    value: function getUid() {
+      return firebase.auth().currentUser ? firebase.auth().currentUser.uid : null;
+    }
   }]);
 
   return AuthServices;
@@ -27842,4 +27979,4 @@ var AuthServices = function () {
 
 exports.default = AuthServices;
 
-},{"../models/user":281}]},{},[278,279,280,281,282,283,284,285,286,287,288]);
+},{"../models/user":281}]},{},[278,279,280,281,282,283,284,285,286,287,288,289]);

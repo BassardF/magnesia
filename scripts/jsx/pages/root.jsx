@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router';
 
-
 import replaceUser from '../actions/users'
 import AuthServices from '../services/auth'
 

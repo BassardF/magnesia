@@ -1,9 +1,10 @@
-export default function mapsReducers(state = 0, action) {
+export default function mapsReducers(state = [], action) {
+	console.log("mapsReducers", state, action);
 	switch (action.type) {
 		case 'SET_MAPS':
-			return Object.assign({}, state, {
-				maps: action.maps
-			})
+			return action.maps
+		case 'ADD_MAP':
+			return state.concat(action.map)
 		default:
 			return state;
 	}

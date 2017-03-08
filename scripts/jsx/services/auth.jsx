@@ -6,7 +6,8 @@ class AuthServices {
 
     var newUser = new User({
       email: email,
-      register_date : new Date().getTime()
+      register_date : new Date().getTime(),
+      name : "placeholder name"
     });
     firebase.database().ref('users/' + uid).set(newUser, (error)=>{
       if(callback) callback(error ? null : newUser);
@@ -20,6 +21,10 @@ class AuthServices {
       if(callback) callback(snap && snap.val() ? new User(snap.val()) : null);
     });
     
+  }
+
+  static getUid(){
+    return firebase.auth().currentUser ? firebase.auth().currentUser.uid : null;
   }
 
 }

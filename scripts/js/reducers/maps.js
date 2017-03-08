@@ -5,14 +5,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = mapsReducers;
 function mapsReducers() {
-	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 	var action = arguments[1];
 
+	console.log("mapsReducers", state, action);
 	switch (action.type) {
 		case 'SET_MAPS':
-			return Object.assign({}, state, {
-				maps: action.maps
-			});
+			return action.maps;
+		case 'ADD_MAP':
+			return state.concat(action.map);
 		default:
 			return state;
 	}

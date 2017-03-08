@@ -25,7 +25,8 @@ var AuthServices = function () {
 
       var newUser = new _user2.default({
         email: email,
-        register_date: new Date().getTime()
+        register_date: new Date().getTime(),
+        name: "placeholder name"
       });
       firebase.database().ref('users/' + uid).set(newUser, function (error) {
         if (callback) callback(error ? null : newUser);
@@ -38,6 +39,11 @@ var AuthServices = function () {
       firebase.database().ref('users/' + uid).once("value", function (snap) {
         if (callback) callback(snap && snap.val() ? new _user2.default(snap.val()) : null);
       });
+    }
+  }, {
+    key: 'getUid',
+    value: function getUid() {
+      return firebase.auth().currentUser ? firebase.auth().currentUser.uid : null;
     }
   }]);
 

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -6,9 +6,27 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = require('react-redux');
+
+var _reactRouter = require('react-router');
+
+var _maps = require('../actions/maps');
+
+var _users = require('../actions/users');
+
+var _users2 = _interopRequireDefault(_users);
+
+var _auth = require('../services/auth');
+
+var _auth2 = _interopRequireDefault(_auth);
+
+var _map = require('../models/map');
+
+var _map2 = _interopRequireDefault(_map);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18,40 +36,125 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var MapsPage = function (_React$Component) {
-	_inherits(MapsPage, _React$Component);
+var MapsPageComp = function (_React$Component) {
+	_inherits(MapsPageComp, _React$Component);
 
-	function MapsPage(props) {
-		_classCallCheck(this, MapsPage);
+	function MapsPageComp(props) {
+		_classCallCheck(this, MapsPageComp);
 
-		var _this = _possibleConstructorReturn(this, (MapsPage.__proto__ || Object.getPrototypeOf(MapsPage)).call(this, props));
+		var _this = _possibleConstructorReturn(this, (MapsPageComp.__proto__ || Object.getPrototypeOf(MapsPageComp)).call(this, props));
 
+		_this.refreshMaps = _this.refreshMaps.bind(_this);
+		_this.createMap = _this.createMap.bind(_this);
 		_this.state = {};
 		return _this;
 	}
 
-	_createClass(MapsPage, [{
-		key: "render",
+	_createClass(MapsPageComp, [{
+		key: 'componentWillMount',
+		value: function componentWillMount() {
+			this.refreshMaps();
+		}
+	}, {
+		key: 'refreshMaps',
+		value: function refreshMaps() {
+			var _this2 = this;
+
+			if (this.props.user && this.props.user.maps) {
+				for (var kid in this.props.user.maps) {
+					firebase.database().ref('maps/' + kid).once("value", function (snap) {
+						if (snap && snap.val()) _this2.props.addMap(snap.val());
+					});
+				}
+			}
+		}
+	}, {
+		key: 'createMap',
+		value: function createMap() {
+			var _this3 = this;
+
+			var creationTimestamp = new Date().getTime();
+			var newMap = new _map2.default({
+				title: "Map Name",
+				description: "description",
+				events: [{
+					uid: _auth2.default.getUid(),
+					timestamp: creationTimestamp,
+					type: 0
+				}]
+			});
+			newMap.users = {};
+			newMap.users[_auth2.default.getUid()] = this.props.user.name;
+
+			//Uploading our new Map
+			var newMapRef = firebase.database().ref('maps').push();
+			var newMapkey = newMapRef.key;
+			newMapRef.set(newMap, function (error) {
+				if (!error) {
+					_this3.props.replaceMaps(_this3.props.maps ? _this3.props.maps.concat(newMap) : [newMap]);
+					//Adding the Map to the user
+					firebase.database().ref('users/' + _auth2.default.getUid() + '/maps/' + newMapkey).set(creationTimestamp, function (error2) {
+						if (!error2) {
+							if (!_this3.props.user.maps) _this3.props.user.maps = {};
+							_this3.props.user.maps[newMapkey] = creationTimestamp;
+							_this3.props.replaceUser(_this3.props.user);
+						}
+					});
+				}
+			});
+		}
+	}, {
+		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
-				"div",
-				{ id: "maps-page" },
+				'div',
+				{ id: 'maps-page' },
 				_react2.default.createElement(
-					"div",
+					'div',
 					null,
 					_react2.default.createElement(
-						"h1",
+						'h1',
 						null,
-						"Maps"
+						'Maps'
+					),
+					_react2.default.createElement(
+						'button',
+						{ onClick: this.createMap },
+						'Create map'
 					)
 				)
 			);
 		}
 	}]);
 
-	return MapsPage;
+	return MapsPageComp;
 }(_react2.default.Component);
 
 ;
+
+var mapStateToProps = function mapStateToProps(state) {
+	console.log("nst", state);
+	return {
+		user: state.user,
+		maps: state.maps
+	};
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	return {
+		replaceMaps: function replaceMaps(maps) {
+			dispatch((0, _maps.replaceMaps)(maps));
+		},
+		addMap: function addMap(map) {
+			console.log("dispatch", map);
+			dispatch((0, _maps.addMap)(map));
+		},
+		replaceUser: function replaceUser(user) {
+			dispatch((0, _users2.default)(user));
+		}
+	};
+};
+
+var MapsPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MapsPageComp);
 
 exports.default = MapsPage;
