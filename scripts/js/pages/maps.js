@@ -61,8 +61,8 @@ var MapsPageComp = function (_React$Component) {
 			var _this2 = this;
 
 			if (this.props.user && this.props.user.maps) {
-				for (var kid in this.props.user.maps) {
-					firebase.database().ref('maps/' + kid).once("value", function (snap) {
+				for (var mid in this.props.user.maps) {
+					firebase.database().ref('maps/' + mid).once("value", function (snap) {
 						if (snap && snap.val()) _this2.props.addMap(new _map2.default(snap.val()));
 					});
 				}
@@ -74,18 +74,7 @@ var MapsPageComp = function (_React$Component) {
 			var _this3 = this;
 
 			var creationTimestamp = new Date().getTime();
-			var newMap = new _map2.default({
-				title: "Map Name",
-				description: "description",
-				events: [{
-					uid: _auth2.default.getUid(),
-					timestamp: creationTimestamp,
-					type: 0
-				}]
-			});
-			newMap.users = {};
-			newMap.users[_auth2.default.getUid()] = this.props.user.name;
-
+			var newMap = new _map2.default().initEmpty(_auth2.default.getUid(), creationTimestamp, this.props.user.name);
 			//Uploading our new Map
 			var newMapRef = firebase.database().ref('maps').push();
 			var newMapkey = newMapRef.key;

@@ -1,9 +1,4 @@
-const PROPERTIES = {
-  
-	EVENTS : {
-		0 : "Map created"
-	}
-
-}
-
-export default Map;
+export default {
+	0 : "Map created",
+	1 : "Nose created"
+};

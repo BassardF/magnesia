@@ -6,7 +6,7 @@ require('load-grunt-tasks')(grunt)
     
     pkg: grunt.file.readJSON('package.json'),
 
-    clean: ['scripts/js', 'scripts/bundle.js'],
+    clean: ['scripts/js', 'scripts/bundle.js', 'styles/css/result.css'],
     
     babel: {
 	  options: {
@@ -35,7 +35,7 @@ require('load-grunt-tasks')(grunt)
 
 	watch: {
 	  scripts: {
-	    files: ['scripts/jsx/*.jsx', 'scripts/jsx/**/*.jsx'],
+	    files: ['scripts/jsx/*.jsx', 'scripts/jsx/**/*.jsx', 'styles/less/**.less'],
 	    tasks: ['default'],
 	    options: {
 	      spawn: false,
@@ -43,8 +43,17 @@ require('load-grunt-tasks')(grunt)
 	  },
 	},
 
+	less: {
+		development: {
+			options: {},
+			files: {
+				'styles/css/result.css': 'styles/less/include.less'
+			}
+		}
+	},
+
   });
 
-  grunt.registerTask('default', ['clean', 'babel', 'browserify', 'watch']);
+  grunt.registerTask('default', ['clean', 'less', 'babel', 'browserify', 'watch']);
 
 };

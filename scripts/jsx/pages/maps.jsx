@@ -22,8 +22,8 @@ class MapsPageComp extends React.Component {
 
 	refreshMaps(){
 		if(this.props.user && this.props.user.maps){
-			for(var kid in this.props.user.maps){
-				firebase.database().ref('maps/' + kid).once("value", (snap) => {
+			for(var mid in this.props.user.maps){
+				firebase.database().ref('maps/' + mid).once("value", (snap) => {
 					if(snap && snap.val()) this.props.addMap(new Map(snap.val()));
 				});
 			}
@@ -32,18 +32,7 @@ class MapsPageComp extends React.Component {
 
 	createMap(){
 		let creationTimestamp = new Date().getTime();
-		let newMap = new Map({
-			title : "Map Name",
-			description : "description",
-			events : [{
-				uid : AuthServices.getUid(),
-				timestamp : creationTimestamp,
-				type : 0
-			}]
-		});
-		newMap.users = {};
-		newMap.users[AuthServices.getUid()] = this.props.user.name;
-
+		let newMap = new Map().initEmpty(AuthServices.getUid(), creationTimestamp, this.props.user.name);
 		//Uploading our new Map
 		let newMapRef = firebase.database().ref('maps').push();
   		let newMapkey = newMapRef.key;

@@ -27375,24 +27375,107 @@ function replaceUser(user) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _node = require("./node");
+
+var _node2 = _interopRequireDefault(_node);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Map = function Map(data) {
-  _classCallCheck(this, Map);
+var Map = function () {
+	function Map(data) {
+		_classCallCheck(this, Map);
 
-  if (data) {
-    for (var key in data) {
-      this[key] = data[key];
-    }
-  }
-};
+		if (data) {
+			for (var key in data) {
+				this[key] = data[key];
+			}
+		}
+	}
+
+	_createClass(Map, [{
+		key: "changeNodeLocation",
+		value: function changeNodeLocation(nid, x, y) {
+			if (this.nodes && this.nodes[nid]) {
+				this.nodes[nid].x = x;
+				this.nodes[nid].y = y;
+			}
+		}
+	}, {
+		key: "initEmpty",
+		value: function initEmpty(uid, timestamp, userName) {
+			this.title = "Map Name";
+			this.description = "description";
+			this.events = [{
+				uid: uid,
+				timestamp: timestamp,
+				type: 0
+			}];
+			this.users = this.users || {};
+			this.users[uid] = userName;
+			this.nodes = [new _node2.default().initEmpty(0, uid, timestamp)];
+			return this;
+		}
+	}]);
+
+	return Map;
+}();
 
 exports.default = Map;
 
-},{}],281:[function(require,module,exports){
+},{"./node":281}],281:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Node = function () {
+  function Node(data) {
+    _classCallCheck(this, Node);
+
+    if (data) {
+      for (var key in data) {
+        this[key] = data[key];
+      }
+    }
+  }
+
+  _createClass(Node, [{
+    key: "initEmpty",
+    value: function initEmpty(nid, uid, timestamp) {
+
+      this.nid = nid;
+      this.title = "First Node";
+      this.description = "";
+      this.color = "#000000";
+      this.bcg_color = "#ffffff";
+      this.scale = 1;
+      this.events = [{
+        uid: uid,
+        timestamp: timestamp,
+        type: 1
+      }];
+      return this;
+    }
+  }]);
+
+  return Node;
+}();
+
+exports.default = Node;
+
+},{}],282:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27413,7 +27496,7 @@ var User = function User(data) {
 
 exports.default = User;
 
-},{}],282:[function(require,module,exports){
+},{}],283:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -27475,7 +27558,200 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 		)
 ), document.getElementById('root'));
 
-},{"../reducers/maps":288,"../reducers/users":289,"./map":283,"./maps":284,"./register":285,"./root":286,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],283:[function(require,module,exports){
+},{"../reducers/maps":293,"../reducers/users":294,"./map":287,"./maps":288,"./register":289,"./root":290,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],284:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var NavigationPanel = function (_React$Component) {
+	_inherits(NavigationPanel, _React$Component);
+
+	function NavigationPanel(props) {
+		_classCallCheck(this, NavigationPanel);
+
+		var _this = _possibleConstructorReturn(this, (NavigationPanel.__proto__ || Object.getPrototypeOf(NavigationPanel)).call(this, props));
+
+		_this.state = {};
+		return _this;
+	}
+
+	_createClass(NavigationPanel, [{
+		key: "componentWillMount",
+		value: function componentWillMount() {}
+	}, {
+		key: "componentWillUnMount",
+		value: function componentWillUnMount() {}
+	}, {
+		key: "render",
+		value: function render() {
+			return _react2.default.createElement(
+				"div",
+				{ id: "navigation-panel" },
+				"NavigationPanel"
+			);
+		}
+	}]);
+
+	return NavigationPanel;
+}(_react2.default.Component);
+
+;
+
+exports.default = NavigationPanel;
+
+},{"react":255}],285:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ToolsPanel = function (_React$Component) {
+	_inherits(ToolsPanel, _React$Component);
+
+	function ToolsPanel(props) {
+		_classCallCheck(this, ToolsPanel);
+
+		var _this = _possibleConstructorReturn(this, (ToolsPanel.__proto__ || Object.getPrototypeOf(ToolsPanel)).call(this, props));
+
+		_this.state = {};
+		return _this;
+	}
+
+	_createClass(ToolsPanel, [{
+		key: "componentWillMount",
+		value: function componentWillMount() {}
+	}, {
+		key: "componentWillUnMount",
+		value: function componentWillUnMount() {}
+	}, {
+		key: "render",
+		value: function render() {
+			return _react2.default.createElement(
+				"div",
+				{ id: "tool-panel" },
+				"ToolsPanel"
+			);
+		}
+	}]);
+
+	return ToolsPanel;
+}(_react2.default.Component);
+
+;
+
+exports.default = ToolsPanel;
+
+},{"react":255}],286:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var TopBar = function (_React$Component) {
+	_inherits(TopBar, _React$Component);
+
+	function TopBar(props) {
+		_classCallCheck(this, TopBar);
+
+		var _this = _possibleConstructorReturn(this, (TopBar.__proto__ || Object.getPrototypeOf(TopBar)).call(this, props));
+
+		_this.state = {};
+		return _this;
+	}
+
+	_createClass(TopBar, [{
+		key: "componentWillMount",
+		value: function componentWillMount() {}
+	}, {
+		key: "componentWillUnMount",
+		value: function componentWillUnMount() {}
+	}, {
+		key: "render",
+		value: function render() {
+			return _react2.default.createElement(
+				"div",
+				{ id: "topbar-wrapper" },
+				_react2.default.createElement(
+					"div",
+					{ id: "topbar-body", className: "flex" },
+					_react2.default.createElement(
+						"div",
+						{ className: "brand flex-grow-0" },
+						"Magnesia."
+					),
+					_react2.default.createElement(
+						"div",
+						{ className: "links flex-grow-1" },
+						_react2.default.createElement(
+							"span",
+							{ className: "flex-grow-0" },
+							"Maps"
+						),
+						_react2.default.createElement(
+							"span",
+							{ className: "flex-grow-0" },
+							"logout"
+						)
+					)
+				)
+			);
+		}
+	}]);
+
+	return TopBar;
+}(_react2.default.Component);
+
+;
+
+exports.default = TopBar;
+
+},{"react":255}],287:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27495,6 +27771,18 @@ var _reactRouter = require('react-router');
 var _map = require('../models/map');
 
 var _map2 = _interopRequireDefault(_map);
+
+var _navigationpanel = require('./dumbs/navigationpanel');
+
+var _navigationpanel2 = _interopRequireDefault(_navigationpanel);
+
+var _toolspanel = require('./dumbs/toolspanel');
+
+var _toolspanel2 = _interopRequireDefault(_toolspanel);
+
+var _drawing = require('../properties/drawing');
+
+var _drawing2 = _interopRequireDefault(_drawing);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27519,16 +27807,106 @@ var MapPageComp = function (_React$Component) {
 	_createClass(MapPageComp, [{
 		key: 'componentWillMount',
 		value: function componentWillMount() {
+			var _this2 = this;
+
 			if (this.props.routeParams && this.props.routeParams.mid) {
-				console.log(this.props.routeParams.mid);
+				var mid = this.props.routeParams.mid;
+				if (mid) {
+					if (this.state.mapRef) mapRef.off();
+					var mapRef = firebase.database().ref('maps/' + mid);
+					this.setState({ mapRef: mapRef });
+					mapRef.on("value", function (snap) {
+						if (snap && snap.val()) _this2.setState({ map: new _map2.default(snap.val()) });
+					});
+				}
 			}
 		}
 	}, {
 		key: 'componentWillUnMount',
-		value: function componentWillUnMount() {}
+		value: function componentWillUnMount() {
+			if (this.state.mapRef) mapRef.off();
+		}
+	}, {
+		key: 'draw',
+		value: function draw(map) {
+			var _this3 = this;
+
+			if (this.state.map && this.state.map.nodes) {
+
+				var svg = d3.select("svg"),
+				    width = svg.property("width"),
+				    height = svg.property("height");
+
+				var gs = svg.selectAll("g").data([map ? map.nodes : this.state.map.nodes], function (d) {
+					return d;
+				});
+
+				//Exit
+				gs.exit().remove();
+
+				//Enter
+				var elemtEnter = gs.enter().append("g");
+
+				elemtEnter.call(d3.drag().on("start", function (d) {
+					d3.event.subject.active = true;
+				}).on("drag", function (d) {
+					var map = _this3.state.map;
+					var r = 40 * (d[0].scale ? +d[0].scale : 1);
+					map.changeNodeLocation(d[0].nid, d3.event.x - width.animVal.value / 2, d3.event.y - width.animVal.value / 2 + r);
+					_this3.draw(map);
+				}).on("end", function (d) {
+					var map = _this3.state.map;
+					var r = 40 * (d[0].scale ? +d[0].scale : 1);
+					map.changeNodeLocation(d[0].nid, d3.event.x - width.animVal.value / 2, d3.event.y - width.animVal.value / 2 + r);
+					_this3.setState({ map: map });
+				}));
+
+				elemtEnter.append("circle").attr("cy", function (d, i) {
+					return height.animVal.value / 2 + (d[i].y ? +d[i].y : 0);
+				}).attr("cx", function (d, i) {
+					return width.animVal.value / 2 + (d[i].x ? +d[i].x : 0);
+				}).attr("r", function (d, i) {
+					return 40 * (d[i].scale ? +d[i].scale : 1);
+				}).attr("stroke", _drawing2.default.defaultCircleStrokeColor).attr("stroke-width", _drawing2.default.defaultCircleStrokeWidth).attr("fill", "white");
+
+				elemtEnter.append("text").attr("dx", function (d, i) {
+					return width.animVal.value / 2 + (d[i].x ? +d[i].x : 0);
+				}).attr("dy", function (d, i) {
+					return height.animVal.value / 2 + (d[i].y ? +d[i].y : 0) + 5;
+				}).attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").text(function (d, i) {
+					return d[i].title;
+				});
+
+				//Update
+				gs.selectAll("circle").attr("cy", function (d, i) {
+					return height.animVal.value / 2 + (d[i].y ? +d[i].y : 0);
+				}).attr("cx", function (d, i) {
+					return width.animVal.value / 2 + (d[i].x ? +d[i].x : 0);
+				});
+
+				gs.selectAll("text").attr("dx", function (d, i) {
+					return width.animVal.value / 2 + (d[i].x ? +d[i].x : 0);
+				}).attr("dy", function (d, i) {
+					return height.animVal.value / 2 + (d[i].y ? +d[i].y : 0) + 5;
+				});
+			}
+		}
+	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate() {
+			this.draw();
+		}
+	}, {
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate() {
+			console.log("shouldComponentUpdate");
+			return true;
+		}
 	}, {
 		key: 'render',
 		value: function render() {
+			var space = document.body.offsetHeight - document.getElementById("topbar-wrapper").offsetHeight;
+			console.log("state", this.state);
 			return _react2.default.createElement(
 				'div',
 				{ id: 'maps-page' },
@@ -27536,9 +27914,23 @@ var MapPageComp = function (_React$Component) {
 					'div',
 					null,
 					_react2.default.createElement(
-						'h1',
-						null,
-						'Map'
+						'div',
+						{ className: 'flex', style: { maxHeight: space } },
+						_react2.default.createElement(
+							'div',
+							{ className: 'flex-grow-0' },
+							_react2.default.createElement(_navigationpanel2.default, null)
+						),
+						_react2.default.createElement(
+							'div',
+							{ id: 'drawing-wrapper', className: 'flex-grow-1' },
+							_react2.default.createElement('svg', { style: { height: space + 'px', width: '100%' } })
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'flex-grow-0' },
+							_react2.default.createElement(_toolspanel2.default, null)
+						)
 					)
 				)
 			);
@@ -27578,7 +27970,7 @@ var MapPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MapP
 
 exports.default = MapPage;
 
-},{"../models/map":280,"react":255,"react-redux":182,"react-router":224}],284:[function(require,module,exports){
+},{"../models/map":280,"../properties/drawing":291,"./dumbs/navigationpanel":284,"./dumbs/toolspanel":285,"react":255,"react-redux":182,"react-router":224}],288:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27642,8 +28034,8 @@ var MapsPageComp = function (_React$Component) {
 			var _this2 = this;
 
 			if (this.props.user && this.props.user.maps) {
-				for (var kid in this.props.user.maps) {
-					firebase.database().ref('maps/' + kid).once("value", function (snap) {
+				for (var mid in this.props.user.maps) {
+					firebase.database().ref('maps/' + mid).once("value", function (snap) {
 						if (snap && snap.val()) _this2.props.addMap(new _map2.default(snap.val()));
 					});
 				}
@@ -27655,18 +28047,7 @@ var MapsPageComp = function (_React$Component) {
 			var _this3 = this;
 
 			var creationTimestamp = new Date().getTime();
-			var newMap = new _map2.default({
-				title: "Map Name",
-				description: "description",
-				events: [{
-					uid: _auth2.default.getUid(),
-					timestamp: creationTimestamp,
-					type: 0
-				}]
-			});
-			newMap.users = {};
-			newMap.users[_auth2.default.getUid()] = this.props.user.name;
-
+			var newMap = new _map2.default().initEmpty(_auth2.default.getUid(), creationTimestamp, this.props.user.name);
 			//Uploading our new Map
 			var newMapRef = firebase.database().ref('maps').push();
 			var newMapkey = newMapRef.key;
@@ -27759,7 +28140,7 @@ var MapsPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Map
 
 exports.default = MapsPage;
 
-},{"../actions/maps":278,"../actions/users":279,"../models/map":280,"../services/auth":290,"react":255,"react-redux":182,"react-router":224}],285:[function(require,module,exports){
+},{"../actions/maps":278,"../actions/users":279,"../models/map":280,"../services/auth":295,"react":255,"react-redux":182,"react-router":224}],289:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27886,7 +28267,7 @@ var RegisterPage = function (_React$Component) {
 
 exports.default = RegisterPage;
 
-},{"react":255}],286:[function(require,module,exports){
+},{"react":255}],290:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27902,6 +28283,10 @@ var _react2 = _interopRequireDefault(_react);
 var _reactRedux = require('react-redux');
 
 var _reactRouter = require('react-router');
+
+var _topbar = require('./dumbs/topbar');
+
+var _topbar2 = _interopRequireDefault(_topbar);
 
 var _users = require('../actions/users');
 
@@ -27966,6 +28351,7 @@ var RootPageComp = function (_React$Component) {
 			return _react2.default.createElement(
 				'div',
 				{ className: 'root-page' },
+				_react2.default.createElement(_topbar2.default, null),
 				this.props.children
 			);
 		}
@@ -27994,23 +28380,30 @@ var RootPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Roo
 
 exports.default = RootPage;
 
-},{"../actions/users":279,"../services/auth":290,"react":255,"react-redux":182,"react-router":224}],287:[function(require,module,exports){
+},{"../actions/users":279,"../services/auth":295,"./dumbs/topbar":286,"react":255,"react-redux":182,"react-router":224}],291:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-var PROPERTIES = {
-
-	EVENTS: {
-		0: "Map created"
-	}
-
+exports.default = {
+	defaultTextColor: "black",
+	defaultCircleStrokeColor: "black",
+	defaultCircleStrokeWidth: "2px"
 };
 
-exports.default = Map;
+},{}],292:[function(require,module,exports){
+"use strict";
 
-},{}],288:[function(require,module,exports){
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = {
+	0: "Map created",
+	1: "Nose created"
+};
+
+},{}],293:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28031,7 +28424,7 @@ function mapsReducers() {
 	}
 }
 
-},{}],289:[function(require,module,exports){
+},{}],294:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28050,7 +28443,7 @@ function usersReducers() {
 	}
 }
 
-},{}],290:[function(require,module,exports){
+},{}],295:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28105,4 +28498,4 @@ var AuthServices = function () {
 
 exports.default = AuthServices;
 
-},{"../models/user":281}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290]);
+},{"../models/user":282}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295]);

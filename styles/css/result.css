@@ -1,0 +1,44 @@
+html,
+body {
+  height: 100%;
+  padding: 0px;
+  margin: 0px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.pull-right {
+  float: right;
+}
+.pull-left {
+  float: left;
+}
+.flex {
+  display: flex;
+}
+.flex .flex-grow-0 {
+  flex-grow: 0;
+}
+.flex .flex-grow-1 {
+  flex-grow: 1;
+}
+#topbar-wrapper {
+  padding: 15px;
+  background-color: #1a1d28;
+}
+#topbar-wrapper #topbar-body > div {
+  vertical-align: middle;
+}
+#topbar-wrapper #topbar-body .brand {
+  font-size: 23px;
+  color: #c380ac;
+}
+#topbar-wrapper #topbar-body .links {
+  font-size: 17px;
+  padding: 4px;
+  text-align: right;
+  color: white;
+}
+#topbar-wrapper #topbar-body .links > span {
+  padding-right: 10px;
+  padding-left: 10px;
+}

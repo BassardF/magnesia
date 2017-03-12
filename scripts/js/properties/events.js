@@ -3,12 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-var PROPERTIES = {
-
-	EVENTS: {
-		0: "Map created"
-	}
-
+exports.default = {
+	0: "Map created",
+	1: "Nose created"
 };
-
-exports.default = Map;

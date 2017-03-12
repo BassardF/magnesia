@@ -18,6 +18,18 @@ var _map = require('../models/map');
 
 var _map2 = _interopRequireDefault(_map);
 
+var _navigationpanel = require('./dumbs/navigationpanel');
+
+var _navigationpanel2 = _interopRequireDefault(_navigationpanel);
+
+var _toolspanel = require('./dumbs/toolspanel');
+
+var _toolspanel2 = _interopRequireDefault(_toolspanel);
+
+var _drawing = require('../properties/drawing');
+
+var _drawing2 = _interopRequireDefault(_drawing);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -41,16 +53,106 @@ var MapPageComp = function (_React$Component) {
 	_createClass(MapPageComp, [{
 		key: 'componentWillMount',
 		value: function componentWillMount() {
+			var _this2 = this;
+
 			if (this.props.routeParams && this.props.routeParams.mid) {
-				console.log(this.props.routeParams.mid);
+				var mid = this.props.routeParams.mid;
+				if (mid) {
+					if (this.state.mapRef) mapRef.off();
+					var mapRef = firebase.database().ref('maps/' + mid);
+					this.setState({ mapRef: mapRef });
+					mapRef.on("value", function (snap) {
+						if (snap && snap.val()) _this2.setState({ map: new _map2.default(snap.val()) });
+					});
+				}
 			}
 		}
 	}, {
 		key: 'componentWillUnMount',
-		value: function componentWillUnMount() {}
+		value: function componentWillUnMount() {
+			if (this.state.mapRef) mapRef.off();
+		}
+	}, {
+		key: 'draw',
+		value: function draw(map) {
+			var _this3 = this;
+
+			if (this.state.map && this.state.map.nodes) {
+
+				var svg = d3.select("svg"),
+				    width = svg.property("width"),
+				    height = svg.property("height");
+
+				var gs = svg.selectAll("g").data([map ? map.nodes : this.state.map.nodes], function (d) {
+					return d;
+				});
+
+				//Exit
+				gs.exit().remove();
+
+				//Enter
+				var elemtEnter = gs.enter().append("g");
+
+				elemtEnter.call(d3.drag().on("start", function (d) {
+					d3.event.subject.active = true;
+				}).on("drag", function (d) {
+					var map = _this3.state.map;
+					var r = 40 * (d[0].scale ? +d[0].scale : 1);
+					map.changeNodeLocation(d[0].nid, d3.event.x - width.animVal.value / 2, d3.event.y - width.animVal.value / 2 + r);
+					_this3.draw(map);
+				}).on("end", function (d) {
+					var map = _this3.state.map;
+					var r = 40 * (d[0].scale ? +d[0].scale : 1);
+					map.changeNodeLocation(d[0].nid, d3.event.x - width.animVal.value / 2, d3.event.y - width.animVal.value / 2 + r);
+					_this3.setState({ map: map });
+				}));
+
+				elemtEnter.append("circle").attr("cy", function (d, i) {
+					return height.animVal.value / 2 + (d[i].y ? +d[i].y : 0);
+				}).attr("cx", function (d, i) {
+					return width.animVal.value / 2 + (d[i].x ? +d[i].x : 0);
+				}).attr("r", function (d, i) {
+					return 40 * (d[i].scale ? +d[i].scale : 1);
+				}).attr("stroke", _drawing2.default.defaultCircleStrokeColor).attr("stroke-width", _drawing2.default.defaultCircleStrokeWidth).attr("fill", "white");
+
+				elemtEnter.append("text").attr("dx", function (d, i) {
+					return width.animVal.value / 2 + (d[i].x ? +d[i].x : 0);
+				}).attr("dy", function (d, i) {
+					return height.animVal.value / 2 + (d[i].y ? +d[i].y : 0) + 5;
+				}).attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").text(function (d, i) {
+					return d[i].title;
+				});
+
+				//Update
+				gs.selectAll("circle").attr("cy", function (d, i) {
+					return height.animVal.value / 2 + (d[i].y ? +d[i].y : 0);
+				}).attr("cx", function (d, i) {
+					return width.animVal.value / 2 + (d[i].x ? +d[i].x : 0);
+				});
+
+				gs.selectAll("text").attr("dx", function (d, i) {
+					return width.animVal.value / 2 + (d[i].x ? +d[i].x : 0);
+				}).attr("dy", function (d, i) {
+					return height.animVal.value / 2 + (d[i].y ? +d[i].y : 0) + 5;
+				});
+			}
+		}
+	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate() {
+			this.draw();
+		}
+	}, {
+		key: 'shouldComponentUpdate',
+		value: function shouldComponentUpdate() {
+			console.log("shouldComponentUpdate");
+			return true;
+		}
 	}, {
 		key: 'render',
 		value: function render() {
+			var space = document.body.offsetHeight - document.getElementById("topbar-wrapper").offsetHeight;
+			console.log("state", this.state);
 			return _react2.default.createElement(
 				'div',
 				{ id: 'maps-page' },
@@ -58,9 +160,23 @@ var MapPageComp = function (_React$Component) {
 					'div',
 					null,
 					_react2.default.createElement(
-						'h1',
-						null,
-						'Map'
+						'div',
+						{ className: 'flex', style: { maxHeight: space } },
+						_react2.default.createElement(
+							'div',
+							{ className: 'flex-grow-0' },
+							_react2.default.createElement(_navigationpanel2.default, null)
+						),
+						_react2.default.createElement(
+							'div',
+							{ id: 'drawing-wrapper', className: 'flex-grow-1' },
+							_react2.default.createElement('svg', { style: { height: space + 'px', width: '100%' } })
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'flex-grow-0' },
+							_react2.default.createElement(_toolspanel2.default, null)
+						)
 					)
 				)
 			);
