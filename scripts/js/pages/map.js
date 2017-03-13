@@ -93,18 +93,24 @@ var MapPageComp = function (_React$Component) {
 				//Enter
 				var elemtEnter = gs.enter().append("g");
 
-				elemtEnter.call(d3.drag().on("start", function (d) {
-					d3.event.subject.active = true;
-				}).on("drag", function (d) {
+				elemtEnter.on("click", function (d) {
+					console.log("click", d);
+				}).call(d3.drag().on("drag", function (d) {
+					console.log("drag");
+					d.active = true;
 					var map = _this3.state.map;
 					var r = 40 * (d[0].scale ? +d[0].scale : 1);
 					map.changeNodeLocation(d[0].nid, d3.event.x - width.animVal.value / 2, d3.event.y - width.animVal.value / 2 + r);
 					_this3.draw(map);
 				}).on("end", function (d) {
-					var map = _this3.state.map;
-					var r = 40 * (d[0].scale ? +d[0].scale : 1);
-					map.changeNodeLocation(d[0].nid, d3.event.x - width.animVal.value / 2, d3.event.y - width.animVal.value / 2 + r);
-					_this3.setState({ map: map });
+					if (d.active) {
+						console.log("end");
+						var map = _this3.state.map;
+						d.active = false;
+						var r = 40 * (d[0].scale ? +d[0].scale : 1);
+						map.changeNodeLocation(d[0].nid, d3.event.x - width.animVal.value / 2, d3.event.y - width.animVal.value / 2 + r);
+						_this3.setState({ map: map });
+					}
 				}));
 
 				elemtEnter.append("circle").attr("cy", function (d, i) {
@@ -113,7 +119,11 @@ var MapPageComp = function (_React$Component) {
 					return width.animVal.value / 2 + (d[i].x ? +d[i].x : 0);
 				}).attr("r", function (d, i) {
 					return 40 * (d[i].scale ? +d[i].scale : 1);
-				}).attr("stroke", _drawing2.default.defaultCircleStrokeColor).attr("stroke-width", _drawing2.default.defaultCircleStrokeWidth).attr("fill", "white");
+				}).attr("stroke", function (d, i) {
+					return _drawing2.default.defaultCircleStrokeColor;
+				}).attr("stroke-width", function (d, i) {
+					return _drawing2.default.defaultCircleStrokeWidth;
+				}).attr("fill", "white");
 
 				elemtEnter.append("text").attr("dx", function (d, i) {
 					return width.animVal.value / 2 + (d[i].x ? +d[i].x : 0);
@@ -130,6 +140,12 @@ var MapPageComp = function (_React$Component) {
 					return width.animVal.value / 2 + (d[i].x ? +d[i].x : 0);
 				});
 
+				gs.selectAll("circle").transition().attr("stroke", function (d, i) {
+					return d.active ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
+				}).attr("stroke-width", function (d, i) {
+					return d.active ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
+				}).duration(70);
+
 				gs.selectAll("text").attr("dx", function (d, i) {
 					return width.animVal.value / 2 + (d[i].x ? +d[i].x : 0);
 				}).attr("dy", function (d, i) {
@@ -145,14 +161,12 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'shouldComponentUpdate',
 		value: function shouldComponentUpdate() {
-			console.log("shouldComponentUpdate");
 			return true;
 		}
 	}, {
 		key: 'render',
 		value: function render() {
 			var space = document.body.offsetHeight - document.getElementById("topbar-wrapper").offsetHeight;
-			console.log("state", this.state);
 			return _react2.default.createElement(
 				'div',
 				{ id: 'maps-page' },

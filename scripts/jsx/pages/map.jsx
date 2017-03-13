@@ -50,21 +50,27 @@ class MapPageComp extends React.Component {
 			let elemtEnter = gs.enter().append("g");
 
 			elemtEnter
+				.on("click", (d)=>{
+					console.log("click", d);
+				})
 			    .call(d3.drag()
-			        .on("start", (d)=>{
-					  	d3.event.subject.active = true;
-					})
 			        .on("drag", (d) =>{
+			        	console.log("drag");
+			        	d.active = true;
 			        	var map = this.state.map;
 			        	var r = 40 * (d[0].scale ? +d[0].scale : 1);
 					  	map.changeNodeLocation(d[0].nid, d3.event.x - width.animVal.value/2, d3.event.y - width.animVal.value/2 + r);
 					  	this.draw(map);
 					})
 			        .on("end", (d)=>{
-			        	var map = this.state.map;
-			        	var r = 40 * (d[0].scale ? +d[0].scale : 1);
-					  	map.changeNodeLocation(d[0].nid, d3.event.x - width.animVal.value/2, d3.event.y - width.animVal.value/2 + r);
-					  	this.setState({map : map});
+			        	if(d.active){
+			        		console.log("end");
+			        		var map = this.state.map;
+				        	d.active = false;
+				        	var r = 40 * (d[0].scale ? +d[0].scale : 1);
+						  	map.changeNodeLocation(d[0].nid, d3.event.x - width.animVal.value/2, d3.event.y - width.animVal.value/2 + r);
+						  	this.setState({map : map});
+			        	}
 					})
 			    );
 
@@ -72,8 +78,8 @@ class MapPageComp extends React.Component {
 				.attr("cy", function(d, i) {return height.animVal.value/2 + (d[i].y ? +d[i].y : 0)})
 			    .attr("cx", function(d, i) {return width.animVal.value/2 + (d[i].x ? +d[i].x : 0)})
 			    .attr("r", function(d, i) {return 40 * (d[i].scale ? +d[i].scale : 1);})
-			    .attr("stroke", DRAWING.defaultCircleStrokeColor)
-			    .attr("stroke-width", DRAWING.defaultCircleStrokeWidth)
+			    .attr("stroke", function(d, i){return DRAWING.defaultCircleStrokeColor})
+			    .attr("stroke-width", function(d, i){return DRAWING.defaultCircleStrokeWidth})
 	    		.attr("fill", "white")
 	    		
 	    	elemtEnter.append("text")
@@ -86,9 +92,14 @@ class MapPageComp extends React.Component {
 		        })
 
 		    //Update
-			gs.selectAll("circle")
+		    gs.selectAll("circle")
 				.attr("cy", function(d, i) {return height.animVal.value/2 + (d[i].y ? +d[i].y : 0)})
 			    .attr("cx", function(d, i) {return width.animVal.value/2 + (d[i].x ? +d[i].x : 0)})
+
+			gs.selectAll("circle").transition()
+			    .attr("stroke", function(d, i){return d.active ? DRAWING.selectedCircleStrokeColor : DRAWING.defaultCircleStrokeColor})
+			    .attr("stroke-width", function(d, i){return d.active ? DRAWING.selectedCircleStrokeWidth : DRAWING.defaultCircleStrokeWidth})
+			    .duration(70)
 
 			gs.selectAll("text")
 				.attr("dx", function(d, i){return width.animVal.value/2 + (d[i].x ? +d[i].x : 0);})
@@ -101,13 +112,11 @@ class MapPageComp extends React.Component {
 	}
 
 	shouldComponentUpdate(){
-		console.log("shouldComponentUpdate");
 		return true;
 	}
 
 	render() {
 		var space = document.body.offsetHeight - document.getElementById("topbar-wrapper").offsetHeight;
-		console.log("state", this.state);
 		return (
 			<div id="maps-page">
 				<div>
