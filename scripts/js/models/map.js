@@ -48,6 +48,11 @@ var Map = function () {
 			this.nodes = [new _node2.default().initEmpty(0, uid, timestamp)];
 			return this;
 		}
+	}, {
+		key: "save",
+		value: function save() {
+			firebase.database().ref('maps/' + this.mid).set(this);
+		}
 	}]);
 
 	return Map;

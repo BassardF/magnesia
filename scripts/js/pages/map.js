@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
@@ -62,7 +64,10 @@ var MapPageComp = function (_React$Component) {
 					var mapRef = firebase.database().ref('maps/' + mid);
 					this.setState({ mapRef: mapRef });
 					mapRef.on("value", function (snap) {
-						if (snap && snap.val()) _this2.setState({ map: new _map2.default(snap.val()) });
+						if (snap && snap.val()) {
+							console.log("N from serv");
+							_this2.setState({ map: new _map2.default(snap.val()) });
+						}
 					});
 				}
 			}
@@ -73,17 +78,30 @@ var MapPageComp = function (_React$Component) {
 			if (this.state.mapRef) mapRef.off();
 		}
 	}, {
+		key: 'selectNode',
+		value: function selectNode(nid) {
+			this.setState({
+				selectedNode: this.state.selectedNode === nid ? null : nid
+			});
+		}
+	}, {
+		key: 'addNewNode',
+		value: function addNewNode(x, y) {
+			console.log("add new node", x, y);
+		}
+	}, {
 		key: 'draw',
-		value: function draw(map) {
+		value: function draw() {
 			var _this3 = this;
 
 			if (this.state.map && this.state.map.nodes) {
+				console.log("draw");
 
 				var svg = d3.select("svg"),
 				    width = svg.property("width"),
 				    height = svg.property("height");
 
-				var gs = svg.selectAll("g").data([map ? map.nodes : this.state.map.nodes], function (d) {
+				var gs = svg.selectAll("g").data(this.state.map.nodes, function (d) {
 					return d;
 				});
 
@@ -93,32 +111,12 @@ var MapPageComp = function (_React$Component) {
 				//Enter
 				var elemtEnter = gs.enter().append("g");
 
-				elemtEnter.on("click", function (d) {
-					console.log("click", d);
-				}).call(d3.drag().on("drag", function (d) {
-					console.log("drag");
-					d.active = true;
-					var map = _this3.state.map;
-					var r = 40 * (d[0].scale ? +d[0].scale : 1);
-					map.changeNodeLocation(d[0].nid, d3.event.x - width.animVal.value / 2, d3.event.y - width.animVal.value / 2 + r);
-					_this3.draw(map);
-				}).on("end", function (d) {
-					if (d.active) {
-						console.log("end");
-						var map = _this3.state.map;
-						d.active = false;
-						var r = 40 * (d[0].scale ? +d[0].scale : 1);
-						map.changeNodeLocation(d[0].nid, d3.event.x - width.animVal.value / 2, d3.event.y - width.animVal.value / 2 + r);
-						_this3.setState({ map: map });
-					}
-				}));
-
 				elemtEnter.append("circle").attr("cy", function (d, i) {
-					return height.animVal.value / 2 + (d[i].y ? +d[i].y : 0);
+					return height.animVal.value / 2 + (d.y ? +d.y : 0);
 				}).attr("cx", function (d, i) {
-					return width.animVal.value / 2 + (d[i].x ? +d[i].x : 0);
+					return width.animVal.value / 2 + (d.x ? +d.x : 0);
 				}).attr("r", function (d, i) {
-					return 40 * (d[i].scale ? +d[i].scale : 1);
+					return 40 * (d.scale ? +d.scale : 1);
 				}).attr("stroke", function (d, i) {
 					return _drawing2.default.defaultCircleStrokeColor;
 				}).attr("stroke-width", function (d, i) {
@@ -126,31 +124,65 @@ var MapPageComp = function (_React$Component) {
 				}).attr("fill", "white");
 
 				elemtEnter.append("text").attr("dx", function (d, i) {
-					return width.animVal.value / 2 + (d[i].x ? +d[i].x : 0);
+					return width.animVal.value / 2 + (d.x ? +d.x : 0);
 				}).attr("dy", function (d, i) {
-					return height.animVal.value / 2 + (d[i].y ? +d[i].y : 0) + 5;
+					return height.animVal.value / 2 + (d.y ? +d.y : 0) + 5;
 				}).attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").text(function (d, i) {
-					return d[i].title;
+					return d.title;
 				});
 
 				//Update
 				gs.selectAll("circle").attr("cy", function (d, i) {
-					return height.animVal.value / 2 + (d[i].y ? +d[i].y : 0);
+					return height.animVal.value / 2 + (d.y ? +d.y : 0);
 				}).attr("cx", function (d, i) {
-					return width.animVal.value / 2 + (d[i].x ? +d[i].x : 0);
+					return width.animVal.value / 2 + (d.x ? +d.x : 0);
 				});
 
 				gs.selectAll("circle").transition().attr("stroke", function (d, i) {
-					return d.active ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
+					return d.active || d.nid == _this3.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
 				}).attr("stroke-width", function (d, i) {
 					return d.active ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
 				}).duration(70);
 
 				gs.selectAll("text").attr("dx", function (d, i) {
-					return width.animVal.value / 2 + (d[i].x ? +d[i].x : 0);
+					return width.animVal.value / 2 + (d.x ? +d.x : 0);
 				}).attr("dy", function (d, i) {
-					return height.animVal.value / 2 + (d[i].y ? +d[i].y : 0) + 5;
+					return height.animVal.value / 2 + (d.y ? +d.y : 0) + 5;
 				});
+
+				//Actions
+				svg.on("click", function (d) {
+					if (!d3.event.defaultPrevented) {
+						_this3.addNewNode(d3.event.x - width.animVal.value / 2, d3.event.y - height.animVal.value / 2);
+					}
+				});
+
+				svg.selectAll("g").on("click", function (d) {
+					console.log("click");
+					d3.event.preventDefault();
+					if (d && _typeof(d.nid) !== undefined) _this3.selectNode(d.nid);
+				}).call(d3.drag().on("drag", function (d) {
+					console.log("drag");
+					d.active = true;
+					var imap = _this3.state.map;
+					var r = 40 * (d.scale ? +d.scale : 1);
+					imap.changeNodeLocation(d.nid, d3.event.x, d3.event.y);
+					_this3.setState({
+						map: imap
+					});
+				}).on("end", function (d) {
+					console.log("drag end");
+					if (d.active) {
+						var imap = _this3.state.map;
+						d.active = false;
+						var r = 40 * (d.scale ? +d.scale : 1);
+						imap.changeNodeLocation(d.nid, d3.event.x, d3.event.y);
+						// this.setState({
+						// 	map : imap
+						// });
+						imap.save();
+					}
+				}));
 			}
 		}
 	}, {

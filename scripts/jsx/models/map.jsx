@@ -33,6 +33,10 @@ class Map {
 		return this;
 	}
 
+	save(){
+		firebase.database().ref('maps/' + this.mid).set(this);
+	}
+
 }
 
 export default Map;
