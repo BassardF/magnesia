@@ -32,6 +32,10 @@ var _drawing = require('../properties/drawing');
 
 var _drawing2 = _interopRequireDefault(_drawing);
 
+var _auth = require('../services/auth');
+
+var _auth2 = _interopRequireDefault(_auth);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -65,8 +69,11 @@ var MapPageComp = function (_React$Component) {
 					this.setState({ mapRef: mapRef });
 					mapRef.on("value", function (snap) {
 						if (snap && snap.val()) {
-							console.log("N from serv");
-							_this2.setState({ map: new _map2.default(snap.val()) });
+							if (!_this2.state.map) _this2.setState({ map: new _map2.default(snap.val()) });else {
+								var map = _this2.state.map;
+								map.upgradeFromServer(snap.val());
+								_this2.setState({ map: map });
+							}
 						}
 					});
 				}
@@ -87,7 +94,9 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'addNewNode',
 		value: function addNewNode(x, y) {
-			console.log("add new node", x, y);
+			var map = this.state.map;
+			map.addNewNode(_auth2.default.getUid(), x, y);
+			map.save();
 		}
 	}, {
 		key: 'draw',
@@ -100,7 +109,6 @@ var MapPageComp = function (_React$Component) {
 				var svg = d3.select("svg"),
 				    width = svg.property("width"),
 				    height = svg.property("height");
-
 				var gs = svg.selectAll("g").data(this.state.map.nodes, function (d) {
 					return d;
 				});
@@ -111,58 +119,41 @@ var MapPageComp = function (_React$Component) {
 				//Enter
 				var elemtEnter = gs.enter().append("g");
 
-				elemtEnter.append("circle").attr("cy", function (d, i) {
-					return height.animVal.value / 2 + (d.y ? +d.y : 0);
-				}).attr("cx", function (d, i) {
-					return width.animVal.value / 2 + (d.x ? +d.x : 0);
-				}).attr("r", function (d, i) {
+				elemtEnter.append("circle").attr("r", function (d, i) {
 					return 40 * (d.scale ? +d.scale : 1);
 				}).attr("stroke", function (d, i) {
 					return _drawing2.default.defaultCircleStrokeColor;
 				}).attr("stroke-width", function (d, i) {
 					return _drawing2.default.defaultCircleStrokeWidth;
-				}).attr("fill", "white");
-
-				elemtEnter.append("text").attr("dx", function (d, i) {
-					return width.animVal.value / 2 + (d.x ? +d.x : 0);
-				}).attr("dy", function (d, i) {
-					return height.animVal.value / 2 + (d.y ? +d.y : 0) + 5;
-				}).attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").text(function (d, i) {
-					return d.title;
-				});
-
-				//Update
-				gs.selectAll("circle").attr("cy", function (d, i) {
+				}).attr("fill", "white").merge(gs.selectAll("circle")).attr("cy", function (d, i) {
 					return height.animVal.value / 2 + (d.y ? +d.y : 0);
 				}).attr("cx", function (d, i) {
 					return width.animVal.value / 2 + (d.x ? +d.x : 0);
-				});
-
-				gs.selectAll("circle").transition().attr("stroke", function (d, i) {
+				}).merge(gs.selectAll("circle")).transition().attr("stroke", function (d, i) {
 					return d.active || d.nid == _this3.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
 				}).attr("stroke-width", function (d, i) {
 					return d.active ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
 				}).duration(70);
 
-				gs.selectAll("text").attr("dx", function (d, i) {
+				elemtEnter.append("text").attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").merge(gs.selectAll("text")).attr("dx", function (d, i) {
 					return width.animVal.value / 2 + (d.x ? +d.x : 0);
 				}).attr("dy", function (d, i) {
 					return height.animVal.value / 2 + (d.y ? +d.y : 0) + 5;
+				}).text(function (d, i) {
+					return d.title;
 				});
 
 				//Actions
 				svg.on("click", function (d) {
 					if (!d3.event.defaultPrevented) {
-						_this3.addNewNode(d3.event.x - width.animVal.value / 2, d3.event.y - height.animVal.value / 2);
+						_this3.addNewNode(d3.event.x - width.animVal.value / 2 - 105, d3.event.y - height.animVal.value / 2 - 60);
 					}
 				});
 
 				svg.selectAll("g").on("click", function (d) {
-					console.log("click");
 					d3.event.preventDefault();
 					if (d && _typeof(d.nid) !== undefined) _this3.selectNode(d.nid);
 				}).call(d3.drag().on("drag", function (d) {
-					console.log("drag");
 					d.active = true;
 					var imap = _this3.state.map;
 					var r = 40 * (d.scale ? +d.scale : 1);
@@ -171,15 +162,11 @@ var MapPageComp = function (_React$Component) {
 						map: imap
 					});
 				}).on("end", function (d) {
-					console.log("drag end");
 					if (d.active) {
 						var imap = _this3.state.map;
 						d.active = false;
 						var r = 40 * (d.scale ? +d.scale : 1);
 						imap.changeNodeLocation(d.nid, d3.event.x, d3.event.y);
-						// this.setState({
-						// 	map : imap
-						// });
 						imap.save();
 					}
 				}));

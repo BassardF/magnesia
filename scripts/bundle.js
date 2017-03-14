@@ -27378,6 +27378,8 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _node = require("./node");
@@ -27394,20 +27396,17 @@ var Map = function () {
 
 		if (data) {
 			for (var key in data) {
-				this[key] = data[key];
+				if (key === "nodes") {
+					this.nodes = [];
+					for (var nid in data.nodes) {
+						this.nodes[nid] = new _node2.default(data.nodes[nid]);
+					}
+				} else this[key] = data[key];
 			}
 		}
 	}
 
 	_createClass(Map, [{
-		key: "changeNodeLocation",
-		value: function changeNodeLocation(nid, x, y) {
-			if (this.nodes && this.nodes[nid]) {
-				this.nodes[nid].x = x;
-				this.nodes[nid].y = y;
-			}
-		}
-	}, {
 		key: "initEmpty",
 		value: function initEmpty(uid, timestamp, userName) {
 			this.title = "Map Name";
@@ -27423,9 +27422,52 @@ var Map = function () {
 			return this;
 		}
 	}, {
+		key: "changeNodeLocation",
+		value: function changeNodeLocation(nid, x, y) {
+			if (this.nodes && this.nodes[nid]) {
+				this.nodes[nid].x = x;
+				this.nodes[nid].y = y;
+			}
+		}
+	}, {
 		key: "save",
 		value: function save() {
 			firebase.database().ref('maps/' + this.mid).set(this);
+		}
+	}, {
+		key: "upgradeFromServer",
+		value: function upgradeFromServer(data) {
+			if (data) {
+				//Add
+				for (var key in data) {
+					if (key !== "nodes") this[key] = data[key];
+				}
+				this.copyNodes(data.nodes);
+				//Remove
+				for (var key2 in this) {
+					if (this.hasOwnProperty(key2) && _typeof(data[key2]) === undefined) delete this[key2];
+				}
+			}
+		}
+	}, {
+		key: "copyNodes",
+		value: function copyNodes(data) {
+			for (var nid in data) {
+				//Upgrade
+				if (this.nodes[nid]) this.nodes[nid].upgradeFromServer(data[nid]);
+				//Add
+				else this.nodes[nid] = new _node2.default(data[nid]);
+			}
+			for (var nid2 in this.nodes) {
+				//Delete
+				if (!data[nid2]) this.nodes[nid2] = null;
+			}
+		}
+	}, {
+		key: "addNewNode",
+		value: function addNewNode(uid, x, y) {
+			var nid = this.nodes.length;
+			this.nodes[nid] = new _node2.default().initSecondary(nid, uid, new Date().getTime(), x, y);
 		}
 	}]);
 
@@ -27440,6 +27482,8 @@ exports.default = Map;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -27466,12 +27510,47 @@ var Node = function () {
       this.color = "#000000";
       this.bcg_color = "#ffffff";
       this.scale = 1;
+      this.x = 0;
+      this.y = 0;
       this.events = [{
         uid: uid,
         timestamp: timestamp,
         type: 1
       }];
       return this;
+    }
+  }, {
+    key: "initSecondary",
+    value: function initSecondary(nid, uid, timestamp, x, y) {
+
+      this.nid = nid;
+      this.title = "New Node";
+      this.description = "";
+      this.color = "#000000";
+      this.bcg_color = "#ffffff";
+      this.scale = 1;
+      this.x = x;
+      this.y = y;
+      this.events = [{
+        uid: uid,
+        timestamp: timestamp,
+        type: 1
+      }];
+      return this;
+    }
+  }, {
+    key: "upgradeFromServer",
+    value: function upgradeFromServer(data) {
+      if (data) {
+        //Add & Upgrade
+        for (var key in data) {
+          this[key] = data[key];
+        }
+        //Delete
+        for (var key2 in this) {
+          if (this.hasOwnProperty(key2) && _typeof(data[key2]) === undefined) delete this[key2];
+        }
+      }
     }
   }]);
 
@@ -27791,6 +27870,10 @@ var _drawing = require('../properties/drawing');
 
 var _drawing2 = _interopRequireDefault(_drawing);
 
+var _auth = require('../services/auth');
+
+var _auth2 = _interopRequireDefault(_auth);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -27824,8 +27907,11 @@ var MapPageComp = function (_React$Component) {
 					this.setState({ mapRef: mapRef });
 					mapRef.on("value", function (snap) {
 						if (snap && snap.val()) {
-							console.log("N from serv");
-							_this2.setState({ map: new _map2.default(snap.val()) });
+							if (!_this2.state.map) _this2.setState({ map: new _map2.default(snap.val()) });else {
+								var map = _this2.state.map;
+								map.upgradeFromServer(snap.val());
+								_this2.setState({ map: map });
+							}
 						}
 					});
 				}
@@ -27846,7 +27932,9 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'addNewNode',
 		value: function addNewNode(x, y) {
-			console.log("add new node", x, y);
+			var map = this.state.map;
+			map.addNewNode(_auth2.default.getUid(), x, y);
+			map.save();
 		}
 	}, {
 		key: 'draw',
@@ -27859,7 +27947,6 @@ var MapPageComp = function (_React$Component) {
 				var svg = d3.select("svg"),
 				    width = svg.property("width"),
 				    height = svg.property("height");
-
 				var gs = svg.selectAll("g").data(this.state.map.nodes, function (d) {
 					return d;
 				});
@@ -27870,58 +27957,41 @@ var MapPageComp = function (_React$Component) {
 				//Enter
 				var elemtEnter = gs.enter().append("g");
 
-				elemtEnter.append("circle").attr("cy", function (d, i) {
-					return height.animVal.value / 2 + (d.y ? +d.y : 0);
-				}).attr("cx", function (d, i) {
-					return width.animVal.value / 2 + (d.x ? +d.x : 0);
-				}).attr("r", function (d, i) {
+				elemtEnter.append("circle").attr("r", function (d, i) {
 					return 40 * (d.scale ? +d.scale : 1);
 				}).attr("stroke", function (d, i) {
 					return _drawing2.default.defaultCircleStrokeColor;
 				}).attr("stroke-width", function (d, i) {
 					return _drawing2.default.defaultCircleStrokeWidth;
-				}).attr("fill", "white");
-
-				elemtEnter.append("text").attr("dx", function (d, i) {
-					return width.animVal.value / 2 + (d.x ? +d.x : 0);
-				}).attr("dy", function (d, i) {
-					return height.animVal.value / 2 + (d.y ? +d.y : 0) + 5;
-				}).attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").text(function (d, i) {
-					return d.title;
-				});
-
-				//Update
-				gs.selectAll("circle").attr("cy", function (d, i) {
+				}).attr("fill", "white").merge(gs.selectAll("circle")).attr("cy", function (d, i) {
 					return height.animVal.value / 2 + (d.y ? +d.y : 0);
 				}).attr("cx", function (d, i) {
 					return width.animVal.value / 2 + (d.x ? +d.x : 0);
-				});
-
-				gs.selectAll("circle").transition().attr("stroke", function (d, i) {
+				}).merge(gs.selectAll("circle")).transition().attr("stroke", function (d, i) {
 					return d.active || d.nid == _this3.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
 				}).attr("stroke-width", function (d, i) {
 					return d.active ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
 				}).duration(70);
 
-				gs.selectAll("text").attr("dx", function (d, i) {
+				elemtEnter.append("text").attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").merge(gs.selectAll("text")).attr("dx", function (d, i) {
 					return width.animVal.value / 2 + (d.x ? +d.x : 0);
 				}).attr("dy", function (d, i) {
 					return height.animVal.value / 2 + (d.y ? +d.y : 0) + 5;
+				}).text(function (d, i) {
+					return d.title;
 				});
 
 				//Actions
 				svg.on("click", function (d) {
 					if (!d3.event.defaultPrevented) {
-						_this3.addNewNode(d3.event.x - width.animVal.value / 2, d3.event.y - height.animVal.value / 2);
+						_this3.addNewNode(d3.event.x - width.animVal.value / 2 - 105, d3.event.y - height.animVal.value / 2 - 60);
 					}
 				});
 
 				svg.selectAll("g").on("click", function (d) {
-					console.log("click");
 					d3.event.preventDefault();
 					if (d && _typeof(d.nid) !== undefined) _this3.selectNode(d.nid);
 				}).call(d3.drag().on("drag", function (d) {
-					console.log("drag");
 					d.active = true;
 					var imap = _this3.state.map;
 					var r = 40 * (d.scale ? +d.scale : 1);
@@ -27930,15 +28000,11 @@ var MapPageComp = function (_React$Component) {
 						map: imap
 					});
 				}).on("end", function (d) {
-					console.log("drag end");
 					if (d.active) {
 						var imap = _this3.state.map;
 						d.active = false;
 						var r = 40 * (d.scale ? +d.scale : 1);
 						imap.changeNodeLocation(d.nid, d3.event.x, d3.event.y);
-						// this.setState({
-						// 	map : imap
-						// });
 						imap.save();
 					}
 				}));
@@ -28021,7 +28087,7 @@ var MapPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MapP
 
 exports.default = MapPage;
 
-},{"../models/map":280,"../properties/drawing":291,"./dumbs/navigationpanel":284,"./dumbs/toolspanel":285,"react":255,"react-redux":182,"react-router":224}],288:[function(require,module,exports){
+},{"../models/map":280,"../properties/drawing":291,"../services/auth":295,"./dumbs/navigationpanel":284,"./dumbs/toolspanel":285,"react":255,"react-redux":182,"react-router":224}],288:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
