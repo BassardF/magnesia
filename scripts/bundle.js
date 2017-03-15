@@ -27378,13 +27378,67 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Link = function () {
+	function Link(data) {
+		_classCallCheck(this, Link);
+
+		if (data) {
+			for (var key in data) {
+				this[key] = data[key];
+			}
+		}
+	}
+
+	_createClass(Link, [{
+		key: "initEmpty",
+		value: function initEmpty(uid, timestamp, nid1, nid2) {
+			this.label = "";
+			this.scale = 1;
+			this.events = [{
+				uid: uid,
+				timestamp: timestamp,
+				type: 2
+			}];
+			this.nodes = {};
+			this.nodes[nid1] = {
+				label: "",
+				type: false
+			};
+			this.nodes[nid2] = {
+				label: "",
+				type: false
+			};
+			return this;
+		}
+	}]);
+
+	return Link;
+}();
+
+exports.default = Link;
+
+},{}],281:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _node = require("./node");
+var _node = require('./node');
 
 var _node2 = _interopRequireDefault(_node);
+
+var _link = require('./link');
+
+var _link2 = _interopRequireDefault(_link);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27401,13 +27455,18 @@ var Map = function () {
 					for (var nid in data.nodes) {
 						this.nodes[nid] = new _node2.default(data.nodes[nid]);
 					}
+				} else if (key === "links") {
+					this.links = [];
+					for (var nid in data.links) {
+						this.links[nid] = new _link2.default(data.links[nid]);
+					}
 				} else this[key] = data[key];
 			}
 		}
 	}
 
 	_createClass(Map, [{
-		key: "initEmpty",
+		key: 'initEmpty',
 		value: function initEmpty(uid, timestamp, userName) {
 			this.title = "Map Name";
 			this.description = "description";
@@ -27422,7 +27481,7 @@ var Map = function () {
 			return this;
 		}
 	}, {
-		key: "changeNodeLocation",
+		key: 'changeNodeLocation',
 		value: function changeNodeLocation(nid, x, y) {
 			if (this.nodes && this.nodes[nid]) {
 				this.nodes[nid].x = x;
@@ -27430,12 +27489,12 @@ var Map = function () {
 			}
 		}
 	}, {
-		key: "save",
+		key: 'save',
 		value: function save() {
 			firebase.database().ref('maps/' + this.mid).set(this);
 		}
 	}, {
-		key: "upgradeFromServer",
+		key: 'upgradeFromServer',
 		value: function upgradeFromServer(data) {
 			if (data) {
 				//Add
@@ -27450,7 +27509,7 @@ var Map = function () {
 			}
 		}
 	}, {
-		key: "copyNodes",
+		key: 'copyNodes',
 		value: function copyNodes(data) {
 			for (var nid in data) {
 				//Upgrade
@@ -27464,10 +27523,19 @@ var Map = function () {
 			}
 		}
 	}, {
-		key: "addNewNode",
-		value: function addNewNode(uid, x, y) {
+		key: 'addNewLink',
+		value: function addNewLink(uid, nid1, nid2) {
+			if (!this.links) this.links = [];
+			this.links.push(new _link2.default().initEmpty(uid, new Date().getTime(), nid1, nid2));
+		}
+	}, {
+		key: 'addNewNode',
+		value: function addNewNode(uid, x, y, connectedNode) {
 			var nid = this.nodes.length;
 			this.nodes[nid] = new _node2.default().initSecondary(nid, uid, new Date().getTime(), x, y);
+			if (connectedNode || connectedNode === 0) {
+				this.addNewLink(uid, connectedNode, nid);
+			}
 		}
 	}]);
 
@@ -27476,7 +27544,7 @@ var Map = function () {
 
 exports.default = Map;
 
-},{"./node":281}],281:[function(require,module,exports){
+},{"./link":280,"./node":282}],282:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27559,7 +27627,7 @@ var Node = function () {
 
 exports.default = Node;
 
-},{}],282:[function(require,module,exports){
+},{}],283:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27580,7 +27648,7 @@ var User = function User(data) {
 
 exports.default = User;
 
-},{}],283:[function(require,module,exports){
+},{}],284:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -27642,7 +27710,7 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 		)
 ), document.getElementById('root'));
 
-},{"../reducers/maps":293,"../reducers/users":294,"./map":287,"./maps":288,"./register":289,"./root":290,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],284:[function(require,module,exports){
+},{"../reducers/maps":294,"../reducers/users":295,"./map":288,"./maps":289,"./register":290,"./root":291,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],285:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27684,10 +27752,18 @@ var NavigationPanel = function (_React$Component) {
 	}, {
 		key: "render",
 		value: function render() {
+			var _this2 = this;
+
+			var domNodes = [];
+			if (this.props.map && this.props.map.nodes) {
+				domNodes = this.props.map.nodes.map(function (n, ind) {
+					return _react2.default.createElement(NodeLine, { key: "key-lp-node-line-" + n.nid, node: n, selectedNode: _this2.props.selectedNode, selectNode: _this2.props.selectNode });
+				});
+			}
 			return _react2.default.createElement(
 				"div",
 				{ id: "navigation-panel" },
-				"NavigationPanel"
+				domNodes
 			);
 		}
 	}]);
@@ -27699,7 +27775,46 @@ var NavigationPanel = function (_React$Component) {
 
 exports.default = NavigationPanel;
 
-},{"react":255}],285:[function(require,module,exports){
+var NodeLine = function (_React$Component2) {
+	_inherits(NodeLine, _React$Component2);
+
+	function NodeLine(props) {
+		_classCallCheck(this, NodeLine);
+
+		var _this3 = _possibleConstructorReturn(this, (NodeLine.__proto__ || Object.getPrototypeOf(NodeLine)).call(this, props));
+
+		_this3.selectNode = _this3.selectNode.bind(_this3);
+		_this3.state = {};
+		return _this3;
+	}
+
+	_createClass(NodeLine, [{
+		key: "selectNode",
+		value: function selectNode() {
+			this.props.selectNode(this.props.node.nid);
+		}
+	}, {
+		key: "render",
+		value: function render() {
+			return _react2.default.createElement(
+				"div",
+				{ onClick: this.selectNode, className: this.props.selectedNode == this.props.node.nid ? "selected-node-line" : "node-line" },
+				_react2.default.createElement("div", { className: "arrow-right v-align-middle inline-block" }),
+				_react2.default.createElement(
+					"span",
+					{ className: "v-align-middle", style: { marginLeft: "5px" } },
+					this.props.node.title
+				)
+			);
+		}
+	}]);
+
+	return NodeLine;
+}(_react2.default.Component);
+
+;
+
+},{"react":255}],286:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27756,7 +27871,7 @@ var ToolsPanel = function (_React$Component) {
 
 exports.default = ToolsPanel;
 
-},{"react":255}],286:[function(require,module,exports){
+},{"react":255}],287:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27835,7 +27950,7 @@ var TopBar = function (_React$Component) {
 
 exports.default = TopBar;
 
-},{"react":255}],287:[function(require,module,exports){
+},{"react":255}],288:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27890,6 +28005,11 @@ var MapPageComp = function (_React$Component) {
 
 		var _this = _possibleConstructorReturn(this, (MapPageComp.__proto__ || Object.getPrototypeOf(MapPageComp)).call(this, props));
 
+		_this.selectNode = _this.selectNode.bind(_this);
+		_this.addNewNode = _this.addNewNode.bind(_this);
+		_this.draw = _this.draw.bind(_this);
+		_this.drawNodes = _this.drawNodes.bind(_this);
+		_this.drawLinks = _this.drawLinks.bind(_this);
 		_this.state = {};
 		return _this;
 	}
@@ -27925,6 +28045,7 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'selectNode',
 		value: function selectNode(nid) {
+			console.log("selectNode", nid);
 			this.setState({
 				selectedNode: this.state.selectedNode === nid ? null : nid
 			});
@@ -27933,82 +28054,124 @@ var MapPageComp = function (_React$Component) {
 		key: 'addNewNode',
 		value: function addNewNode(x, y) {
 			var map = this.state.map;
-			map.addNewNode(_auth2.default.getUid(), x, y);
+			map.addNewNode(_auth2.default.getUid(), x, y, this.state.selectedNode);
 			map.save();
 		}
 	}, {
 		key: 'draw',
 		value: function draw() {
-			var _this3 = this;
-
-			if (this.state.map && this.state.map.nodes) {
-				console.log("draw");
-
+			if (this.state.map) {
 				var svg = d3.select("svg"),
 				    width = svg.property("width"),
 				    height = svg.property("height");
-				var gs = svg.selectAll("g").data(this.state.map.nodes, function (d) {
-					return d;
+
+				if (this.state.map.links) this.drawLinks(svg, width, height);
+
+				if (this.state.map.nodes) this.drawNodes(svg, width, height);
+
+				svg.selectAll("g.node");
+				svg.selectAll("g.link");
+			}
+		}
+	}, {
+		key: 'drawNodes',
+		value: function drawNodes(svg, width, height) {
+			var _this3 = this;
+
+			var gs = svg.select("g#nodes").selectAll("g.node").data(this.state.map.nodes, function (d) {
+				return d;
+			});
+
+			//Exit
+			gs.exit().remove();
+
+			//Enter
+			var elemtEnter = gs.enter().append("g").attr("class", "node");
+
+			elemtEnter.append("circle").attr("r", function (d, i) {
+				return 40 * (d.scale ? +d.scale : 1);
+			}).attr("stroke", function (d, i) {
+				return _drawing2.default.defaultCircleStrokeColor;
+			}).attr("stroke-width", function (d, i) {
+				return _drawing2.default.defaultCircleStrokeWidth;
+			}).attr("fill", "white").merge(gs.selectAll("circle")).attr("cy", function (d, i) {
+				return height.animVal.value / 2 + (d.y ? +d.y : 0);
+			}).attr("cx", function (d, i) {
+				return width.animVal.value / 2 + (d.x ? +d.x : 0);
+			}).attr("stroke", function (d, i) {
+				return d.nid == _this3.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
+			}).attr("stroke-width", function (d, i) {
+				return d.active ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
+			});
+
+			elemtEnter.append("text").attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").merge(gs.selectAll("text")).attr("dx", function (d, i) {
+				return width.animVal.value / 2 + (d.x ? +d.x : 0);
+			}).attr("dy", function (d, i) {
+				return height.animVal.value / 2 + (d.y ? +d.y : 0) + 5;
+			}).text(function (d, i) {
+				return d.title;
+			});
+
+			//Actions
+			svg.on("click", function (d) {
+				if (!d3.event.defaultPrevented) {
+					_this3.addNewNode(d3.event.x - width.animVal.value / 2 - 105, d3.event.y - height.animVal.value / 2 - 60);
+				}
+			});
+
+			svg.selectAll("g").on("click", function (d) {
+				d3.event.preventDefault();
+				if (d && _typeof(d.nid) !== undefined) _this3.selectNode(d.nid);
+			}).call(d3.drag().on("drag", function (d) {
+				d.active = true;
+				var imap = _this3.state.map;
+				var r = 40 * (d.scale ? +d.scale : 1);
+				imap.changeNodeLocation(d.nid, d3.event.x, d3.event.y);
+				_this3.setState({
+					map: imap
 				});
-
-				//Exit
-				gs.exit().remove();
-
-				//Enter
-				var elemtEnter = gs.enter().append("g");
-
-				elemtEnter.append("circle").attr("r", function (d, i) {
-					return 40 * (d.scale ? +d.scale : 1);
-				}).attr("stroke", function (d, i) {
-					return _drawing2.default.defaultCircleStrokeColor;
-				}).attr("stroke-width", function (d, i) {
-					return _drawing2.default.defaultCircleStrokeWidth;
-				}).attr("fill", "white").merge(gs.selectAll("circle")).attr("cy", function (d, i) {
-					return height.animVal.value / 2 + (d.y ? +d.y : 0);
-				}).attr("cx", function (d, i) {
-					return width.animVal.value / 2 + (d.x ? +d.x : 0);
-				}).merge(gs.selectAll("circle")).transition().attr("stroke", function (d, i) {
-					return d.active || d.nid == _this3.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
-				}).attr("stroke-width", function (d, i) {
-					return d.active ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
-				}).duration(70);
-
-				elemtEnter.append("text").attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").merge(gs.selectAll("text")).attr("dx", function (d, i) {
-					return width.animVal.value / 2 + (d.x ? +d.x : 0);
-				}).attr("dy", function (d, i) {
-					return height.animVal.value / 2 + (d.y ? +d.y : 0) + 5;
-				}).text(function (d, i) {
-					return d.title;
-				});
-
-				//Actions
-				svg.on("click", function (d) {
-					if (!d3.event.defaultPrevented) {
-						_this3.addNewNode(d3.event.x - width.animVal.value / 2 - 105, d3.event.y - height.animVal.value / 2 - 60);
-					}
-				});
-
-				svg.selectAll("g").on("click", function (d) {
-					d3.event.preventDefault();
-					if (d && _typeof(d.nid) !== undefined) _this3.selectNode(d.nid);
-				}).call(d3.drag().on("drag", function (d) {
-					d.active = true;
+			}).on("end", function (d) {
+				if (d.active) {
 					var imap = _this3.state.map;
+					d.active = false;
 					var r = 40 * (d.scale ? +d.scale : 1);
 					imap.changeNodeLocation(d.nid, d3.event.x, d3.event.y);
-					_this3.setState({
-						map: imap
-					});
-				}).on("end", function (d) {
-					if (d.active) {
-						var imap = _this3.state.map;
-						d.active = false;
-						var r = 40 * (d.scale ? +d.scale : 1);
-						imap.changeNodeLocation(d.nid, d3.event.x, d3.event.y);
-						imap.save();
-					}
-				}));
-			}
+					imap.save();
+				}
+			}));
+		}
+	}, {
+		key: 'drawLinks',
+		value: function drawLinks(svg, width, height) {
+			var _this4 = this;
+
+			var gs = svg.select("g#links").selectAll("g.link").data(this.state.map.links, function (d) {
+				return d;
+			});
+
+			//Exit
+			gs.exit().remove();
+
+			//Enter
+			var elemtEnter = gs.enter().append("g").attr("class", "link");
+
+			elemtEnter.append("line").attr("stroke", function (d, i) {
+				return _drawing2.default.defaultCircleStrokeColor;
+			}).attr("stroke-width", function (d, i) {
+				return _drawing2.default.defaultCircleStrokeWidth;
+			}).merge(gs.selectAll("line")).attr("x1", function (d, i) {
+				var origin = _this4.state.map.nodes[Object.keys(d.nodes)[0]];
+				return width.animVal.value / 2 + (origin.x ? +origin.x : 0);
+			}).attr("y1", function (d, i) {
+				var origin = _this4.state.map.nodes[Object.keys(d.nodes)[0]];
+				return height.animVal.value / 2 + (origin.y ? +origin.y : 0);
+			}).attr("x2", function (d, i) {
+				var destination = _this4.state.map.nodes[Object.keys(d.nodes)[1]];
+				return width.animVal.value / 2 + (destination.x ? +destination.x : 0);
+			}).attr("y2", function (d, i) {
+				var destination = _this4.state.map.nodes[Object.keys(d.nodes)[1]];
+				return height.animVal.value / 2 + (destination.y ? +destination.y : 0);
+			});
 		}
 	}, {
 		key: 'componentDidUpdate',
@@ -28036,17 +28199,22 @@ var MapPageComp = function (_React$Component) {
 						_react2.default.createElement(
 							'div',
 							{ className: 'flex-grow-0' },
-							_react2.default.createElement(_navigationpanel2.default, null)
+							_react2.default.createElement(_navigationpanel2.default, { map: this.state.map, selectedNode: this.state.selectedNode, selectNode: this.selectNode })
 						),
 						_react2.default.createElement(
 							'div',
 							{ id: 'drawing-wrapper', className: 'flex-grow-1' },
-							_react2.default.createElement('svg', { style: { height: space + 'px', width: '100%' } })
+							_react2.default.createElement(
+								'svg',
+								{ style: { height: space + 'px', width: '100%' } },
+								_react2.default.createElement('g', { id: 'links' }),
+								_react2.default.createElement('g', { id: 'nodes' })
+							)
 						),
 						_react2.default.createElement(
 							'div',
 							{ className: 'flex-grow-0' },
-							_react2.default.createElement(_toolspanel2.default, null)
+							_react2.default.createElement(_toolspanel2.default, { map: this.state.map, selectedNode: this.state.selectedNode })
 						)
 					)
 				)
@@ -28087,7 +28255,7 @@ var MapPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MapP
 
 exports.default = MapPage;
 
-},{"../models/map":280,"../properties/drawing":291,"../services/auth":295,"./dumbs/navigationpanel":284,"./dumbs/toolspanel":285,"react":255,"react-redux":182,"react-router":224}],288:[function(require,module,exports){
+},{"../models/map":281,"../properties/drawing":292,"../services/auth":296,"./dumbs/navigationpanel":285,"./dumbs/toolspanel":286,"react":255,"react-redux":182,"react-router":224}],289:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28257,7 +28425,7 @@ var MapsPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Map
 
 exports.default = MapsPage;
 
-},{"../actions/maps":278,"../actions/users":279,"../models/map":280,"../services/auth":295,"react":255,"react-redux":182,"react-router":224}],289:[function(require,module,exports){
+},{"../actions/maps":278,"../actions/users":279,"../models/map":281,"../services/auth":296,"react":255,"react-redux":182,"react-router":224}],290:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28384,7 +28552,7 @@ var RegisterPage = function (_React$Component) {
 
 exports.default = RegisterPage;
 
-},{"react":255}],290:[function(require,module,exports){
+},{"react":255}],291:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28497,7 +28665,7 @@ var RootPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Roo
 
 exports.default = RootPage;
 
-},{"../actions/users":279,"../services/auth":295,"./dumbs/topbar":286,"react":255,"react-redux":182,"react-router":224}],291:[function(require,module,exports){
+},{"../actions/users":279,"../services/auth":296,"./dumbs/topbar":287,"react":255,"react-redux":182,"react-router":224}],292:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28511,7 +28679,7 @@ exports.default = {
 	selectedCircleStrokeWidth: "4px"
 };
 
-},{}],292:[function(require,module,exports){
+},{}],293:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28519,10 +28687,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = {
 	0: "Map created",
-	1: "Nose created"
+	1: "Node created",
+	2: "Link created"
 };
 
-},{}],293:[function(require,module,exports){
+},{}],294:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28543,7 +28712,7 @@ function mapsReducers() {
 	}
 }
 
-},{}],294:[function(require,module,exports){
+},{}],295:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28562,7 +28731,7 @@ function usersReducers() {
 	}
 }
 
-},{}],295:[function(require,module,exports){
+},{}],296:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28617,4 +28786,4 @@ var AuthServices = function () {
 
 exports.default = AuthServices;
 
-},{"../models/user":282}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295]);
+},{"../models/user":283}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296]);

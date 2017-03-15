@@ -1,0 +1,36 @@
+#navigation-panel{
+	
+	border-right: solid 1px @grey;
+	height: 100%;
+	padding: 10px;
+	padding-left: 5px;
+	font-size: 13px;
+
+	.node-line{
+
+		margin-left: 3px;
+		cursor: pointer;
+
+		.arrow-right {
+			width: 0; 
+			height: 0; 
+			border-top: 4px solid transparent;
+			border-bottom: 4px solid transparent;
+			border-left: 4px solid black;
+		}
+	}
+
+	.selected-node-line{
+
+		color: @purple;
+
+		.arrow-right {
+			width: 0; 
+			height: 0; 
+			border-top: 4px solid @purple;
+			border-right: 4px solid transparent;
+			border-left: 4px solid transparent;
+		}
+	}
+	
+}

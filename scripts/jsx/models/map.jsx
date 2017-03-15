@@ -1,4 +1,5 @@
 import Node from './node'
+import Link from './link'
 
 class Map {
   
@@ -9,6 +10,11 @@ class Map {
 					this.nodes = [];
 					for(var nid in data.nodes){
 						this.nodes[nid] = new Node(data.nodes[nid]);
+					}
+				} else if(key === "links"){
+					this.links = [];
+					for(var nid in data.links){
+						this.links[nid] = new Link(data.links[nid]);
 					}
 				}
 				else this[key] = data[key];
@@ -71,9 +77,17 @@ class Map {
 		}
 	}
 
-	addNewNode(uid, x, y){
+	addNewLink(uid, nid1, nid2){
+		if(!this.links) this.links = [];
+		this.links.push(new Link().initEmpty(uid, new Date().getTime(), nid1, nid2));
+	}
+
+	addNewNode(uid, x, y, connectedNode){
 		var nid = this.nodes.length;
 		this.nodes[nid] = new Node().initSecondary(nid, uid, new Date().getTime(), x, y);
+		if(connectedNode || connectedNode === 0){
+			this.addNewLink(uid, connectedNode, nid);
+		}
 	}
 
 }

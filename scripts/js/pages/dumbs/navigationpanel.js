@@ -39,10 +39,18 @@ var NavigationPanel = function (_React$Component) {
 	}, {
 		key: "render",
 		value: function render() {
+			var _this2 = this;
+
+			var domNodes = [];
+			if (this.props.map && this.props.map.nodes) {
+				domNodes = this.props.map.nodes.map(function (n, ind) {
+					return _react2.default.createElement(NodeLine, { key: "key-lp-node-line-" + n.nid, node: n, selectedNode: _this2.props.selectedNode, selectNode: _this2.props.selectNode });
+				});
+			}
 			return _react2.default.createElement(
 				"div",
 				{ id: "navigation-panel" },
-				"NavigationPanel"
+				domNodes
 			);
 		}
 	}]);
@@ -53,3 +61,42 @@ var NavigationPanel = function (_React$Component) {
 ;
 
 exports.default = NavigationPanel;
+
+var NodeLine = function (_React$Component2) {
+	_inherits(NodeLine, _React$Component2);
+
+	function NodeLine(props) {
+		_classCallCheck(this, NodeLine);
+
+		var _this3 = _possibleConstructorReturn(this, (NodeLine.__proto__ || Object.getPrototypeOf(NodeLine)).call(this, props));
+
+		_this3.selectNode = _this3.selectNode.bind(_this3);
+		_this3.state = {};
+		return _this3;
+	}
+
+	_createClass(NodeLine, [{
+		key: "selectNode",
+		value: function selectNode() {
+			this.props.selectNode(this.props.node.nid);
+		}
+	}, {
+		key: "render",
+		value: function render() {
+			return _react2.default.createElement(
+				"div",
+				{ onClick: this.selectNode, className: this.props.selectedNode == this.props.node.nid ? "selected-node-line" : "node-line" },
+				_react2.default.createElement("div", { className: "arrow-right v-align-middle inline-block" }),
+				_react2.default.createElement(
+					"span",
+					{ className: "v-align-middle", style: { marginLeft: "5px" } },
+					this.props.node.title
+				)
+			);
+		}
+	}]);
+
+	return NodeLine;
+}(_react2.default.Component);
+
+;

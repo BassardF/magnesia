@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -8,9 +8,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _node = require("./node");
+var _node = require('./node');
 
 var _node2 = _interopRequireDefault(_node);
+
+var _link = require('./link');
+
+var _link2 = _interopRequireDefault(_link);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27,13 +31,18 @@ var Map = function () {
 					for (var nid in data.nodes) {
 						this.nodes[nid] = new _node2.default(data.nodes[nid]);
 					}
+				} else if (key === "links") {
+					this.links = [];
+					for (var nid in data.links) {
+						this.links[nid] = new _link2.default(data.links[nid]);
+					}
 				} else this[key] = data[key];
 			}
 		}
 	}
 
 	_createClass(Map, [{
-		key: "initEmpty",
+		key: 'initEmpty',
 		value: function initEmpty(uid, timestamp, userName) {
 			this.title = "Map Name";
 			this.description = "description";
@@ -48,7 +57,7 @@ var Map = function () {
 			return this;
 		}
 	}, {
-		key: "changeNodeLocation",
+		key: 'changeNodeLocation',
 		value: function changeNodeLocation(nid, x, y) {
 			if (this.nodes && this.nodes[nid]) {
 				this.nodes[nid].x = x;
@@ -56,12 +65,12 @@ var Map = function () {
 			}
 		}
 	}, {
-		key: "save",
+		key: 'save',
 		value: function save() {
 			firebase.database().ref('maps/' + this.mid).set(this);
 		}
 	}, {
-		key: "upgradeFromServer",
+		key: 'upgradeFromServer',
 		value: function upgradeFromServer(data) {
 			if (data) {
 				//Add
@@ -76,7 +85,7 @@ var Map = function () {
 			}
 		}
 	}, {
-		key: "copyNodes",
+		key: 'copyNodes',
 		value: function copyNodes(data) {
 			for (var nid in data) {
 				//Upgrade
@@ -90,10 +99,19 @@ var Map = function () {
 			}
 		}
 	}, {
-		key: "addNewNode",
-		value: function addNewNode(uid, x, y) {
+		key: 'addNewLink',
+		value: function addNewLink(uid, nid1, nid2) {
+			if (!this.links) this.links = [];
+			this.links.push(new _link2.default().initEmpty(uid, new Date().getTime(), nid1, nid2));
+		}
+	}, {
+		key: 'addNewNode',
+		value: function addNewNode(uid, x, y, connectedNode) {
 			var nid = this.nodes.length;
 			this.nodes[nid] = new _node2.default().initSecondary(nid, uid, new Date().getTime(), x, y);
+			if (connectedNode || connectedNode === 0) {
+				this.addNewLink(uid, connectedNode, nid);
+			}
 		}
 	}]);
 
