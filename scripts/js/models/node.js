@@ -11,9 +11,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Node = function () {
-  function Node(data) {
+  function Node(data, mid) {
     _classCallCheck(this, Node);
 
+    if (mid) this.mid = mid;
     if (data) {
       for (var key in data) {
         this[key] = data[key];
@@ -23,9 +24,10 @@ var Node = function () {
 
   _createClass(Node, [{
     key: "initEmpty",
-    value: function initEmpty(nid, uid, timestamp) {
+    value: function initEmpty(nid, uid, timestamp, mid) {
 
       this.nid = nid;
+      this.mid = mid || null;
       this.title = "First Node";
       this.description = "";
       this.color = "#000000";
@@ -42,9 +44,10 @@ var Node = function () {
     }
   }, {
     key: "initSecondary",
-    value: function initSecondary(nid, uid, timestamp, x, y) {
+    value: function initSecondary(nid, uid, timestamp, x, y, mid) {
 
       this.nid = nid;
+      this.mid = mid || null;
       this.title = "New Node";
       this.description = "";
       this.color = "#000000";
@@ -58,6 +61,11 @@ var Node = function () {
         type: 1
       }];
       return this;
+    }
+  }, {
+    key: "save",
+    value: function save() {
+      firebase.database().ref('maps/' + this.mid + "/nodes/" + this.nid).set(this);
     }
   }, {
     key: "upgradeFromServer",

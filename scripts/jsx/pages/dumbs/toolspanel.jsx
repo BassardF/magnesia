@@ -15,9 +15,7 @@ class ToolsPanel extends React.Component {
 
 	render() {
 		return (
-			<div id="tool-panel">
-				ToolsPanel
-			</div>
+			<div id="tool-panel"></div>
 		);
 	}
 };

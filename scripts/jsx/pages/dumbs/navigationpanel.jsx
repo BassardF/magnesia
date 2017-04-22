@@ -17,7 +17,7 @@ class NavigationPanel extends React.Component {
 		var domNodes = [];
 		if(this.props.map && this.props.map.nodes){
 			domNodes = this.props.map.nodes.map((n, ind) => {
-				return <NodeLine key={"key-lp-node-line-" + n.nid} node={n} selectedNode={this.props.selectedNode} selectNode={this.props.selectNode}/>;
+				return <NodeLine key={"key-lp-node-line-" + n.nid} links={this.props.map.links} node={n} selectedNode={this.props.selectedNode} selectNode={this.props.selectNode}/>;
 			});
 		}
 		return (
@@ -43,10 +43,13 @@ class NodeLine extends React.Component {
 	}
 
 	render() {
+		var selected = this.props.selectedNode == this.props.node.nid;
 		return (
-			<div onClick={this.selectNode} className={this.props.selectedNode == this.props.node.nid ? "selected-node-line" : "node-line" }>
-				<div className="arrow-right v-align-middle inline-block"></div>
-				<span className="v-align-middle" style={{marginLeft : "5px"}}>{this.props.node.title}</span>
+			<div>
+				<div onClick={this.selectNode} className={ selected ? "selected-node-line" : "node-line" }>
+					<div className="arrow-right v-align-middle inline-block"></div>
+					<span className="v-align-middle" style={{marginLeft : "5px"}}>{this.props.node.title}</span>
+				</div>
 			</div>
 		);
 	}

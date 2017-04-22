@@ -29,12 +29,12 @@ var Map = function () {
 				if (key === "nodes") {
 					this.nodes = [];
 					for (var nid in data.nodes) {
-						this.nodes[nid] = new _node2.default(data.nodes[nid]);
+						this.nodes[nid] = new _node2.default(data.nodes[nid], data.mid);
 					}
 				} else if (key === "links") {
 					this.links = [];
 					for (var nid in data.links) {
-						this.links[nid] = new _link2.default(data.links[nid]);
+						this.links[nid] = new _link2.default(data.links[nid], data.mid);
 					}
 				} else this[key] = data[key];
 			}
@@ -53,7 +53,7 @@ var Map = function () {
 			}];
 			this.users = this.users || {};
 			this.users[uid] = userName;
-			this.nodes = [new _node2.default().initEmpty(0, uid, timestamp)];
+			this.nodes = [new _node2.default().initEmpty(0, uid, timestamp, this.mid)];
 			return this;
 		}
 	}, {
@@ -91,7 +91,7 @@ var Map = function () {
 				//Upgrade
 				if (this.nodes[nid]) this.nodes[nid].upgradeFromServer(data[nid]);
 				//Add
-				else this.nodes[nid] = new _node2.default(data[nid]);
+				else this.nodes[nid] = new _node2.default(data[nid], this.mid);
 			}
 			for (var nid2 in this.nodes) {
 				//Delete
@@ -102,13 +102,13 @@ var Map = function () {
 		key: 'addNewLink',
 		value: function addNewLink(uid, nid1, nid2) {
 			if (!this.links) this.links = [];
-			this.links.push(new _link2.default().initEmpty(uid, new Date().getTime(), nid1, nid2));
+			this.links.push(new _link2.default().initEmpty(uid, new Date().getTime(), nid1, nid2, this.mid));
 		}
 	}, {
 		key: 'addNewNode',
 		value: function addNewNode(uid, x, y, connectedNode) {
 			var nid = this.nodes.length;
-			this.nodes[nid] = new _node2.default().initSecondary(nid, uid, new Date().getTime(), x, y);
+			this.nodes[nid] = new _node2.default().initSecondary(nid, uid, new Date().getTime(), x, y, this.mid);
 			if (connectedNode || connectedNode === 0) {
 				this.addNewLink(uid, connectedNode, nid);
 			}

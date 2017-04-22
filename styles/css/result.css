@@ -28,6 +28,13 @@ body {
 .inline-block {
   display: inline-block;
 }
+.node-text-input {
+  outline: none !important;
+  border: none;
+  font-size: 14px;
+  border-bottom: solid 1px #464646;
+  text-align: center;
+}
 #topbar-wrapper {
   padding: 15px;
   background-color: #1a1d28;
@@ -50,11 +57,12 @@ body {
   padding-left: 10px;
 }
 #navigation-panel {
-  border-right: solid 1px #808381;
+  background-color: #ededed;
+  color: #464646;
   height: 100%;
   padding: 10px;
   padding-left: 5px;
-  font-size: 13px;
+  font-size: 15px;
 }
 #navigation-panel .node-line {
   margin-left: 3px;
@@ -65,7 +73,7 @@ body {
   height: 0;
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
-  border-left: 4px solid black;
+  border-left: 4px solid #464646;
 }
 #navigation-panel .selected-node-line {
   color: #c380ac;
@@ -78,6 +86,6 @@ body {
   border-left: 4px solid transparent;
 }
 #tool-panel {
-  border-left: solid 1px #808381;
+  border-left: solid 1px #464646;
   height: 100%;
 }

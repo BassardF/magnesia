@@ -1,6 +1,7 @@
 class Node {
   
-  constructor(data) {
+  constructor(data, mid) {
+    if(mid) this.mid = mid;
     if(data){
       for(var key in data){
         this[key] = data[key];
@@ -8,9 +9,10 @@ class Node {
     }
   }
 
-  initEmpty(nid, uid, timestamp){
+  initEmpty(nid, uid, timestamp, mid){
 
     this.nid = nid;
+    this.mid = mid || null;
   	this.title = "First Node";
   	this.description = "";
   	this.color = "#000000";
@@ -26,9 +28,10 @@ class Node {
   	return this;
   }
 
-  initSecondary(nid, uid, timestamp, x, y){
+  initSecondary(nid, uid, timestamp, x, y, mid){
 
     this.nid = nid;
+    this.mid = mid || null;
     this.title = "New Node";
     this.description = "";
     this.color = "#000000";
@@ -42,6 +45,10 @@ class Node {
       type : 1
     }];
     return this;
+  }
+
+  save(){
+    firebase.database().ref('maps/' + this.mid + "/nodes/" + this.nid).set(this);
   }
 
   upgradeFromServer(data){

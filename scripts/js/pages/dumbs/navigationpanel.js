@@ -44,7 +44,7 @@ var NavigationPanel = function (_React$Component) {
 			var domNodes = [];
 			if (this.props.map && this.props.map.nodes) {
 				domNodes = this.props.map.nodes.map(function (n, ind) {
-					return _react2.default.createElement(NodeLine, { key: "key-lp-node-line-" + n.nid, node: n, selectedNode: _this2.props.selectedNode, selectNode: _this2.props.selectNode });
+					return _react2.default.createElement(NodeLine, { key: "key-lp-node-line-" + n.nid, links: _this2.props.map.links, node: n, selectedNode: _this2.props.selectedNode, selectNode: _this2.props.selectNode });
 				});
 			}
 			return _react2.default.createElement(
@@ -83,14 +83,19 @@ var NodeLine = function (_React$Component2) {
 	}, {
 		key: "render",
 		value: function render() {
+			var selected = this.props.selectedNode == this.props.node.nid;
 			return _react2.default.createElement(
 				"div",
-				{ onClick: this.selectNode, className: this.props.selectedNode == this.props.node.nid ? "selected-node-line" : "node-line" },
-				_react2.default.createElement("div", { className: "arrow-right v-align-middle inline-block" }),
+				null,
 				_react2.default.createElement(
-					"span",
-					{ className: "v-align-middle", style: { marginLeft: "5px" } },
-					this.props.node.title
+					"div",
+					{ onClick: this.selectNode, className: selected ? "selected-node-line" : "node-line" },
+					_react2.default.createElement("div", { className: "arrow-right v-align-middle inline-block" }),
+					_react2.default.createElement(
+						"span",
+						{ className: "v-align-middle", style: { marginLeft: "5px" } },
+						this.props.node.title
+					)
 				)
 			);
 		}

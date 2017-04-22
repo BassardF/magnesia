@@ -1,6 +1,7 @@
 class Link {
   
-	constructor(data) {
+	constructor(data, mid) {
+		if(mid) this.mid = mid;
 		if(data){
 			for(var key in data){
 				this[key] = data[key];
@@ -8,7 +9,8 @@ class Link {
 		}
 	}
 
-	initEmpty(uid, timestamp, nid1, nid2){
+	initEmpty(uid, timestamp, nid1, nid2, mid){
+		this.mid = mid
 		this.label = "";
 		this.scale = 1;
 		this.events = [{

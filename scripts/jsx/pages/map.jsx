@@ -18,7 +18,9 @@ class MapPageComp extends React.Component {
 		this.draw = this.draw.bind(this);
 		this.drawNodes = this.drawNodes.bind(this);
 		this.drawLinks = this.drawLinks.bind(this);
-	    this.state = {};
+		this.selectLink = this.selectLink.bind(this);
+		this.changeNodeText = this.changeNodeText.bind(this);
+ 	    this.state = {};
 	}
 
 	componentWillMount(){
@@ -47,16 +49,33 @@ class MapPageComp extends React.Component {
 	}
 
 	selectNode(nid){
-		console.log("selectNode", nid);
 		this.setState({
-			selectedNode : this.state.selectedNode === nid ? null : nid
+			selectedNode : this.state.selectedNode === nid ? null : nid,
+			selectedLink : this.state.selectedNode === nid ? this.state.selectedLink : null
+		});
+	}
+
+	selectLink(link){
+		let id = Object.keys(link.nodes).join("");
+		this.setState({
+			selectedLink : this.state.selectedLink === id ? null : id,
+			selectedNode : this.state.selectedLink === id ? this.state.selectedNode : null
 		});
 	}
 
 	addNewNode(x, y){
+		console.log("x", x);
+		console.log("y", y);
 		var map = this.state.map;
 		map.addNewNode(AuthServices.getUid(), x, y, this.state.selectedNode);
 		map.save();
+	}
+
+	changeNodeText(nid, text){
+		var map = this.state.map;
+		var node = map.nodes[nid];
+		node.title = text;
+		node.save();
 	}
 
 	draw(){
@@ -71,8 +90,17 @@ class MapPageComp extends React.Component {
 			if(this.state.map.nodes)
 				this.drawNodes(svg, width, height);
 
-			svg.selectAll("g.node")
-			svg.selectAll("g.link")
+			svg.on("dblclick", (d) => {
+				if(!d3.event.defaultPrevented){
+					console.log("width", width);
+					console.log("-x", d3.event.x, width.animVal.value/2);
+					console.log("-y", d3.event.y, height.animVal.value/2);
+					this.addNewNode(
+						d3.event.x - 200 - width.animVal.value/2, 
+						d3.event.y - 58 - height.animVal.value/2
+					);
+				}
+			})
 		}
 	}
 
@@ -105,15 +133,13 @@ class MapPageComp extends React.Component {
 	        .text(function(d, i){return d.title;})
 
 	    //Actions
-	    svg.on("click", (d) => {
-			if(!d3.event.defaultPrevented){
-				this.addNewNode(d3.event.x - width.animVal.value/2 - 105, d3.event.y - height.animVal.value/2 - 60);
-			}
-		})
+	    svg.selectAll("g.node text").call(this.makeEditable, "tmp", this);
 
-	    svg.selectAll("g").on("click", (d) => {
-			d3.event.preventDefault();
-			if(d && typeof d.nid !== undefined) this.selectNode(d.nid);
+	    svg.selectAll("g.node").on("click", (d) => {
+	    	if(!d3.event.defaultPrevented){
+				d3.event.preventDefault();
+				if(d && typeof d.nid !== undefined) this.selectNode(d.nid);
+			}
 		})
 	    .call(d3.drag()
 	        .on("drag", (d) => {
@@ -147,25 +173,121 @@ class MapPageComp extends React.Component {
 		let elemtEnter = gs.enter().append("g").attr("class", "link");
 
 		elemtEnter.append("line")
-		    .attr("stroke", function(d, i){return DRAWING.defaultCircleStrokeColor})
 		    .attr("stroke-width", function(d, i){return DRAWING.defaultCircleStrokeWidth})
     	  .merge(gs.selectAll("line")) 
+    	  	.attr("stroke", (d, i) => {
+    	  		let id = Object.keys(d.nodes).join("");
+    	  		let selected = this.state.selectedLink && id == this.state.selectedLink;
+    	  		return selected ? DRAWING.selectedCircleStrokeColor : DRAWING.defaultCircleStrokeColor
+    	  	})
     	  	.attr("x1", (d, i) => {
-    	  		var origin = this.state.map.nodes[Object.keys(d.nodes)[0]];
+    	  		let origin = this.state.map.nodes[Object.keys(d.nodes)[0]];
     	  		return width.animVal.value/2 + (origin.x ? +origin.x : 0);
     	  	})
 		    .attr("y1", (d, i) => {
-		    	var origin = this.state.map.nodes[Object.keys(d.nodes)[0]];
+		    	let origin = this.state.map.nodes[Object.keys(d.nodes)[0]];
 		    	return height.animVal.value/2 + (origin.y ? +origin.y : 0);
 		    })
 		    .attr("x2", (d, i) => {
-		    	var destination = this.state.map.nodes[Object.keys(d.nodes)[1]];
+		    	let destination = this.state.map.nodes[Object.keys(d.nodes)[1]];
     	  		return width.animVal.value/2 + (destination.x ? +destination.x : 0);
 		    })
 		    .attr("y2", (d, i) => {
-		    	var destination = this.state.map.nodes[Object.keys(d.nodes)[1]];
+		    	let destination = this.state.map.nodes[Object.keys(d.nodes)[1]];
 		    	return height.animVal.value/2 + (destination.y ? +destination.y : 0);
 		    })
+
+		    svg.selectAll("g.link").on("click", (d) => {
+				d3.event.preventDefault();
+				if(d && typeof d.nid !== undefined && d.nodes) this.selectLink(d);
+			})
+	}
+
+	makeEditable(d, field, thisRef){
+	    d.on("mouseover", function() {
+	        d3.select(this).style("fill", "red");
+	      })
+	      .on("mouseout", function() {
+	        d3.select(this).style("fill", null);
+	      })
+	      .on("click", function(d) {
+
+	      	d3.event.preventDefault();
+
+	        var p = this.parentNode;
+	        var xy = this.getBBox();
+	        var p_xy = p.getBBox();
+
+	        let svg = d3.select("svg"),
+				width = svg.property("width"),
+	    		height = svg.property("height");
+
+	    	var r = 40 * (d.scale ? +d.scale : 1);
+	        xy.x = width.animVal.value/2 + (d.x ? +d.x : 0) - r + 5;
+	        xy.y = height.animVal.value/2 + (d.y ? +d.y : 0) - 10;
+	        
+	        var el = d3.select(this);
+	        var p_el = d3.select(p);
+
+	        var frm = p_el.append("foreignObject");
+
+	        var inp = frm
+	            .attr("x", xy.x)
+	            .attr("y", xy.y)
+	            .attr("width", r*2 - 10)
+	            .attr("height", 25)
+	            .append("xhtml:form")
+	                    .append("input")
+	                    	.attr("class", "node-text-input")
+	                        .attr("value", function() {
+	                            // nasty spot to place this call, but here we are sure that the <input> tag is available
+	                            // and is handily pointed at by 'this':
+	                            this.focus();
+	                            return d[field];
+	                        })
+	                        .attr("style", "width: " + (r*2 - 10) + "px;")
+	                        // make the form go away when you jump out (form looses focus) or hit ENTER:
+	                        .on("blur", function() {
+	                            
+	                            var txt = inp.node().value;
+	                            d[field] = txt;
+	                            el.text(function(d) { return d[field]; });
+
+	                            // Note to self: frm.remove() will remove the entire <g> group! Remember the D3 selection logic!
+	                            p_el.select("foreignObject").remove();
+
+	                            thisRef.changeNodeText(d.nid, txt);
+
+	                        })
+	                        .on("keypress", function() {
+	                            // IE fix
+	                            if (!d3.event) d3.event = window.event;
+
+	                            var e = d3.event;
+	                            if (e.keyCode == 13){
+	                                if (typeof(e.cancelBubble) !== 'undefined') // IE
+	                                  e.cancelBubble = true;
+	                                if (e.stopPropagation)
+	                                  e.stopPropagation();
+	                                e.preventDefault();
+
+	                                var txt = inp.node().value;
+
+	                                d[field] = txt;
+	                                el.text(function(d) { return d[field]; });
+
+	                                thisRef.changeNodeText(d.nid, txt);
+	                                // odd. Should work in Safari, but the debugger crashes on this instead.
+	                                // Anyway, it SHOULD be here and it doesn't hurt otherwise.
+	                                try {
+	                                	p_el.select("foreignObject").remove();
+	                                } catch(e) {
+
+	                                }
+	                                
+	                            }
+	                        });
+	      });
 	}
 
 	componentDidUpdate(){
@@ -182,7 +304,7 @@ class MapPageComp extends React.Component {
 			<div id="maps-page">
 				<div>
 					<div className="flex" style={{maxHeight : space}}>
-						<div className="flex-grow-0">
+						<div id="nav-panel-wrapper" style={{width:"200px"}} className="flex-grow-0">
 							<NavigationPanel map={this.state.map} selectedNode={this.state.selectedNode} selectNode={this.selectNode}/>
 						</div>
 

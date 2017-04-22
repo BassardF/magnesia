@@ -9,9 +9,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Link = function () {
-	function Link(data) {
+	function Link(data, mid) {
 		_classCallCheck(this, Link);
 
+		if (mid) this.mid = mid;
 		if (data) {
 			for (var key in data) {
 				this[key] = data[key];
@@ -21,7 +22,8 @@ var Link = function () {
 
 	_createClass(Link, [{
 		key: "initEmpty",
-		value: function initEmpty(uid, timestamp, nid1, nid2) {
+		value: function initEmpty(uid, timestamp, nid1, nid2, mid) {
+			this.mid = mid;
 			this.label = "";
 			this.scale = 1;
 			this.events = [{
