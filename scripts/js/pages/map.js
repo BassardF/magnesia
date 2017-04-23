@@ -100,9 +100,11 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'deleteSelectedNode',
 		value: function deleteSelectedNode() {
-			if (this.state.selectedNode != null) {
+			if (this.state.selectedNode) {
 				this.state.map.deleteNode(this.state.selectedNode);
 				this.selectNode(null);
+			} else if (this.state.selectedNode !== null) {
+				alert("Root node can't be deleted");
 			}
 		}
 	}, {
@@ -172,15 +174,11 @@ var MapPageComp = function (_React$Component) {
 				return d;
 			});
 
-			console.log("gs", gs);
-
 			//Exit
 			gs.exit().remove();
 
 			//Enter
 			var elemtEnter = gs.enter().append("g").attr("class", "node");
-
-			console.log("elemtEnter", elemtEnter);
 
 			elemtEnter.append("circle").attr("r", function (d, i) {
 				return 40 * (d.scale ? +d.scale : 1);

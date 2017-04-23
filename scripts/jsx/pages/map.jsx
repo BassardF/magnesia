@@ -53,9 +53,11 @@ class MapPageComp extends React.Component {
 	}
 
 	deleteSelectedNode(){
-		if(this.state.selectedNode != null){
+		if(this.state.selectedNode){
 			this.state.map.deleteNode(this.state.selectedNode);
 			this.selectNode(null);
+		} else if(this.state.selectedNode !== null){
+			alert("Root node can't be deleted");
 		}
 	}
 
@@ -120,15 +122,11 @@ class MapPageComp extends React.Component {
 			return d;
 		});
 
-		console.log("gs", gs);
-
 		//Exit
 		gs.exit().remove();
 
 		//Enter
 		let elemtEnter = gs.enter().append("g").attr("class", "node");
-
-		console.log("elemtEnter", elemtEnter);
 
 		elemtEnter.append("circle")
 		    .attr("r", function(d, i) {return 40 * (d.scale ? +d.scale : 1);})
