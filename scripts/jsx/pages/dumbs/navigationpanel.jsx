@@ -17,7 +17,9 @@ class NavigationPanel extends React.Component {
 		var domNodes = [];
 		if(this.props.map && this.props.map.nodes){
 			domNodes = this.props.map.nodes.map((n, ind) => {
-				return <NodeLine key={"key-lp-node-line-" + n.nid} links={this.props.map.links} node={n} selectedNode={this.props.selectedNode} selectNode={this.props.selectNode}/>;
+				return n && (n.nid || n.nid == 0) ?
+					<NodeLine key={"key-lp-node-line-" + n.nid} links={this.props.map.links} node={n} selectedNode={this.props.selectedNode} selectNode={this.props.selectNode}/>
+					: null;
 			});
 		}
 		return (

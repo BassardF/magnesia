@@ -44,6 +44,21 @@ class MapPageComp extends React.Component {
 		}
 	}
 
+	componentDidMount(){
+		document.body.onkeydown = (e) => {
+		    if(e.keyCode == 8){
+		    	this.deleteSelectedNode();
+		    }
+		};	
+	}
+
+	deleteSelectedNode(){
+		if(this.state.selectedNode != null){
+			this.state.map.deleteNode(this.state.selectedNode);
+			this.selectNode(null);
+		}
+	}
+
 	componentWillUnMount(){
 		if(this.state.mapRef) mapRef.off();
 	}
@@ -64,8 +79,6 @@ class MapPageComp extends React.Component {
 	}
 
 	addNewNode(x, y){
-		console.log("x", x);
-		console.log("y", y);
 		var map = this.state.map;
 		map.addNewNode(AuthServices.getUid(), x, y, this.state.selectedNode);
 		map.save();
@@ -74,7 +87,7 @@ class MapPageComp extends React.Component {
 	changeNodeText(nid, text){
 		var map = this.state.map;
 		var node = map.nodes[nid];
-		node.title = text;
+		node.title = text || "------";
 		node.save();
 	}
 
@@ -92,26 +105,30 @@ class MapPageComp extends React.Component {
 
 			svg.on("dblclick", (d) => {
 				if(!d3.event.defaultPrevented){
-					console.log("width", width);
-					console.log("-x", d3.event.x, width.animVal.value/2);
-					console.log("-y", d3.event.y, height.animVal.value/2);
 					this.addNewNode(
 						d3.event.x - 200 - width.animVal.value/2, 
 						d3.event.y - 58 - height.animVal.value/2
 					);
 				}
-			})
+			});
 		}
 	}
 
 	drawNodes(svg, width, height){
-		let gs = svg.select("g#nodes").selectAll("g.node").data(this.state.map.nodes, function(d) { return d; });
+
+		let gs = svg.select("g#nodes").selectAll("g.node").data(this.state.map.nodes, function(d, ind) {
+			return d;
+		});
+
+		console.log("gs", gs);
 
 		//Exit
 		gs.exit().remove();
 
 		//Enter
 		let elemtEnter = gs.enter().append("g").attr("class", "node");
+
+		console.log("elemtEnter", elemtEnter);
 
 		elemtEnter.append("circle")
 		    .attr("r", function(d, i) {return 40 * (d.scale ? +d.scale : 1);})
@@ -122,15 +139,16 @@ class MapPageComp extends React.Component {
     	  	.attr("cy", function(d, i) {return height.animVal.value/2 + (d.y ? +d.y : 0)})
 		    .attr("cx", function(d, i) {return width.animVal.value/2 + (d.x ? +d.x : 0)})
 		    .attr("stroke", (d, i) => {return d.nid == this.state.selectedNode ? DRAWING.selectedCircleStrokeColor : DRAWING.defaultCircleStrokeColor})
-		    .attr("stroke-width", function(d, i){return d.active ? DRAWING.selectedCircleStrokeWidth : DRAWING.defaultCircleStrokeWidth})
+		    .attr("stroke-width", (d, i) => {return d.nid == this.state.selectedNode ? DRAWING.selectedCircleStrokeWidth : DRAWING.defaultCircleStrokeWidth});
     		
     	elemtEnter.append("text")
 	        .attr("color", DRAWING.defaultTextColor)
 	        .attr("text-anchor", "middle")
+	        .attr("class", "noselect")
 	      .merge(gs.selectAll("text")) 
-	        .attr("dx", function(d, i){return width.animVal.value/2 + (d.x ? +d.x : 0);})
-	        .attr("dy", function(d, i){return height.animVal.value/2 + (d.y ? +d.y : 0) + 5;})
-	        .text(function(d, i){return d.title;})
+	        .attr("dx", function(d, i) {return width.animVal.value/2 + (d.x ? +d.x : 0);})
+	        .attr("dy", function(d, i) {return height.animVal.value/2 + (d.y ? +d.y : 0) + 5;})
+	        .text((d, i) => {return d.title;});
 
 	    //Actions
 	    svg.selectAll("g.node text").call(this.makeEditable, "tmp", this);
@@ -139,6 +157,10 @@ class MapPageComp extends React.Component {
 	    	if(!d3.event.defaultPrevented){
 				d3.event.preventDefault();
 				if(d && typeof d.nid !== undefined) this.selectNode(d.nid);
+			}
+		}).on("dblclick", (d) => {
+	    	if(!d3.event.defaultPrevented){
+				d3.event.preventDefault();
 			}
 		})
 	    .call(d3.drag()
@@ -205,7 +227,7 @@ class MapPageComp extends React.Component {
 
 	makeEditable(d, field, thisRef){
 	    d.on("mouseover", function() {
-	        d3.select(this).style("fill", "red");
+	        d3.select(this).style("fill", "#c380ac").style("cursor", "pointer");
 	      })
 	      .on("mouseout", function() {
 	        d3.select(this).style("fill", null);

@@ -12,6 +12,7 @@ class Node {
   initEmpty(nid, uid, timestamp, mid){
 
     this.nid = nid;
+    this.utt = new Date().getTime();
     this.mid = mid || null;
   	this.title = "First Node";
   	this.description = "";
@@ -32,6 +33,7 @@ class Node {
 
     this.nid = nid;
     this.mid = mid || null;
+    this.utt = new Date().getTime();
     this.title = "New Node";
     this.description = "";
     this.color = "#000000";

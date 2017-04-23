@@ -87,6 +87,25 @@ var MapPageComp = function (_React$Component) {
 			}
 		}
 	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			var _this3 = this;
+
+			document.body.onkeydown = function (e) {
+				if (e.keyCode == 8) {
+					_this3.deleteSelectedNode();
+				}
+			};
+		}
+	}, {
+		key: 'deleteSelectedNode',
+		value: function deleteSelectedNode() {
+			if (this.state.selectedNode != null) {
+				this.state.map.deleteNode(this.state.selectedNode);
+				this.selectNode(null);
+			}
+		}
+	}, {
 		key: 'componentWillUnMount',
 		value: function componentWillUnMount() {
 			if (this.state.mapRef) mapRef.off();
@@ -111,8 +130,6 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'addNewNode',
 		value: function addNewNode(x, y) {
-			console.log("x", x);
-			console.log("y", y);
 			var map = this.state.map;
 			map.addNewNode(_auth2.default.getUid(), x, y, this.state.selectedNode);
 			map.save();
@@ -122,13 +139,13 @@ var MapPageComp = function (_React$Component) {
 		value: function changeNodeText(nid, text) {
 			var map = this.state.map;
 			var node = map.nodes[nid];
-			node.title = text;
+			node.title = text || "------";
 			node.save();
 		}
 	}, {
 		key: 'draw',
 		value: function draw() {
-			var _this3 = this;
+			var _this4 = this;
 
 			if (this.state.map) {
 				var svg = d3.select("svg"),
@@ -141,10 +158,7 @@ var MapPageComp = function (_React$Component) {
 
 				svg.on("dblclick", function (d) {
 					if (!d3.event.defaultPrevented) {
-						console.log("width", width);
-						console.log("-x", d3.event.x, width.animVal.value / 2);
-						console.log("-y", d3.event.y, height.animVal.value / 2);
-						_this3.addNewNode(d3.event.x - 200 - width.animVal.value / 2, d3.event.y - 58 - height.animVal.value / 2);
+						_this4.addNewNode(d3.event.x - 200 - width.animVal.value / 2, d3.event.y - 58 - height.animVal.value / 2);
 					}
 				});
 			}
@@ -152,17 +166,21 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'drawNodes',
 		value: function drawNodes(svg, width, height) {
-			var _this4 = this;
+			var _this5 = this;
 
-			var gs = svg.select("g#nodes").selectAll("g.node").data(this.state.map.nodes, function (d) {
+			var gs = svg.select("g#nodes").selectAll("g.node").data(this.state.map.nodes, function (d, ind) {
 				return d;
 			});
+
+			console.log("gs", gs);
 
 			//Exit
 			gs.exit().remove();
 
 			//Enter
 			var elemtEnter = gs.enter().append("g").attr("class", "node");
+
+			console.log("elemtEnter", elemtEnter);
 
 			elemtEnter.append("circle").attr("r", function (d, i) {
 				return 40 * (d.scale ? +d.scale : 1);
@@ -175,12 +193,12 @@ var MapPageComp = function (_React$Component) {
 			}).attr("cx", function (d, i) {
 				return width.animVal.value / 2 + (d.x ? +d.x : 0);
 			}).attr("stroke", function (d, i) {
-				return d.nid == _this4.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
+				return d.nid == _this5.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
 			}).attr("stroke-width", function (d, i) {
-				return d.active ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
+				return d.nid == _this5.state.selectedNode ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
 			});
 
-			elemtEnter.append("text").attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").merge(gs.selectAll("text")).attr("dx", function (d, i) {
+			elemtEnter.append("text").attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").attr("class", "noselect").merge(gs.selectAll("text")).attr("dx", function (d, i) {
 				return width.animVal.value / 2 + (d.x ? +d.x : 0);
 			}).attr("dy", function (d, i) {
 				return height.animVal.value / 2 + (d.y ? +d.y : 0) + 5;
@@ -194,19 +212,23 @@ var MapPageComp = function (_React$Component) {
 			svg.selectAll("g.node").on("click", function (d) {
 				if (!d3.event.defaultPrevented) {
 					d3.event.preventDefault();
-					if (d && _typeof(d.nid) !== undefined) _this4.selectNode(d.nid);
+					if (d && _typeof(d.nid) !== undefined) _this5.selectNode(d.nid);
+				}
+			}).on("dblclick", function (d) {
+				if (!d3.event.defaultPrevented) {
+					d3.event.preventDefault();
 				}
 			}).call(d3.drag().on("drag", function (d) {
 				d.active = true;
-				var imap = _this4.state.map;
+				var imap = _this5.state.map;
 				var r = 40 * (d.scale ? +d.scale : 1);
 				imap.changeNodeLocation(d.nid, d3.event.x, d3.event.y);
-				_this4.setState({
+				_this5.setState({
 					map: imap
 				});
 			}).on("end", function (d) {
 				if (d.active) {
-					var imap = _this4.state.map;
+					var imap = _this5.state.map;
 					d.active = false;
 					var r = 40 * (d.scale ? +d.scale : 1);
 					imap.changeNodeLocation(d.nid, d3.event.x, d3.event.y);
@@ -217,7 +239,7 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'drawLinks',
 		value: function drawLinks(svg, width, height) {
-			var _this5 = this;
+			var _this6 = this;
 
 			var gs = svg.select("g#links").selectAll("g.link").data(this.state.map.links, function (d) {
 				return d;
@@ -233,32 +255,32 @@ var MapPageComp = function (_React$Component) {
 				return _drawing2.default.defaultCircleStrokeWidth;
 			}).merge(gs.selectAll("line")).attr("stroke", function (d, i) {
 				var id = Object.keys(d.nodes).join("");
-				var selected = _this5.state.selectedLink && id == _this5.state.selectedLink;
+				var selected = _this6.state.selectedLink && id == _this6.state.selectedLink;
 				return selected ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
 			}).attr("x1", function (d, i) {
-				var origin = _this5.state.map.nodes[Object.keys(d.nodes)[0]];
+				var origin = _this6.state.map.nodes[Object.keys(d.nodes)[0]];
 				return width.animVal.value / 2 + (origin.x ? +origin.x : 0);
 			}).attr("y1", function (d, i) {
-				var origin = _this5.state.map.nodes[Object.keys(d.nodes)[0]];
+				var origin = _this6.state.map.nodes[Object.keys(d.nodes)[0]];
 				return height.animVal.value / 2 + (origin.y ? +origin.y : 0);
 			}).attr("x2", function (d, i) {
-				var destination = _this5.state.map.nodes[Object.keys(d.nodes)[1]];
+				var destination = _this6.state.map.nodes[Object.keys(d.nodes)[1]];
 				return width.animVal.value / 2 + (destination.x ? +destination.x : 0);
 			}).attr("y2", function (d, i) {
-				var destination = _this5.state.map.nodes[Object.keys(d.nodes)[1]];
+				var destination = _this6.state.map.nodes[Object.keys(d.nodes)[1]];
 				return height.animVal.value / 2 + (destination.y ? +destination.y : 0);
 			});
 
 			svg.selectAll("g.link").on("click", function (d) {
 				d3.event.preventDefault();
-				if (d && _typeof(d.nid) !== undefined && d.nodes) _this5.selectLink(d);
+				if (d && _typeof(d.nid) !== undefined && d.nodes) _this6.selectLink(d);
 			});
 		}
 	}, {
 		key: 'makeEditable',
 		value: function makeEditable(d, field, thisRef) {
 			d.on("mouseover", function () {
-				d3.select(this).style("fill", "red");
+				d3.select(this).style("fill", "#c380ac").style("cursor", "pointer");
 			}).on("mouseout", function () {
 				d3.select(this).style("fill", null);
 			}).on("click", function (d) {

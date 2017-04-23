@@ -44,7 +44,7 @@ var NavigationPanel = function (_React$Component) {
 			var domNodes = [];
 			if (this.props.map && this.props.map.nodes) {
 				domNodes = this.props.map.nodes.map(function (n, ind) {
-					return _react2.default.createElement(NodeLine, { key: "key-lp-node-line-" + n.nid, links: _this2.props.map.links, node: n, selectedNode: _this2.props.selectedNode, selectNode: _this2.props.selectNode });
+					return n && (n.nid || n.nid == 0) ? _react2.default.createElement(NodeLine, { key: "key-lp-node-line-" + n.nid, links: _this2.props.map.links, node: n, selectedNode: _this2.props.selectedNode, selectNode: _this2.props.selectNode }) : null;
 				});
 			}
 			return _react2.default.createElement(

@@ -45,6 +45,32 @@ class Map {
 		}
 	}
 
+	deleteNode(nid){
+		var tmpLinks = []
+		if(this.nodes && this.nodes[nid]){
+			for (var i = nid + 1; i < this.nodes.length; i++) {
+				this.nodes[i].nid = this.nodes[i].nid - 1;
+				this.nodes[i-1] = this.nodes[i];
+			}
+			this.nodes.pop();
+			if(this.links){
+				for (var i = 0; i < this.links.length; i++) {
+					if(!this.links[i].nodes[nid]){
+						for (var inid in this.links[i].nodes) {
+							if(inid > nid) {
+								this.links[i].nodes[inid - 1] = this.links[i].nodes[inid];
+								delete this.links[i].nodes[inid];
+							}
+						}
+						tmpLinks.push(this.links[i]);
+					}
+				}
+				this.links = tmpLinks;
+			}
+		}
+		this.save();
+	}
+
 	save(){
 		firebase.database().ref('maps/' + this.mid).set(this);
 	}
