@@ -53,11 +53,11 @@ class MapPageComp extends React.Component {
 	}
 
 	deleteSelectedNode(){
-		if(this.state.selectedNode){
+		if(this.state.selectedNode !== null){
 			this.state.map.deleteNode(this.state.selectedNode);
 			this.selectNode(null);
-		} else if(this.state.selectedNode !== null){
-			alert("Root node can't be deleted");
+		} else {
+			//swal("Root Node", "Root Node can't be deleted", "warning");
 		}
 	}
 
@@ -117,8 +117,9 @@ class MapPageComp extends React.Component {
 	}
 
 	drawNodes(svg, width, height){
-
-		let gs = svg.select("g#nodes").selectAll("g.node").data(this.state.map.nodes, function(d, ind) {
+		
+		let nodes = this.state.map.nodes;
+		let gs = svg.select("g#nodes").selectAll("g.node").data(nodes, function(d, ind) {
 			return d;
 		});
 
@@ -129,24 +130,24 @@ class MapPageComp extends React.Component {
 		let elemtEnter = gs.enter().append("g").attr("class", "node");
 
 		elemtEnter.append("circle")
-		    .attr("r", function(d, i) {return 40 * (d.scale ? +d.scale : 1);})
+		    .attr("r", function(d, i) {return 40 * (nodes[i].scale ? +nodes[i].scale : 1);})
 		    .attr("stroke", function(d, i){return DRAWING.defaultCircleStrokeColor})
 		    .attr("stroke-width", function(d, i){return DRAWING.defaultCircleStrokeWidth})
     		.attr("fill", "white")
     	  .merge(gs.selectAll("circle")) 
-    	  	.attr("cy", function(d, i) {return height.animVal.value/2 + (d.y ? +d.y : 0)})
-		    .attr("cx", function(d, i) {return width.animVal.value/2 + (d.x ? +d.x : 0)})
-		    .attr("stroke", (d, i) => {return d.nid == this.state.selectedNode ? DRAWING.selectedCircleStrokeColor : DRAWING.defaultCircleStrokeColor})
-		    .attr("stroke-width", (d, i) => {return d.nid == this.state.selectedNode ? DRAWING.selectedCircleStrokeWidth : DRAWING.defaultCircleStrokeWidth});
+    	  	.attr("cy", function(d, i) {return height.animVal.value/2 + (nodes[i].y ? +nodes[i].y : 0)})
+		    .attr("cx", function(d, i) {return width.animVal.value/2 + (nodes[i].x ? +nodes[i].x : 0)})
+		    .attr("stroke", (d, i) => {return nodes[i].nid == this.state.selectedNode ? DRAWING.selectedCircleStrokeColor : DRAWING.defaultCircleStrokeColor})
+		    .attr("stroke-width", (d, i) => {return nodes[i].nid == this.state.selectedNode ? DRAWING.selectedCircleStrokeWidth : DRAWING.defaultCircleStrokeWidth});
     		
     	elemtEnter.append("text")
 	        .attr("color", DRAWING.defaultTextColor)
 	        .attr("text-anchor", "middle")
 	        .attr("class", "noselect")
 	      .merge(gs.selectAll("text")) 
-	        .attr("dx", function(d, i) {return width.animVal.value/2 + (d.x ? +d.x : 0);})
-	        .attr("dy", function(d, i) {return height.animVal.value/2 + (d.y ? +d.y : 0) + 5;})
-	        .text((d, i) => {return d.title;});
+	        .attr("dx", function(d, i) {return width.animVal.value/2 + (nodes[i].x ? +nodes[i].x : 0);})
+	        .attr("dy", function(d, i) {return height.animVal.value/2 + (nodes[i].y ? +nodes[i].y : 0) + 5;})
+	        .text((d, i) => {return nodes[i].title;});
 
 	    //Actions
 	    svg.selectAll("g.node text").call(this.makeEditable, "tmp", this);
@@ -184,7 +185,9 @@ class MapPageComp extends React.Component {
 	}
 
 	drawLinks(svg, width, height){
-		let gs = svg.select("g#links").selectAll("g.link").data(this.state.map.links, function(d) { return d; });
+		
+		let links = this.state.map.links;
+		let gs = svg.select("g#links").selectAll("g.link").data(links, function(d) { return d; });
 
 		//Exit
 		gs.exit().remove();
@@ -196,24 +199,24 @@ class MapPageComp extends React.Component {
 		    .attr("stroke-width", function(d, i){return DRAWING.defaultCircleStrokeWidth})
     	  .merge(gs.selectAll("line")) 
     	  	.attr("stroke", (d, i) => {
-    	  		let id = Object.keys(d.nodes).join("");
+    	  		let id = Object.keys(links[i].nodes).join("");
     	  		let selected = this.state.selectedLink && id == this.state.selectedLink;
     	  		return selected ? DRAWING.selectedCircleStrokeColor : DRAWING.defaultCircleStrokeColor
     	  	})
     	  	.attr("x1", (d, i) => {
-    	  		let origin = this.state.map.nodes[Object.keys(d.nodes)[0]];
+    	  		let origin = this.state.map.nodes[Object.keys(links[i].nodes)[0]];
     	  		return width.animVal.value/2 + (origin.x ? +origin.x : 0);
     	  	})
 		    .attr("y1", (d, i) => {
-		    	let origin = this.state.map.nodes[Object.keys(d.nodes)[0]];
+		    	let origin = this.state.map.nodes[Object.keys(links[i].nodes)[0]];
 		    	return height.animVal.value/2 + (origin.y ? +origin.y : 0);
 		    })
 		    .attr("x2", (d, i) => {
-		    	let destination = this.state.map.nodes[Object.keys(d.nodes)[1]];
+		    	let destination = this.state.map.nodes[Object.keys(links[i].nodes)[1]];
     	  		return width.animVal.value/2 + (destination.x ? +destination.x : 0);
 		    })
 		    .attr("y2", (d, i) => {
-		    	let destination = this.state.map.nodes[Object.keys(d.nodes)[1]];
+		    	let destination = this.state.map.nodes[Object.keys(links[i].nodes)[1]];
 		    	return height.animVal.value/2 + (destination.y ? +destination.y : 0);
 		    })
 

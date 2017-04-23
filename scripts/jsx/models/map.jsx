@@ -57,7 +57,7 @@ class Map {
 				for (var i = 0; i < this.links.length; i++) {
 					if(!this.links[i].nodes[nid]){
 						for (var inid in this.links[i].nodes) {
-							if(inid > nid) {
+							if(+inid > +nid) {
 								this.links[i].nodes[inid - 1] = this.links[i].nodes[inid];
 								delete this.links[i].nodes[inid];
 							}

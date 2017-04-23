@@ -27504,7 +27504,7 @@ var Map = function () {
 					for (var i = 0; i < this.links.length; i++) {
 						if (!this.links[i].nodes[nid]) {
 							for (var inid in this.links[i].nodes) {
-								if (inid > nid) {
+								if (+inid > +nid) {
 									this.links[i].nodes[inid - 1] = this.links[i].nodes[inid];
 									delete this.links[i].nodes[inid];
 								}
@@ -28093,11 +28093,11 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'deleteSelectedNode',
 		value: function deleteSelectedNode() {
-			if (this.state.selectedNode) {
+			if (this.state.selectedNode !== null) {
 				this.state.map.deleteNode(this.state.selectedNode);
 				this.selectNode(null);
-			} else if (this.state.selectedNode !== null) {
-				alert("Root node can't be deleted");
+			} else {
+				//swal("Root Node", "Root Node can't be deleted", "warning");
 			}
 		}
 	}, {
@@ -28163,7 +28163,8 @@ var MapPageComp = function (_React$Component) {
 		value: function drawNodes(svg, width, height) {
 			var _this5 = this;
 
-			var gs = svg.select("g#nodes").selectAll("g.node").data(this.state.map.nodes, function (d, ind) {
+			var nodes = this.state.map.nodes;
+			var gs = svg.select("g#nodes").selectAll("g.node").data(nodes, function (d, ind) {
 				return d;
 			});
 
@@ -28174,27 +28175,27 @@ var MapPageComp = function (_React$Component) {
 			var elemtEnter = gs.enter().append("g").attr("class", "node");
 
 			elemtEnter.append("circle").attr("r", function (d, i) {
-				return 40 * (d.scale ? +d.scale : 1);
+				return 40 * (nodes[i].scale ? +nodes[i].scale : 1);
 			}).attr("stroke", function (d, i) {
 				return _drawing2.default.defaultCircleStrokeColor;
 			}).attr("stroke-width", function (d, i) {
 				return _drawing2.default.defaultCircleStrokeWidth;
 			}).attr("fill", "white").merge(gs.selectAll("circle")).attr("cy", function (d, i) {
-				return height.animVal.value / 2 + (d.y ? +d.y : 0);
+				return height.animVal.value / 2 + (nodes[i].y ? +nodes[i].y : 0);
 			}).attr("cx", function (d, i) {
-				return width.animVal.value / 2 + (d.x ? +d.x : 0);
+				return width.animVal.value / 2 + (nodes[i].x ? +nodes[i].x : 0);
 			}).attr("stroke", function (d, i) {
-				return d.nid == _this5.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
+				return nodes[i].nid == _this5.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
 			}).attr("stroke-width", function (d, i) {
-				return d.nid == _this5.state.selectedNode ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
+				return nodes[i].nid == _this5.state.selectedNode ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
 			});
 
 			elemtEnter.append("text").attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").attr("class", "noselect").merge(gs.selectAll("text")).attr("dx", function (d, i) {
-				return width.animVal.value / 2 + (d.x ? +d.x : 0);
+				return width.animVal.value / 2 + (nodes[i].x ? +nodes[i].x : 0);
 			}).attr("dy", function (d, i) {
-				return height.animVal.value / 2 + (d.y ? +d.y : 0) + 5;
+				return height.animVal.value / 2 + (nodes[i].y ? +nodes[i].y : 0) + 5;
 			}).text(function (d, i) {
-				return d.title;
+				return nodes[i].title;
 			});
 
 			//Actions
@@ -28232,7 +28233,8 @@ var MapPageComp = function (_React$Component) {
 		value: function drawLinks(svg, width, height) {
 			var _this6 = this;
 
-			var gs = svg.select("g#links").selectAll("g.link").data(this.state.map.links, function (d) {
+			var links = this.state.map.links;
+			var gs = svg.select("g#links").selectAll("g.link").data(links, function (d) {
 				return d;
 			});
 
@@ -28245,20 +28247,20 @@ var MapPageComp = function (_React$Component) {
 			elemtEnter.append("line").attr("stroke-width", function (d, i) {
 				return _drawing2.default.defaultCircleStrokeWidth;
 			}).merge(gs.selectAll("line")).attr("stroke", function (d, i) {
-				var id = Object.keys(d.nodes).join("");
+				var id = Object.keys(links[i].nodes).join("");
 				var selected = _this6.state.selectedLink && id == _this6.state.selectedLink;
 				return selected ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
 			}).attr("x1", function (d, i) {
-				var origin = _this6.state.map.nodes[Object.keys(d.nodes)[0]];
+				var origin = _this6.state.map.nodes[Object.keys(links[i].nodes)[0]];
 				return width.animVal.value / 2 + (origin.x ? +origin.x : 0);
 			}).attr("y1", function (d, i) {
-				var origin = _this6.state.map.nodes[Object.keys(d.nodes)[0]];
+				var origin = _this6.state.map.nodes[Object.keys(links[i].nodes)[0]];
 				return height.animVal.value / 2 + (origin.y ? +origin.y : 0);
 			}).attr("x2", function (d, i) {
-				var destination = _this6.state.map.nodes[Object.keys(d.nodes)[1]];
+				var destination = _this6.state.map.nodes[Object.keys(links[i].nodes)[1]];
 				return width.animVal.value / 2 + (destination.x ? +destination.x : 0);
 			}).attr("y2", function (d, i) {
-				var destination = _this6.state.map.nodes[Object.keys(d.nodes)[1]];
+				var destination = _this6.state.map.nodes[Object.keys(links[i].nodes)[1]];
 				return height.animVal.value / 2 + (destination.y ? +destination.y : 0);
 			});
 
