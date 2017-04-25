@@ -2,8 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router';
 
-import TopBar from './dumbs/topbar'
-
 import replaceUser from '../actions/users'
 import AuthServices from '../services/auth'
 
@@ -40,8 +38,7 @@ class RootPageComp extends React.Component {
 
 	render() {
 		return (
-			<div className="root-page">
-				<TopBar/>
+			<div className="root-page" style={{height:"100%"}}>
 				{this.props.children}
 			</div>
 		);

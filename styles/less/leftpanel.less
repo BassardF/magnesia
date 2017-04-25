@@ -1,30 +1,43 @@
-#navigation-panel{
+#left-panel{
 	
 	background-color: @greybcg;
-	color : @grey;
+	border-right : solid 1px @grey;
+	color : @darkgrey;
 	height: 100%;
-	padding: 10px;
-	padding-left: 5px;
 	font-size: 15px;
+
+	#logo{
+		color: @purple;
+		font-size: 30px;
+		padding: 20px;
+		font-weight:bold;
+	}
 
 	.node-line{
 
+		font-size: 15px;
 		margin-left: 3px;
 		cursor: pointer;
+		margin-top: 5px;
+		margin-bottom: 5px;
 
 		.arrow-right {
 			width: 0; 
 			height: 0; 
 			border-top: 4px solid transparent;
 			border-bottom: 4px solid transparent;
-			border-left: 4px solid @grey;
+			border-left: 4px solid @darkgrey;
 		}
 	}
 
 	.selected-node-line{
 
+		font-size: 15px;
 		color: @purple;
-
+		margin-top: 5px;
+		margin-bottom: 5px;
+		cursor: pointer;
+		
 		.arrow-right {
 			width: 0; 
 			height: 0; 
@@ -32,6 +45,58 @@
 			border-right: 4px solid transparent;
 			border-left: 4px solid transparent;
 		}
+	}
+
+	.link-line{
+		font-size: 13px;
+		margin-left: 10px;
+		cursor: pointer;
+		margin-top : 3px;
+		margin-bottom : 3px;
+	}
+
+	.selected-link-line{
+		font-size: 13px;
+		margin-left: 10px;
+		cursor: pointer;
+		margin-top : 3px;
+		margin-bottom : 3px;
+		color: @purple;
+	}
+
+	.left-panel-nav{
+
+		img{
+			width:20px;
+			height:20px;
+		}
+
+		flex-grow : 1;
+		background-color : @lightPurple;
+		color : white;
+		height : 40px;
+		cursor : pointer;
+	}
+
+	.left-panel-nav-selected{
+
+		img{
+			width:20px;
+			height:20px;
+		}
+
+		flex-grow : 1;
+		color : @purple;
+		height : 40px;
+		background-color : @extraLightPurple;
+	}
+
+	.left-panel-title{
+		text-align: center;
+		padding: 10px;
+		font-size : 18px;
+		color: @darkgrey;
+		background-color: @extraLightPurple;
 	}
 	
 }

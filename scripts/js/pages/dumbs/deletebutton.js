@@ -18,34 +18,39 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var ToolsPanel = function (_React$Component) {
-	_inherits(ToolsPanel, _React$Component);
+var DeleteButton = function (_React$Component) {
+	_inherits(DeleteButton, _React$Component);
 
-	function ToolsPanel(props) {
-		_classCallCheck(this, ToolsPanel);
+	function DeleteButton() {
+		_classCallCheck(this, DeleteButton);
 
-		var _this = _possibleConstructorReturn(this, (ToolsPanel.__proto__ || Object.getPrototypeOf(ToolsPanel)).call(this, props));
-
-		_this.state = {};
-		return _this;
+		return _possibleConstructorReturn(this, (DeleteButton.__proto__ || Object.getPrototypeOf(DeleteButton)).apply(this, arguments));
 	}
 
-	_createClass(ToolsPanel, [{
-		key: "componentWillMount",
-		value: function componentWillMount() {}
-	}, {
-		key: "componentWillUnMount",
-		value: function componentWillUnMount() {}
-	}, {
+	_createClass(DeleteButton, [{
 		key: "render",
 		value: function render() {
-			return _react2.default.createElement("div", { id: "tool-panel" });
+
+			return _react2.default.createElement(
+				"div",
+				{ className: "delete-button", onClick: this.props.action || null },
+				_react2.default.createElement(
+					"span",
+					{ className: "delete-button-words", style: { marginRight: "3px" } },
+					this.props.label
+				),
+				_react2.default.createElement(
+					"span",
+					{ className: "delete-button-cross" },
+					"\xD7"
+				)
+			);
 		}
 	}]);
 
-	return ToolsPanel;
+	return DeleteButton;
 }(_react2.default.Component);
 
 ;
 
-exports.default = ToolsPanel;
+exports.default = DeleteButton;

@@ -20,13 +20,9 @@ var _map = require('../models/map');
 
 var _map2 = _interopRequireDefault(_map);
 
-var _navigationpanel = require('./dumbs/navigationpanel');
+var _leftpanel = require('./dumbs/leftpanel');
 
-var _navigationpanel2 = _interopRequireDefault(_navigationpanel);
-
-var _toolspanel = require('./dumbs/toolspanel');
-
-var _toolspanel2 = _interopRequireDefault(_toolspanel);
+var _leftpanel2 = _interopRequireDefault(_leftpanel);
 
 var _drawing = require('../properties/drawing');
 
@@ -59,6 +55,7 @@ var MapPageComp = function (_React$Component) {
 		_this.drawLinks = _this.drawLinks.bind(_this);
 		_this.selectLink = _this.selectLink.bind(_this);
 		_this.changeNodeText = _this.changeNodeText.bind(_this);
+		_this.deleteSelectedNode = _this.deleteSelectedNode.bind(_this);
 		_this.state = {};
 		return _this;
 	}
@@ -93,19 +90,15 @@ var MapPageComp = function (_React$Component) {
 
 			document.body.onkeydown = function (e) {
 				if (e.keyCode == 8) {
-					_this3.deleteSelectedNode();
+					if (!document.activeElement || document.activeElement.tagName !== "INPUT") _this3.deleteSelectedNode();
 				}
 			};
 		}
 	}, {
 		key: 'deleteSelectedNode',
-		value: function deleteSelectedNode() {
-			if (this.state.selectedNode !== null) {
-				this.state.map.deleteNode(this.state.selectedNode);
-				this.selectNode(null);
-			} else {
-				//swal("Root Node", "Root Node can't be deleted", "warning");
-			}
+		value: function deleteSelectedNode(optionalNid) {
+			if (optionalNid || optionalNid === 0) this.state.map.deleteNode(optionalNid);else if (this.state.selectedNode !== null) this.state.map.deleteNode(this.state.selectedNode);
+			this.selectNode(null);
 		}
 	}, {
 		key: 'componentWillUnMount',
@@ -116,8 +109,7 @@ var MapPageComp = function (_React$Component) {
 		key: 'selectNode',
 		value: function selectNode(nid) {
 			this.setState({
-				selectedNode: this.state.selectedNode === nid ? null : nid,
-				selectedLink: this.state.selectedNode === nid ? this.state.selectedLink : null
+				selectedNode: this.state.selectedNode === nid ? null : nid
 			});
 		}
 	}, {
@@ -125,8 +117,7 @@ var MapPageComp = function (_React$Component) {
 		value: function selectLink(link) {
 			var id = Object.keys(link.nodes).join("");
 			this.setState({
-				selectedLink: this.state.selectedLink === id ? null : id,
-				selectedNode: this.state.selectedLink === id ? this.state.selectedNode : null
+				selectedLink: this.state.selectedLink === id ? null : id
 			});
 		}
 	}, {
@@ -160,7 +151,7 @@ var MapPageComp = function (_React$Component) {
 
 				svg.on("dblclick", function (d) {
 					if (!d3.event.defaultPrevented) {
-						_this4.addNewNode(d3.event.x - 200 - width.animVal.value / 2, d3.event.y - 58 - height.animVal.value / 2);
+						_this4.addNewNode(d3.event.x - 200 - width.animVal.value / 2, d3.event.y - height.animVal.value / 2);
 					}
 				});
 			}
@@ -364,35 +355,31 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var space = document.body.offsetHeight - document.getElementById("topbar-wrapper").offsetHeight;
+
 			return _react2.default.createElement(
 				'div',
-				{ id: 'maps-page' },
+				{ id: 'maps-page', style: { height: "100%" } },
 				_react2.default.createElement(
 					'div',
-					null,
+					{ className: 'flex', style: { height: "100%" } },
 					_react2.default.createElement(
 						'div',
-						{ className: 'flex', style: { maxHeight: space } },
+						{ id: 'left-panel-wrapper', style: { width: "200px", height: "100%" }, className: 'flex-grow-0' },
+						_react2.default.createElement(_leftpanel2.default, { map: this.state.map,
+							changeNodeText: this.changeNodeText,
+							selectedLink: this.state.selectedLink, selectLink: this.selectLink,
+							selectedNode: this.state.selectedNode, selectNode: this.selectNode,
+							deleteSelectedNode: this.deleteSelectedNode
+						})
+					),
+					_react2.default.createElement(
+						'div',
+						{ id: 'drawing-wrapper', className: 'flex-grow-1', style: { height: "100%" } },
 						_react2.default.createElement(
-							'div',
-							{ id: 'nav-panel-wrapper', style: { width: "200px" }, className: 'flex-grow-0' },
-							_react2.default.createElement(_navigationpanel2.default, { map: this.state.map, selectedNode: this.state.selectedNode, selectNode: this.selectNode })
-						),
-						_react2.default.createElement(
-							'div',
-							{ id: 'drawing-wrapper', className: 'flex-grow-1' },
-							_react2.default.createElement(
-								'svg',
-								{ style: { height: space + 'px', width: '100%' } },
-								_react2.default.createElement('g', { id: 'links' }),
-								_react2.default.createElement('g', { id: 'nodes' })
-							)
-						),
-						_react2.default.createElement(
-							'div',
-							{ className: 'flex-grow-0' },
-							_react2.default.createElement(_toolspanel2.default, { map: this.state.map, selectedNode: this.state.selectedNode })
+							'svg',
+							{ style: { height: '100%', width: '100%' } },
+							_react2.default.createElement('g', { id: 'links' }),
+							_react2.default.createElement('g', { id: 'nodes' })
 						)
 					)
 				)

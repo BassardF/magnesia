@@ -14,10 +14,6 @@ var _reactRedux = require('react-redux');
 
 var _reactRouter = require('react-router');
 
-var _topbar = require('./dumbs/topbar');
-
-var _topbar2 = _interopRequireDefault(_topbar);
-
 var _users = require('../actions/users');
 
 var _users2 = _interopRequireDefault(_users);
@@ -80,8 +76,7 @@ var RootPageComp = function (_React$Component) {
 		value: function render() {
 			return _react2.default.createElement(
 				'div',
-				{ className: 'root-page' },
-				_react2.default.createElement(_topbar2.default, null),
+				{ className: 'root-page', style: { height: "100%" } },
 				this.props.children
 			);
 		}

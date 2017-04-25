@@ -38,6 +38,7 @@ var Map = function () {
 					}
 				} else this[key] = data[key];
 			}
+			if (!this.nodes) this.nodes = [];
 		}
 	}
 
@@ -134,7 +135,7 @@ var Map = function () {
 	}, {
 		key: 'addNewNode',
 		value: function addNewNode(uid, x, y, connectedNode) {
-			var nid = this.nodes.length;
+			var nid = this.nodes ? this.nodes.length : 0;
 			this.nodes[nid] = new _node2.default().initSecondary(nid, uid, new Date().getTime(), x, y, this.mid);
 			if (connectedNode || connectedNode === 0) {
 				this.addNewLink(uid, connectedNode, nid);

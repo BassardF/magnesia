@@ -7,6 +7,10 @@ html, body {
 	-moz-osx-font-smoothing: grayscale;
 }
 
+#root{
+	height: 100%;
+}
+
 .pull-right{
 	float: right;
 }
@@ -33,4 +37,59 @@ html, body {
 
 .inline-block{
 	display : inline-block;
+}
+
+.hide{
+	display : none;
+}
+
+.delete-button{
+	float: right;
+	color: @darkgrey;
+	vertical-align: middle;
+	border-radius : 4px;
+	border: solid 1px @greybcg;
+	padding : 2px 5px;
+	font-size: 12px;
+	cursor: pointer;
+
+	-webkit-transition: all 1s ease;
+    transition: all 1s ease;
+	
+    &:hover{
+		border: solid 1px @darkgrey;
+	}
+
+	.delete-button-words{
+		opacity : 0;
+		-webkit-transition: opacity 1s ease;
+    	transition: opacity 1s ease;
+	}
+	
+	&:hover .delete-button-words{
+		opacity : 1;
+	}
+}
+
+.tiny-sphere{
+	border-radius: 50px;
+	height: 4px;
+	width: 4px;
+	border : solid 2px @darkgrey;
+}
+
+.no-outline{
+	 outline: none !important;
+}
+
+.hover-toggle{
+	opacity:0;
+
+	-webkit-transition: all 1s ease;
+    transition: all 1s ease;
+
+    &.hover-active{
+    	opacity: 1;
+    }
+
 }

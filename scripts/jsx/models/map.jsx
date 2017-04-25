@@ -19,6 +19,7 @@ class Map {
 				}
 				else this[key] = data[key];
 			}
+			if(!this.nodes) this.nodes = [];
 		}
 	}
 
@@ -109,7 +110,7 @@ class Map {
 	}
 
 	addNewNode(uid, x, y, connectedNode){
-		var nid = this.nodes.length;
+		var nid = this.nodes ? this.nodes.length : 0;
 		this.nodes[nid] = new Node().initSecondary(nid, uid, new Date().getTime(), x, y, this.mid);
 		if(connectedNode || connectedNode === 0){
 			this.addNewLink(uid, connectedNode, nid);

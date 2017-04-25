@@ -3,11 +3,9 @@ import { connect } from 'react-redux'
 import { browserHistory } from 'react-router';
 
 import Map from '../models/map'
-import NavigationPanel from './dumbs/navigationpanel'
-import ToolsPanel from './dumbs/toolspanel'
+import LeftPanel from './dumbs/leftpanel'
 import DRAWING from '../properties/drawing'
 import AuthServices from '../services/auth'
-
 
 class MapPageComp extends React.Component {
 
@@ -20,6 +18,7 @@ class MapPageComp extends React.Component {
 		this.drawLinks = this.drawLinks.bind(this);
 		this.selectLink = this.selectLink.bind(this);
 		this.changeNodeText = this.changeNodeText.bind(this);
+		this.deleteSelectedNode = this.deleteSelectedNode.bind(this);
  	    this.state = {};
 	}
 
@@ -47,18 +46,15 @@ class MapPageComp extends React.Component {
 	componentDidMount(){
 		document.body.onkeydown = (e) => {
 		    if(e.keyCode == 8){
-		    	this.deleteSelectedNode();
+		    	if(!document.activeElement || document.activeElement.tagName !== "INPUT") this.deleteSelectedNode();
 		    }
 		};	
 	}
 
-	deleteSelectedNode(){
-		if(this.state.selectedNode !== null){
-			this.state.map.deleteNode(this.state.selectedNode);
-			this.selectNode(null);
-		} else {
-			//swal("Root Node", "Root Node can't be deleted", "warning");
-		}
+	deleteSelectedNode(optionalNid){
+		if(optionalNid || optionalNid === 0) this.state.map.deleteNode(optionalNid);
+		else if(this.state.selectedNode !== null) this.state.map.deleteNode(this.state.selectedNode);
+		this.selectNode(null);
 	}
 
 	componentWillUnMount(){
@@ -67,16 +63,14 @@ class MapPageComp extends React.Component {
 
 	selectNode(nid){
 		this.setState({
-			selectedNode : this.state.selectedNode === nid ? null : nid,
-			selectedLink : this.state.selectedNode === nid ? this.state.selectedLink : null
+			selectedNode : this.state.selectedNode === nid ? null : nid
 		});
 	}
 
 	selectLink(link){
 		let id = Object.keys(link.nodes).join("");
 		this.setState({
-			selectedLink : this.state.selectedLink === id ? null : id,
-			selectedNode : this.state.selectedLink === id ? this.state.selectedNode : null
+			selectedLink : this.state.selectedLink === id ? null : id
 		});
 	}
 
@@ -109,7 +103,7 @@ class MapPageComp extends React.Component {
 				if(!d3.event.defaultPrevented){
 					this.addNewNode(
 						d3.event.x - 200 - width.animVal.value/2, 
-						d3.event.y - 58 - height.animVal.value/2
+						d3.event.y - height.animVal.value/2
 					);
 				}
 			});
@@ -322,27 +316,28 @@ class MapPageComp extends React.Component {
 	}
 
 	render() {
-		var space = document.body.offsetHeight - document.getElementById("topbar-wrapper").offsetHeight;
+		
 		return (
-			<div id="maps-page">
-				<div>
-					<div className="flex" style={{maxHeight : space}}>
-						<div id="nav-panel-wrapper" style={{width:"200px"}} className="flex-grow-0">
-							<NavigationPanel map={this.state.map} selectedNode={this.state.selectedNode} selectNode={this.selectNode}/>
-						</div>
+			<div id="maps-page" style={{height:"100%"}}>
+				
+				<div className="flex" style={{height:"100%"}}>
+					<div id="left-panel-wrapper" style={{width:"200px", height:"100%"}} className="flex-grow-0">
+						<LeftPanel map={this.state.map} 
+								   changeNodeText={this.changeNodeText}
+								   selectedLink={this.state.selectedLink} selectLink={this.selectLink} 
+								   selectedNode={this.state.selectedNode} selectNode={this.selectNode}
+								   deleteSelectedNode={this.deleteSelectedNode}
+								   />
+					</div>
 
-						<div id="drawing-wrapper" className="flex-grow-1">
-							<svg style={{height: space+'px', width: '100%'}}>
-								<g id="links"></g>
-								<g id="nodes"></g>
-							</svg>
-						</div>
-
-						<div className="flex-grow-0">
-							<ToolsPanel map={this.state.map} selectedNode={this.state.selectedNode}/>
-						</div>
+					<div id="drawing-wrapper" className="flex-grow-1" style={{height:"100%"}}>
+						<svg style={{height: '100%', width: '100%'}}>
+							<g id="links"></g>
+							<g id="nodes"></g>
+						</svg>
 					</div>
 				</div>
+				
 			</div>
 		);
 	}

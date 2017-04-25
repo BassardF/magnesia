@@ -1,0 +1,412 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _deletebutton = require('./deletebutton');
+
+var _deletebutton2 = _interopRequireDefault(_deletebutton);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var LeftPanel = function (_React$Component) {
+	_inherits(LeftPanel, _React$Component);
+
+	function LeftPanel(props) {
+		_classCallCheck(this, LeftPanel);
+
+		var _this = _possibleConstructorReturn(this, (LeftPanel.__proto__ || Object.getPrototypeOf(LeftPanel)).call(this, props));
+
+		_this.state = {
+			nav: 0
+		};
+		return _this;
+	}
+
+	_createClass(LeftPanel, [{
+		key: 'componentWillMount',
+		value: function componentWillMount() {}
+	}, {
+		key: 'componentWillUnMount',
+		value: function componentWillUnMount() {}
+	}, {
+		key: 'selectNav',
+		value: function selectNav(nav) {
+			this.setState({
+				nav: nav
+			});
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+
+			var dom = null,
+			    title = "";
+			switch (this.state.nav) {
+				case 0:
+					dom = _react2.default.createElement(NodeTree, { map: this.props.map,
+						selectedNode: this.props.selectedNode, selectNode: this.props.selectNode,
+						selectedLink: this.props.selectedLink, selectLink: this.props.selectLink,
+						deleteSelectedNode: this.props.deleteSelectedNode });
+					title = "Navigation Tree";
+					break;
+				case 1:
+					dom = _react2.default.createElement(NodeDetails, { map: this.props.map,
+						changeNodeText: this.props.changeNodeText,
+						selectedNode: this.props.selectedNode, selectNode: this.props.selectNode });
+					title = "Node Details";
+					break;
+				case 2:
+					title = "Messages";
+					break;
+				case 3:
+					title = "Logs";
+					break;
+			}
+
+			return _react2.default.createElement(
+				'div',
+				{ id: 'left-panel' },
+				_react2.default.createElement(
+					'div',
+					{ id: 'logo' },
+					'Mg.'
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: '' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'flex' },
+						_react2.default.createElement(
+							'div',
+							{ onClick: this.selectNav.bind(this, 0), className: this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav" },
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 0 ? "placeholder.svg" : "placeholder-white.svg") })
+						),
+						_react2.default.createElement(
+							'div',
+							{ onClick: this.selectNav.bind(this, 1), className: this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav" },
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 1 ? "placeholder.svg" : "placeholder-white.svg") })
+						),
+						_react2.default.createElement(
+							'div',
+							{ onClick: this.selectNav.bind(this, 2), className: this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav" },
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 2 ? "placeholder.svg" : "placeholder-white.svg") })
+						),
+						_react2.default.createElement(
+							'div',
+							{ onClick: this.selectNav.bind(this, 3), className: this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav" },
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 3 ? "placeholder.svg" : "placeholder-white.svg") })
+						)
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'left-panel-title' },
+					title
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { padding: "10px" } },
+					dom
+				)
+			);
+		}
+	}]);
+
+	return LeftPanel;
+}(_react2.default.Component);
+
+;
+
+exports.default = LeftPanel;
+
+var NodeTree = function (_React$Component2) {
+	_inherits(NodeTree, _React$Component2);
+
+	function NodeTree() {
+		_classCallCheck(this, NodeTree);
+
+		return _possibleConstructorReturn(this, (NodeTree.__proto__ || Object.getPrototypeOf(NodeTree)).apply(this, arguments));
+	}
+
+	_createClass(NodeTree, [{
+		key: 'render',
+		value: function render() {
+			var _this3 = this;
+
+			var domNodes = [];
+			if (this.props.map && this.props.map.nodes) {
+				domNodes = this.props.map.nodes.map(function (n, ind) {
+					return n && (n.nid || n.nid == 0) ? _react2.default.createElement(NodeLine, { key: "key-lp-node-line-" + n.nid, nodes: _this3.props.map.nodes,
+						links: _this3.props.map.links, selectedLink: _this3.props.selectedLink, selectLink: _this3.props.selectLink,
+						node: n, selectedNode: _this3.props.selectedNode, selectNode: _this3.props.selectNode,
+						deleteSelectedNode: _this3.props.deleteSelectedNode }) : null;
+				});
+			}
+			return _react2.default.createElement(
+				'div',
+				null,
+				domNodes
+			);
+		}
+	}]);
+
+	return NodeTree;
+}(_react2.default.Component);
+
+;
+
+var NodeLine = function (_React$Component3) {
+	_inherits(NodeLine, _React$Component3);
+
+	function NodeLine(props) {
+		_classCallCheck(this, NodeLine);
+
+		var _this4 = _possibleConstructorReturn(this, (NodeLine.__proto__ || Object.getPrototypeOf(NodeLine)).call(this, props));
+
+		_this4.selectNode = _this4.selectNode.bind(_this4);
+		_this4.deleteNode = _this4.deleteNode.bind(_this4);
+		_this4.state = {};
+		return _this4;
+	}
+
+	_createClass(NodeLine, [{
+		key: 'selectNode',
+		value: function selectNode() {
+			this.props.selectNode(this.props.node.nid);
+		}
+	}, {
+		key: 'deleteNode',
+		value: function deleteNode(e) {
+			e.stopPropagation();
+			this.props.deleteSelectedNode(this.props.node.nid);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var selected = this.props.selectedNode == this.props.node.nid;
+			var domLinks = [];
+			if (this.props.links && selected) {
+				for (var i = 0; i < this.props.links.length; i++) {
+					var link = this.props.links[i];
+					if (link && link.nodes && link.nodes[this.props.node.nid]) {
+						domLinks.push(_react2.default.createElement(LinkLine, { key: "key-node-" + this.props.node.nid + "-link-" + i, link: link, nodes: this.props.nodes, selectedNode: this.props.selectedNode, selectedLink: this.props.selectedLink, selectLink: this.props.selectLink }));
+					}
+				}
+			}
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'div',
+					{ onClick: this.selectNode, className: selected ? "selected-node-line" : "node-line" },
+					_react2.default.createElement('div', { className: 'arrow-right v-align-middle inline-block' }),
+					_react2.default.createElement(
+						'span',
+						{ className: 'v-align-middle', style: { marginLeft: selected ? "4px" : "5px" } },
+						this.props.node.title
+					),
+					_react2.default.createElement(_deletebutton2.default, { label: 'delete', action: this.deleteNode })
+				),
+				_react2.default.createElement(
+					'div',
+					null,
+					domLinks
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { opacity: ".5", marginLeft: "10px", marginTop: "3px", marginBottom: "3px" }, className: !selected || domLinks && domLinks.length ? "hide" : "" },
+					_react2.default.createElement('div', { style: { display: "inline-block", verticalAlign: "middle" }, className: 'tiny-sphere' }),
+					_react2.default.createElement(
+						'div',
+						{ style: { display: "inline-block", verticalAlign: "middle", marginLeft: "3px" } },
+						'no link'
+					)
+				)
+			);
+		}
+	}]);
+
+	return NodeLine;
+}(_react2.default.Component);
+
+;
+
+var LinkLine = function (_React$Component4) {
+	_inherits(LinkLine, _React$Component4);
+
+	function LinkLine(props) {
+		_classCallCheck(this, LinkLine);
+
+		var _this5 = _possibleConstructorReturn(this, (LinkLine.__proto__ || Object.getPrototypeOf(LinkLine)).call(this, props));
+
+		_this5.selectLink = _this5.selectLink.bind(_this5);
+		_this5.deleteLink = _this5.deleteLink.bind(_this5);
+		_this5.state = {};
+		return _this5;
+	}
+
+	_createClass(LinkLine, [{
+		key: 'selectLink',
+		value: function selectLink() {
+			this.props.selectLink(this.props.link);
+		}
+	}, {
+		key: 'deleteLink',
+		value: function deleteLink(e) {
+			e.stopPropagation();
+			var link = this.props.link;
+			var nkeys = link && link.nodes ? Object.keys(link.nodes) : [];
+			console.log("deleteLink", nkeys);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var link = this.props.link;
+			var nkeys = link && link.nodes ? Object.keys(link.nodes) : [];
+			var selected = !!(link.nodes && this.props.selectedLink && this.props.selectedLink == nkeys.join(""));
+			var targetNid = 0;
+			if (nkeys.length) {
+				if (nkeys[0] == this.props.selectedNode) targetNid = nkeys[1];else targetNid = nkeys[0];
+			}
+
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'div',
+					{ onClick: this.selectLink, className: selected ? "selected-link-line" : "link-line" },
+					_react2.default.createElement(
+						'div',
+						{ className: 'arrow-right v-align-middle inline-block' },
+						'\u2014'
+					),
+					_react2.default.createElement(
+						'span',
+						{ className: 'v-align-middle', style: { marginLeft: "5px" } },
+						this.props.nodes && this.props.nodes[targetNid] ? this.props.nodes[targetNid].title : ""
+					),
+					_react2.default.createElement(_deletebutton2.default, { label: 'unlink', action: this.deleteLink })
+				)
+			);
+		}
+	}]);
+
+	return LinkLine;
+}(_react2.default.Component);
+
+;
+
+var NodeDetails = function (_React$Component5) {
+	_inherits(NodeDetails, _React$Component5);
+
+	function NodeDetails(props) {
+		_classCallCheck(this, NodeDetails);
+
+		var _this6 = _possibleConstructorReturn(this, (NodeDetails.__proto__ || Object.getPrototypeOf(NodeDetails)).call(this, props));
+
+		_this6.deleteNode = _this6.deleteNode.bind(_this6);
+		_this6.changeText = _this6.changeText.bind(_this6);
+		_this6.appl = _this6.appl.bind(_this6);
+		_this6.okd = _this6.okd.bind(_this6);
+
+		var node = _this6.props.map && _this6.props.map.nodes && _this6.props.selectedNode !== undefined && _this6.props.map.nodes[_this6.props.selectedNode];
+
+		_this6.state = {
+			text: node ? node.title : ""
+		};
+		return _this6;
+	}
+
+	_createClass(NodeDetails, [{
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(np) {
+			var node = np.map && np.map.nodes && np.selectedNode !== undefined && np.map.nodes[np.selectedNode];
+			if (node.title !== this.state.text) {
+				this.setState({
+					text: node.title
+				});
+			}
+		}
+	}, {
+		key: 'deleteNode',
+		value: function deleteNode(e) {
+			e.stopPropagation();
+			this.props.deleteSelectedNode(this.props.node.nid);
+		}
+	}, {
+		key: 'changeText',
+		value: function changeText(e) {
+			this.setState({
+				text: e.target.value
+			});
+		}
+	}, {
+		key: 'okd',
+		value: function okd(e) {
+			if (e.keyCode == 13 && this.state.text) this.appl();
+		}
+	}, {
+		key: 'appl',
+		value: function appl() {
+			this.props.changeNodeText(this.props.selectedNode, this.state.text);
+			this.refs.lpnodeinput.blur();
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var node = this.props.map && this.props.map.nodes && this.props.selectedNode !== undefined && this.props.map.nodes[this.props.selectedNode];
+			if (!node) return null;
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'h3',
+					null,
+					'Text'
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'flex' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'flex-grow-1' },
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement('input', { ref: 'lpnodeinput', className: 'no-outline', style: { textAlign: "center", fontSize: "12px", backgroundColor: "inherit", border: "none", borderBottom: "solid 1px black" },
+								onKeyDown: this.okd, value: this.state.text, onChange: this.changeText, placeholder: "node's text" })
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'flex-grow-0' },
+						_react2.default.createElement(
+							'div',
+							{ onClick: this.appl, className: "hover-toggle " + (this.state.text == node.title ? "" : "hover-active"), style: { width: "50px", paddingLeft: "5px", fontSize: "12px", cursor: "pointer" } },
+							'\u2713 apply'
+						)
+					)
+				)
+			);
+		}
+	}]);
+
+	return NodeDetails;
+}(_react2.default.Component);
+
+;
