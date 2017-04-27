@@ -100,3 +100,45 @@
 	}
 	
 }
+
+.scale-05, .scale-1, .scale-2{
+	border-radius: 50px;
+    border : solid 2px @darkgrey;
+	margin-left : auto;
+	margin-right : auto;
+	margin-top : 5px;
+
+	-webkit-transition: all 1s ease;
+    transition: all 1s ease;
+}
+
+.scale-wrapper{
+	cursor: pointer;
+}
+
+.scale-wrapper:hover .scale-05,
+.scale-wrapper:hover .scale-1, 
+.scale-wrapper:hover .scale-2{
+	background-color : @darkgrey;
+}
+
+
+.scale-05{
+	height: 5px;
+	width: 5px;
+}
+
+.scale-1{
+	height: 10px;
+	width: 10px;
+}
+
+.scale-2{
+	height: 20px;
+	width: 20px;
+}
+
+.selected-scale{
+	border-color : @lightPurple !important;
+	background-color : @lightPurple !important;
+}

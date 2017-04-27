@@ -54,8 +54,13 @@ var MapPageComp = function (_React$Component) {
 		_this.drawNodes = _this.drawNodes.bind(_this);
 		_this.drawLinks = _this.drawLinks.bind(_this);
 		_this.selectLink = _this.selectLink.bind(_this);
+
 		_this.changeNodeText = _this.changeNodeText.bind(_this);
+		_this.changeNodeDescription = _this.changeNodeDescription.bind(_this);
+		_this.changeNodeScale = _this.changeNodeScale.bind(_this);
+
 		_this.deleteSelectedNode = _this.deleteSelectedNode.bind(_this);
+		_this.deleteLink = _this.deleteLink.bind(_this);
 		_this.state = {};
 		return _this;
 	}
@@ -90,9 +95,14 @@ var MapPageComp = function (_React$Component) {
 
 			document.body.onkeydown = function (e) {
 				if (e.keyCode == 8) {
-					if (!document.activeElement || document.activeElement.tagName !== "INPUT") _this3.deleteSelectedNode();
+					if (!document.activeElement || document.activeElement.tagName !== "INPUT" || document.activeElement.tagName !== "TEXTAREA") _this3.deleteSelectedNode();
 				}
 			};
+		}
+	}, {
+		key: 'componentWillUnMount',
+		value: function componentWillUnMount() {
+			if (this.state.mapRef) mapRef.off();
 		}
 	}, {
 		key: 'deleteSelectedNode',
@@ -101,9 +111,9 @@ var MapPageComp = function (_React$Component) {
 			this.selectNode(null);
 		}
 	}, {
-		key: 'componentWillUnMount',
-		value: function componentWillUnMount() {
-			if (this.state.mapRef) mapRef.off();
+		key: 'deleteLink',
+		value: function deleteLink(l) {
+			if (l && this.state.map) this.state.map.deleteLink(l);
 		}
 	}, {
 		key: 'selectNode',
@@ -128,11 +138,27 @@ var MapPageComp = function (_React$Component) {
 			map.save();
 		}
 	}, {
+		key: 'changeNodeScale',
+		value: function changeNodeScale(nid, scale) {
+			var map = this.state.map;
+			var node = map.nodes[nid];
+			node.scale = scale || 1;
+			node.save();
+		}
+	}, {
 		key: 'changeNodeText',
 		value: function changeNodeText(nid, text) {
 			var map = this.state.map;
 			var node = map.nodes[nid];
 			node.title = text || "------";
+			node.save();
+		}
+	}, {
+		key: 'changeNodeDescription',
+		value: function changeNodeDescription(nid, description) {
+			var map = this.state.map;
+			var node = map.nodes[nid];
+			node.description = description || "";
 			node.save();
 		}
 	}, {
@@ -172,13 +198,13 @@ var MapPageComp = function (_React$Component) {
 			//Enter
 			var elemtEnter = gs.enter().append("g").attr("class", "node");
 
-			elemtEnter.append("circle").attr("r", function (d, i) {
-				return 40 * (nodes[i].scale ? +nodes[i].scale : 1);
-			}).attr("stroke", function (d, i) {
+			elemtEnter.append("circle").attr("stroke", function (d, i) {
 				return _drawing2.default.defaultCircleStrokeColor;
 			}).attr("stroke-width", function (d, i) {
 				return _drawing2.default.defaultCircleStrokeWidth;
-			}).attr("fill", "white").merge(gs.selectAll("circle")).attr("cy", function (d, i) {
+			}).attr("fill", "white").merge(gs.selectAll("circle")).attr("r", function (d, i) {
+				return 40 * (nodes[i].scale ? +nodes[i].scale : 1);
+			}).attr("cy", function (d, i) {
 				return height.animVal.value / 2 + (nodes[i].y ? +nodes[i].y : 0);
 			}).attr("cx", function (d, i) {
 				return width.animVal.value / 2 + (nodes[i].x ? +nodes[i].x : 0);
@@ -366,10 +392,12 @@ var MapPageComp = function (_React$Component) {
 						'div',
 						{ id: 'left-panel-wrapper', style: { width: "200px", height: "100%" }, className: 'flex-grow-0' },
 						_react2.default.createElement(_leftpanel2.default, { map: this.state.map,
-							changeNodeText: this.changeNodeText,
+							changeNodeText: this.changeNodeText, changeNodeDescription: this.changeNodeDescription,
 							selectedLink: this.state.selectedLink, selectLink: this.selectLink,
 							selectedNode: this.state.selectedNode, selectNode: this.selectNode,
-							deleteSelectedNode: this.deleteSelectedNode
+							changeNodeScale: this.changeNodeScale,
+							deleteSelectedNode: this.deleteSelectedNode,
+							deleteLink: this.deleteLink
 						})
 					),
 					_react2.default.createElement(

@@ -17,8 +17,13 @@ class MapPageComp extends React.Component {
 		this.drawNodes = this.drawNodes.bind(this);
 		this.drawLinks = this.drawLinks.bind(this);
 		this.selectLink = this.selectLink.bind(this);
+
 		this.changeNodeText = this.changeNodeText.bind(this);
+		this.changeNodeDescription = this.changeNodeDescription.bind(this);
+		this.changeNodeScale = this.changeNodeScale.bind(this);
+		
 		this.deleteSelectedNode = this.deleteSelectedNode.bind(this);
+		this.deleteLink = this.deleteLink.bind(this);
  	    this.state = {};
 	}
 
@@ -46,9 +51,13 @@ class MapPageComp extends React.Component {
 	componentDidMount(){
 		document.body.onkeydown = (e) => {
 		    if(e.keyCode == 8){
-		    	if(!document.activeElement || document.activeElement.tagName !== "INPUT") this.deleteSelectedNode();
+		    	if(!document.activeElement || document.activeElement.tagName !== "INPUT" || document.activeElement.tagName !== "TEXTAREA") this.deleteSelectedNode();
 		    }
 		};	
+	}
+
+	componentWillUnMount(){
+		if(this.state.mapRef) mapRef.off();
 	}
 
 	deleteSelectedNode(optionalNid){
@@ -57,8 +66,8 @@ class MapPageComp extends React.Component {
 		this.selectNode(null);
 	}
 
-	componentWillUnMount(){
-		if(this.state.mapRef) mapRef.off();
+	deleteLink(l){
+		if(l && this.state.map) this.state.map.deleteLink(l);
 	}
 
 	selectNode(nid){
@@ -80,10 +89,24 @@ class MapPageComp extends React.Component {
 		map.save();
 	}
 
+	changeNodeScale(nid, scale){
+		var map = this.state.map;
+		var node = map.nodes[nid];
+		node.scale = scale || 1;
+		node.save();
+	}
+
 	changeNodeText(nid, text){
 		var map = this.state.map;
 		var node = map.nodes[nid];
 		node.title = text || "------";
+		node.save();
+	}
+
+	changeNodeDescription(nid, description){
+		var map = this.state.map;
+		var node = map.nodes[nid];
+		node.description = description || "";
 		node.save();
 	}
 
@@ -124,11 +147,11 @@ class MapPageComp extends React.Component {
 		let elemtEnter = gs.enter().append("g").attr("class", "node");
 
 		elemtEnter.append("circle")
-		    .attr("r", function(d, i) {return 40 * (nodes[i].scale ? +nodes[i].scale : 1);})
 		    .attr("stroke", function(d, i){return DRAWING.defaultCircleStrokeColor})
 		    .attr("stroke-width", function(d, i){return DRAWING.defaultCircleStrokeWidth})
     		.attr("fill", "white")
-    	  .merge(gs.selectAll("circle")) 
+    	  .merge(gs.selectAll("circle"))
+    	    .attr("r", function(d, i) {return 40 * (nodes[i].scale ? +nodes[i].scale : 1);}) 
     	  	.attr("cy", function(d, i) {return height.animVal.value/2 + (nodes[i].y ? +nodes[i].y : 0)})
 		    .attr("cx", function(d, i) {return width.animVal.value/2 + (nodes[i].x ? +nodes[i].x : 0)})
 		    .attr("stroke", (d, i) => {return nodes[i].nid == this.state.selectedNode ? DRAWING.selectedCircleStrokeColor : DRAWING.defaultCircleStrokeColor})
@@ -323,10 +346,12 @@ class MapPageComp extends React.Component {
 				<div className="flex" style={{height:"100%"}}>
 					<div id="left-panel-wrapper" style={{width:"200px", height:"100%"}} className="flex-grow-0">
 						<LeftPanel map={this.state.map} 
-								   changeNodeText={this.changeNodeText}
+								   changeNodeText={this.changeNodeText} changeNodeDescription={this.changeNodeDescription}
 								   selectedLink={this.state.selectedLink} selectLink={this.selectLink} 
 								   selectedNode={this.state.selectedNode} selectNode={this.selectNode}
+								   changeNodeScale={this.changeNodeScale}
 								   deleteSelectedNode={this.deleteSelectedNode}
+								   deleteLink={this.deleteLink}
 								   />
 					</div>
 

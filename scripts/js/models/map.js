@@ -93,6 +93,20 @@ var Map = function () {
 			this.save();
 		}
 	}, {
+		key: 'deleteLink',
+		value: function deleteLink(l) {
+			if (l && l.length == 2 && this.links && this.links.length) {
+				for (var i = this.links.length - 1; i >= 0; i--) {
+					var link = this.links[i];
+					var nkeys = link && link.nodes ? Object.keys(link.nodes).join("") : null;
+					if (nkeys == l) {
+						this.links.splice(i, 1);
+						this.save();
+					}
+				}
+			}
+		}
+	}, {
 		key: 'save',
 		value: function save() {
 			firebase.database().ref('maps/' + this.mid).set(this);

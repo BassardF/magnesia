@@ -55,18 +55,22 @@ var LeftPanel = function (_React$Component) {
 
 			var dom = null,
 			    title = "";
+			var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
+			if (!nodeSelected && this.state.nav == 1) this.state.nav = 0;
 			switch (this.state.nav) {
 				case 0:
 					dom = _react2.default.createElement(NodeTree, { map: this.props.map,
 						selectedNode: this.props.selectedNode, selectNode: this.props.selectNode,
 						selectedLink: this.props.selectedLink, selectLink: this.props.selectLink,
-						deleteSelectedNode: this.props.deleteSelectedNode });
+						deleteSelectedNode: this.props.deleteSelectedNode,
+						deleteLink: this.props.deleteLink });
 					title = "Navigation Tree";
 					break;
 				case 1:
 					dom = _react2.default.createElement(NodeDetails, { map: this.props.map,
-						changeNodeText: this.props.changeNodeText,
-						selectedNode: this.props.selectedNode, selectNode: this.props.selectNode });
+						changeNodeText: this.props.changeNodeText, changeNodeDescription: this.props.changeNodeDescription,
+						selectedNode: this.props.selectedNode, selectNode: this.props.selectNode,
+						changeNodeScale: this.props.changeNodeScale });
 					title = "Node Details";
 					break;
 				case 2:
@@ -98,8 +102,8 @@ var LeftPanel = function (_React$Component) {
 						),
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.selectNav.bind(this, 1), className: this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav" },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 1 ? "placeholder.svg" : "placeholder-white.svg") })
+							{ onClick: nodeSelected ? this.selectNav.bind(this, 1) : null, className: this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav" },
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../magnesia/assets/images/" + (this.state.nav == 1 ? "placeholder.svg" : "placeholder-white.svg") })
 						),
 						_react2.default.createElement(
 							'div',
@@ -154,7 +158,8 @@ var NodeTree = function (_React$Component2) {
 					return n && (n.nid || n.nid == 0) ? _react2.default.createElement(NodeLine, { key: "key-lp-node-line-" + n.nid, nodes: _this3.props.map.nodes,
 						links: _this3.props.map.links, selectedLink: _this3.props.selectedLink, selectLink: _this3.props.selectLink,
 						node: n, selectedNode: _this3.props.selectedNode, selectNode: _this3.props.selectNode,
-						deleteSelectedNode: _this3.props.deleteSelectedNode }) : null;
+						deleteSelectedNode: _this3.props.deleteSelectedNode,
+						deleteLink: _this3.props.deleteLink }) : null;
 				});
 			}
 			return _react2.default.createElement(
@@ -204,7 +209,9 @@ var NodeLine = function (_React$Component3) {
 				for (var i = 0; i < this.props.links.length; i++) {
 					var link = this.props.links[i];
 					if (link && link.nodes && link.nodes[this.props.node.nid]) {
-						domLinks.push(_react2.default.createElement(LinkLine, { key: "key-node-" + this.props.node.nid + "-link-" + i, link: link, nodes: this.props.nodes, selectedNode: this.props.selectedNode, selectedLink: this.props.selectedLink, selectLink: this.props.selectLink }));
+						domLinks.push(_react2.default.createElement(LinkLine, { key: "key-node-" + this.props.node.nid + "-link-" + i, link: link, nodes: this.props.nodes,
+							selectedNode: this.props.selectedNode, selectedLink: this.props.selectedLink, selectLink: this.props.selectLink,
+							deleteLink: this.props.deleteLink }));
 					}
 				}
 			}
@@ -270,8 +277,8 @@ var LinkLine = function (_React$Component4) {
 		value: function deleteLink(e) {
 			e.stopPropagation();
 			var link = this.props.link;
-			var nkeys = link && link.nodes ? Object.keys(link.nodes) : [];
-			console.log("deleteLink", nkeys);
+			var nkeys = link && link.nodes ? Object.keys(link.nodes).join("") : null;
+			if (nkeys) this.props.deleteLink(nkeys);
 		}
 	}, {
 		key: 'render',
@@ -321,13 +328,17 @@ var NodeDetails = function (_React$Component5) {
 
 		_this6.deleteNode = _this6.deleteNode.bind(_this6);
 		_this6.changeText = _this6.changeText.bind(_this6);
+		_this6.changeDescription = _this6.changeDescription.bind(_this6);
 		_this6.appl = _this6.appl.bind(_this6);
 		_this6.okd = _this6.okd.bind(_this6);
+		_this6.appl2 = _this6.appl2.bind(_this6);
+		_this6.changeNodeScale = _this6.changeNodeScale.bind(_this6);
 
 		var node = _this6.props.map && _this6.props.map.nodes && _this6.props.selectedNode !== undefined && _this6.props.map.nodes[_this6.props.selectedNode];
 
 		_this6.state = {
-			text: node ? node.title : ""
+			text: node ? node.title : "",
+			description: node ? node.description : ""
 		};
 		return _this6;
 	}
@@ -356,6 +367,20 @@ var NodeDetails = function (_React$Component5) {
 			});
 		}
 	}, {
+		key: 'changeDescription',
+		value: function changeDescription(e) {
+			this.setState({
+				description: e.target.value
+			}, function () {
+				var el = this.refs.lpnodedescription;
+				setTimeout(function () {
+					var baseCss = "text-align: center; font-size: 12px; background-color: inherit; border-top: none; border-right: none; border-bottom: 1px solid black; border-left: none; border-image: initial;resize: none;";
+					el.style.cssText = baseCss + 'height:auto; padding:0';
+					el.style.cssText = baseCss + 'height:' + el.scrollHeight + 'px';
+				}, 0);
+			});
+		}
+	}, {
 		key: 'okd',
 		value: function okd(e) {
 			if (e.keyCode == 13 && this.state.text) this.appl();
@@ -367,6 +392,17 @@ var NodeDetails = function (_React$Component5) {
 			this.refs.lpnodeinput.blur();
 		}
 	}, {
+		key: 'appl2',
+		value: function appl2() {
+			this.props.changeNodeDescription(this.props.selectedNode, this.state.description);
+			this.refs.lpnodedescription.blur();
+		}
+	}, {
+		key: 'changeNodeScale',
+		value: function changeNodeScale(scale) {
+			this.props.changeNodeScale(this.props.selectedNode, scale);
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var node = this.props.map && this.props.map.nodes && this.props.selectedNode !== undefined && this.props.map.nodes[this.props.selectedNode];
@@ -375,30 +411,109 @@ var NodeDetails = function (_React$Component5) {
 				'div',
 				null,
 				_react2.default.createElement(
-					'h3',
-					null,
-					'Text'
-				),
-				_react2.default.createElement(
 					'div',
-					{ className: 'flex' },
+					null,
 					_react2.default.createElement(
-						'div',
-						{ className: 'flex-grow-1' },
-						_react2.default.createElement(
-							'div',
-							null,
-							_react2.default.createElement('input', { ref: 'lpnodeinput', className: 'no-outline', style: { textAlign: "center", fontSize: "12px", backgroundColor: "inherit", border: "none", borderBottom: "solid 1px black" },
-								onKeyDown: this.okd, value: this.state.text, onChange: this.changeText, placeholder: "node's text" })
-						)
+						'h3',
+						null,
+						'Text'
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'flex-grow-0' },
+						{ className: 'flex' },
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.appl, className: "hover-toggle " + (this.state.text == node.title ? "" : "hover-active"), style: { width: "50px", paddingLeft: "5px", fontSize: "12px", cursor: "pointer" } },
-							'\u2713 apply'
+							{ className: 'flex-grow-1' },
+							_react2.default.createElement(
+								'div',
+								null,
+								_react2.default.createElement('input', { ref: 'lpnodeinput', className: 'no-outline', style: { textAlign: "center", fontSize: "12px", backgroundColor: "inherit", border: "none", borderBottom: "solid 1px black" },
+									onKeyDown: this.okd, value: this.state.text, onChange: this.changeText, placeholder: "node's text" })
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'flex-grow-0' },
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.appl, className: "hover-toggle " + (this.state.text == node.title ? "" : "hover-active"), style: { width: "50px", paddingLeft: "5px", fontSize: "12px", cursor: "pointer" } },
+								'\u2713 apply'
+							)
+						)
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'h3',
+						null,
+						'Details'
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'flex' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'flex-grow-1' },
+							_react2.default.createElement(
+								'div',
+								null,
+								_react2.default.createElement('textarea', { ref: 'lpnodedescription', className: 'no-outline', style: { textAlign: "center", fontSize: "12px", backgroundColor: "inherit", border: "none", borderBottom: "solid 1px black" },
+									value: this.state.description, onChange: this.changeDescription, placeholder: "node's description" })
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'flex-grow-0' },
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.appl2, className: "hover-toggle " + (this.state.description == node.description ? "" : "hover-active"), style: { width: "50px", paddingLeft: "5px", fontSize: "12px", cursor: "pointer" } },
+								'\u2713 apply'
+							)
+						)
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'h3',
+						null,
+						'Scale'
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'flex' },
+						_react2.default.createElement(
+							'div',
+							{ onClick: this.changeNodeScale.bind(this, 0.5), className: 'flex-grow-1 scale-wrapper' },
+							_react2.default.createElement(
+								'div',
+								{ style: { fontSize: "12px", textAlign: "center" } },
+								'small'
+							),
+							_react2.default.createElement('div', { className: "scale-05 " + (node && node.scale == 0.5 ? "selected-scale" : "") })
+						),
+						_react2.default.createElement(
+							'div',
+							{ onClick: this.changeNodeScale.bind(this, 1), className: 'flex-grow-1 scale-wrapper' },
+							_react2.default.createElement(
+								'div',
+								{ style: { fontSize: "12px", textAlign: "center" } },
+								'normal'
+							),
+							_react2.default.createElement('div', { className: "scale-1 " + (node && node.scale == 1 ? "selected-scale" : "") })
+						),
+						_react2.default.createElement(
+							'div',
+							{ onClick: this.changeNodeScale.bind(this, 2), className: 'flex-grow-1 scale-wrapper' },
+							_react2.default.createElement(
+								'div',
+								{ style: { fontSize: "12px", textAlign: "center" } },
+								'large'
+							),
+							_react2.default.createElement('div', { className: "scale-2 " + (node && node.scale == 2 ? "selected-scale" : "") })
 						)
 					)
 				)

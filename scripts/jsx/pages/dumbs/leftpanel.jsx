@@ -25,18 +25,22 @@ class LeftPanel extends React.Component {
 	render() {
 		
 		var dom = null, title = "";
+		var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
+		if(!nodeSelected && this.state.nav == 1) this.state.nav = 0;
 		switch(this.state.nav) {
 		    case 0:
 		        dom = <NodeTree map={this.props.map} 
 		        				selectedNode={this.props.selectedNode} selectNode={this.props.selectNode} 
 		        				selectedLink={this.props.selectedLink} selectLink={this.props.selectLink}
-		        				deleteSelectedNode={this.props.deleteSelectedNode}/>;
+		        				deleteSelectedNode={this.props.deleteSelectedNode} 
+		        				deleteLink={this.props.deleteLink}/>;
 		        title = "Navigation Tree";
 		        break;
 		    case 1:
 		    	dom = <NodeDetails map={this.props.map} 
-		    				   changeNodeText={this.props.changeNodeText}
-		        			   selectedNode={this.props.selectedNode} selectNode={this.props.selectNode} />;
+		    				   changeNodeText={this.props.changeNodeText} changeNodeDescription={this.props.changeNodeDescription}
+		        			   selectedNode={this.props.selectedNode} selectNode={this.props.selectNode} 
+		        			   changeNodeScale={this.props.changeNodeScale}/>;
 		        title = "Node Details";
 		        break;
 		    case 2:
@@ -56,8 +60,8 @@ class LeftPanel extends React.Component {
 						<div onClick={this.selectNav.bind(this, 0)} className={this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav"}>
 							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../magnesia/assets/images/"+ (this.state.nav == 0 ? "placeholder.svg" : "placeholder-white.svg")}/>
 						</div>
-						<div onClick={this.selectNav.bind(this, 1)} className={this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav"}>
-							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../magnesia/assets/images/"+ (this.state.nav == 1 ? "placeholder.svg" : "placeholder-white.svg")}/>
+						<div onClick={nodeSelected ? this.selectNav.bind(this, 1) : null} className={this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav"}>
+							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto", opacity : (nodeSelected ? "1" : ".5")}} src={"../magnesia/assets/images/"+ (this.state.nav == 1 ? "placeholder.svg" : "placeholder-white.svg")}/>
 						</div>
 						<div onClick={this.selectNav.bind(this, 2)} className={this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav"}>
 							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../magnesia/assets/images/"+ (this.state.nav == 2 ? "placeholder.svg" : "placeholder-white.svg")}/>
@@ -87,7 +91,8 @@ class NodeTree extends React.Component {
 					<NodeLine key={"key-lp-node-line-" + n.nid} nodes={this.props.map.nodes} 
 							  links={this.props.map.links} selectedLink={this.props.selectedLink} selectLink={this.props.selectLink} 
 							  node={n} selectedNode={this.props.selectedNode} selectNode={this.props.selectNode}
-							  deleteSelectedNode={this.props.deleteSelectedNode}/>
+							  deleteSelectedNode={this.props.deleteSelectedNode}
+							  deleteLink={this.props.deleteLink}/>
 					: null;
 			});
 		}
@@ -125,7 +130,9 @@ class NodeLine extends React.Component {
 				var link = this.props.links[i];
 				if(link && link.nodes && link.nodes[this.props.node.nid]){
 					domLinks.push(
-						<LinkLine key={"key-node-" + this.props.node.nid + "-link-" + i} link={link} nodes={this.props.nodes} selectedNode={this.props.selectedNode} selectedLink={this.props.selectedLink} selectLink={this.props.selectLink}/>
+						<LinkLine key={"key-node-" + this.props.node.nid + "-link-" + i} link={link} nodes={this.props.nodes} 
+								  selectedNode={this.props.selectedNode} selectedLink={this.props.selectedLink} selectLink={this.props.selectLink}
+								  deleteLink={this.props.deleteLink}/>
 					);
 				}
 			}
@@ -167,8 +174,8 @@ class LinkLine extends React.Component {
 	deleteLink(e){
 		e.stopPropagation();
 		var link = this.props.link;
-		var nkeys = link && link.nodes ? Object.keys(link.nodes) : [];
-		console.log("deleteLink", nkeys);
+		var nkeys = link && link.nodes ? Object.keys(link.nodes).join("") : null;
+		if(nkeys) this.props.deleteLink(nkeys);
 	}
 
 	render() {
@@ -202,13 +209,17 @@ class NodeDetails extends React.Component {
 	    
 	    this.deleteNode = this.deleteNode.bind(this);
 	    this.changeText = this.changeText.bind(this);
+	    this.changeDescription = this.changeDescription.bind(this);
 	    this.appl = this.appl.bind(this);
 		this.okd = this.okd.bind(this);
+		this.appl2 = this.appl2.bind(this);
+		this.changeNodeScale = this.changeNodeScale.bind(this);
 
 	    var node = this.props.map && this.props.map.nodes && this.props.selectedNode !== undefined && this.props.map.nodes[this.props.selectedNode];
 	    
 	    this.state = {
-	    	text : node ? node.title : ""
+	    	text : node ? node.title : "",
+	    	description : node ? node.description : ""
 	    };
 	}
 
@@ -231,6 +242,19 @@ class NodeDetails extends React.Component {
 			text : e.target.value
 		});
 	}
+
+	changeDescription(e){
+		this.setState({
+			description : e.target.value
+		}, function(){
+			var el = this.refs.lpnodedescription;
+			setTimeout(function(){
+				var baseCss = "text-align: center; font-size: 12px; background-color: inherit; border-top: none; border-right: none; border-bottom: 1px solid black; border-left: none; border-image: initial;resize: none;";
+				el.style.cssText = baseCss + 'height:auto; padding:0';
+				el.style.cssText = baseCss + 'height:' + el.scrollHeight + 'px';
+			}, 0);
+		});
+	}
 	
 	okd(e){
 		if(e.keyCode == 13 && this.state.text) this.appl();
@@ -241,19 +265,61 @@ class NodeDetails extends React.Component {
 		this.refs.lpnodeinput.blur();
 	}
 
+	appl2(){
+		this.props.changeNodeDescription(this.props.selectedNode, this.state.description);
+		this.refs.lpnodedescription.blur();
+	}
+
+	changeNodeScale(scale){
+		this.props.changeNodeScale(this.props.selectedNode, scale);
+	}
+
 	render() {
 		var node = this.props.map && this.props.map.nodes && this.props.selectedNode !== undefined && this.props.map.nodes[this.props.selectedNode];
 		if(!node) return null;
 		return (
 			<div>
-				<h3>Text</h3>
-				<div className="flex">
-					<div className="flex-grow-1">
-						<div><input ref="lpnodeinput" className="no-outline" style={{textAlign:"center", fontSize:"12px", backgroundColor:"inherit", border : "none", borderBottom: "solid 1px black"}}
-									onKeyDown={this.okd} value={this.state.text} onChange={this.changeText} placeholder={"node's text"}/></div>
+				<div>
+					<h3>Text</h3>
+					<div className="flex">
+						<div className="flex-grow-1">
+							<div><input ref="lpnodeinput" className="no-outline" style={{textAlign:"center", fontSize:"12px", backgroundColor:"inherit", border : "none", borderBottom: "solid 1px black"}}
+										onKeyDown={this.okd} value={this.state.text} onChange={this.changeText} placeholder={"node's text"}/>
+							</div>
+						</div>
+						<div className="flex-grow-0">
+							<div onClick={this.appl} className={"hover-toggle " + (this.state.text == node.title ? "" : "hover-active")} style={{width:"50px", paddingLeft:"5px", fontSize:"12px", cursor:"pointer"}}>&#x2713; apply</div>
+						</div>
 					</div>
-					<div className="flex-grow-0">
-						<div onClick={this.appl} className={"hover-toggle " + (this.state.text == node.title ? "" : "hover-active")} style={{width:"50px", paddingLeft:"5px", fontSize:"12px", cursor:"pointer"}}>&#x2713; apply</div>
+				</div>
+				<div>
+					<h3>Details</h3>
+					<div className="flex">
+						<div className="flex-grow-1">
+							<div><textarea ref="lpnodedescription" className="no-outline" style={{textAlign:"center", fontSize:"12px", backgroundColor:"inherit", border : "none", borderBottom: "solid 1px black"}}
+										value={this.state.description} onChange={this.changeDescription} placeholder={"node's description"}></textarea>
+							</div>
+						</div>
+						<div className="flex-grow-0">
+							<div onClick={this.appl2} className={"hover-toggle " + (this.state.description == node.description ? "" : "hover-active")} style={{width:"50px", paddingLeft:"5px", fontSize:"12px", cursor:"pointer"}}>&#x2713; apply</div>
+						</div>
+					</div>
+				</div>
+				<div>
+					<h3>Scale</h3>
+					<div className="flex">
+						<div onClick={this.changeNodeScale.bind(this, 0.5)} className="flex-grow-1 scale-wrapper">
+							<div style={{fontSize:"12px", textAlign:"center"}}>small</div>
+							<div className={"scale-05 " + (node && node.scale == 0.5 ? "selected-scale" : "")}></div>
+						</div>
+						<div onClick={this.changeNodeScale.bind(this, 1)} className="flex-grow-1 scale-wrapper">
+							<div style={{fontSize:"12px", textAlign:"center"}}>normal</div>
+							<div className={"scale-1 " + (node && node.scale == 1 ? "selected-scale" : "")}></div>
+						</div>
+						<div onClick={this.changeNodeScale.bind(this, 2)} className="flex-grow-1 scale-wrapper">
+							<div style={{fontSize:"12px", textAlign:"center"}}>large</div>
+							<div className={"scale-2 " + (node && node.scale == 2 ? "selected-scale" : "")}></div>
+						</div>
 					</div>
 				</div>
 			</div>
