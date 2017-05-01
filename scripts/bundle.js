@@ -27761,17 +27761,43 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var User = function User(data) {
-  _classCallCheck(this, User);
+var User = function () {
+  function User(data) {
+    _classCallCheck(this, User);
 
-  if (data) {
-    for (var key in data) {
-      this[key] = data[key];
+    if (data) {
+      for (var key in data) {
+        this[key] = data[key];
+      }
     }
   }
-};
+
+  _createClass(User, [{
+    key: "cancelInvite",
+    value: function cancelInvite(mid, uid) {
+      delete this.invites[mid];
+      firebase.database().ref("users/" + uid + "/invites/" + mid).remove();
+      firebase.database().ref("maps/" + mid + "/invites/" + uid).remove();
+    }
+  }, {
+    key: "acceptInvite",
+    value: function acceptInvite(mid, uid) {
+      delete this.invites[mid];
+      firebase.database().ref("users/" + uid + "/invites/" + mid).remove();
+      firebase.database().ref("maps/" + mid + "/invites/" + uid).remove();
+      firebase.database().ref("users/" + uid + "/maps/" + mid).set(new Date().getTime());
+      firebase.database().ref("maps/" + mid + "/users/" + uid).set(this.name);
+      if (!this.maps) this.maps = {};
+      this.maps[mid] = new Date().getTime();
+    }
+  }]);
+
+  return User;
+}();
 
 exports.default = User;
 
@@ -27837,7 +27863,7 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 		)
 ), document.getElementById('root'));
 
-},{"../reducers/maps":297,"../reducers/users":298,"./map":291,"./maps":292,"./register":293,"./root":294,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],286:[function(require,module,exports){
+},{"../reducers/maps":298,"../reducers/users":299,"./map":292,"./maps":293,"./register":294,"./root":295,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],286:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27896,6 +27922,91 @@ var DeleteButton = function (_React$Component) {
 exports.default = DeleteButton;
 
 },{"react":255}],287:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var InviteLine = function (_React$Component) {
+	_inherits(InviteLine, _React$Component);
+
+	function InviteLine() {
+		_classCallCheck(this, InviteLine);
+
+		return _possibleConstructorReturn(this, (InviteLine.__proto__ || Object.getPrototypeOf(InviteLine)).apply(this, arguments));
+	}
+
+	_createClass(InviteLine, [{
+		key: "render",
+		value: function render() {
+
+			return _react2.default.createElement(
+				"div",
+				{ className: "invite-line", onClick: null },
+				_react2.default.createElement(
+					"div",
+					null,
+					this.props.invite.title
+				),
+				_react2.default.createElement(
+					"div",
+					{ style: { marginTop: "5px" } },
+					_react2.default.createElement(
+						"div",
+						{ className: "invite-line-buttons", onClick: this.props.validate },
+						_react2.default.createElement(
+							"span",
+							{ style: { marginRight: "3px" }, className: "inline-block" },
+							"\u2713"
+						),
+						_react2.default.createElement(
+							"span",
+							{ className: "inline-block", style: { marginRight: "3px" } },
+							"accept"
+						)
+					),
+					_react2.default.createElement(
+						"div",
+						{ className: "invite-line-buttons", onClick: this.props.cancel },
+						_react2.default.createElement(
+							"span",
+							{ style: { marginRight: "3px" }, className: "inline-block" },
+							"\xD7"
+						),
+						_react2.default.createElement(
+							"span",
+							{ className: "inline-block", style: { marginRight: "3px" } },
+							"cancel"
+						)
+					)
+				)
+			);
+		}
+	}]);
+
+	return InviteLine;
+}(_react2.default.Component);
+
+;
+
+exports.default = InviteLine;
+
+},{"react":255}],288:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28637,7 +28748,7 @@ var LogsBlock = function (_React$Component8) {
 
 ;
 
-},{"./deletebutton":286,"react":255}],288:[function(require,module,exports){
+},{"./deletebutton":286,"react":255}],289:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28901,7 +29012,7 @@ var ProspectLine = function (_React$Component3) {
 
 ;
 
-},{"../../services/auth":299,"react":255}],289:[function(require,module,exports){
+},{"../../services/auth":300,"react":255}],290:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29027,7 +29138,7 @@ var MapBlock = function (_React$Component) {
 
 exports.default = MapBlock;
 
-},{"react":255}],290:[function(require,module,exports){
+},{"react":255}],291:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29282,7 +29393,7 @@ var MapDetails = function (_React$Component) {
 
 exports.default = MapDetails;
 
-},{"react":255}],291:[function(require,module,exports){
+},{"react":255}],292:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29743,7 +29854,7 @@ var MapPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MapP
 
 exports.default = MapPage;
 
-},{"../models/map":281,"../properties/drawing":295,"../services/auth":299,"./dumbs/leftpanel":287,"react":255,"react-redux":182,"react-router":224}],292:[function(require,module,exports){
+},{"../models/map":281,"../properties/drawing":296,"../services/auth":300,"./dumbs/leftpanel":288,"react":255,"react-redux":182,"react-router":224}],293:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29786,6 +29897,10 @@ var _manageusers = require('./dumbs/manageusers');
 
 var _manageusers2 = _interopRequireDefault(_manageusers);
 
+var _invite = require('./dumbs/invite');
+
+var _invite2 = _interopRequireDefault(_invite);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -29809,9 +29924,13 @@ var MapsPageComp = function (_React$Component) {
 		_this.promptLeaveMap = _this.promptLeaveMap.bind(_this);
 		_this.leaveMap = _this.leaveMap.bind(_this);
 		_this.toggleManageUsers = _this.toggleManageUsers.bind(_this);
+		_this.fetchInvites = _this.fetchInvites.bind(_this);
+		_this.validateInvite = _this.validateInvite.bind(_this);
+		_this.cancelInvite = _this.cancelInvite.bind(_this);
 
 		_this.state = {
 			selected: 0,
+			invites: [],
 			selectedMap: null,
 			manageUsers: false
 		};
@@ -29831,6 +29950,61 @@ var MapsPageComp = function (_React$Component) {
 		key: 'componentWillUnMount',
 		value: function componentWillUnMount() {
 			this.removeCurrentOn();
+		}
+	}, {
+		key: 'validateInvite',
+		value: function validateInvite(ind) {
+			var _this3 = this;
+
+			console.log("validateInvite");
+			var usr = this.props.user;
+			var mid = this.state.invites[ind].mid;
+			usr.acceptInvite(mid, _auth2.default.getUid());
+			this.props.replaceUser(usr);
+			var invites = this.state.invites;
+			invites.splice(ind, 1);
+
+			firebase.database().ref('maps/' + mid).once("value", function (snap) {
+				if (snap && snap.val()) _this3.props.addMap(new _map2.default(snap.val()));
+				_this3.setState({
+					invites: invites
+				});
+			});
+		}
+	}, {
+		key: 'cancelInvite',
+		value: function cancelInvite(ind) {
+			var usr = this.props.user;
+			usr.cancelInvite(this.state.invites[ind].mid, _auth2.default.getUid());
+			this.props.replaceUser(usr);
+			var invites = this.state.invites;
+			invites.splice(ind, 1);
+			this.setState({
+				invites: invites
+			});
+		}
+	}, {
+		key: 'fetchInvites',
+		value: function fetchInvites() {
+			var _this4 = this;
+
+			if (this.props.user && this.props.user.invites) {
+				for (var mid in this.props.user.invites) {
+					if (!this.props.user.invites[mid].answer) {
+						firebase.database().ref('maps/' + mid + '/title').once("value", function (titlesnap) {
+							var title = titlesnap.val();
+							var invites = _this4.state.invites;
+							invites.push({
+								mid: mid,
+								title: title
+							});
+							_this4.setState({
+								invites: invites
+							});
+						});
+					}
+				}
+			}
 		}
 	}, {
 		key: 'toggleManageUsers',
@@ -29855,7 +30029,7 @@ var MapsPageComp = function (_React$Component) {
 	}, {
 		key: 'selectMap',
 		value: function selectMap(ind, force) {
-			var _this3 = this;
+			var _this5 = this;
 
 			if (ind !== this.state.selected || force) {
 				var map = this.props.maps[ind];
@@ -29870,17 +30044,17 @@ var MapsPageComp = function (_React$Component) {
 				firebase.database().ref('maps/' + mid).on("value", function (snap) {
 					if (snap && snap.val()) {
 						var newMp = new _map2.default(snap.val());
-						var mps = _this3.props.maps;
+						var mps = _this5.props.maps;
 						mps[ind] = newMp;
-						_this3.props.replaceMaps(mps);
+						_this5.props.replaceMaps(mps);
 					} else {
-						_this3.removeCurrentOn();
-						var mps = _this3.props.maps;
+						_this5.removeCurrentOn();
+						var mps = _this5.props.maps;
 						mps.splice(ind, 1);
-						_this3.props.replaceMaps(mps);
-						_this3.selectMap(0);
+						_this5.props.replaceMaps(mps);
+						_this5.selectMap(0);
 					}
-					_this3.forceUpdate();
+					_this5.forceUpdate();
 				});
 
 				this.setState({
@@ -29897,10 +30071,10 @@ var MapsPageComp = function (_React$Component) {
 				var count = 0;
 				for (var mid in this.props.user.maps) {
 					(function (mid) {
-						var _this4 = this;
+						var _this6 = this;
 
 						firebase.database().ref('maps/' + mid).once("value", function (snap) {
-							if (snap && snap.val()) _this4.props.addMap(new _map2.default(snap.val()));
+							if (snap && snap.val()) _this6.props.addMap(new _map2.default(snap.val()));
 							count++;
 							if (count == keysCount && callback) {
 								callback();
@@ -29913,7 +30087,7 @@ var MapsPageComp = function (_React$Component) {
 	}, {
 		key: 'createMap',
 		value: function createMap() {
-			var _this5 = this;
+			var _this7 = this;
 
 			var creationTimestamp = new Date().getTime();
 			var newMap = new _map2.default().initEmpty(_auth2.default.getUid(), creationTimestamp, this.props.user.name);
@@ -29923,15 +30097,15 @@ var MapsPageComp = function (_React$Component) {
 			newMap.mid = newMapkey;
 			newMapRef.set(newMap, function (error) {
 				if (!error) {
-					var mapArray = _this5.props.maps ? _this5.props.maps.concat(newMap) : [newMap];
-					_this5.props.replaceMaps(mapArray);
+					var mapArray = _this7.props.maps ? _this7.props.maps.concat(newMap) : [newMap];
+					_this7.props.replaceMaps(mapArray);
 					//Adding the Map to the user
 					firebase.database().ref('users/' + _auth2.default.getUid() + '/maps/' + newMapkey).set(creationTimestamp, function (error2) {
 						if (!error2) {
-							if (!_this5.props.user.maps) _this5.props.user.maps = {};
-							_this5.props.user.maps[newMapkey] = creationTimestamp;
-							_this5.props.replaceUser(_this5.props.user);
-							_this5.selectMap(mapArray.length - 1, true);
+							if (!_this7.props.user.maps) _this7.props.user.maps = {};
+							_this7.props.user.maps[newMapkey] = creationTimestamp;
+							_this7.props.replaceUser(_this7.props.user);
+							_this7.selectMap(mapArray.length - 1, true);
 						}
 					});
 				}
@@ -29996,7 +30170,14 @@ var MapsPageComp = function (_React$Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var maps = [];
+			var maps = [],
+			    invitesDom = [],
+			    pendingInvites = 0;
+			if (this.props.user && this.props.user.invites) {
+				for (var mid in this.props.user.invites) {
+					if (!this.props.user.invites[mid].answer) pendingInvites++;
+				}
+			}
 			for (var i = 0; i < this.props.maps.length + 1; i++) {
 				maps.push(_react2.default.createElement(_mapblock2.default, {
 					key: "map-block-" + i,
@@ -30018,6 +30199,12 @@ var MapsPageComp = function (_React$Component) {
 						goToMap: this.goToMap.bind(this, selectedMap.mid),
 						map: selectedMap, promptChangeTitle: this.promptChangeTitle,
 						leaveMap: this.promptLeaveMap, toggleManageUsers: this.toggleManageUsers });
+				}
+			}
+
+			if (this.state.invites) {
+				for (var i = 0; i < this.state.invites.length; i++) {
+					invitesDom.push(_react2.default.createElement(_invite2.default, { key: "invite-key-" + i, cancel: this.cancelInvite.bind(this, i), validate: this.validateInvite.bind(this, i), invite: this.state.invites[i] }));
 				}
 			}
 			return _react2.default.createElement(
@@ -30058,6 +30245,14 @@ var MapsPageComp = function (_React$Component) {
 							_react2.default.createElement(
 								'div',
 								{ className: 'flex-grow-0', style: { width: "200px" } },
+								_react2.default.createElement(
+									'div',
+									{ onClick: this.fetchInvites, className: 'pending-invites-cta', style: { display: pendingInvites && !this.state.invites.length ? "block" : "none" } },
+									pendingInvites,
+									' pending invitation',
+									pendingInvites > 1 ? "s" : ""
+								),
+								invitesDom,
 								maps
 							),
 							_react2.default.createElement(
@@ -30102,7 +30297,7 @@ var MapsPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Map
 
 exports.default = MapsPage;
 
-},{"../actions/maps":278,"../actions/users":279,"../models/map":281,"../services/auth":299,"./dumbs/manageusers":288,"./dumbs/mapblock":289,"./dumbs/mapdetails":290,"react":255,"react-redux":182,"react-router":224}],293:[function(require,module,exports){
+},{"../actions/maps":278,"../actions/users":279,"../models/map":281,"../services/auth":300,"./dumbs/invite":287,"./dumbs/manageusers":289,"./dumbs/mapblock":290,"./dumbs/mapdetails":291,"react":255,"react-redux":182,"react-router":224}],294:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30233,7 +30428,7 @@ var RegisterPage = function (_React$Component) {
 
 exports.default = RegisterPage;
 
-},{"../services/auth":299,"react":255}],294:[function(require,module,exports){
+},{"../services/auth":300,"react":255}],295:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30346,7 +30541,7 @@ var RootPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Roo
 
 exports.default = RootPage;
 
-},{"../actions/users":279,"../services/auth":299,"react":255,"react-redux":182,"react-router":224}],295:[function(require,module,exports){
+},{"../actions/users":279,"../services/auth":300,"react":255,"react-redux":182,"react-router":224}],296:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30360,7 +30555,7 @@ exports.default = {
 	selectedCircleStrokeWidth: "4px"
 };
 
-},{}],296:[function(require,module,exports){
+},{}],297:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30372,7 +30567,7 @@ exports.default = {
 	2: "Link created"
 };
 
-},{}],297:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30393,7 +30588,7 @@ function mapsReducers() {
 	}
 }
 
-},{}],298:[function(require,module,exports){
+},{}],299:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30412,7 +30607,7 @@ function usersReducers() {
 	}
 }
 
-},{}],299:[function(require,module,exports){
+},{}],300:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30482,4 +30677,4 @@ var AuthServices = function () {
 
 exports.default = AuthServices;
 
-},{"../models/user":284}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299]);
+},{"../models/user":284}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300]);

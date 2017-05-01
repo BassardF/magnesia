@@ -149,6 +149,7 @@ body {
 #maps-page #map-details-title {
   text-align: center;
   cursor: pointer;
+  margin-bottom: 15px;
 }
 #maps-page #map-details-title #map-details-title-sub {
   opacity: 0;
@@ -200,6 +201,39 @@ body {
 }
 #maps-page .invite-user-button:hover .show-hover {
   display: inline;
+}
+#maps-page .pending-invites-cta {
+  padding: 10px;
+  text-align: center;
+  border-radius: 3px;
+  border: solid 1px #9C27B0;
+  background-color: #9C27B0;
+  color: #FAFAFA;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+#maps-page .invite-line {
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 3px;
+  border: solid 1px #9C27B0;
+  background-color: #9C27B0;
+  color: #FAFAFA;
+}
+#maps-page .invite-line-buttons {
+  display: inline-block;
+  padding: 3px 5px;
+  border-radius: 5px;
+  border: solid 1px #FAFAFA;
+  margin-right: 5px;
+  cursor: pointer;
+  -webkit-transition: all .5s ease;
+  transition: all .5s ease;
+}
+#maps-page .invite-line-buttons:hover {
+  border: solid 1px #FAFAFA;
+  background-color: #FAFAFA;
+  color: purple;
 }
 .node-text-input {
   outline: none !important;
