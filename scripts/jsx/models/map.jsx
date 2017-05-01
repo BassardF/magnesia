@@ -1,5 +1,6 @@
 import Node from './node'
 import Link from './link'
+import Message from './message'
 
 class Map {
   
@@ -15,6 +16,12 @@ class Map {
 					this.links = [];
 					for(var nid in data.links){
 						this.links[nid] = new Link(data.links[nid], data.mid);
+					}
+				}
+				else if(key === "messages"){
+					this.messages = {};
+					for(var mid in data.messages){
+						this.messages[mid] = new Message(data.messages[mid], data.mid);
 					}
 				}
 				else this[key] = data[key];
@@ -85,8 +92,46 @@ class Map {
 		}
 	}
 
+	changeTitle(title){
+		this.title = title;
+		this.save();
+	}
+
 	save(){
 		firebase.database().ref('maps/' + this.mid).set(this);
+	}
+
+	invite(to, email, from){
+		if(!this.invites) this.invites = {};
+		this.invites[to] = {
+			from : from,
+			timestamp : new Date().getTime(),
+			email : email
+		};
+		firebase.database().ref('users/' + to + '/invites/' + this.mid).set({
+			from : from,
+			timestamp : new Date().getTime()	
+		});
+		this.save();
+	}
+
+	leave(uid){
+		if(this.users && Object.keys(this.users).length > 1){
+			firebase.database().ref('maps/' + this.mid + '/users/' + uid).remove();
+		} else {
+			firebase.database().ref('maps/' + this.mid).remove();
+		}
+		firebase.database().ref('users/' + uid + '/maps/' + this.mid).remove();
+	}
+
+	sendMessage(msg, uid, name){
+		var message = new Message({
+			content : msg,
+			uid : uid,
+			name : name,
+			timestamp : new Date().getTime()
+		});
+		firebase.database().ref('maps/' + this.mid + '/messages').push(message);
 	}
 
 	upgradeFromServer(data){

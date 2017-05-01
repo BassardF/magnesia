@@ -14,6 +14,8 @@ class RootPageComp extends React.Component {
 			if(user){
 				//No state user
 				if(!this.props.user){
+					//Set email for search
+					AuthServices.uploadEmail(user.uid, user.email);
 					//Check login case
 					AuthServices.fetchUser(user.uid, (fetchedUser)=>{
 						if(fetchedUser){
@@ -31,7 +33,10 @@ class RootPageComp extends React.Component {
 			//No token
 			} else {
 				//Remove user from state
-				if(this.props.user) this.props.replaceUser(null); 
+				if(this.props.user){
+					browserHistory.push('/');
+					// this.props.replaceUser(null); 	
+				}
 			}
 		});
 	}

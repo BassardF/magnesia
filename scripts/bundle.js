@@ -27442,6 +27442,10 @@ var _link = require('./link');
 
 var _link2 = _interopRequireDefault(_link);
 
+var _message = require('./message');
+
+var _message2 = _interopRequireDefault(_message);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -27461,6 +27465,11 @@ var Map = function () {
 					this.links = [];
 					for (var nid in data.links) {
 						this.links[nid] = new _link2.default(data.links[nid], data.mid);
+					}
+				} else if (key === "messages") {
+					this.messages = {};
+					for (var mid in data.messages) {
+						this.messages[mid] = new _message2.default(data.messages[mid], data.mid);
 					}
 				} else this[key] = data[key];
 			}
@@ -27533,9 +27542,51 @@ var Map = function () {
 			}
 		}
 	}, {
+		key: 'changeTitle',
+		value: function changeTitle(title) {
+			this.title = title;
+			this.save();
+		}
+	}, {
 		key: 'save',
 		value: function save() {
 			firebase.database().ref('maps/' + this.mid).set(this);
+		}
+	}, {
+		key: 'invite',
+		value: function invite(to, email, from) {
+			if (!this.invites) this.invites = {};
+			this.invites[to] = {
+				from: from,
+				timestamp: new Date().getTime(),
+				email: email
+			};
+			firebase.database().ref('users/' + to + '/invites/' + this.mid).set({
+				from: from,
+				timestamp: new Date().getTime()
+			});
+			this.save();
+		}
+	}, {
+		key: 'leave',
+		value: function leave(uid) {
+			if (this.users && Object.keys(this.users).length > 1) {
+				firebase.database().ref('maps/' + this.mid + '/users/' + uid).remove();
+			} else {
+				firebase.database().ref('maps/' + this.mid).remove();
+			}
+			firebase.database().ref('users/' + uid + '/maps/' + this.mid).remove();
+		}
+	}, {
+		key: 'sendMessage',
+		value: function sendMessage(msg, uid, name) {
+			var message = new _message2.default({
+				content: msg,
+				uid: uid,
+				name: name,
+				timestamp: new Date().getTime()
+			});
+			firebase.database().ref('maps/' + this.mid + '/messages').push(message);
 		}
 	}, {
 		key: 'upgradeFromServer',
@@ -27588,7 +27639,29 @@ var Map = function () {
 
 exports.default = Map;
 
-},{"./link":280,"./node":282}],282:[function(require,module,exports){
+},{"./link":280,"./message":282,"./node":283}],282:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Message = function Message(data, mid) {
+	_classCallCheck(this, Message);
+
+	if (mid) this.mid = mid;
+	if (data) {
+		for (var key in data) {
+			this[key] = data[key];
+		}
+	}
+};
+
+exports.default = Message;
+
+},{}],283:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27681,7 +27754,7 @@ var Node = function () {
 
 exports.default = Node;
 
-},{}],283:[function(require,module,exports){
+},{}],284:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27702,7 +27775,7 @@ var User = function User(data) {
 
 exports.default = User;
 
-},{}],284:[function(require,module,exports){
+},{}],285:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -27764,7 +27837,7 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 		)
 ), document.getElementById('root'));
 
-},{"../reducers/maps":293,"../reducers/users":294,"./map":287,"./maps":288,"./register":289,"./root":290,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],285:[function(require,module,exports){
+},{"../reducers/maps":297,"../reducers/users":298,"./map":291,"./maps":292,"./register":293,"./root":294,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],286:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27822,7 +27895,7 @@ var DeleteButton = function (_React$Component) {
 
 exports.default = DeleteButton;
 
-},{"react":255}],286:[function(require,module,exports){
+},{"react":255}],287:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27882,6 +27955,7 @@ var LeftPanel = function (_React$Component) {
 			    title = "";
 			var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 			if (!nodeSelected && this.state.nav == 1) this.state.nav = 0;
+			var subSpace = window.innerHeight - (76 + 40 + 42);
 			switch (this.state.nav) {
 				case 0:
 					dom = _react2.default.createElement(NodeTree, { map: this.props.map,
@@ -27900,9 +27974,11 @@ var LeftPanel = function (_React$Component) {
 					break;
 				case 2:
 					title = "Messages";
+					dom = _react2.default.createElement(MessageBlock, { vspace: subSpace, map: this.props.map, sendMessage: this.props.sendMessage });
 					break;
 				case 3:
 					title = "Logs";
+					dom = _react2.default.createElement(LogsBlock, null);
 					break;
 			}
 
@@ -27922,23 +27998,23 @@ var LeftPanel = function (_React$Component) {
 						{ className: 'flex' },
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.selectNav.bind(this, 0), className: this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav" },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 0 ? "placeholder.svg" : "placeholder-white.svg") })
+							{ onClick: this.selectNav.bind(this, 0), className: this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: "pointer" } },
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 0 ? "tree.svg" : "tree-white.svg") })
 						),
 						_react2.default.createElement(
 							'div',
-							{ onClick: nodeSelected ? this.selectNav.bind(this, 1) : null, className: this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav" },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../magnesia/assets/images/" + (this.state.nav == 1 ? "placeholder.svg" : "placeholder-white.svg") })
+							{ onClick: nodeSelected ? this.selectNav.bind(this, 1) : null, className: this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: nodeSelected ? "pointer" : "not-allowed" } },
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../magnesia/assets/images/" + (this.state.nav == 1 ? "node.svg" : "node-white.svg") })
 						),
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.selectNav.bind(this, 2), className: this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav" },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 2 ? "placeholder.svg" : "placeholder-white.svg") })
+							{ onClick: this.selectNav.bind(this, 2), className: this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: "pointer" } },
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 2 ? "chat.svg" : "chat-white.svg") })
 						),
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.selectNav.bind(this, 3), className: this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav" },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 3 ? "placeholder.svg" : "placeholder-white.svg") })
+							{ onClick: this.selectNav.bind(this, 3), className: this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: "pointer" } },
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
 						)
 					)
 				),
@@ -28284,7 +28360,7 @@ var NodeDetails = function (_React$Component5) {
 							_react2.default.createElement(
 								'div',
 								null,
-								_react2.default.createElement('textarea', { ref: 'lpnodedescription', className: 'no-outline', style: { textAlign: "center", fontSize: "12px", backgroundColor: "inherit", border: "none", borderBottom: "solid 1px black" },
+								_react2.default.createElement('textarea', { rows: '1', ref: 'lpnodedescription', className: 'no-outline', style: { textAlign: "center", fontSize: "12px", backgroundColor: "inherit", border: "none", borderBottom: "solid 1px black", resize: "none" },
 									value: this.state.description, onChange: this.changeDescription, placeholder: "node's description" })
 							)
 						),
@@ -28351,7 +28427,862 @@ var NodeDetails = function (_React$Component5) {
 
 ;
 
-},{"./deletebutton":285,"react":255}],287:[function(require,module,exports){
+var MessageBlock = function (_React$Component6) {
+	_inherits(MessageBlock, _React$Component6);
+
+	function MessageBlock(props) {
+		_classCallCheck(this, MessageBlock);
+
+		var _this7 = _possibleConstructorReturn(this, (MessageBlock.__proto__ || Object.getPrototypeOf(MessageBlock)).call(this, props));
+
+		_this7.changePrompt = _this7.changePrompt.bind(_this7);
+		_this7.send = _this7.send.bind(_this7);
+		_this7.okd = _this7.okd.bind(_this7);
+		_this7.state = {};
+		return _this7;
+	}
+
+	_createClass(MessageBlock, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			this.refs.prompt.focus();
+			var el = this.refs.messages;
+			if (el) el.scrollTop = el.scrollHeight;
+		}
+	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate() {
+			var el = this.refs.messages;
+			if (el) el.scrollTop = el.scrollHeight;
+		}
+	}, {
+		key: 'changePrompt',
+		value: function changePrompt(e) {
+			this.setState({
+				prompt: e.target.value
+			}, function () {
+				var el = this.refs.prompt;
+				setTimeout(function () {
+					var baseCss = "width:98%;text-align: center; font-size: 12px; background-color: inherit; border-top: none; border-right: none; border-bottom: 1px solid black; border-left: none; border-image: initial;resize: none;";
+					el.style.cssText = baseCss + 'height:auto; padding:0';
+					el.style.cssText = baseCss + 'height:' + el.scrollHeight + 'px';
+				}, 0);
+			});
+		}
+	}, {
+		key: 'okd',
+		value: function okd(e) {
+			if (e.keyCode == 13 && this.state.prompt) {
+				e.stopPropagation();
+				e.preventDefault();
+				this.send();
+			}
+		}
+	}, {
+		key: 'send',
+		value: function send() {
+			this.props.sendMessage(this.state.prompt);
+			this.setState({
+				prompt: ''
+			});
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var msgs = [];
+			if (this.props.map.messages) {
+				for (var mid in this.props.map.messages) {
+					msgs.push(_react2.default.createElement(MessageLine, { key: "key-msg-" + mid, message: this.props.map.messages[mid] }));
+				}
+			}
+			var headerHeight = 41;
+			var headerNode = this.refs.msgactionwrapper;
+			if (headerNode) {
+				headerHeight = headerNode.offsetHeight;
+			}
+
+			var msgHeight = this.props.vspace - 40 - headerHeight;
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'div',
+					{ ref: 'msgactionwrapper' },
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement('textarea', { ref: 'prompt', rows: '1', onKeyDown: this.okd, className: 'no-outline', style: { width: "98%", textAlign: "center", fontSize: "12px", backgroundColor: "inherit", border: "none", borderBottom: "solid 1px black", resize: "none" },
+								value: this.state.prompt, onChange: this.changePrompt, placeholder: "message..." })
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { height: "17px" } },
+						_react2.default.createElement(
+							'div',
+							{ onClick: this.state.prompt ? this.send : null, className: "hover-toggle " + (this.state.prompt ? "hover-active" : ""), style: { marginBottom: "5px", marginTop: "5px", fontSize: "14px", cursor: this.state.prompt ? "pointer" : "default", textAlign: "center" } },
+							'\u2712 send'
+						)
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ ref: 'messages', style: { overflow: "scroll", height: msgHeight + "px" } },
+					msgs
+				)
+			);
+		}
+	}]);
+
+	return MessageBlock;
+}(_react2.default.Component);
+
+;
+
+var MessageLine = function (_React$Component7) {
+	_inherits(MessageLine, _React$Component7);
+
+	function MessageLine() {
+		_classCallCheck(this, MessageLine);
+
+		return _possibleConstructorReturn(this, (MessageLine.__proto__ || Object.getPrototypeOf(MessageLine)).apply(this, arguments));
+	}
+
+	_createClass(MessageLine, [{
+		key: 'render',
+		value: function render() {
+			var time = this.props.message && this.props.message.timestamp ? this.props.message.timestamp : null;
+			if (time) {
+				var t = new Date(time),
+				    now = new Date();
+				if (t.getDate() == now.getDate() && t.getMonth() == now.getMonth() && t.getFullYear() == now.getFullYear()) {
+					time = t.getHours() + ":" + (t.getMinutes() < 10 ? '0' : '') + t.getMinutes();
+				} else {
+					var months = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
+					time = t.getDate() + " " + months[t.getMonth()] + " " + (t.getFullYear() - 2000);
+				}
+			}
+
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'h4',
+						{ style: { fontSize: "15px", marginBottom: "0px" } },
+						this.props.message.name
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { fontSize: "11px", textAlign: "right" } },
+						time
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { fontSize: "13px" } },
+					this.props.message.content
+				)
+			);
+		}
+	}]);
+
+	return MessageLine;
+}(_react2.default.Component);
+
+;
+
+var LogsBlock = function (_React$Component8) {
+	_inherits(LogsBlock, _React$Component8);
+
+	function LogsBlock() {
+		_classCallCheck(this, LogsBlock);
+
+		return _possibleConstructorReturn(this, (LogsBlock.__proto__ || Object.getPrototypeOf(LogsBlock)).apply(this, arguments));
+	}
+
+	_createClass(LogsBlock, [{
+		key: 'render',
+		value: function render() {
+
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'div',
+						{ style: { marginTop: "20px", marginBottom: "20px", textAlign: "center", fontSize: "22px" } },
+						'Area under'
+					),
+					_react2.default.createElement('img', { style: { width: "70px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../magnesia/assets/images/construction.svg' }),
+					_react2.default.createElement(
+						'div',
+						{ style: { marginTop: "20px", textAlign: "center", fontSize: "22px" } },
+						'construction'
+					)
+				)
+			);
+		}
+	}]);
+
+	return LogsBlock;
+}(_react2.default.Component);
+
+;
+
+},{"./deletebutton":286,"react":255}],288:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _auth = require('../../services/auth');
+
+var _auth2 = _interopRequireDefault(_auth);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ManageUsers = function (_React$Component) {
+	_inherits(ManageUsers, _React$Component);
+
+	function ManageUsers(props) {
+		_classCallCheck(this, ManageUsers);
+
+		var _this = _possibleConstructorReturn(this, (ManageUsers.__proto__ || Object.getPrototypeOf(ManageUsers)).call(this, props));
+
+		_this.changeSearch = _this.changeSearch.bind(_this);
+		_this.inviteUser = _this.inviteUser.bind(_this);
+
+		_this.state = {
+			search: "",
+			results: []
+		};
+		return _this;
+	}
+
+	_createClass(ManageUsers, [{
+		key: 'inviteUser',
+		value: function inviteUser(uid, email) {
+			var map = this.props.map;
+			map.invite(uid, email, _auth2.default.getUid());
+		}
+	}, {
+		key: 'changeSearch',
+		value: function changeSearch(e) {
+			var _this2 = this;
+
+			var val = e.target.value;
+			var arr = [];
+			if (val && val.length >= 3) {
+				firebase.database().ref('emails').orderByKey().startAt(val).limitToFirst(10).once("value", function (res) {
+					var results = res.val();
+					if (results) {
+						for (var email in results) {
+							arr.push({
+								email: email,
+								uid: results[email]
+							});
+						}
+					}
+					_this2.setState({
+						results: arr
+					});
+				});
+			}
+			this.setState({
+				search: val
+			});
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var map = this.props.map;
+
+			var userDom = [],
+			    invitedDom = [],
+			    prospectDom = [];;
+
+			for (var uid in map.users) {
+				userDom.push(_react2.default.createElement(UserLine, { key: "key-user-selected-line" + uid, uid: uid, name: map.users[uid] }));
+			}
+
+			if (map.invites) {
+				for (var uid in map.invites) {
+					userDom.push(_react2.default.createElement(ProspectLine, { key: "key-prospect-selected-line" + uid, invited: true, uid: uid, name: map.invites[uid].email }));
+				}
+			}
+
+			for (var i = 0; i < this.state.results.length; i++) {
+				var uid = this.state.results[i].uid;
+				var email = this.state.results[i].email;
+				var invited = !!(map.invites && map.invites[uid]);
+				if (!invited) {
+					userDom.push(_react2.default.createElement(ProspectLine, { key: "key-prospect-selected-line" + uid, invited: false, uid: uid, name: email, inviteUser: this.inviteUser.bind(this, uid, email) }));
+				}
+			}
+
+			return _react2.default.createElement(
+				'div',
+				{ className: 'map-details' },
+				_react2.default.createElement(
+					'div',
+					{ id: 'map-details-title', onClick: this.props.promptChangeTitle },
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'span',
+							{ id: 'map-details-title-content' },
+							this.props.map.title
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { marginTop: "7px" } },
+						_react2.default.createElement(
+							'span',
+							{ id: 'map-details-title-sub' },
+							_react2.default.createElement('img', { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../magnesia/assets/images/edit.svg' }),
+							_react2.default.createElement(
+								'span',
+								{ style: { verticalAlign: "middle" } },
+								'edit'
+							)
+						)
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { fontSize: "14px", height: "20px" } },
+					_react2.default.createElement(
+						'div',
+						{ onClick: this.props.toggleManageUsers, className: 'purple-unerlined-hover', style: { cursor: "pointer", display: "inline-block", marginLeft: "10px" } },
+						_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../magnesia/assets/images/arrow-right.svg' }),
+						_react2.default.createElement(
+							'span',
+							{ style: { verticalAlign: "middle" } },
+							'back to my maps'
+						)
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'search-user-input-wrapper', style: { maxWidth: "280px", marginTop: "30px", marginRight: "auto", marginLeft: "auto" } },
+					_react2.default.createElement('img', { style: { verticalAlign: "middle", width: "20px", marginRight: "5px" }, src: '../magnesia/assets/images/magnifier.svg' }),
+					_react2.default.createElement('input', { value: this.state.value, onChange: this.changeSearch, placeholder: 'email address', style: { verticalAlign: "middle", width: "250px", fontSize: "17px", border: "none", outline: "none" } })
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { marginTop: "30px", maxWidth: "500px", marginRight: "auto", marginLeft: "auto" } },
+					userDom
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { marginTop: "30px", maxWidth: "500px", marginRight: "auto", marginLeft: "auto" } },
+					prospectDom
+				)
+			);
+		}
+	}]);
+
+	return ManageUsers;
+}(_react2.default.Component);
+
+;
+
+exports.default = ManageUsers;
+
+var UserLine = function (_React$Component2) {
+	_inherits(UserLine, _React$Component2);
+
+	function UserLine() {
+		_classCallCheck(this, UserLine);
+
+		return _possibleConstructorReturn(this, (UserLine.__proto__ || Object.getPrototypeOf(UserLine)).apply(this, arguments));
+	}
+
+	_createClass(UserLine, [{
+		key: 'render',
+		value: function render() {
+			return _react2.default.createElement(
+				'div',
+				{ className: 'selected-user-line' },
+				_react2.default.createElement(
+					'div',
+					{ className: 'flex' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'flex-grow-1' },
+						this.props.name
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { textAlign: "right" }, className: 'flex-grow-1 purple' },
+						'\u2713 joined'
+					)
+				)
+			);
+		}
+	}]);
+
+	return UserLine;
+}(_react2.default.Component);
+
+;
+
+var ProspectLine = function (_React$Component3) {
+	_inherits(ProspectLine, _React$Component3);
+
+	function ProspectLine() {
+		_classCallCheck(this, ProspectLine);
+
+		return _possibleConstructorReturn(this, (ProspectLine.__proto__ || Object.getPrototypeOf(ProspectLine)).apply(this, arguments));
+	}
+
+	_createClass(ProspectLine, [{
+		key: 'render',
+		value: function render() {
+
+			var rs = this.props.invited ? _react2.default.createElement(
+				'div',
+				{ style: { textAlign: "right" }, className: 'flex-grow-1 purple' },
+				'\u2713 invited'
+			) : _react2.default.createElement(
+				'span',
+				{ className: 'invite-user-button', onClick: this.props.inviteUser || null },
+				_react2.default.createElement('img', { className: 'hide-hover', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../magnesia/assets/images/invite-purple.svg' }),
+				_react2.default.createElement('img', { className: 'show-hover', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../magnesia/assets/images/invite-grey.svg' }),
+				'invite'
+			);
+
+			return _react2.default.createElement(
+				'div',
+				{ className: 'selected-user-line' },
+				_react2.default.createElement(
+					'div',
+					{ className: 'flex' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'flex-grow-1' },
+						this.props.name
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { textAlign: "right" }, className: 'flex-grow-1 purple' },
+						rs
+					)
+				)
+			);
+		}
+	}]);
+
+	return ProspectLine;
+}(_react2.default.Component);
+
+;
+
+},{"../../services/auth":299,"react":255}],289:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var MapBlock = function (_React$Component) {
+	_inherits(MapBlock, _React$Component);
+
+	function MapBlock() {
+		_classCallCheck(this, MapBlock);
+
+		return _possibleConstructorReturn(this, (MapBlock.__proto__ || Object.getPrototypeOf(MapBlock)).apply(this, arguments));
+	}
+
+	_createClass(MapBlock, [{
+		key: "render",
+		value: function render() {
+
+			if (this.props.map) {
+				return _react2.default.createElement(
+					"div",
+					{ className: this.props.selected ? "map-block-selected" : "map-block", onClick: this.props.selected ? null : this.props.selectMap },
+					_react2.default.createElement(
+						"div",
+						{ className: "map-block-sub" },
+						_react2.default.createElement("img", { style: { verticalAlign: "middle", height: "20px", width: "20px" }, src: "../magnesia/assets/images/map.svg" }),
+						_react2.default.createElement(
+							"span",
+							{ style: { verticalAlign: "middle", marginLeft: "10px" } },
+							this.props.map.title
+						),
+						_react2.default.createElement(
+							"div",
+							{ className: "flex " + (this.props.selected ? "hide" : ""), style: { fontSize: "12px", marginTop: "10px" } },
+							_react2.default.createElement(
+								"div",
+								{ className: "flex-grow-1" },
+								_react2.default.createElement(
+									"div",
+									null,
+									_react2.default.createElement(
+										"span",
+										{ className: "purple" },
+										this.props.map.nodes.length
+									),
+									" nodes"
+								),
+								_react2.default.createElement(
+									"div",
+									{ style: { marginTop: "3px" } },
+									_react2.default.createElement(
+										"span",
+										{ className: "purple" },
+										this.props.map.users ? Object.keys(this.props.map.users).length : 0
+									),
+									" users"
+								)
+							),
+							_react2.default.createElement(
+								"div",
+								{ className: "flex-grow-1" },
+								_react2.default.createElement(
+									"div",
+									null,
+									_react2.default.createElement(
+										"span",
+										{ className: "purple" },
+										this.props.map.messages ? Object.keys(this.props.map.messages).length : 0
+									),
+									" messages"
+								),
+								_react2.default.createElement(
+									"div",
+									{ style: { marginTop: "3px" } },
+									_react2.default.createElement(
+										"span",
+										{ className: "purple" },
+										this.props.map.links ? Object.keys(this.props.map.links).length : 0
+									),
+									" links"
+								)
+							)
+						)
+					)
+				);
+			} else {
+				return _react2.default.createElement(
+					"div",
+					{ onClick: this.props.createMap, className: "empty-map-block", style: { textAlign: "center", cursor: "pointer" } },
+					_react2.default.createElement(
+						"div",
+						{ style: { marginTop: "20px" } },
+						_react2.default.createElement(
+							"span",
+							{ style: { verticalAlign: "middle", fontSize: "25px", marginRight: "10px" } },
+							"+"
+						)
+					)
+				);
+			}
+		}
+	}]);
+
+	return MapBlock;
+}(_react2.default.Component);
+
+;
+
+exports.default = MapBlock;
+
+},{"react":255}],290:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var MapDetails = function (_React$Component) {
+	_inherits(MapDetails, _React$Component);
+
+	function MapDetails() {
+		_classCallCheck(this, MapDetails);
+
+		return _possibleConstructorReturn(this, (MapDetails.__proto__ || Object.getPrototypeOf(MapDetails)).apply(this, arguments));
+	}
+
+	_createClass(MapDetails, [{
+		key: "render",
+		value: function render() {
+			var map = this.props.map;
+			var counts = {
+				nodes: this.props.map.nodes.length,
+				users: this.props.map.users ? Object.keys(this.props.map.users).length : 0,
+				messages: this.props.map.messages ? Object.keys(this.props.map.messages).length : 0,
+				links: this.props.map.links ? Object.keys(this.props.map.links).length : 0
+			};
+			var max = Math.max(counts.nodes, counts.users, counts.messages, counts.links, 5);
+
+			return _react2.default.createElement(
+				"div",
+				{ className: "map-details" },
+				_react2.default.createElement(
+					"div",
+					{ id: "map-details-title", onClick: this.props.promptChangeTitle },
+					_react2.default.createElement(
+						"div",
+						null,
+						_react2.default.createElement(
+							"span",
+							{ id: "map-details-title-content" },
+							this.props.map.title
+						)
+					),
+					_react2.default.createElement(
+						"div",
+						{ style: { marginTop: "7px" } },
+						_react2.default.createElement(
+							"span",
+							{ id: "map-details-title-sub" },
+							_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../magnesia/assets/images/edit.svg" }),
+							_react2.default.createElement(
+								"span",
+								{ style: { verticalAlign: "middle" } },
+								"edit"
+							)
+						)
+					)
+				),
+				_react2.default.createElement(
+					"div",
+					{ style: { fontSize: "14px", height: "20px" } },
+					_react2.default.createElement(
+						"div",
+						{ onClick: this.props.leaveMap, className: "purple-unerlined-hover", style: { marginRight: "10px", cursor: "pointer", float: "right", display: "inline-block" } },
+						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../magnesia/assets/images/exit.svg" }),
+						_react2.default.createElement(
+							"span",
+							{ style: { verticalAlign: "middle" } },
+							"leave map"
+						)
+					),
+					_react2.default.createElement(
+						"div",
+						{ style: { float: "right", display: "inline-block", marginLeft: "10px", marginRight: "10px" } },
+						" | "
+					),
+					_react2.default.createElement(
+						"div",
+						{ onClick: this.props.toggleManageUsers, className: "purple-unerlined-hover", style: { cursor: "pointer", float: "right", display: "inline-block" } },
+						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../magnesia/assets/images/invite.svg" }),
+						_react2.default.createElement(
+							"span",
+							{ style: { verticalAlign: "middle" } },
+							"manage users"
+						)
+					),
+					_react2.default.createElement(
+						"div",
+						{ style: { float: "right", display: "inline-block", marginLeft: "10px", marginRight: "10px" } },
+						" | "
+					),
+					_react2.default.createElement(
+						"div",
+						{ onClick: this.props.goToMap, className: "purple-unerlined-hover", style: { cursor: "pointer", float: "right", display: "inline-block" } },
+						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../magnesia/assets/images/map.svg" }),
+						_react2.default.createElement(
+							"span",
+							{ style: { verticalAlign: "middle" } },
+							"get in"
+						)
+					)
+				),
+				_react2.default.createElement(
+					"div",
+					{ style: { paddingLeft: "40px", paddingRight: "40px" } },
+					_react2.default.createElement(
+						"div",
+						{ className: "flex", style: { marginTop: "30px" } },
+						_react2.default.createElement(
+							"div",
+							{ className: "flex-grow-0" },
+							_react2.default.createElement(
+								"div",
+								{ style: { width: "100px" } },
+								_react2.default.createElement(
+									"div",
+									{ style: { marginTop: "10px" } },
+									"users"
+								),
+								_react2.default.createElement(
+									"div",
+									{ style: { float: "right", marginTop: "-17px", marginRight: "5px" } },
+									counts.users
+								)
+							)
+						),
+						_react2.default.createElement(
+							"div",
+							{ className: "flex-grow-1" },
+							_react2.default.createElement(
+								"div",
+								null,
+								_react2.default.createElement("div", { style: { width: counts.users * 100 / max + "%" }, className: "maps-progress-bar blue0-bcg" })
+							)
+						)
+					),
+					_react2.default.createElement(
+						"div",
+						{ className: "flex", style: { marginTop: "30px" } },
+						_react2.default.createElement(
+							"div",
+							{ className: "flex-grow-0" },
+							_react2.default.createElement(
+								"div",
+								{ style: { width: "100px" } },
+								_react2.default.createElement(
+									"div",
+									{ style: { marginTop: "10px" } },
+									"nodes"
+								),
+								_react2.default.createElement(
+									"div",
+									{ style: { float: "right", marginTop: "-17px", marginRight: "5px" } },
+									counts.nodes
+								)
+							)
+						),
+						_react2.default.createElement(
+							"div",
+							{ className: "flex-grow-1" },
+							_react2.default.createElement(
+								"div",
+								null,
+								_react2.default.createElement("div", { style: { width: counts.nodes * 100 / max + "%" }, className: "maps-progress-bar blue1-bcg" })
+							)
+						)
+					),
+					_react2.default.createElement(
+						"div",
+						{ className: "flex", style: { marginTop: "30px" } },
+						_react2.default.createElement(
+							"div",
+							{ className: "flex-grow-0" },
+							_react2.default.createElement(
+								"div",
+								{ style: { width: "100px" } },
+								_react2.default.createElement(
+									"div",
+									{ style: { marginTop: "10px" } },
+									"links"
+								),
+								_react2.default.createElement(
+									"div",
+									{ style: { float: "right", marginTop: "-17px", marginRight: "5px" } },
+									counts.links
+								)
+							)
+						),
+						_react2.default.createElement(
+							"div",
+							{ className: "flex-grow-1" },
+							_react2.default.createElement(
+								"div",
+								null,
+								_react2.default.createElement("div", { style: { width: counts.links * 100 / max + "%" }, className: "maps-progress-bar blue2-bcg" })
+							)
+						)
+					),
+					_react2.default.createElement(
+						"div",
+						{ className: "flex", style: { marginTop: "30px" } },
+						_react2.default.createElement(
+							"div",
+							{ className: "flex-grow-0" },
+							_react2.default.createElement(
+								"div",
+								{ style: { width: "100px" } },
+								_react2.default.createElement(
+									"div",
+									{ style: { marginTop: "10px" } },
+									"messages"
+								),
+								_react2.default.createElement(
+									"div",
+									{ style: { float: "right", marginTop: "-17px", marginRight: "5px" } },
+									counts.messages
+								)
+							)
+						),
+						_react2.default.createElement(
+							"div",
+							{ className: "flex-grow-1" },
+							_react2.default.createElement(
+								"div",
+								null,
+								_react2.default.createElement("div", { style: { width: counts.messages * 100 / max + "%" }, className: "maps-progress-bar blue3-bcg" })
+							)
+						)
+					)
+				)
+			);
+		}
+	}]);
+
+	return MapDetails;
+}(_react2.default.Component);
+
+;
+
+exports.default = MapDetails;
+
+},{"react":255}],291:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28408,6 +29339,8 @@ var MapPageComp = function (_React$Component) {
 		_this.drawNodes = _this.drawNodes.bind(_this);
 		_this.drawLinks = _this.drawLinks.bind(_this);
 		_this.selectLink = _this.selectLink.bind(_this);
+
+		_this.sendMessage = _this.sendMessage.bind(_this);
 
 		_this.changeNodeText = _this.changeNodeText.bind(_this);
 		_this.changeNodeDescription = _this.changeNodeDescription.bind(_this);
@@ -28490,6 +29423,13 @@ var MapPageComp = function (_React$Component) {
 			var map = this.state.map;
 			map.addNewNode(_auth2.default.getUid(), x, y, this.state.selectedNode);
 			map.save();
+		}
+	}, {
+		key: 'sendMessage',
+		value: function sendMessage(msg) {
+			var uid = _auth2.default.getUid();
+			var name = this.props.user ? this.props.user.name : "John Doe";
+			this.state.map.sendMessage(msg, uid, name);
 		}
 	}, {
 		key: 'changeNodeScale',
@@ -28751,7 +29691,8 @@ var MapPageComp = function (_React$Component) {
 							selectedNode: this.state.selectedNode, selectNode: this.selectNode,
 							changeNodeScale: this.changeNodeScale,
 							deleteSelectedNode: this.deleteSelectedNode,
-							deleteLink: this.deleteLink
+							deleteLink: this.deleteLink,
+							sendMessage: this.sendMessage
 						})
 					),
 					_react2.default.createElement(
@@ -28802,7 +29743,7 @@ var MapPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MapP
 
 exports.default = MapPage;
 
-},{"../models/map":281,"../properties/drawing":291,"../services/auth":295,"./dumbs/leftpanel":286,"react":255,"react-redux":182,"react-router":224}],288:[function(require,module,exports){
+},{"../models/map":281,"../properties/drawing":295,"../services/auth":299,"./dumbs/leftpanel":287,"react":255,"react-redux":182,"react-router":224}],292:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28833,6 +29774,18 @@ var _map = require('../models/map');
 
 var _map2 = _interopRequireDefault(_map);
 
+var _mapblock = require('./dumbs/mapblock');
+
+var _mapblock2 = _interopRequireDefault(_mapblock);
+
+var _mapdetails = require('./dumbs/mapdetails');
+
+var _mapdetails2 = _interopRequireDefault(_mapdetails);
+
+var _manageusers = require('./dumbs/manageusers');
+
+var _manageusers2 = _interopRequireDefault(_manageusers);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28851,32 +29804,116 @@ var MapsPageComp = function (_React$Component) {
 
 		_this.refreshMaps = _this.refreshMaps.bind(_this);
 		_this.createMap = _this.createMap.bind(_this);
-		_this.state = {};
+		_this.selectMap = _this.selectMap.bind(_this);
+		_this.promptChangeTitle = _this.promptChangeTitle.bind(_this);
+		_this.promptLeaveMap = _this.promptLeaveMap.bind(_this);
+		_this.leaveMap = _this.leaveMap.bind(_this);
+		_this.toggleManageUsers = _this.toggleManageUsers.bind(_this);
+
+		_this.state = {
+			selected: 0,
+			selectedMap: null,
+			manageUsers: false
+		};
 		return _this;
 	}
 
 	_createClass(MapsPageComp, [{
 		key: 'componentWillMount',
 		value: function componentWillMount() {
-			this.refreshMaps();
+			var _this2 = this;
+
+			this.refreshMaps(function () {
+				_this2.selectMap(0, true);
+			});
+		}
+	}, {
+		key: 'componentWillUnMount',
+		value: function componentWillUnMount() {
+			this.removeCurrentOn();
+		}
+	}, {
+		key: 'toggleManageUsers',
+		value: function toggleManageUsers() {
+			this.setState({
+				manageUsers: !this.state.manageUsers
+			});
+		}
+	}, {
+		key: 'logout',
+		value: function logout() {
+			_auth2.default.logout();
+		}
+	}, {
+		key: 'removeCurrentOn',
+		value: function removeCurrentOn() {
+			if (this.props.maps && this.props.maps[this.state.selected]) {
+				var mid = this.props.maps[this.state.selected].mid;
+				firebase.database().ref('maps/' + mid).off();
+			}
+		}
+	}, {
+		key: 'selectMap',
+		value: function selectMap(ind, force) {
+			var _this3 = this;
+
+			if (ind !== this.state.selected || force) {
+				var map = this.props.maps[ind];
+				if (!map && this.props.user && this.props.user.maps) {
+					var keys = Object.keys(this.props.user.maps);
+					var mid = keys[ind];
+				} else if (map) {
+					var mid = map.mid;
+				} else return;
+
+				this.removeCurrentOn();
+				firebase.database().ref('maps/' + mid).on("value", function (snap) {
+					if (snap && snap.val()) {
+						var newMp = new _map2.default(snap.val());
+						var mps = _this3.props.maps;
+						mps[ind] = newMp;
+						_this3.props.replaceMaps(mps);
+					} else {
+						_this3.removeCurrentOn();
+						var mps = _this3.props.maps;
+						mps.splice(ind, 1);
+						_this3.props.replaceMaps(mps);
+						_this3.selectMap(0);
+					}
+					_this3.forceUpdate();
+				});
+
+				this.setState({
+					selected: ind,
+					manageUsers: false
+				});
+			}
 		}
 	}, {
 		key: 'refreshMaps',
-		value: function refreshMaps() {
-			var _this2 = this;
-
+		value: function refreshMaps(callback) {
 			if (this.props.user && this.props.user.maps) {
+				var keysCount = Object.keys(this.props.user.maps).length;
+				var count = 0;
 				for (var mid in this.props.user.maps) {
-					firebase.database().ref('maps/' + mid).once("value", function (snap) {
-						if (snap && snap.val()) _this2.props.addMap(new _map2.default(snap.val()));
-					});
+					(function (mid) {
+						var _this4 = this;
+
+						firebase.database().ref('maps/' + mid).once("value", function (snap) {
+							if (snap && snap.val()) _this4.props.addMap(new _map2.default(snap.val()));
+							count++;
+							if (count == keysCount && callback) {
+								callback();
+							}
+						});
+					}).bind(this)(mid);
 				}
 			}
 		}
 	}, {
 		key: 'createMap',
 		value: function createMap() {
-			var _this3 = this;
+			var _this5 = this;
 
 			var creationTimestamp = new Date().getTime();
 			var newMap = new _map2.default().initEmpty(_auth2.default.getUid(), creationTimestamp, this.props.user.name);
@@ -28886,13 +29923,15 @@ var MapsPageComp = function (_React$Component) {
 			newMap.mid = newMapkey;
 			newMapRef.set(newMap, function (error) {
 				if (!error) {
-					_this3.props.replaceMaps(_this3.props.maps ? _this3.props.maps.concat(newMap) : [newMap]);
+					var mapArray = _this5.props.maps ? _this5.props.maps.concat(newMap) : [newMap];
+					_this5.props.replaceMaps(mapArray);
 					//Adding the Map to the user
 					firebase.database().ref('users/' + _auth2.default.getUid() + '/maps/' + newMapkey).set(creationTimestamp, function (error2) {
 						if (!error2) {
-							if (!_this3.props.user.maps) _this3.props.user.maps = {};
-							_this3.props.user.maps[newMapkey] = creationTimestamp;
-							_this3.props.replaceUser(_this3.props.user);
+							if (!_this5.props.user.maps) _this5.props.user.maps = {};
+							_this5.props.user.maps[newMapkey] = creationTimestamp;
+							_this5.props.replaceUser(_this5.props.user);
+							_this5.selectMap(mapArray.length - 1, true);
 						}
 					});
 				}
@@ -28901,41 +29940,132 @@ var MapsPageComp = function (_React$Component) {
 	}, {
 		key: 'goToMap',
 		value: function goToMap(mid) {
+			this.removeCurrentOn();
 			_reactRouter.browserHistory.push('/map/' + mid);
+		}
+	}, {
+		key: 'changeCurrentMapTitle',
+		value: function changeCurrentMapTitle(title) {
+			var selectedMap = this.props.maps[this.state.selected];
+			selectedMap.changeTitle(title);
+		}
+	}, {
+		key: 'promptChangeTitle',
+		value: function promptChangeTitle() {
+			var selectedMap = this.props.maps[this.state.selected];
+			swal({
+				title: "Change title",
+				text: "Choose a new title for '" + selectedMap.title + "'",
+				type: "input",
+				showCancelButton: true,
+				closeOnConfirm: false,
+				inputPlaceholder: "title"
+			}, function (inputValue) {
+				if (inputValue === false) return false;
+
+				if (inputValue === "") {
+					swal.showInputError("Choose a new title!");
+					return false;
+				}
+				this.changeCurrentMapTitle(inputValue);
+				swal("Title changed!", "New title: " + inputValue, "success");
+			}.bind(this));
+		}
+	}, {
+		key: 'leaveMap',
+		value: function leaveMap() {
+			var selectedMap = this.props.maps[this.state.selected];
+			selectedMap.leave(_auth2.default.getUid());
+		}
+	}, {
+		key: 'promptLeaveMap',
+		value: function promptLeaveMap() {
+			swal({
+				title: "Are you sure?",
+				text: "Would you like to leave this map?",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "Yes!",
+				closeOnConfirm: false
+			}, function () {
+				swal("Done", "You have just left the map!", "success");
+				this.leaveMap();
+			}.bind(this));
 		}
 	}, {
 		key: 'render',
 		value: function render() {
 			var maps = [];
-			for (var i = 0; i < this.props.maps.length; i++) {
-				maps.push(_react2.default.createElement(
-					'div',
-					{ onClick: this.goToMap.bind(this, this.props.maps[i].mid), key: "map-line-" + i },
-					this.props.maps[i].title
-				));
+			for (var i = 0; i < this.props.maps.length + 1; i++) {
+				maps.push(_react2.default.createElement(_mapblock2.default, {
+					key: "map-block-" + i,
+					map: this.props.maps[i],
+					selected: this.state.selected == i,
+					selectMap: this.selectMap.bind(this, i),
+					goToMap: this.props.maps[i] ? this.goToMap.bind(this, this.props.maps[i].mid) : null,
+					createMap: this.createMap }));
+			}
+			var selectedMap = this.props.maps[this.state.selected],
+			    rightSide = null;
+			if (selectedMap) {
+				if (this.state.manageUsers) {
+					rightSide = _react2.default.createElement(_manageusers2.default, {
+						map: selectedMap, promptChangeTitle: this.promptChangeTitle,
+						toggleManageUsers: this.toggleManageUsers });
+				} else {
+					rightSide = _react2.default.createElement(_mapdetails2.default, {
+						goToMap: this.goToMap.bind(this, selectedMap.mid),
+						map: selectedMap, promptChangeTitle: this.promptChangeTitle,
+						leaveMap: this.promptLeaveMap, toggleManageUsers: this.toggleManageUsers });
+				}
 			}
 			return _react2.default.createElement(
 				'div',
 				{ id: 'maps-page' },
 				_react2.default.createElement(
 					'div',
-					null,
+					{ style: { maxWidth: "900px", marginLeft: "auto", marginRight: "auto" } },
 					_react2.default.createElement(
-						'h1',
-						null,
-						'Maps'
+						'div',
+						{ id: 'logo-wrapper' },
+						_react2.default.createElement(
+							'div',
+							{ id: 'logo' },
+							'Mg.'
+						),
+						_react2.default.createElement(
+							'div',
+							{ style: { float: "right", marginRight: "20px", marginTop: "-50px" } },
+							_react2.default.createElement(
+								'div',
+								{ style: { display: "inline-block", marginRight: "20px" } },
+								this.props.user.name
+							),
+							_react2.default.createElement(
+								'div',
+								{ style: { display: "inline-block", cursor: "pointer" }, onClick: this.logout },
+								'logout'
+							)
+						)
 					),
 					_react2.default.createElement(
-						'h2',
-						null,
-						'Welcome, ',
-						this.props.user.name
-					),
-					maps,
-					_react2.default.createElement(
-						'button',
-						{ onClick: this.createMap },
-						'Create map'
+						'div',
+						{ style: { paddingLeft: "20px", paddingRight: "20px" } },
+						_react2.default.createElement(
+							'div',
+							{ className: 'flex' },
+							_react2.default.createElement(
+								'div',
+								{ className: 'flex-grow-0', style: { width: "200px" } },
+								maps
+							),
+							_react2.default.createElement(
+								'div',
+								{ className: 'flex-grow-1' },
+								rightSide
+							)
+						)
 					)
 				)
 			);
@@ -28972,8 +30102,8 @@ var MapsPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Map
 
 exports.default = MapsPage;
 
-},{"../actions/maps":278,"../actions/users":279,"../models/map":281,"../services/auth":295,"react":255,"react-redux":182,"react-router":224}],289:[function(require,module,exports){
-"use strict";
+},{"../actions/maps":278,"../actions/users":279,"../models/map":281,"../services/auth":299,"./dumbs/manageusers":288,"./dumbs/mapblock":289,"./dumbs/mapdetails":290,"react":255,"react-redux":182,"react-router":224}],293:[function(require,module,exports){
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -28981,9 +30111,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _auth = require('../services/auth');
+
+var _auth2 = _interopRequireDefault(_auth);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29014,7 +30148,7 @@ var RegisterPage = function (_React$Component) {
 	}
 
 	_createClass(RegisterPage, [{
-		key: "changeEmail",
+		key: 'changeEmail',
 		value: function changeEmail() {
 			var _this2 = this;
 
@@ -29025,7 +30159,7 @@ var RegisterPage = function (_React$Component) {
 			});
 		}
 	}, {
-		key: "changePwd",
+		key: 'changePwd',
 		value: function changePwd() {
 			var _this3 = this;
 
@@ -29036,7 +30170,7 @@ var RegisterPage = function (_React$Component) {
 			});
 		}
 	}, {
-		key: "register",
+		key: 'register',
 		value: function register() {
 			firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.pwd).catch(function (error) {
 				var errorCode = error.code;
@@ -29045,7 +30179,7 @@ var RegisterPage = function (_React$Component) {
 			});
 		}
 	}, {
-		key: "login",
+		key: 'login',
 		value: function login() {
 			firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.pwd).catch(function (error) {
 				var errorCode = error.code;
@@ -29054,38 +30188,38 @@ var RegisterPage = function (_React$Component) {
 			});
 		}
 	}, {
-		key: "render",
+		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
-				"div",
-				{ id: "register-page" },
+				'div',
+				{ id: 'register-page' },
 				_react2.default.createElement(
-					"div",
+					'div',
 					null,
 					_react2.default.createElement(
-						"h1",
+						'h1',
 						null,
-						"Regiser"
+						'Regiser'
 					),
 					_react2.default.createElement(
-						"div",
+						'div',
 						null,
-						_react2.default.createElement("input", { ref: "email", type: "email", value: this.state.email, onChange: this.changeEmail, placeholder: "Email" })
+						_react2.default.createElement('input', { ref: 'email', type: 'email', value: this.state.email, onChange: this.changeEmail, placeholder: 'Email' })
 					),
 					_react2.default.createElement(
-						"div",
+						'div',
 						null,
-						_react2.default.createElement("input", { ref: "pwd", type: "password", value: this.state.pwd, onChange: this.changePwd, placeholder: "Password" })
+						_react2.default.createElement('input', { ref: 'pwd', type: 'password', value: this.state.pwd, onChange: this.changePwd, placeholder: 'Password' })
 					),
 					_react2.default.createElement(
-						"button",
+						'button',
 						{ onClick: this.register },
-						"register"
+						'register'
 					),
 					_react2.default.createElement(
-						"button",
+						'button',
 						{ onClick: this.login },
-						"login"
+						'login'
 					)
 				)
 			);
@@ -29099,7 +30233,7 @@ var RegisterPage = function (_React$Component) {
 
 exports.default = RegisterPage;
 
-},{"react":255}],290:[function(require,module,exports){
+},{"../services/auth":299,"react":255}],294:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29152,6 +30286,8 @@ var RootPageComp = function (_React$Component) {
 				if (user) {
 					//No state user
 					if (!_this2.props.user) {
+						//Set email for search
+						_auth2.default.uploadEmail(user.uid, user.email);
 						//Check login case
 						_auth2.default.fetchUser(user.uid, function (fetchedUser) {
 							if (fetchedUser) {
@@ -29169,7 +30305,10 @@ var RootPageComp = function (_React$Component) {
 					//No token
 				} else {
 					//Remove user from state
-					if (_this2.props.user) _this2.props.replaceUser(null);
+					if (_this2.props.user) {
+						_reactRouter.browserHistory.push('/');
+						// this.props.replaceUser(null); 	
+					}
 				}
 			});
 		}
@@ -29207,7 +30346,7 @@ var RootPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Roo
 
 exports.default = RootPage;
 
-},{"../actions/users":279,"../services/auth":295,"react":255,"react-redux":182,"react-router":224}],291:[function(require,module,exports){
+},{"../actions/users":279,"../services/auth":299,"react":255,"react-redux":182,"react-router":224}],295:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29221,7 +30360,7 @@ exports.default = {
 	selectedCircleStrokeWidth: "4px"
 };
 
-},{}],292:[function(require,module,exports){
+},{}],296:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29233,7 +30372,7 @@ exports.default = {
 	2: "Link created"
 };
 
-},{}],293:[function(require,module,exports){
+},{}],297:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29254,7 +30393,7 @@ function mapsReducers() {
 	}
 }
 
-},{}],294:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29273,7 +30412,7 @@ function usersReducers() {
 	}
 }
 
-},{}],295:[function(require,module,exports){
+},{}],299:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29311,7 +30450,6 @@ var AuthServices = function () {
   }, {
     key: 'fetchUser',
     value: function fetchUser(uid, callback) {
-
       firebase.database().ref('users/' + uid).once("value", function (snap) {
         if (callback) callback(snap && snap.val() ? new _user2.default(snap.val()) : null);
       });
@@ -29321,6 +30459,22 @@ var AuthServices = function () {
     value: function getUid() {
       return firebase.auth().currentUser ? firebase.auth().currentUser.uid : null;
     }
+  }, {
+    key: 'logout',
+    value: function logout() {
+      firebase.auth().signOut();
+    }
+  }, {
+    key: 'uploadEmail',
+    value: function uploadEmail(uid, email) {
+      var unauthorized = [".", "#", "$", "[", "]"];
+      if (uid && email) {
+        for (var i = 0; i < unauthorized.length; i++) {
+          email = email.split(unauthorized[i]).join("_");
+        }
+        firebase.database().ref('emails/' + email).set(uid);
+      }
+    }
   }]);
 
   return AuthServices;
@@ -29328,4 +30482,4 @@ var AuthServices = function () {
 
 exports.default = AuthServices;
 
-},{"../models/user":283}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295]);
+},{"../models/user":284}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299]);

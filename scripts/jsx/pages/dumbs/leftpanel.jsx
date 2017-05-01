@@ -27,6 +27,7 @@ class LeftPanel extends React.Component {
 		var dom = null, title = "";
 		var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 		if(!nodeSelected && this.state.nav == 1) this.state.nav = 0;
+		let subSpace = window.innerHeight - (76 + 40 + 42);
 		switch(this.state.nav) {
 		    case 0:
 		        dom = <NodeTree map={this.props.map} 
@@ -45,9 +46,11 @@ class LeftPanel extends React.Component {
 		        break;
 		    case 2:
 		        title = "Messages";
+		        dom = <MessageBlock vspace={subSpace} map={this.props.map} sendMessage={this.props.sendMessage}/>
 		        break;
 		    case 3:
 		        title = "Logs";
+		        dom = <LogsBlock/>
 		        break;
 		}
 
@@ -57,17 +60,17 @@ class LeftPanel extends React.Component {
 				<div className="">
 
 					<div className="flex">
-						<div onClick={this.selectNav.bind(this, 0)} className={this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav"}>
-							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../magnesia/assets/images/"+ (this.state.nav == 0 ? "placeholder.svg" : "placeholder-white.svg")}/>
+						<div onClick={this.selectNav.bind(this, 0)} className={this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav"} style={{cursor : "pointer"}}>
+							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../magnesia/assets/images/"+ (this.state.nav == 0 ? "tree.svg" : "tree-white.svg")}/>
 						</div>
-						<div onClick={nodeSelected ? this.selectNav.bind(this, 1) : null} className={this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav"}>
-							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto", opacity : (nodeSelected ? "1" : ".5")}} src={"../magnesia/assets/images/"+ (this.state.nav == 1 ? "placeholder.svg" : "placeholder-white.svg")}/>
+						<div onClick={nodeSelected ? this.selectNav.bind(this, 1) : null} className={this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav"} style={{cursor : (nodeSelected ? "pointer" : "not-allowed")}}>
+							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto", opacity : (nodeSelected ? "1" : ".5")}} src={"../magnesia/assets/images/"+ (this.state.nav == 1 ? "node.svg" : "node-white.svg")}/>
 						</div>
-						<div onClick={this.selectNav.bind(this, 2)} className={this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav"}>
-							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../magnesia/assets/images/"+ (this.state.nav == 2 ? "placeholder.svg" : "placeholder-white.svg")}/>
+						<div onClick={this.selectNav.bind(this, 2)} className={this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav"} style={{cursor : "pointer"}}>
+							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../magnesia/assets/images/"+ (this.state.nav == 2 ? "chat.svg" : "chat-white.svg")}/>
 						</div>
-						<div onClick={this.selectNav.bind(this, 3)} className={this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"}>
-							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../magnesia/assets/images/"+ (this.state.nav == 3 ? "placeholder.svg" : "placeholder-white.svg")}/>
+						<div onClick={this.selectNav.bind(this, 3)} className={this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"} style={{cursor : "pointer"}}>
+							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../magnesia/assets/images/"+ (this.state.nav == 3 ? "logs.svg" : "logs-white.svg")}/>
 						</div>
 					</div>
 
@@ -296,7 +299,7 @@ class NodeDetails extends React.Component {
 					<h3>Details</h3>
 					<div className="flex">
 						<div className="flex-grow-1">
-							<div><textarea ref="lpnodedescription" className="no-outline" style={{textAlign:"center", fontSize:"12px", backgroundColor:"inherit", border : "none", borderBottom: "solid 1px black"}}
+							<div><textarea rows="1" ref="lpnodedescription" className="no-outline" style={{textAlign:"center", fontSize:"12px", backgroundColor:"inherit", border : "none", borderBottom: "solid 1px black", resize: "none"}}
 										value={this.state.description} onChange={this.changeDescription} placeholder={"node's description"}></textarea>
 							</div>
 						</div>
@@ -327,3 +330,132 @@ class NodeDetails extends React.Component {
 	}
 };
 
+class MessageBlock extends React.Component {
+
+	constructor(props) {
+	    super(props);
+	    this.changePrompt = this.changePrompt.bind(this);
+	    this.send = this.send.bind(this);
+	    this.okd = this.okd.bind(this);
+	    this.state = {};
+	}
+
+	componentDidMount(){
+		this.refs.prompt.focus();
+		var el = this.refs.messages;
+		if(el) el.scrollTop = el.scrollHeight;
+	}
+
+	componentDidUpdate(){
+		var el = this.refs.messages;
+		if(el) el.scrollTop = el.scrollHeight;
+	}
+
+	changePrompt(e){
+		this.setState({
+			prompt : e.target.value
+		}, function(){
+			var el = this.refs.prompt;
+			setTimeout(function(){
+				var baseCss = "width:98%;text-align: center; font-size: 12px; background-color: inherit; border-top: none; border-right: none; border-bottom: 1px solid black; border-left: none; border-image: initial;resize: none;";
+				el.style.cssText = baseCss + 'height:auto; padding:0';
+				el.style.cssText = baseCss + 'height:' + el.scrollHeight + 'px';
+			}, 0);
+		});
+	}
+
+	okd(e){
+		if(e.keyCode == 13 && this.state.prompt) {
+			e.stopPropagation();
+			e.preventDefault();
+			this.send();
+		}
+	}
+
+	send(){
+		this.props.sendMessage(this.state.prompt);
+		this.setState({
+			prompt : ''
+		});
+	}
+
+	render() {
+		let msgs = [];
+		if(this.props.map.messages){
+			for(var mid in this.props.map.messages){
+				msgs.push(
+					<MessageLine key={"key-msg-" + mid} message={this.props.map.messages[mid]}/>
+				);
+			}
+		}
+		let headerHeight = 41;
+		let headerNode = this.refs.msgactionwrapper;
+		if(headerNode){
+			headerHeight = headerNode.offsetHeight;	
+		}
+
+		let msgHeight = this.props.vspace - 40 - headerHeight;
+		return (
+			<div>
+				<div ref="msgactionwrapper">
+					<div>
+						<div>
+							<textarea ref="prompt" rows="1" onKeyDown={this.okd} className="no-outline" style={{width:"98%", textAlign:"center", fontSize:"12px", backgroundColor:"inherit", border : "none", borderBottom: "solid 1px black", resize: "none"}}
+									  value={this.state.prompt} onChange={this.changePrompt} placeholder={"message..."}></textarea>
+						</div>
+					</div>
+					<div style={{height:"17px"}}>
+						<div onClick={this.state.prompt ? this.send : null} className={"hover-toggle " + (this.state.prompt ? "hover-active" : "")} style={{marginBottom:"5px", marginTop:"5px", fontSize:"14px", cursor:(this.state.prompt ? "pointer" : "default"), textAlign: "center"}}>&#x2712; send</div>
+					</div>
+				</div>
+				<div ref='messages' style={{overflow:"scroll", height: msgHeight + "px"}}>
+					{msgs}
+				</div>
+			</div>
+		);
+	}
+};
+
+class MessageLine extends React.Component {
+
+	render() {
+		let time = this.props.message && this.props.message.timestamp ? this.props.message.timestamp : null;
+		if(time){
+			let t = new Date(time), now = new Date();
+			if(t.getDate() == now.getDate() && t.getMonth() == now.getMonth() && t.getFullYear() == now.getFullYear()){
+				time = t.getHours() + ":" + (t.getMinutes()<10?'0':'') + t.getMinutes();
+			} else {
+				let months = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
+				time = t.getDate() + " " + (months[t.getMonth()]) + " " + (t.getFullYear()-2000);
+			}
+		}
+
+		return (
+			<div>
+				<div>
+					<h4 style={{fontSize:"15px", marginBottom:"0px"}}>{this.props.message.name}</h4>
+					<div style={{fontSize:"11px", textAlign:"right"}}>{time}</div>
+				</div>
+				<div style={{fontSize:"13px"}}>
+					{this.props.message.content} 
+				</div>
+			</div>
+		);
+	}
+};
+
+class LogsBlock extends React.Component {
+
+	render() {
+
+		return (
+			<div>
+				<div>
+					<div style={{marginTop:"20px", marginBottom:"20px", textAlign:"center", fontSize : "22px"}}>Area under</div>
+					<img style={{width:"70px", display : "block", marginLeft:"auto", marginRight:"auto"}} src="../magnesia/assets/images/construction.svg"/>
+					<div style={{marginTop:"20px", textAlign:"center", fontSize : "22px"}}>construction</div>
+				</div>
+			</div>
+		);
+	}
+};

@@ -35,7 +35,6 @@ var AuthServices = function () {
   }, {
     key: 'fetchUser',
     value: function fetchUser(uid, callback) {
-
       firebase.database().ref('users/' + uid).once("value", function (snap) {
         if (callback) callback(snap && snap.val() ? new _user2.default(snap.val()) : null);
       });
@@ -44,6 +43,22 @@ var AuthServices = function () {
     key: 'getUid',
     value: function getUid() {
       return firebase.auth().currentUser ? firebase.auth().currentUser.uid : null;
+    }
+  }, {
+    key: 'logout',
+    value: function logout() {
+      firebase.auth().signOut();
+    }
+  }, {
+    key: 'uploadEmail',
+    value: function uploadEmail(uid, email) {
+      var unauthorized = [".", "#", "$", "[", "]"];
+      if (uid && email) {
+        for (var i = 0; i < unauthorized.length; i++) {
+          email = email.split(unauthorized[i]).join("_");
+        }
+        firebase.database().ref('emails/' + email).set(uid);
+      }
     }
   }]);
 

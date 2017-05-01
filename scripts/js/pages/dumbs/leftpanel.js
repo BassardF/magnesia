@@ -57,6 +57,7 @@ var LeftPanel = function (_React$Component) {
 			    title = "";
 			var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 			if (!nodeSelected && this.state.nav == 1) this.state.nav = 0;
+			var subSpace = window.innerHeight - (76 + 40 + 42);
 			switch (this.state.nav) {
 				case 0:
 					dom = _react2.default.createElement(NodeTree, { map: this.props.map,
@@ -75,9 +76,11 @@ var LeftPanel = function (_React$Component) {
 					break;
 				case 2:
 					title = "Messages";
+					dom = _react2.default.createElement(MessageBlock, { vspace: subSpace, map: this.props.map, sendMessage: this.props.sendMessage });
 					break;
 				case 3:
 					title = "Logs";
+					dom = _react2.default.createElement(LogsBlock, null);
 					break;
 			}
 
@@ -97,23 +100,23 @@ var LeftPanel = function (_React$Component) {
 						{ className: 'flex' },
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.selectNav.bind(this, 0), className: this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav" },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 0 ? "placeholder.svg" : "placeholder-white.svg") })
+							{ onClick: this.selectNav.bind(this, 0), className: this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: "pointer" } },
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 0 ? "tree.svg" : "tree-white.svg") })
 						),
 						_react2.default.createElement(
 							'div',
-							{ onClick: nodeSelected ? this.selectNav.bind(this, 1) : null, className: this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav" },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../magnesia/assets/images/" + (this.state.nav == 1 ? "placeholder.svg" : "placeholder-white.svg") })
+							{ onClick: nodeSelected ? this.selectNav.bind(this, 1) : null, className: this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: nodeSelected ? "pointer" : "not-allowed" } },
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../magnesia/assets/images/" + (this.state.nav == 1 ? "node.svg" : "node-white.svg") })
 						),
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.selectNav.bind(this, 2), className: this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav" },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 2 ? "placeholder.svg" : "placeholder-white.svg") })
+							{ onClick: this.selectNav.bind(this, 2), className: this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: "pointer" } },
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 2 ? "chat.svg" : "chat-white.svg") })
 						),
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.selectNav.bind(this, 3), className: this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav" },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 3 ? "placeholder.svg" : "placeholder-white.svg") })
+							{ onClick: this.selectNav.bind(this, 3), className: this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: "pointer" } },
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
 						)
 					)
 				),
@@ -459,7 +462,7 @@ var NodeDetails = function (_React$Component5) {
 							_react2.default.createElement(
 								'div',
 								null,
-								_react2.default.createElement('textarea', { ref: 'lpnodedescription', className: 'no-outline', style: { textAlign: "center", fontSize: "12px", backgroundColor: "inherit", border: "none", borderBottom: "solid 1px black" },
+								_react2.default.createElement('textarea', { rows: '1', ref: 'lpnodedescription', className: 'no-outline', style: { textAlign: "center", fontSize: "12px", backgroundColor: "inherit", border: "none", borderBottom: "solid 1px black", resize: "none" },
 									value: this.state.description, onChange: this.changeDescription, placeholder: "node's description" })
 							)
 						),
@@ -522,6 +525,216 @@ var NodeDetails = function (_React$Component5) {
 	}]);
 
 	return NodeDetails;
+}(_react2.default.Component);
+
+;
+
+var MessageBlock = function (_React$Component6) {
+	_inherits(MessageBlock, _React$Component6);
+
+	function MessageBlock(props) {
+		_classCallCheck(this, MessageBlock);
+
+		var _this7 = _possibleConstructorReturn(this, (MessageBlock.__proto__ || Object.getPrototypeOf(MessageBlock)).call(this, props));
+
+		_this7.changePrompt = _this7.changePrompt.bind(_this7);
+		_this7.send = _this7.send.bind(_this7);
+		_this7.okd = _this7.okd.bind(_this7);
+		_this7.state = {};
+		return _this7;
+	}
+
+	_createClass(MessageBlock, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			this.refs.prompt.focus();
+			var el = this.refs.messages;
+			if (el) el.scrollTop = el.scrollHeight;
+		}
+	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate() {
+			var el = this.refs.messages;
+			if (el) el.scrollTop = el.scrollHeight;
+		}
+	}, {
+		key: 'changePrompt',
+		value: function changePrompt(e) {
+			this.setState({
+				prompt: e.target.value
+			}, function () {
+				var el = this.refs.prompt;
+				setTimeout(function () {
+					var baseCss = "width:98%;text-align: center; font-size: 12px; background-color: inherit; border-top: none; border-right: none; border-bottom: 1px solid black; border-left: none; border-image: initial;resize: none;";
+					el.style.cssText = baseCss + 'height:auto; padding:0';
+					el.style.cssText = baseCss + 'height:' + el.scrollHeight + 'px';
+				}, 0);
+			});
+		}
+	}, {
+		key: 'okd',
+		value: function okd(e) {
+			if (e.keyCode == 13 && this.state.prompt) {
+				e.stopPropagation();
+				e.preventDefault();
+				this.send();
+			}
+		}
+	}, {
+		key: 'send',
+		value: function send() {
+			this.props.sendMessage(this.state.prompt);
+			this.setState({
+				prompt: ''
+			});
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var msgs = [];
+			if (this.props.map.messages) {
+				for (var mid in this.props.map.messages) {
+					msgs.push(_react2.default.createElement(MessageLine, { key: "key-msg-" + mid, message: this.props.map.messages[mid] }));
+				}
+			}
+			var headerHeight = 41;
+			var headerNode = this.refs.msgactionwrapper;
+			if (headerNode) {
+				headerHeight = headerNode.offsetHeight;
+			}
+
+			var msgHeight = this.props.vspace - 40 - headerHeight;
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'div',
+					{ ref: 'msgactionwrapper' },
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement('textarea', { ref: 'prompt', rows: '1', onKeyDown: this.okd, className: 'no-outline', style: { width: "98%", textAlign: "center", fontSize: "12px", backgroundColor: "inherit", border: "none", borderBottom: "solid 1px black", resize: "none" },
+								value: this.state.prompt, onChange: this.changePrompt, placeholder: "message..." })
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { height: "17px" } },
+						_react2.default.createElement(
+							'div',
+							{ onClick: this.state.prompt ? this.send : null, className: "hover-toggle " + (this.state.prompt ? "hover-active" : ""), style: { marginBottom: "5px", marginTop: "5px", fontSize: "14px", cursor: this.state.prompt ? "pointer" : "default", textAlign: "center" } },
+							'\u2712 send'
+						)
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ ref: 'messages', style: { overflow: "scroll", height: msgHeight + "px" } },
+					msgs
+				)
+			);
+		}
+	}]);
+
+	return MessageBlock;
+}(_react2.default.Component);
+
+;
+
+var MessageLine = function (_React$Component7) {
+	_inherits(MessageLine, _React$Component7);
+
+	function MessageLine() {
+		_classCallCheck(this, MessageLine);
+
+		return _possibleConstructorReturn(this, (MessageLine.__proto__ || Object.getPrototypeOf(MessageLine)).apply(this, arguments));
+	}
+
+	_createClass(MessageLine, [{
+		key: 'render',
+		value: function render() {
+			var time = this.props.message && this.props.message.timestamp ? this.props.message.timestamp : null;
+			if (time) {
+				var t = new Date(time),
+				    now = new Date();
+				if (t.getDate() == now.getDate() && t.getMonth() == now.getMonth() && t.getFullYear() == now.getFullYear()) {
+					time = t.getHours() + ":" + (t.getMinutes() < 10 ? '0' : '') + t.getMinutes();
+				} else {
+					var months = ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."];
+					time = t.getDate() + " " + months[t.getMonth()] + " " + (t.getFullYear() - 2000);
+				}
+			}
+
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'h4',
+						{ style: { fontSize: "15px", marginBottom: "0px" } },
+						this.props.message.name
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { fontSize: "11px", textAlign: "right" } },
+						time
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { fontSize: "13px" } },
+					this.props.message.content
+				)
+			);
+		}
+	}]);
+
+	return MessageLine;
+}(_react2.default.Component);
+
+;
+
+var LogsBlock = function (_React$Component8) {
+	_inherits(LogsBlock, _React$Component8);
+
+	function LogsBlock() {
+		_classCallCheck(this, LogsBlock);
+
+		return _possibleConstructorReturn(this, (LogsBlock.__proto__ || Object.getPrototypeOf(LogsBlock)).apply(this, arguments));
+	}
+
+	_createClass(LogsBlock, [{
+		key: 'render',
+		value: function render() {
+
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'div',
+						{ style: { marginTop: "20px", marginBottom: "20px", textAlign: "center", fontSize: "22px" } },
+						'Area under'
+					),
+					_react2.default.createElement('img', { style: { width: "70px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../magnesia/assets/images/construction.svg' }),
+					_react2.default.createElement(
+						'div',
+						{ style: { marginTop: "20px", textAlign: "center", fontSize: "22px" } },
+						'construction'
+					)
+				)
+			);
+		}
+	}]);
+
+	return LogsBlock;
 }(_react2.default.Component);
 
 ;

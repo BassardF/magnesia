@@ -1,5 +1,7 @@
 import React from 'react'
 
+import AuthServices from '../services/auth'
+
 class RegisterPage extends React.Component {
 
 	constructor(props) {

@@ -50,6 +50,8 @@ var RootPageComp = function (_React$Component) {
 				if (user) {
 					//No state user
 					if (!_this2.props.user) {
+						//Set email for search
+						_auth2.default.uploadEmail(user.uid, user.email);
 						//Check login case
 						_auth2.default.fetchUser(user.uid, function (fetchedUser) {
 							if (fetchedUser) {
@@ -67,7 +69,10 @@ var RootPageComp = function (_React$Component) {
 					//No token
 				} else {
 					//Remove user from state
-					if (_this2.props.user) _this2.props.replaceUser(null);
+					if (_this2.props.user) {
+						_reactRouter.browserHistory.push('/');
+						// this.props.replaceUser(null); 	
+					}
 				}
 			});
 		}

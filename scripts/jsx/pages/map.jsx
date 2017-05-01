@@ -18,6 +18,8 @@ class MapPageComp extends React.Component {
 		this.drawLinks = this.drawLinks.bind(this);
 		this.selectLink = this.selectLink.bind(this);
 
+		this.sendMessage = this.sendMessage.bind(this);
+
 		this.changeNodeText = this.changeNodeText.bind(this);
 		this.changeNodeDescription = this.changeNodeDescription.bind(this);
 		this.changeNodeScale = this.changeNodeScale.bind(this);
@@ -87,6 +89,12 @@ class MapPageComp extends React.Component {
 		var map = this.state.map;
 		map.addNewNode(AuthServices.getUid(), x, y, this.state.selectedNode);
 		map.save();
+	}
+
+	sendMessage(msg){
+		var uid = AuthServices.getUid();
+		var name = this.props.user ? this.props.user.name : "John Doe";
+		this.state.map.sendMessage(msg, uid, name);
 	}
 
 	changeNodeScale(nid, scale){
@@ -352,6 +360,7 @@ class MapPageComp extends React.Component {
 								   changeNodeScale={this.changeNodeScale}
 								   deleteSelectedNode={this.deleteSelectedNode}
 								   deleteLink={this.deleteLink}
+								   sendMessage={this.sendMessage}
 								   />
 					</div>
 

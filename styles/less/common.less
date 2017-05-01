@@ -82,6 +82,24 @@ html, body {
 	 outline: none !important;
 }
 
+.purple{
+	color : @purple;
+}
+
+.purple-bcg{
+	background-color: @purple;
+}
+
+.purple-unerlined-hover{
+	-webkit-transition: all .5s ease;
+	transition: all .5s ease;
+	border-bottom : solid 2px white;
+}
+
+.purple-unerlined-hover:hover{
+	border-bottom : solid 2px @lightPurple;
+}
+
 .hover-toggle{
 	opacity:0;
 
@@ -92,4 +110,26 @@ html, body {
     	opacity: 1;
     }
 
+}
+
+.blue0-bcg{
+	background-color: @blue-0;
+}
+
+.blue1-bcg{
+	background-color: @blue-1;
+}
+
+.blue2-bcg{
+	background-color: @blue-2;
+}
+
+.blue3-bcg{
+	background-color: @blue-3;
+}
+
+.rotate-180{
+    -ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
 }

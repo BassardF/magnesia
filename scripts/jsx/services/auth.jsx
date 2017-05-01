@@ -16,15 +16,28 @@ class AuthServices {
   }
 
   static fetchUser(uid, callback) {
-
     firebase.database().ref('users/' + uid).once("value", (snap)=>{
       if(callback) callback(snap && snap.val() ? new User(snap.val()) : null);
     });
-    
   }
 
   static getUid(){
     return firebase.auth().currentUser ? firebase.auth().currentUser.uid : null;
+  }
+
+  static logout(){
+    firebase.auth().signOut();
+  }
+
+  static uploadEmail(uid, email){
+    var unauthorized = [".", "#", "$", "[", "]"];
+    if(uid && email){
+      for (var i = 0; i < unauthorized.length; i++) {
+        email = email.split(unauthorized[i]).join("_");
+      }
+      firebase.database().ref('emails/' + email).set(uid);
+    }
+    
   }
 
 }

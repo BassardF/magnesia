@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -6,9 +6,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _auth = require('../services/auth');
+
+var _auth2 = _interopRequireDefault(_auth);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -39,7 +43,7 @@ var RegisterPage = function (_React$Component) {
 	}
 
 	_createClass(RegisterPage, [{
-		key: "changeEmail",
+		key: 'changeEmail',
 		value: function changeEmail() {
 			var _this2 = this;
 
@@ -50,7 +54,7 @@ var RegisterPage = function (_React$Component) {
 			});
 		}
 	}, {
-		key: "changePwd",
+		key: 'changePwd',
 		value: function changePwd() {
 			var _this3 = this;
 
@@ -61,7 +65,7 @@ var RegisterPage = function (_React$Component) {
 			});
 		}
 	}, {
-		key: "register",
+		key: 'register',
 		value: function register() {
 			firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.pwd).catch(function (error) {
 				var errorCode = error.code;
@@ -70,7 +74,7 @@ var RegisterPage = function (_React$Component) {
 			});
 		}
 	}, {
-		key: "login",
+		key: 'login',
 		value: function login() {
 			firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.pwd).catch(function (error) {
 				var errorCode = error.code;
@@ -79,38 +83,38 @@ var RegisterPage = function (_React$Component) {
 			});
 		}
 	}, {
-		key: "render",
+		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
-				"div",
-				{ id: "register-page" },
+				'div',
+				{ id: 'register-page' },
 				_react2.default.createElement(
-					"div",
+					'div',
 					null,
 					_react2.default.createElement(
-						"h1",
+						'h1',
 						null,
-						"Regiser"
+						'Regiser'
 					),
 					_react2.default.createElement(
-						"div",
+						'div',
 						null,
-						_react2.default.createElement("input", { ref: "email", type: "email", value: this.state.email, onChange: this.changeEmail, placeholder: "Email" })
+						_react2.default.createElement('input', { ref: 'email', type: 'email', value: this.state.email, onChange: this.changeEmail, placeholder: 'Email' })
 					),
 					_react2.default.createElement(
-						"div",
+						'div',
 						null,
-						_react2.default.createElement("input", { ref: "pwd", type: "password", value: this.state.pwd, onChange: this.changePwd, placeholder: "Password" })
+						_react2.default.createElement('input', { ref: 'pwd', type: 'password', value: this.state.pwd, onChange: this.changePwd, placeholder: 'Password' })
 					),
 					_react2.default.createElement(
-						"button",
+						'button',
 						{ onClick: this.register },
-						"register"
+						'register'
 					),
 					_react2.default.createElement(
-						"button",
+						'button',
 						{ onClick: this.login },
-						"login"
+						'login'
 					)
 				)
 			);

@@ -1,0 +1,118 @@
+#maps-page{
+
+	color : @darkgrey;
+	
+	#logo{
+	    color: #9C27B0;
+	    font-size: 30px;
+	    padding: 20px;
+	    font-weight: bold;
+	}
+
+	#logo-wrapper{
+		border-bottom : solid 1px @grey;
+		margin-bottom : 30px;
+	}
+
+	.map-block-sub{
+		margin-top: 0px;
+		-webkit-transition: all .5s ease;
+    	transition: all .5s ease;
+	}
+
+	.map-block{
+		padding: 10px;
+		height: 70px;
+		margin-bottom: 5px;
+		background-color : @greybcg;
+		cursor : pointer;
+		border-left : 5px solid @extraLightPurple;
+	}
+
+	.map-block-selected{
+		padding: 10px;
+		height: 70px;
+		margin-bottom: 5px;
+		border-left : 5px solid @purple;
+
+		.map-block-sub{
+			margin-top: 22px;
+		}
+	}
+
+	.empty-map-block{
+		padding: 10px;
+		height: 70px;
+		margin-bottom: 5px;
+		background-color : @greybcg;
+	}
+
+	#map-details-title{
+		text-align: center;
+		cursor : pointer;
+
+		& #map-details-title-sub{
+			opacity : 0;
+			-webkit-transition: all .5s ease;
+	    	transition: all .5s ease;
+	    	font-size : 15px;
+		}
+
+		&:hover #map-details-title-sub{
+			opacity : 1;
+		}
+
+    	& #map-details-title-content{
+    		-webkit-transition: all .5s ease;
+	    	transition: all .5s ease;
+	    	padding: 5px;
+	    	border-bottom : solid 2px white;
+	    	font-size : 25px;
+    	}
+
+    	&:hover #map-details-title-content{
+			border-bottom : solid 2px @lightPurple;
+		}
+	}
+
+	.maps-progress-bar{
+		height : 40px;
+	}
+
+	.search-user-input-wrapper{
+		border-bottom : solid 1px @lightPurple;
+		padding-bottom : 3px;
+	}
+
+	.selected-user-line{
+		padding : 20px;
+		background-color : @greybcg;
+		margin-bottom: 3px;
+	}
+
+	.invite-user-button{
+		padding: 5px 10px;
+		border-radius: 3px;
+		border: solid 1px @purple;
+		color: @purple;
+		cursor: pointer;
+
+		.show-hover{
+			display : none;
+		}
+
+		&:hover {
+			background-color: @purple;
+			color : @greybcg;
+
+			.hide-hover{
+				display : none;
+			}
+
+			.show-hover{
+				display : inline;
+			}
+		}
+	}
+
+}

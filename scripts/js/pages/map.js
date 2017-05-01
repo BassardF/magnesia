@@ -55,6 +55,8 @@ var MapPageComp = function (_React$Component) {
 		_this.drawLinks = _this.drawLinks.bind(_this);
 		_this.selectLink = _this.selectLink.bind(_this);
 
+		_this.sendMessage = _this.sendMessage.bind(_this);
+
 		_this.changeNodeText = _this.changeNodeText.bind(_this);
 		_this.changeNodeDescription = _this.changeNodeDescription.bind(_this);
 		_this.changeNodeScale = _this.changeNodeScale.bind(_this);
@@ -136,6 +138,13 @@ var MapPageComp = function (_React$Component) {
 			var map = this.state.map;
 			map.addNewNode(_auth2.default.getUid(), x, y, this.state.selectedNode);
 			map.save();
+		}
+	}, {
+		key: 'sendMessage',
+		value: function sendMessage(msg) {
+			var uid = _auth2.default.getUid();
+			var name = this.props.user ? this.props.user.name : "John Doe";
+			this.state.map.sendMessage(msg, uid, name);
 		}
 	}, {
 		key: 'changeNodeScale',
@@ -397,7 +406,8 @@ var MapPageComp = function (_React$Component) {
 							selectedNode: this.state.selectedNode, selectNode: this.selectNode,
 							changeNodeScale: this.changeNodeScale,
 							deleteSelectedNode: this.deleteSelectedNode,
-							deleteLink: this.deleteLink
+							deleteLink: this.deleteLink,
+							sendMessage: this.sendMessage
 						})
 					),
 					_react2.default.createElement(

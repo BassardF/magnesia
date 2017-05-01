@@ -16,6 +16,10 @@ var _link = require('./link');
 
 var _link2 = _interopRequireDefault(_link);
 
+var _message = require('./message');
+
+var _message2 = _interopRequireDefault(_message);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35,6 +39,11 @@ var Map = function () {
 					this.links = [];
 					for (var nid in data.links) {
 						this.links[nid] = new _link2.default(data.links[nid], data.mid);
+					}
+				} else if (key === "messages") {
+					this.messages = {};
+					for (var mid in data.messages) {
+						this.messages[mid] = new _message2.default(data.messages[mid], data.mid);
 					}
 				} else this[key] = data[key];
 			}
@@ -107,9 +116,51 @@ var Map = function () {
 			}
 		}
 	}, {
+		key: 'changeTitle',
+		value: function changeTitle(title) {
+			this.title = title;
+			this.save();
+		}
+	}, {
 		key: 'save',
 		value: function save() {
 			firebase.database().ref('maps/' + this.mid).set(this);
+		}
+	}, {
+		key: 'invite',
+		value: function invite(to, email, from) {
+			if (!this.invites) this.invites = {};
+			this.invites[to] = {
+				from: from,
+				timestamp: new Date().getTime(),
+				email: email
+			};
+			firebase.database().ref('users/' + to + '/invites/' + this.mid).set({
+				from: from,
+				timestamp: new Date().getTime()
+			});
+			this.save();
+		}
+	}, {
+		key: 'leave',
+		value: function leave(uid) {
+			if (this.users && Object.keys(this.users).length > 1) {
+				firebase.database().ref('maps/' + this.mid + '/users/' + uid).remove();
+			} else {
+				firebase.database().ref('maps/' + this.mid).remove();
+			}
+			firebase.database().ref('users/' + uid + '/maps/' + this.mid).remove();
+		}
+	}, {
+		key: 'sendMessage',
+		value: function sendMessage(msg, uid, name) {
+			var message = new _message2.default({
+				content: msg,
+				uid: uid,
+				name: name,
+				timestamp: new Date().getTime()
+			});
+			firebase.database().ref('maps/' + this.mid + '/messages').push(message);
 		}
 	}, {
 		key: 'upgradeFromServer',
