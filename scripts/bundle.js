@@ -27855,7 +27855,8 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 				{ history: _reactRouter.browserHistory },
 				_react2.default.createElement(
 						_reactRouter.Route,
-						{ path: '/', component: _root2.default },
+						{ component: _root2.default },
+						_react2.default.createElement(_reactRouter.Route, { path: '/', component: _register2.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/maps', component: _maps4.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/map/:mid', component: _map2.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '*', component: _register2.default })
@@ -28110,22 +28111,22 @@ var LeftPanel = function (_React$Component) {
 						_react2.default.createElement(
 							'div',
 							{ onClick: this.selectNav.bind(this, 0), className: this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 0 ? "tree.svg" : "tree-white.svg") })
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 0 ? "tree.svg" : "tree-white.svg") })
 						),
 						_react2.default.createElement(
 							'div',
 							{ onClick: nodeSelected ? this.selectNav.bind(this, 1) : null, className: this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: nodeSelected ? "pointer" : "not-allowed" } },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../magnesia/assets/images/" + (this.state.nav == 1 ? "node.svg" : "node-white.svg") })
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../assets/images/" + (this.state.nav == 1 ? "node.svg" : "node-white.svg") })
 						),
 						_react2.default.createElement(
 							'div',
 							{ onClick: this.selectNav.bind(this, 2), className: this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 2 ? "chat.svg" : "chat-white.svg") })
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 2 ? "chat.svg" : "chat-white.svg") })
 						),
 						_react2.default.createElement(
 							'div',
 							{ onClick: this.selectNav.bind(this, 3), className: this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../magnesia/assets/images/" + (this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
+							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
 						)
 					)
 				),
@@ -28732,7 +28733,7 @@ var LogsBlock = function (_React$Component8) {
 						{ style: { marginTop: "20px", marginBottom: "20px", textAlign: "center", fontSize: "22px" } },
 						'Area under'
 					),
-					_react2.default.createElement('img', { style: { width: "70px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../magnesia/assets/images/construction.svg' }),
+					_react2.default.createElement('img', { style: { width: "70px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/construction.svg' }),
 					_react2.default.createElement(
 						'div',
 						{ style: { marginTop: "20px", textAlign: "center", fontSize: "22px" } },
@@ -28873,7 +28874,7 @@ var ManageUsers = function (_React$Component) {
 						_react2.default.createElement(
 							'span',
 							{ id: 'map-details-title-sub' },
-							_react2.default.createElement('img', { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../magnesia/assets/images/edit.svg' }),
+							_react2.default.createElement('img', { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/edit.svg' }),
 							_react2.default.createElement(
 								'span',
 								{ style: { verticalAlign: "middle" } },
@@ -28888,7 +28889,7 @@ var ManageUsers = function (_React$Component) {
 					_react2.default.createElement(
 						'div',
 						{ onClick: this.props.toggleManageUsers, className: 'purple-unerlined-hover', style: { cursor: "pointer", display: "inline-block", marginLeft: "10px" } },
-						_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../magnesia/assets/images/arrow-right.svg' }),
+						_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/arrow-right.svg' }),
 						_react2.default.createElement(
 							'span',
 							{ style: { verticalAlign: "middle" } },
@@ -28899,7 +28900,7 @@ var ManageUsers = function (_React$Component) {
 				_react2.default.createElement(
 					'div',
 					{ className: 'search-user-input-wrapper', style: { maxWidth: "280px", marginTop: "30px", marginRight: "auto", marginLeft: "auto" } },
-					_react2.default.createElement('img', { style: { verticalAlign: "middle", width: "20px", marginRight: "5px" }, src: '../magnesia/assets/images/magnifier.svg' }),
+					_react2.default.createElement('img', { style: { verticalAlign: "middle", width: "20px", marginRight: "5px" }, src: '../assets/images/magnifier.svg' }),
 					_react2.default.createElement('input', { value: this.state.value, onChange: this.changeSearch, placeholder: 'email address', style: { verticalAlign: "middle", width: "250px", fontSize: "17px", border: "none", outline: "none" } })
 				),
 				_react2.default.createElement(
@@ -28981,8 +28982,8 @@ var ProspectLine = function (_React$Component3) {
 			) : _react2.default.createElement(
 				'span',
 				{ className: 'invite-user-button', onClick: this.props.inviteUser || null },
-				_react2.default.createElement('img', { className: 'hide-hover', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../magnesia/assets/images/invite-purple.svg' }),
-				_react2.default.createElement('img', { className: 'show-hover', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../magnesia/assets/images/invite-grey.svg' }),
+				_react2.default.createElement('img', { className: 'hide-hover', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/invite-purple.svg' }),
+				_react2.default.createElement('img', { className: 'show-hover', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/invite-grey.svg' }),
 				'invite'
 			);
 
@@ -29053,7 +29054,7 @@ var MapBlock = function (_React$Component) {
 					_react2.default.createElement(
 						"div",
 						{ className: "map-block-sub" },
-						_react2.default.createElement("img", { style: { verticalAlign: "middle", height: "20px", width: "20px" }, src: "../magnesia/assets/images/map.svg" }),
+						_react2.default.createElement("img", { style: { verticalAlign: "middle", height: "20px", width: "20px" }, src: "../assets/images/map.svg" }),
 						_react2.default.createElement(
 							"span",
 							{ style: { verticalAlign: "middle", marginLeft: "10px" } },
@@ -29201,7 +29202,7 @@ var MapDetails = function (_React$Component) {
 						_react2.default.createElement(
 							"span",
 							{ id: "map-details-title-sub" },
-							_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../magnesia/assets/images/edit.svg" }),
+							_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../assets/images/edit.svg" }),
 							_react2.default.createElement(
 								"span",
 								{ style: { verticalAlign: "middle" } },
@@ -29216,7 +29217,7 @@ var MapDetails = function (_React$Component) {
 					_react2.default.createElement(
 						"div",
 						{ onClick: this.props.leaveMap, className: "purple-unerlined-hover", style: { marginRight: "10px", cursor: "pointer", float: "right", display: "inline-block" } },
-						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../magnesia/assets/images/exit.svg" }),
+						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../assets/images/exit.svg" }),
 						_react2.default.createElement(
 							"span",
 							{ style: { verticalAlign: "middle" } },
@@ -29231,7 +29232,7 @@ var MapDetails = function (_React$Component) {
 					_react2.default.createElement(
 						"div",
 						{ onClick: this.props.toggleManageUsers, className: "purple-unerlined-hover", style: { cursor: "pointer", float: "right", display: "inline-block" } },
-						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../magnesia/assets/images/invite.svg" }),
+						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../assets/images/invite.svg" }),
 						_react2.default.createElement(
 							"span",
 							{ style: { verticalAlign: "middle" } },
@@ -29246,7 +29247,7 @@ var MapDetails = function (_React$Component) {
 					_react2.default.createElement(
 						"div",
 						{ onClick: this.props.goToMap, className: "purple-unerlined-hover", style: { cursor: "pointer", float: "right", display: "inline-block" } },
-						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../magnesia/assets/images/map.svg" }),
+						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../assets/images/map.svg" }),
 						_react2.default.createElement(
 							"span",
 							{ style: { verticalAlign: "middle" } },

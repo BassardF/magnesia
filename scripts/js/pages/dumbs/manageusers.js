@@ -122,7 +122,7 @@ var ManageUsers = function (_React$Component) {
 						_react2.default.createElement(
 							'span',
 							{ id: 'map-details-title-sub' },
-							_react2.default.createElement('img', { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../magnesia/assets/images/edit.svg' }),
+							_react2.default.createElement('img', { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/edit.svg' }),
 							_react2.default.createElement(
 								'span',
 								{ style: { verticalAlign: "middle" } },
@@ -137,7 +137,7 @@ var ManageUsers = function (_React$Component) {
 					_react2.default.createElement(
 						'div',
 						{ onClick: this.props.toggleManageUsers, className: 'purple-unerlined-hover', style: { cursor: "pointer", display: "inline-block", marginLeft: "10px" } },
-						_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../magnesia/assets/images/arrow-right.svg' }),
+						_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/arrow-right.svg' }),
 						_react2.default.createElement(
 							'span',
 							{ style: { verticalAlign: "middle" } },
@@ -148,7 +148,7 @@ var ManageUsers = function (_React$Component) {
 				_react2.default.createElement(
 					'div',
 					{ className: 'search-user-input-wrapper', style: { maxWidth: "280px", marginTop: "30px", marginRight: "auto", marginLeft: "auto" } },
-					_react2.default.createElement('img', { style: { verticalAlign: "middle", width: "20px", marginRight: "5px" }, src: '../magnesia/assets/images/magnifier.svg' }),
+					_react2.default.createElement('img', { style: { verticalAlign: "middle", width: "20px", marginRight: "5px" }, src: '../assets/images/magnifier.svg' }),
 					_react2.default.createElement('input', { value: this.state.value, onChange: this.changeSearch, placeholder: 'email address', style: { verticalAlign: "middle", width: "250px", fontSize: "17px", border: "none", outline: "none" } })
 				),
 				_react2.default.createElement(
@@ -230,8 +230,8 @@ var ProspectLine = function (_React$Component3) {
 			) : _react2.default.createElement(
 				'span',
 				{ className: 'invite-user-button', onClick: this.props.inviteUser || null },
-				_react2.default.createElement('img', { className: 'hide-hover', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../magnesia/assets/images/invite-purple.svg' }),
-				_react2.default.createElement('img', { className: 'show-hover', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../magnesia/assets/images/invite-grey.svg' }),
+				_react2.default.createElement('img', { className: 'hide-hover', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/invite-purple.svg' }),
+				_react2.default.createElement('img', { className: 'show-hover', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/invite-grey.svg' }),
 				'invite'
 			);
 

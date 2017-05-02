@@ -51,7 +51,8 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 				{ history: _reactRouter.browserHistory },
 				_react2.default.createElement(
 						_reactRouter.Route,
-						{ path: '/', component: _root2.default },
+						{ component: _root2.default },
+						_react2.default.createElement(_reactRouter.Route, { path: '/', component: _register2.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/maps', component: _maps4.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/map/:mid', component: _map2.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '*', component: _register2.default })

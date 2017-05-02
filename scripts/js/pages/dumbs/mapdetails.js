@@ -60,7 +60,7 @@ var MapDetails = function (_React$Component) {
 						_react2.default.createElement(
 							"span",
 							{ id: "map-details-title-sub" },
-							_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../magnesia/assets/images/edit.svg" }),
+							_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../assets/images/edit.svg" }),
 							_react2.default.createElement(
 								"span",
 								{ style: { verticalAlign: "middle" } },
@@ -75,7 +75,7 @@ var MapDetails = function (_React$Component) {
 					_react2.default.createElement(
 						"div",
 						{ onClick: this.props.leaveMap, className: "purple-unerlined-hover", style: { marginRight: "10px", cursor: "pointer", float: "right", display: "inline-block" } },
-						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../magnesia/assets/images/exit.svg" }),
+						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../assets/images/exit.svg" }),
 						_react2.default.createElement(
 							"span",
 							{ style: { verticalAlign: "middle" } },
@@ -90,7 +90,7 @@ var MapDetails = function (_React$Component) {
 					_react2.default.createElement(
 						"div",
 						{ onClick: this.props.toggleManageUsers, className: "purple-unerlined-hover", style: { cursor: "pointer", float: "right", display: "inline-block" } },
-						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../magnesia/assets/images/invite.svg" }),
+						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../assets/images/invite.svg" }),
 						_react2.default.createElement(
 							"span",
 							{ style: { verticalAlign: "middle" } },
@@ -105,7 +105,7 @@ var MapDetails = function (_React$Component) {
 					_react2.default.createElement(
 						"div",
 						{ onClick: this.props.goToMap, className: "purple-unerlined-hover", style: { cursor: "pointer", float: "right", display: "inline-block" } },
-						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../magnesia/assets/images/map.svg" }),
+						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../assets/images/map.svg" }),
 						_react2.default.createElement(
 							"span",
 							{ style: { verticalAlign: "middle" } },

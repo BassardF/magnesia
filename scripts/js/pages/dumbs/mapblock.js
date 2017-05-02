@@ -38,7 +38,7 @@ var MapBlock = function (_React$Component) {
 					_react2.default.createElement(
 						"div",
 						{ className: "map-block-sub" },
-						_react2.default.createElement("img", { style: { verticalAlign: "middle", height: "20px", width: "20px" }, src: "../magnesia/assets/images/map.svg" }),
+						_react2.default.createElement("img", { style: { verticalAlign: "middle", height: "20px", width: "20px" }, src: "../assets/images/map.svg" }),
 						_react2.default.createElement(
 							"span",
 							{ style: { verticalAlign: "middle", marginLeft: "10px" } },

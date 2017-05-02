@@ -20,7 +20,7 @@ class MapDetails extends React.Component {
 					</div>
 					<div style={{marginTop:"7px"}}>
 						<span id="map-details-title-sub">
-							<img style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../magnesia/assets/images/edit.svg"/>
+							<img style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/edit.svg"/>
 							<span style={{verticalAlign:"middle"}}>edit</span>
 						</span>
 					</div>
@@ -28,17 +28,17 @@ class MapDetails extends React.Component {
 
 				<div style={{fontSize:"14px", height:"20px"}}>
 					<div onClick={this.props.leaveMap} className="purple-unerlined-hover" style={{marginRight:"10px", cursor:"pointer", float:"right", display:"inline-block"}}>
-						<img style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../magnesia/assets/images/exit.svg"/>
+						<img style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/exit.svg"/>
 						<span style={{verticalAlign:"middle"}}>leave map</span>
 					</div>
 					<div style={{float:"right", display:"inline-block", marginLeft: "10px", marginRight: "10px"}}> | </div>
 					<div onClick={this.props.toggleManageUsers} className="purple-unerlined-hover" style={{cursor:"pointer", float:"right", display:"inline-block"}}>
-						<img style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../magnesia/assets/images/invite.svg"/>
+						<img style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/invite.svg"/>
 						<span style={{verticalAlign:"middle"}}>manage users</span>
 					</div>
 					<div style={{float:"right", display:"inline-block", marginLeft: "10px", marginRight: "10px"}}> | </div>
 					<div onClick={this.props.goToMap} className="purple-unerlined-hover" style={{cursor:"pointer", float:"right", display:"inline-block"}}>
-						<img style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../magnesia/assets/images/map.svg"/>
+						<img style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/map.svg"/>
 						<span style={{verticalAlign:"middle"}}>get in</span>
 					</div>
 				</div>

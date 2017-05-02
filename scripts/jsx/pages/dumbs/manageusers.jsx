@@ -83,7 +83,7 @@ class ManageUsers extends React.Component {
 					</div>
 					<div style={{marginTop:"7px"}}>
 						<span id="map-details-title-sub">
-							<img style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../magnesia/assets/images/edit.svg"/>
+							<img style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/edit.svg"/>
 							<span style={{verticalAlign:"middle"}}>edit</span>
 						</span>
 					</div>
@@ -91,13 +91,13 @@ class ManageUsers extends React.Component {
 
 				<div style={{fontSize:"14px", height:"20px"}}>
 					<div onClick={this.props.toggleManageUsers} className="purple-unerlined-hover" style={{cursor:"pointer", display:"inline-block", marginLeft: "10px"}}>
-						<img className="rotate-180" style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../magnesia/assets/images/arrow-right.svg"/>
+						<img className="rotate-180" style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/arrow-right.svg"/>
 						<span style={{verticalAlign:"middle"}}>back to my maps</span>
 					</div>
 				</div>
 
 				<div className="search-user-input-wrapper" style={{maxWidth: "280px", marginTop: "30px", marginRight:"auto", marginLeft:"auto"}}>
-					<img style={{verticalAlign:"middle", width:"20px", marginRight : "5px"}} src="../magnesia/assets/images/magnifier.svg"/>
+					<img style={{verticalAlign:"middle", width:"20px", marginRight : "5px"}} src="../assets/images/magnifier.svg"/>
 					<input value={this.state.value} onChange={this.changeSearch} placeholder="email address" style={{verticalAlign:"middle", width:"250px", fontSize : "17px", border : "none", outline : "none"}}/>
 				</div>
 
@@ -143,8 +143,8 @@ class ProspectLine extends React.Component {
 			</div> 
 		:
 			<span className="invite-user-button" onClick={this.props.inviteUser || null}>
-				<img className="hide-hover" style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../magnesia/assets/images/invite-purple.svg"/>
-				<img className="show-hover" style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../magnesia/assets/images/invite-grey.svg"/>
+				<img className="hide-hover" style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/invite-purple.svg"/>
+				<img className="show-hover" style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/invite-grey.svg"/>
 				invite
 			</span>;	
 

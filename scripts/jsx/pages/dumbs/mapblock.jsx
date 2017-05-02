@@ -8,7 +8,7 @@ class MapBlock extends React.Component {
 			return (
 				<div className={this.props.selected ? "map-block-selected" : "map-block"} onClick={this.props.selected ? null : this.props.selectMap}>
 					<div className="map-block-sub">
-						<img style={{verticalAlign:"middle", height:"20px", width:"20px"}} src="../magnesia/assets/images/map.svg"/>
+						<img style={{verticalAlign:"middle", height:"20px", width:"20px"}} src="../assets/images/map.svg"/>
 						<span style={{verticalAlign:"middle", marginLeft:"10px"}}>{this.props.map.title}</span>
 						<div className={"flex " + (this.props.selected ? "hide" : "")} style={{fontSize:"12px", marginTop:"10px"}}>
 							<div className="flex-grow-1">

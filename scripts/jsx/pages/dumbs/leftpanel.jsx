@@ -61,16 +61,16 @@ class LeftPanel extends React.Component {
 
 					<div className="flex">
 						<div onClick={this.selectNav.bind(this, 0)} className={this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav"} style={{cursor : "pointer"}}>
-							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../magnesia/assets/images/"+ (this.state.nav == 0 ? "tree.svg" : "tree-white.svg")}/>
+							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (this.state.nav == 0 ? "tree.svg" : "tree-white.svg")}/>
 						</div>
 						<div onClick={nodeSelected ? this.selectNav.bind(this, 1) : null} className={this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav"} style={{cursor : (nodeSelected ? "pointer" : "not-allowed")}}>
-							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto", opacity : (nodeSelected ? "1" : ".5")}} src={"../magnesia/assets/images/"+ (this.state.nav == 1 ? "node.svg" : "node-white.svg")}/>
+							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto", opacity : (nodeSelected ? "1" : ".5")}} src={"../assets/images/"+ (this.state.nav == 1 ? "node.svg" : "node-white.svg")}/>
 						</div>
 						<div onClick={this.selectNav.bind(this, 2)} className={this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav"} style={{cursor : "pointer"}}>
-							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../magnesia/assets/images/"+ (this.state.nav == 2 ? "chat.svg" : "chat-white.svg")}/>
+							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (this.state.nav == 2 ? "chat.svg" : "chat-white.svg")}/>
 						</div>
 						<div onClick={this.selectNav.bind(this, 3)} className={this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"} style={{cursor : "pointer"}}>
-							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../magnesia/assets/images/"+ (this.state.nav == 3 ? "logs.svg" : "logs-white.svg")}/>
+							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (this.state.nav == 3 ? "logs.svg" : "logs-white.svg")}/>
 						</div>
 					</div>
 
@@ -452,7 +452,7 @@ class LogsBlock extends React.Component {
 			<div>
 				<div>
 					<div style={{marginTop:"20px", marginBottom:"20px", textAlign:"center", fontSize : "22px"}}>Area under</div>
-					<img style={{width:"70px", display : "block", marginLeft:"auto", marginRight:"auto"}} src="../magnesia/assets/images/construction.svg"/>
+					<img style={{width:"70px", display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/construction.svg"/>
 					<div style={{marginTop:"20px", textAlign:"center", fontSize : "22px"}}>construction</div>
 				</div>
 			</div>
