@@ -46,7 +46,6 @@ class MapsPageComp extends React.Component {
 	}
 
 	validateInvite(ind){
-		console.log("validateInvite");
 		var usr = this.props.user;
 		var mid = this.state.invites[ind].mid;
 		usr.acceptInvite(mid, AuthServices.getUid());

@@ -21,23 +21,50 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var MapDetails = function (_React$Component) {
 	_inherits(MapDetails, _React$Component);
 
-	function MapDetails() {
+	function MapDetails(props) {
 		_classCallCheck(this, MapDetails);
 
-		return _possibleConstructorReturn(this, (MapDetails.__proto__ || Object.getPrototypeOf(MapDetails)).apply(this, arguments));
+		var _this = _possibleConstructorReturn(this, (MapDetails.__proto__ || Object.getPrototypeOf(MapDetails)).call(this, props));
+
+		_this.state = {
+			map: null
+		};
+		return _this;
 	}
 
 	_createClass(MapDetails, [{
-		key: "render",
-		value: function render() {
-			var map = this.props.map;
-			var counts = {
+		key: "componentWillReceiveProps",
+		value: function componentWillReceiveProps(np) {
+			var _this2 = this;
+
+			if (np.map && (!this.state.map || np.map.title !== this.state.map.title)) {
+				this.setState({
+					map: np.map
+				}, function () {
+					var counts = _this2.getCount();
+					var max = Math.max(counts.nodes, counts.users, counts.messages, counts.links, 5);
+					_this2.refs.progressbarusers.style.width = counts.users * 100 / max + "%";
+					_this2.refs.progressbarnodes.style.width = counts.nodes * 100 / max + "%";
+					_this2.refs.progressbarlinks.style.width = counts.links * 100 / max + "%";
+					_this2.refs.progressbarmessages.style.width = counts.messages * 100 / max + "%";
+				});
+			}
+		}
+	}, {
+		key: "getCount",
+		value: function getCount() {
+			return {
 				nodes: this.props.map.nodes.length,
 				users: this.props.map.users ? Object.keys(this.props.map.users).length : 0,
 				messages: this.props.map.messages ? Object.keys(this.props.map.messages).length : 0,
 				links: this.props.map.links ? Object.keys(this.props.map.links).length : 0
 			};
-			var max = Math.max(counts.nodes, counts.users, counts.messages, counts.links, 5);
+		}
+	}, {
+		key: "render",
+		value: function render() {
+			var map = this.props.map;
+			var counts = this.getCount();
 
 			return _react2.default.createElement(
 				"div",
@@ -143,7 +170,7 @@ var MapDetails = function (_React$Component) {
 							_react2.default.createElement(
 								"div",
 								null,
-								_react2.default.createElement("div", { style: { width: counts.users * 100 / max + "%" }, className: "maps-progress-bar blue0-bcg" })
+								_react2.default.createElement("div", { ref: "progressbarusers", style: { width: 0 + "%" }, className: "maps-progress-bar blue0-bcg" })
 							)
 						)
 					),
@@ -174,7 +201,7 @@ var MapDetails = function (_React$Component) {
 							_react2.default.createElement(
 								"div",
 								null,
-								_react2.default.createElement("div", { style: { width: counts.nodes * 100 / max + "%" }, className: "maps-progress-bar blue1-bcg" })
+								_react2.default.createElement("div", { ref: "progressbarnodes", style: { width: 0 + "%" }, className: "maps-progress-bar blue1-bcg" })
 							)
 						)
 					),
@@ -205,7 +232,7 @@ var MapDetails = function (_React$Component) {
 							_react2.default.createElement(
 								"div",
 								null,
-								_react2.default.createElement("div", { style: { width: counts.links * 100 / max + "%" }, className: "maps-progress-bar blue2-bcg" })
+								_react2.default.createElement("div", { ref: "progressbarlinks", style: { width: 0 + "%" }, className: "maps-progress-bar blue2-bcg" })
 							)
 						)
 					),
@@ -236,7 +263,7 @@ var MapDetails = function (_React$Component) {
 							_react2.default.createElement(
 								"div",
 								null,
-								_react2.default.createElement("div", { style: { width: counts.messages * 100 / max + "%" }, className: "maps-progress-bar blue3-bcg" })
+								_react2.default.createElement("div", { ref: "progressbarmessages", style: { width: 0 + "%" }, className: "maps-progress-bar blue3-bcg" })
 							)
 						)
 					)

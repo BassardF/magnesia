@@ -172,6 +172,8 @@ body {
 }
 #maps-page .maps-progress-bar {
   height: 40px;
+  -webkit-transition: all .5s ease;
+  transition: all .5s ease;
 }
 #maps-page .search-user-input-wrapper {
   border-bottom: solid 1px #CE93D8;

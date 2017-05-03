@@ -1,10 +1,14 @@
 import React from 'react'
+import { browserHistory } from 'react-router';
+
 import DeleteButton from './deletebutton'
 
 class LeftPanel extends React.Component {
 
 	constructor(props) {
 	    super(props);
+	    this.backToMyMaps = this.backToMyMaps.bind(this);
+
 	    this.state = {
 	    	nav : 0
 	    };
@@ -22,12 +26,16 @@ class LeftPanel extends React.Component {
 		});
 	}
 
+	backToMyMaps(){
+		browserHistory.push('/maps');
+	}
+
 	render() {
 		
 		var dom = null, title = "";
 		var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 		if(!nodeSelected && this.state.nav == 1) this.state.nav = 0;
-		let subSpace = window.innerHeight - (76 + 40 + 42);
+		let subSpace = window.innerHeight - (28 + 66 + 40 + 42);
 		switch(this.state.nav) {
 		    case 0:
 		        dom = <NodeTree map={this.props.map} 
@@ -56,7 +64,11 @@ class LeftPanel extends React.Component {
 
 		return (
 			<div id="left-panel">
-				<div id="logo">Mg.</div>
+				<div onClick={this.backToMyMaps} className="purple" style={{cursor:"pointer", paddingLeft:"20px", paddingTop:"10px"}}>
+					<img className="rotate-180" style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/arrow-right-purple.svg"/>
+	   				<span style={{verticalAlign:"middle"}}>back to my maps</span>
+   				</div>
+				<div style={{paddingTop:"10px"}} id="logo">Mg.</div>
 				<div className="">
 
 					<div className="flex">

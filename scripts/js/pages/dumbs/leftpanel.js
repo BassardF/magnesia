@@ -10,6 +10,8 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouter = require('react-router');
+
 var _deletebutton = require('./deletebutton');
 
 var _deletebutton2 = _interopRequireDefault(_deletebutton);
@@ -29,6 +31,8 @@ var LeftPanel = function (_React$Component) {
 		_classCallCheck(this, LeftPanel);
 
 		var _this = _possibleConstructorReturn(this, (LeftPanel.__proto__ || Object.getPrototypeOf(LeftPanel)).call(this, props));
+
+		_this.backToMyMaps = _this.backToMyMaps.bind(_this);
 
 		_this.state = {
 			nav: 0
@@ -50,6 +54,11 @@ var LeftPanel = function (_React$Component) {
 			});
 		}
 	}, {
+		key: 'backToMyMaps',
+		value: function backToMyMaps() {
+			_reactRouter.browserHistory.push('/maps');
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 
@@ -57,7 +66,7 @@ var LeftPanel = function (_React$Component) {
 			    title = "";
 			var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 			if (!nodeSelected && this.state.nav == 1) this.state.nav = 0;
-			var subSpace = window.innerHeight - (76 + 40 + 42);
+			var subSpace = window.innerHeight - (28 + 66 + 40 + 42);
 			switch (this.state.nav) {
 				case 0:
 					dom = _react2.default.createElement(NodeTree, { map: this.props.map,
@@ -89,7 +98,17 @@ var LeftPanel = function (_React$Component) {
 				{ id: 'left-panel' },
 				_react2.default.createElement(
 					'div',
-					{ id: 'logo' },
+					{ onClick: this.backToMyMaps, className: 'purple', style: { cursor: "pointer", paddingLeft: "20px", paddingTop: "10px" } },
+					_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/arrow-right-purple.svg' }),
+					_react2.default.createElement(
+						'span',
+						{ style: { verticalAlign: "middle" } },
+						'back to my maps'
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { paddingTop: "10px" }, id: 'logo' },
 					'Mg.'
 				),
 				_react2.default.createElement(

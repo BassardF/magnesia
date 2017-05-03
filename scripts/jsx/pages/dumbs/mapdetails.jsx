@@ -2,15 +2,41 @@ import React from 'react'
 
 class MapDetails extends React.Component {
 
-	render() {
-		let map = this.props.map;
-		var counts = {
+	constructor(props) {
+	    super(props);
+
+	    this.state = {
+	    	map : null
+	    };
+	}
+
+	componentWillReceiveProps(np){
+		if(np.map && (!this.state.map || np.map.title !== this.state.map.title)){
+			this.setState({
+				map : np.map
+			}, () => {
+				let counts = this.getCount();
+				let max = Math.max(counts.nodes, counts.users, counts.messages, counts.links, 5);
+				this.refs.progressbarusers.style.width = (counts.users*100/max) + "%";
+				this.refs.progressbarnodes.style.width = (counts.nodes*100/max) + "%";
+				this.refs.progressbarlinks.style.width = (counts.links*100/max) + "%";
+				this.refs.progressbarmessages.style.width = (counts.messages*100/max) + "%";
+			});
+		}
+	}
+
+	getCount(){
+		return {
 			nodes : this.props.map.nodes.length,
 			users : this.props.map.users ? Object.keys(this.props.map.users).length : 0,
 			messages : this.props.map.messages ? Object.keys(this.props.map.messages).length : 0,
 			links : this.props.map.links ? Object.keys(this.props.map.links).length : 0	
-		};
-		var max = Math.max(counts.nodes, counts.users, counts.messages, counts.links, 5);
+		};	
+	}
+
+	render() {
+		let map = this.props.map;
+		let counts = this.getCount();
 
 		return (
 			<div className="map-details">
@@ -54,7 +80,7 @@ class MapDetails extends React.Component {
 						</div>
 						<div className="flex-grow-1">
 							<div>
-								<div style={{width: (counts.users*100/max) + "%"}} className="maps-progress-bar blue0-bcg"></div>
+								<div ref="progressbarusers" style={{width: 0 + "%"}} className="maps-progress-bar blue0-bcg"></div>
 							</div>
 						</div>
 					</div>
@@ -68,7 +94,7 @@ class MapDetails extends React.Component {
 						</div>
 						<div className="flex-grow-1">
 							<div>
-								<div style={{width: (counts.nodes*100/max) + "%"}} className="maps-progress-bar blue1-bcg"></div>
+								<div ref="progressbarnodes" style={{width: 0 + "%"}} className="maps-progress-bar blue1-bcg"></div>
 							</div>
 						</div>
 					</div>
@@ -82,7 +108,7 @@ class MapDetails extends React.Component {
 						</div>
 						<div className="flex-grow-1">
 							<div>
-								<div style={{width: (counts.links*100/max) + "%"}} className="maps-progress-bar blue2-bcg"></div>
+								<div ref="progressbarlinks" style={{width: 0 + "%"}} className="maps-progress-bar blue2-bcg"></div>
 							</div>
 						</div>
 					</div>	
@@ -96,7 +122,7 @@ class MapDetails extends React.Component {
 						</div>
 						<div className="flex-grow-1">
 							<div>
-								<div style={{width: (counts.messages*100/max) + "%"}} className="maps-progress-bar blue3-bcg"></div>
+								<div ref="progressbarmessages" style={{width: 0 + "%"}} className="maps-progress-bar blue3-bcg"></div>
 							</div>
 						</div>
 					</div>
