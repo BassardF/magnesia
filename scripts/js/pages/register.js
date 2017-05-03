@@ -32,35 +32,74 @@ var RegisterPage = function (_React$Component) {
 
 		_this.changeEmail = _this.changeEmail.bind(_this);
 		_this.changePwd = _this.changePwd.bind(_this);
+		_this.changeName = _this.changeName.bind(_this);
 		_this.register = _this.register.bind(_this);
 		_this.login = _this.login.bind(_this);
+		_this.isMailValid = _this.isMailValid.bind(_this);
 
 		_this.state = {
 			email: "",
-			pwd: ""
+			pwd: "",
+			name: ""
 		};
 		return _this;
 	}
 
 	_createClass(RegisterPage, [{
-		key: 'changeEmail',
-		value: function changeEmail() {
+		key: 'changeName',
+		value: function changeName() {
 			var _this2 = this;
 
 			this.setState(function (prevState) {
 				return {
-					email: _this2.refs.email.value
+					name: _this2.refs.name.value
 				};
 			});
 		}
 	}, {
+		key: 'isMailValid',
+		value: function isMailValid(email) {
+			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			return re.test(email);
+		}
+	}, {
+		key: 'changeEmail',
+		value: function changeEmail() {
+			var _this3 = this;
+
+			var email = this.refs.email.value;
+			var validEmail = email && this.isMailValid(email);
+			this.setState(function (prevState) {
+				return {
+					email: _this3.refs.email.value,
+					validEmail: validEmail,
+					mailTaken: null
+				};
+			});
+			if (validEmail) {
+				var unauthorized = [".", "#", "$", "[", "]"];
+				for (var i = 0; i < unauthorized.length; i++) {
+					email = email.split(unauthorized[i]).join("_");
+				}
+				firebase.database().ref('emails/' + email).once("value", function (snap) {
+					_this3.setState(function (prevState) {
+						return {
+							mailTaken: !!snap.val()
+						};
+					});
+				}, function (error) {
+					console.log("error", error);
+				});
+			}
+		}
+	}, {
 		key: 'changePwd',
 		value: function changePwd() {
-			var _this3 = this;
+			var _this4 = this;
 
 			this.setState(function (prevState) {
 				return {
-					pwd: _this3.refs.pwd.value
+					pwd: _this4.refs.pwd.value
 				};
 			});
 		}
@@ -85,35 +124,61 @@ var RegisterPage = function (_React$Component) {
 	}, {
 		key: 'render',
 		value: function render() {
+			var showRegister = this.state.validEmail && this.state.mailTaken === false;
+			var showLogin = this.state.validEmail && this.state.mailTaken === true;
+
 			return _react2.default.createElement(
 				'div',
 				{ id: 'register-page' },
 				_react2.default.createElement(
 					'div',
-					null,
+					{ style: { maxWidth: "900px", marginLeft: "auto", marginRight: "auto" } },
+					_react2.default.createElement(
+						'div',
+						{ id: 'logo-wrapper' },
+						_react2.default.createElement(
+							'div',
+							{ id: 'logo' },
+							'Mg.'
+						)
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { maxWidth: "500px", marginLeft: "auto", marginRight: "auto" } },
 					_react2.default.createElement(
 						'h1',
-						null,
-						'Regiser'
+						{ style: { marginTop: "40px", fontSize: "20px" } },
+						'Register or Login !'
+					),
+					_react2.default.createElement(
+						'h3',
+						{ style: { fontSize: "14px", marginBottom: "40px" }, className: 'light-purple' },
+						'Wether you already have an account or not you\'re in the right place !'
 					),
 					_react2.default.createElement(
 						'div',
 						null,
-						_react2.default.createElement('input', { ref: 'email', type: 'email', value: this.state.email, onChange: this.changeEmail, placeholder: 'Email' })
+						_react2.default.createElement('input', { className: 'reg-inp', ref: 'email', type: 'email', value: this.state.email, onChange: this.changeEmail, placeholder: 'email address' })
 					),
 					_react2.default.createElement(
 						'div',
 						null,
-						_react2.default.createElement('input', { ref: 'pwd', type: 'password', value: this.state.pwd, onChange: this.changePwd, placeholder: 'Password' })
+						_react2.default.createElement('input', { className: 'reg-inp', ref: 'pwd', type: 'password', value: this.state.pwd, onChange: this.changePwd, placeholder: 'password' })
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { display: showRegister ? "block" : "none" } },
+						_react2.default.createElement('input', { className: 'reg-inp', ref: 'name', type: 'text', value: this.state.name, onChange: this.changeName, placeholder: 'name' })
 					),
 					_react2.default.createElement(
 						'button',
-						{ onClick: this.register },
+						{ className: 'reg-button', style: { display: showRegister ? "block" : "none" }, onClick: this.register },
 						'register'
 					),
 					_react2.default.createElement(
 						'button',
-						{ onClick: this.login },
+						{ className: 'reg-button', style: { display: showLogin ? "block" : "none" }, onClick: this.login },
 						'login'
 					)
 				)

@@ -69,8 +69,20 @@ body {
 .purple {
   color: #9C27B0;
 }
+.light-purple {
+  color: #CE93D8;
+}
+.extra-light-purple {
+  color: #F3E5F5;
+}
 .purple-bcg {
   background-color: #9C27B0;
+}
+.light-purple-bcg {
+  background-color: #CE93D8;
+}
+.extra-light-purple-bcg {
+  background-color: #F3E5F5;
 }
 .purple-unerlined-hover {
   -webkit-transition: all .5s ease;
@@ -377,4 +389,54 @@ body {
 .selected-scale {
   border-color: #CE93D8 !important;
   background-color: #CE93D8 !important;
+}
+#register-page {
+  color: #424242;
+}
+#register-page #logo {
+  color: #9C27B0;
+  font-size: 30px;
+  padding: 20px;
+  font-weight: bold;
+}
+#register-page #logo-wrapper {
+  border-bottom: solid 1px #BDBDBD;
+  margin-bottom: 30px;
+}
+#register-page .reg-inp {
+  font-size: 14px;
+  border: none;
+  border-bottom: solid 2px #F3E5F5;
+  padding: 5px;
+  text-align: center;
+  min-width: 300px;
+  margin-bottom: 30px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  outline: none !important;
+  -webkit-transition: all .5s ease;
+  transition: all .5s ease;
+}
+#register-page .reg-inp:focus {
+  border-bottom: solid 2px #9C27B0;
+}
+#register-page .reg-button {
+  font-size: 14px;
+  border-radius: 5px;
+  background-color: white;
+  width: 100px;
+  padding: 10px;
+  border: solid 1px #9C27B0;
+  color: #9C27B0;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  cursor: pointer;
+  -webkit-transition: all .5s ease;
+  transition: all .5s ease;
+}
+#register-page .reg-button:hover {
+  background-color: #9C27B0;
+  color: white;
 }

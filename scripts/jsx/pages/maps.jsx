@@ -36,6 +36,7 @@ class MapsPageComp extends React.Component {
 	}
 
 	componentWillMount(){
+		this.props.replaceMaps([]);
 		this.refreshMaps(()=>{
 			this.selectMap(0, true);
 		});
@@ -54,7 +55,9 @@ class MapsPageComp extends React.Component {
 		invites.splice(ind, 1);
 
 		firebase.database().ref('maps/' + mid).once("value", (snap) => {
-			if(snap && snap.val()) this.props.addMap(new Map(snap.val()));
+			if(snap && snap.val()) {
+				this.props.addMap(new Map(snap.val()));
+			}
 			this.setState({
 				invites: invites
 			});
@@ -152,7 +155,9 @@ class MapsPageComp extends React.Component {
 			for(var mid in this.props.user.maps){
 				(function(mid){
 					firebase.database().ref('maps/' + mid).once("value", (snap) => {
-						if(snap && snap.val()) this.props.addMap(new Map(snap.val()));
+						if(snap && snap.val()) {
+							this.props.addMap(new Map(snap.val()));
+						}
 						count++;
 						if(count == keysCount && callback){
 							callback();

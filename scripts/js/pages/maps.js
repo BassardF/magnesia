@@ -85,6 +85,7 @@ var MapsPageComp = function (_React$Component) {
 		value: function componentWillMount() {
 			var _this2 = this;
 
+			this.props.replaceMaps([]);
 			this.refreshMaps(function () {
 				_this2.selectMap(0, true);
 			});
@@ -107,7 +108,9 @@ var MapsPageComp = function (_React$Component) {
 			invites.splice(ind, 1);
 
 			firebase.database().ref('maps/' + mid).once("value", function (snap) {
-				if (snap && snap.val()) _this3.props.addMap(new _map2.default(snap.val()));
+				if (snap && snap.val()) {
+					_this3.props.addMap(new _map2.default(snap.val()));
+				}
 				_this3.setState({
 					invites: invites
 				});
@@ -216,7 +219,9 @@ var MapsPageComp = function (_React$Component) {
 						var _this6 = this;
 
 						firebase.database().ref('maps/' + mid).once("value", function (snap) {
-							if (snap && snap.val()) _this6.props.addMap(new _map2.default(snap.val()));
+							if (snap && snap.val()) {
+								_this6.props.addMap(new _map2.default(snap.val()));
+							}
 							count++;
 							if (count == keysCount && callback) {
 								callback();

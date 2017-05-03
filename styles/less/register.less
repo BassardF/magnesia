@@ -1,0 +1,59 @@
+#register-page{
+	
+	color : @darkgrey;
+	
+	#logo{
+	    color: #9C27B0;
+	    font-size: 30px;
+	    padding: 20px;
+	    font-weight: bold;
+	}
+
+	#logo-wrapper{
+		border-bottom : solid 1px @grey;
+		margin-bottom : 30px;
+	}
+
+	.reg-inp{
+		font-size : 14px;
+		border : none;
+		border-bottom : solid 2px @extraLightPurple;
+		padding: 5px;
+		text-align :center;
+		min-width : 300px;
+		margin-bottom: 30px;
+		display : block;
+		margin-left : auto;
+		margin-right : auto;
+		outline: none !important;
+
+		-webkit-transition: all .5s ease;
+    	transition: all .5s ease;
+
+		&:focus{
+			border-bottom : solid 2px @purple;
+		}
+	}
+
+	.reg-button{
+		font-size : 14px;
+		border-radius : 5px;
+		background-color : white;
+		width : 100px;
+		padding : 10px;
+		border: solid 1px @purple;
+		color : @purple;
+		text-align : center;
+		margin-left : auto;
+		margin-right : auto;
+		cursor : pointer;
+
+		-webkit-transition: all .5s ease;
+    	transition: all .5s ease;
+
+		&:hover{
+			background-color : @purple;
+			color : white;
+		}
+	}
+}
