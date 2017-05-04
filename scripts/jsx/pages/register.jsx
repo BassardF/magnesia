@@ -88,23 +88,62 @@ class RegisterPage extends React.Component {
 						<div id="logo">Mg.</div>
 					</div>
 				</div>
-				<div style={{maxWidth:"500px", marginLeft:"auto", marginRight:"auto"}}>
-					<h1 style={{marginTop: "40px", fontSize : "20px"}}>Register or Login !</h1>
-					<h3 style={{fontSize : "14px", marginBottom: "40px"}} className="light-purple">
-						Wether you already have an account or not you're in the right place !
-					</h3>
-					<div>
-						<input className="reg-inp" ref="email" type="email" value={this.state.email} onChange={this.changeEmail} placeholder="email address"/>
-					</div>
-					<div>
-						<input className="reg-inp" ref="pwd" type="password" value={this.state.pwd} onChange={this.changePwd} placeholder="password"/>
-					</div>
-					<div style={{display : (showRegister ? "block" : "none")}}>
-						<input className="reg-inp" ref="name" type="text" value={this.state.name} onChange={this.changeName} placeholder="name"/>
-					</div>
+				<h1 style={{marginTop: "60px", marginBottom: "60px", fontSize : "20px", textAlign:"center"}}>
+					Join Us - or - Login
+				</h1>
+				<div  style={{maxWidth:"700px", marginLeft:"auto", marginRight:"auto"}}>
+					<div className="col-wrap">
+						<div className="half">
+							<div>
+								<input className={"reg-inp " + (this.state.validEmail ? "validated" : "")} ref="email" type="email" value={this.state.email} onChange={this.changeEmail} placeholder="email address"/>
+							</div>
+							<div>
+								<input className={"reg-inp " + (this.state.pwd && this.state.pwd.length >= 6 ? "validated" : "")} ref="pwd" type="password" value={this.state.pwd} onChange={this.changePwd} placeholder="password"/>
+							</div>
+							<div style={{display : (showRegister ? "block" : "none")}}>
+								<input className={"reg-inp " + (this.state.name && this.state.name.length >= 3 ? "validated" : "")} ref="name" type="text" value={this.state.name} onChange={this.changeName} placeholder="name"/>
+							</div>
 
-					<button className="reg-button" style={{display : (showRegister ? "block" : "none")}} onClick={this.register}>register</button>
-					<button className="reg-button" style={{display : (showLogin ? "block" : "none")}} onClick={this.login}>login</button>
+							<button className={"reg-button " + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 && this.state.name && this.state.name.length >= 3 ? "" : "disabled-button")} 
+									style={{display : (showRegister ? "block" : "none")}} 
+									onClick={this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 && this.state.name && this.state.name.length >= 3 ? this.register : null}>
+									register
+							</button>
+							<button className={"reg-button " + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button")} 
+									style={{display : (showLogin ? "block" : "none")}} 
+									onClick={this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.login : null}>
+									login
+							</button>
+						</div>
+						<div className="half">
+							<div style={{marginTop : showLogin ? "20px" : "30px", paddingLeft: "30px"}}>
+								<div className={"invalid-step-line " + (this.state.validEmail ? "hide" : "")}>
+									<span style={{marginRight:"5px"}}>&#10007;</span> Invalid email address
+								</div>
+								<div className={"step-line " + (this.state.validEmail ? "valid" : "")}>
+									<span style={{marginRight:"5px"}}>&#10004;</span> Valid email address
+								</div>
+								<div className={"step-line " + (showLogin ? "valid" : "")}>
+									<span style={{marginRight:"5px"}}>&#10004;</span> Existing account
+								</div>
+								<div className={"step-line " + (showRegister ? "valid" : "")}>
+									<span style={{marginRight:"5px"}}>&#10004;</span> Email available
+								</div>
+								<div className={"step-line " + (this.state.pwd && this.state.pwd.length >= 6 ? "valid" : "")}>
+									<span style={{marginRight:"5px"}}>&#10004;</span> Valid password length
+								</div>
+								<div className={"invalid-step-line " + (this.state.pwd && this.state.pwd.length >= 6 ? "hide" : "")}>
+									<span style={{marginRight:"5px"}}>&#10007;</span> Password too short
+								</div>
+								<div className={"step-line " + (showRegister && this.state.name && this.state.name.length >= 3 ? "valid" : "")}>
+									<span style={{marginRight:"5px"}}>&#10004;</span> Valid name
+								</div>
+								<div className={"invalid-step-line " + (!showRegister || (this.state.name && this.state.name.length >= 3) ? "hide" : "")}>
+									<span style={{marginRight:"5px"}}>&#10007;</span> Name too short
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		);

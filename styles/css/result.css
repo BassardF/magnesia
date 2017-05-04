@@ -433,10 +433,41 @@ body {
   margin-left: auto;
   margin-right: auto;
   cursor: pointer;
+  outline: none !important;
   -webkit-transition: all .5s ease;
   transition: all .5s ease;
 }
 #register-page .reg-button:hover {
   background-color: #9C27B0;
   color: white;
+}
+#register-page .reg-button.disabled-button {
+  cursor: not-allowed;
+  opacity: .5;
+}
+#register-page .step-line {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: none;
+  opacity: 0;
+  -webkit-transition: all .5s ease;
+  transition: all .5s ease;
+}
+#register-page .step-line.valid {
+  opacity: 1;
+  color: #4CAF50;
+  display: none;
+  display: block;
+}
+#register-page .invalid-step-line {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+#register-page .invalid-step-line.hide {
+  display: none;
+}
+#register-page .col-wrap .half {
+  display: inline-block;
+  vertical-align: top;
+  width: 50%;
 }

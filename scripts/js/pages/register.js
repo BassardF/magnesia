@@ -144,42 +144,137 @@ var RegisterPage = function (_React$Component) {
 					)
 				),
 				_react2.default.createElement(
+					'h1',
+					{ style: { marginTop: "60px", marginBottom: "60px", fontSize: "20px", textAlign: "center" } },
+					'Join Us - or - Login'
+				),
+				_react2.default.createElement(
 					'div',
-					{ style: { maxWidth: "500px", marginLeft: "auto", marginRight: "auto" } },
-					_react2.default.createElement(
-						'h1',
-						{ style: { marginTop: "40px", fontSize: "20px" } },
-						'Register or Login !'
-					),
-					_react2.default.createElement(
-						'h3',
-						{ style: { fontSize: "14px", marginBottom: "40px" }, className: 'light-purple' },
-						'Wether you already have an account or not you\'re in the right place !'
-					),
+					{ style: { maxWidth: "700px", marginLeft: "auto", marginRight: "auto" } },
 					_react2.default.createElement(
 						'div',
-						null,
-						_react2.default.createElement('input', { className: 'reg-inp', ref: 'email', type: 'email', value: this.state.email, onChange: this.changeEmail, placeholder: 'email address' })
-					),
-					_react2.default.createElement(
-						'div',
-						null,
-						_react2.default.createElement('input', { className: 'reg-inp', ref: 'pwd', type: 'password', value: this.state.pwd, onChange: this.changePwd, placeholder: 'password' })
-					),
-					_react2.default.createElement(
-						'div',
-						{ style: { display: showRegister ? "block" : "none" } },
-						_react2.default.createElement('input', { className: 'reg-inp', ref: 'name', type: 'text', value: this.state.name, onChange: this.changeName, placeholder: 'name' })
-					),
-					_react2.default.createElement(
-						'button',
-						{ className: 'reg-button', style: { display: showRegister ? "block" : "none" }, onClick: this.register },
-						'register'
-					),
-					_react2.default.createElement(
-						'button',
-						{ className: 'reg-button', style: { display: showLogin ? "block" : "none" }, onClick: this.login },
-						'login'
+						{ className: 'col-wrap' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'half' },
+							_react2.default.createElement(
+								'div',
+								null,
+								_react2.default.createElement('input', { className: "reg-inp " + (this.state.validEmail ? "validated" : ""), ref: 'email', type: 'email', value: this.state.email, onChange: this.changeEmail, placeholder: 'email address' })
+							),
+							_react2.default.createElement(
+								'div',
+								null,
+								_react2.default.createElement('input', { className: "reg-inp " + (this.state.pwd && this.state.pwd.length >= 6 ? "validated" : ""), ref: 'pwd', type: 'password', value: this.state.pwd, onChange: this.changePwd, placeholder: 'password' })
+							),
+							_react2.default.createElement(
+								'div',
+								{ style: { display: showRegister ? "block" : "none" } },
+								_react2.default.createElement('input', { className: "reg-inp " + (this.state.name && this.state.name.length >= 3 ? "validated" : ""), ref: 'name', type: 'text', value: this.state.name, onChange: this.changeName, placeholder: 'name' })
+							),
+							_react2.default.createElement(
+								'button',
+								{ className: "reg-button " + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 && this.state.name && this.state.name.length >= 3 ? "" : "disabled-button"),
+									style: { display: showRegister ? "block" : "none" },
+									onClick: this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 && this.state.name && this.state.name.length >= 3 ? this.register : null },
+								'register'
+							),
+							_react2.default.createElement(
+								'button',
+								{ className: "reg-button " + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button"),
+									style: { display: showLogin ? "block" : "none" },
+									onClick: this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.login : null },
+								'login'
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ className: 'half' },
+							_react2.default.createElement(
+								'div',
+								{ style: { marginTop: showLogin ? "20px" : "30px", paddingLeft: "30px" } },
+								_react2.default.createElement(
+									'div',
+									{ className: "invalid-step-line " + (this.state.validEmail ? "hide" : "") },
+									_react2.default.createElement(
+										'span',
+										{ style: { marginRight: "5px" } },
+										'\u2717'
+									),
+									' Invalid email address'
+								),
+								_react2.default.createElement(
+									'div',
+									{ className: "step-line " + (this.state.validEmail ? "valid" : "") },
+									_react2.default.createElement(
+										'span',
+										{ style: { marginRight: "5px" } },
+										'\u2714'
+									),
+									' Valid email address'
+								),
+								_react2.default.createElement(
+									'div',
+									{ className: "step-line " + (showLogin ? "valid" : "") },
+									_react2.default.createElement(
+										'span',
+										{ style: { marginRight: "5px" } },
+										'\u2714'
+									),
+									' Existing account'
+								),
+								_react2.default.createElement(
+									'div',
+									{ className: "step-line " + (showRegister ? "valid" : "") },
+									_react2.default.createElement(
+										'span',
+										{ style: { marginRight: "5px" } },
+										'\u2714'
+									),
+									' Email available'
+								),
+								_react2.default.createElement(
+									'div',
+									{ className: "step-line " + (this.state.pwd && this.state.pwd.length >= 6 ? "valid" : "") },
+									_react2.default.createElement(
+										'span',
+										{ style: { marginRight: "5px" } },
+										'\u2714'
+									),
+									' Valid password length'
+								),
+								_react2.default.createElement(
+									'div',
+									{ className: "invalid-step-line " + (this.state.pwd && this.state.pwd.length >= 6 ? "hide" : "") },
+									_react2.default.createElement(
+										'span',
+										{ style: { marginRight: "5px" } },
+										'\u2717'
+									),
+									' Password too short'
+								),
+								_react2.default.createElement(
+									'div',
+									{ className: "step-line " + (showRegister && this.state.name && this.state.name.length >= 3 ? "valid" : "") },
+									_react2.default.createElement(
+										'span',
+										{ style: { marginRight: "5px" } },
+										'\u2714'
+									),
+									' Valid name'
+								),
+								_react2.default.createElement(
+									'div',
+									{ className: "invalid-step-line " + (!showRegister || this.state.name && this.state.name.length >= 3 ? "hide" : "") },
+									_react2.default.createElement(
+										'span',
+										{ style: { marginRight: "5px" } },
+										'\u2717'
+									),
+									' Name too short'
+								)
+							)
+						)
 					)
 				)
 			);
