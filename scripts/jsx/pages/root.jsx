@@ -34,8 +34,8 @@ class RootPageComp extends React.Component {
 			} else {
 				//Remove user from state
 				if(this.props.user){
+					this.props.replaceUser(null);
 					browserHistory.push('/');
-					// this.props.replaceUser(null); 	
 				}
 			}
 		});

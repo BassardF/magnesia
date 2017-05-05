@@ -374,7 +374,7 @@ var MapsPageComp = function (_React$Component) {
 							_react2.default.createElement(
 								'div',
 								{ style: { display: "inline-block", marginRight: "20px" } },
-								this.props.user.name
+								this.props.user ? this.props.user.name : "John Doe"
 							),
 							_react2.default.createElement(
 								'div',

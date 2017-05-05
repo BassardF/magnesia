@@ -27368,7 +27368,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = replaceUser;
 function replaceUser(user) {
 	if (user) return { type: 'SET_USER', user: user };
-	return {};
+	return { type: 'SET_USER', user: null };
 }
 
 },{}],280:[function(require,module,exports){
@@ -30278,7 +30278,7 @@ var MapsPageComp = function (_React$Component) {
 							_react2.default.createElement(
 								'div',
 								{ style: { display: "inline-block", marginRight: "20px" } },
-								this.props.user.name
+								this.props.user ? this.props.user.name : "John Doe"
 							),
 							_react2.default.createElement(
 								'div',
@@ -30383,31 +30383,21 @@ var RegisterPage = function (_React$Component) {
 
 		_this.changeEmail = _this.changeEmail.bind(_this);
 		_this.changePwd = _this.changePwd.bind(_this);
-		_this.changeName = _this.changeName.bind(_this);
 		_this.register = _this.register.bind(_this);
 		_this.login = _this.login.bind(_this);
 		_this.isMailValid = _this.isMailValid.bind(_this);
+		_this.toggleLoading = _this.toggleLoading.bind(_this);
 
 		_this.state = {
 			email: "",
 			pwd: "",
-			name: ""
+			loading: false,
+			errorMessage: null
 		};
 		return _this;
 	}
 
 	_createClass(RegisterPage, [{
-		key: 'changeName',
-		value: function changeName() {
-			var _this2 = this;
-
-			this.setState(function (prevState) {
-				return {
-					name: _this2.refs.name.value
-				};
-			});
-		}
-	}, {
 		key: 'isMailValid',
 		value: function isMailValid(email) {
 			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -30416,15 +30406,16 @@ var RegisterPage = function (_React$Component) {
 	}, {
 		key: 'changeEmail',
 		value: function changeEmail() {
-			var _this3 = this;
+			var _this2 = this;
 
 			var email = this.refs.email.value;
 			var validEmail = email && this.isMailValid(email);
 			this.setState(function (prevState) {
 				return {
-					email: _this3.refs.email.value,
+					email: _this2.refs.email.value,
 					validEmail: validEmail,
-					mailTaken: null
+					mailTaken: null,
+					errorMessage: null
 				};
 			});
 			if (validEmail) {
@@ -30433,7 +30424,7 @@ var RegisterPage = function (_React$Component) {
 					email = email.split(unauthorized[i]).join("_");
 				}
 				firebase.database().ref('emails/' + email).once("value", function (snap) {
-					_this3.setState(function (prevState) {
+					_this2.setState(function (prevState) {
 						return {
 							mailTaken: !!snap.val()
 						};
@@ -30446,30 +30437,50 @@ var RegisterPage = function (_React$Component) {
 	}, {
 		key: 'changePwd',
 		value: function changePwd() {
-			var _this4 = this;
+			var _this3 = this;
 
 			this.setState(function (prevState) {
 				return {
-					pwd: _this4.refs.pwd.value
+					pwd: _this3.refs.pwd.value,
+					errorMessage: null
 				};
 			});
 		}
 	}, {
 		key: 'register',
 		value: function register() {
-			firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.pwd).catch(function (error) {
+			var _this4 = this;
+
+			this.toggleLoading();
+			firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.pwd).catch(function (error, ad) {
 				var errorCode = error.code;
 				var errorMessage = error.message;
-				console.log(errorCode + errorMessage);
+				_this4.setState({
+					errorMessage: errorMessage,
+					loading: false
+				});
 			});
 		}
 	}, {
 		key: 'login',
 		value: function login() {
+			var _this5 = this;
+
+			this.toggleLoading();
 			firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.pwd).catch(function (error) {
 				var errorCode = error.code;
 				var errorMessage = error.message;
-				console.log(errorCode + errorMessage);
+				_this5.setState({
+					errorMessage: errorMessage,
+					loading: false
+				});
+			});
+		}
+	}, {
+		key: 'toggleLoading',
+		value: function toggleLoading() {
+			this.setState({
+				loading: !this.state.loading
 			});
 		}
 	}, {
@@ -30501,6 +30512,11 @@ var RegisterPage = function (_React$Component) {
 				),
 				_react2.default.createElement(
 					'div',
+					{ className: 'purple', style: { display: this.state.errorMessage ? "block" : "none", textAlign: "center", paddingBottom: "40px" } },
+					this.state.errorMessage
+				),
+				_react2.default.createElement(
+					'div',
 					{ style: { maxWidth: "700px", marginLeft: "auto", marginRight: "auto" } },
 					_react2.default.createElement(
 						'div',
@@ -30519,23 +30535,55 @@ var RegisterPage = function (_React$Component) {
 								_react2.default.createElement('input', { className: "reg-inp " + (this.state.pwd && this.state.pwd.length >= 6 ? "validated" : ""), ref: 'pwd', type: 'password', value: this.state.pwd, onChange: this.changePwd, placeholder: 'password' })
 							),
 							_react2.default.createElement(
-								'div',
-								{ style: { display: showRegister ? "block" : "none" } },
-								_react2.default.createElement('input', { className: "reg-inp " + (this.state.name && this.state.name.length >= 3 ? "validated" : ""), ref: 'name', type: 'text', value: this.state.name, onChange: this.changeName, placeholder: 'name' })
+								'button',
+								{ className: 'pre-loading-button', style: { display: !showRegister && !showLogin ? "block" : "none" } },
+								_react2.default.createElement(
+									'span',
+									null,
+									'login / register'
+								)
 							),
 							_react2.default.createElement(
 								'button',
-								{ className: "reg-button " + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 && this.state.name && this.state.name.length >= 3 ? "" : "disabled-button"),
+								{ className: (this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button"),
 									style: { display: showRegister ? "block" : "none" },
-									onClick: this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 && this.state.name && this.state.name.length >= 3 ? this.register : null },
-								'register'
+									onClick: this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.register : null },
+								_react2.default.createElement(
+									'span',
+									{ style: { display: this.state.loading ? "inline" : "none" } },
+									_react2.default.createElement('img', { src: '../assets/images/spinner-purple.svg', className: 'rotate', style: { display: "block", width: "20px", height: "20px", marginRight: "auto", marginLeft: "auto" } }),
+									_react2.default.createElement(
+										'span',
+										{ style: { verticalAlgin: "middle" } },
+										'Loading'
+									)
+								),
+								_react2.default.createElement(
+									'span',
+									{ style: { display: this.state.loading ? "none" : "inline" } },
+									'register'
+								)
 							),
 							_react2.default.createElement(
 								'button',
-								{ className: "reg-button " + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button"),
+								{ className: (this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button"),
 									style: { display: showLogin ? "block" : "none" },
 									onClick: this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.login : null },
-								'login'
+								_react2.default.createElement(
+									'span',
+									{ style: { display: this.state.loading ? "inline" : "none" } },
+									_react2.default.createElement('img', { src: '../assets/images/spinner-purple.svg', className: 'rotate', style: { display: "block", width: "20px", height: "20px", marginRight: "auto", marginLeft: "auto" } }),
+									_react2.default.createElement(
+										'span',
+										{ style: { verticalAlgin: "middle" } },
+										'Loading'
+									)
+								),
+								_react2.default.createElement(
+									'span',
+									{ style: { display: this.state.loading ? "none" : "inline" } },
+									'login'
+								)
 							)
 						),
 						_react2.default.createElement(
@@ -30543,7 +30591,7 @@ var RegisterPage = function (_React$Component) {
 							{ className: 'half' },
 							_react2.default.createElement(
 								'div',
-								{ style: { marginTop: showLogin ? "20px" : "30px", paddingLeft: "30px" } },
+								{ style: { marginTop: "20px", paddingLeft: "30px" } },
 								_react2.default.createElement(
 									'div',
 									{ className: "invalid-step-line " + (this.state.validEmail ? "hide" : "") },
@@ -30603,26 +30651,6 @@ var RegisterPage = function (_React$Component) {
 										'\u2717'
 									),
 									' Password too short'
-								),
-								_react2.default.createElement(
-									'div',
-									{ className: "step-line " + (showRegister && this.state.name && this.state.name.length >= 3 ? "valid" : "") },
-									_react2.default.createElement(
-										'span',
-										{ style: { marginRight: "5px" } },
-										'\u2714'
-									),
-									' Valid name'
-								),
-								_react2.default.createElement(
-									'div',
-									{ className: "invalid-step-line " + (!showRegister || this.state.name && this.state.name.length >= 3 ? "hide" : "") },
-									_react2.default.createElement(
-										'span',
-										{ style: { marginRight: "5px" } },
-										'\u2717'
-									),
-									' Name too short'
 								)
 							)
 						)
@@ -30712,8 +30740,8 @@ var RootPageComp = function (_React$Component) {
 				} else {
 					//Remove user from state
 					if (_this2.props.user) {
+						_this2.props.replaceUser(null);
 						_reactRouter.browserHistory.push('/');
-						// this.props.replaceUser(null); 	
 					}
 				}
 			});

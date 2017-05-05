@@ -70,8 +70,8 @@ var RootPageComp = function (_React$Component) {
 				} else {
 					//Remove user from state
 					if (_this2.props.user) {
+						_this2.props.replaceUser(null);
 						_reactRouter.browserHistory.push('/');
-						// this.props.replaceUser(null); 	
 					}
 				}
 			});

@@ -290,7 +290,7 @@ class MapsPageComp extends React.Component {
 					<div id="logo-wrapper">
 						<div id="logo">Mg.</div>
 						<div style={{float:"right", marginRight:"20px", marginTop:"-50px"}}>
-							<div style={{display:"inline-block", marginRight:"20px"}}>{this.props.user.name}</div>
+							<div style={{display:"inline-block", marginRight:"20px"}}>{this.props.user ? this.props.user.name : "John Doe"}</div>
 							<div style={{display:"inline-block", cursor : "pointer"}} onClick={this.logout}>logout</div>
 						</div>
 					</div>

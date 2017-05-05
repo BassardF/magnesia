@@ -6,5 +6,5 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = replaceUser;
 function replaceUser(user) {
 	if (user) return { type: 'SET_USER', user: user };
-	return {};
+	return { type: 'SET_USER', user: null };
 }
