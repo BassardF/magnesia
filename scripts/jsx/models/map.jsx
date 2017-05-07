@@ -116,11 +116,7 @@ class Map {
 	}
 
 	leave(uid){
-		if(this.users && Object.keys(this.users).length > 1){
-			firebase.database().ref('maps/' + this.mid + '/users/' + uid).remove();
-		} else {
-			firebase.database().ref('maps/' + this.mid).remove();
-		}
+		firebase.database().ref('maps/' + this.mid + '/users/' + uid).remove();
 		firebase.database().ref('users/' + uid + '/maps/' + this.mid).remove();
 	}
 

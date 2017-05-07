@@ -12,6 +12,7 @@ class RegisterPage extends React.Component {
 		this.login = this.login.bind(this);
 		this.isMailValid = this.isMailValid.bind(this);
 		this.toggleLoading = this.toggleLoading.bind(this);
+		this.pwskeyUp = this.pwskeyUp.bind(this);
 
 	    this.state = {
 	    	email : "",
@@ -58,6 +59,17 @@ class RegisterPage extends React.Component {
 	    }));
 	}
 
+	pwskeyUp(e){
+        if(e.which && e.which === 13){
+        	var showRegister = this.state.validEmail && this.state.mailTaken === false;
+			var showLogin = this.state.validEmail && this.state.mailTaken === true;
+            var refB = this.refs.regbutton;
+            var refL = this.refs.loginbutton;
+			if(showRegister && refB) refB.click();
+			if(showLogin && refL) refL.click();
+        }
+    }
+
 	register (){
 		this.toggleLoading();
 		firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.pwd).catch((error, ad) => {
@@ -102,7 +114,7 @@ class RegisterPage extends React.Component {
 				<h1 style={{marginTop: "60px", marginBottom: "60px", fontSize : "20px", textAlign:"center"}}>
 					Join Us - or - Login
 				</h1>
-				<div className="purple" style={{display :(this.state.errorMessage ? "block" : "none"), textAlign:"center", paddingBottom : "40px"}}>
+				<div className="purple" style={{display :(this.state.errorMessage ? "block" : "none"), textAlign:"center", marginTop:"-20px", paddingBottom:"30px"}}>
 					{this.state.errorMessage}
 				</div>
 				<div style={{maxWidth:"700px", marginLeft:"auto", marginRight:"auto"}}>
@@ -112,12 +124,12 @@ class RegisterPage extends React.Component {
 								<input className={"reg-inp " + (this.state.validEmail ? "validated" : "")} ref="email" type="email" value={this.state.email} onChange={this.changeEmail} placeholder="email address"/>
 							</div>
 							<div>
-								<input className={"reg-inp " + (this.state.pwd && this.state.pwd.length >= 6 ? "validated" : "")} ref="pwd" type="password" value={this.state.pwd} onChange={this.changePwd} placeholder="password"/>
+								<input onKeyPress={this.pwskeyUp} className={"reg-inp " + (this.state.pwd && this.state.pwd.length >= 6 ? "validated" : "")} ref="pwd" type="password" value={this.state.pwd} onChange={this.changePwd} placeholder="password"/>
 							</div>
 							<button className="pre-loading-button" style={{display : (!showRegister && !showLogin ? "block" : "none")}}>
 								<span>login / register</span>
 							</button>
-							<button className={(this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button")} 
+							<button ref="regbutton" className={(this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button")} 
 									style={{display : (showRegister ? "block" : "none")}} 
 									onClick={this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.register : null}>
 									<span style={{display: this.state.loading ? "inline" : "none"}}>
@@ -128,7 +140,7 @@ class RegisterPage extends React.Component {
 										register
 									</span>
 							</button>
-							<button className={(this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button")} 
+							<button ref="loginbutton" className={(this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button")} 
 									style={{display : (showLogin ? "block" : "none")}} 
 									onClick={this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.login : null}>
 									<span style={{display: this.state.loading ? "inline" : "none"}}>

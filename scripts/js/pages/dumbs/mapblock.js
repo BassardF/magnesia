@@ -38,15 +38,20 @@ var MapBlock = function (_React$Component) {
 					_react2.default.createElement(
 						"div",
 						{ className: "map-block-sub" },
+						_react2.default.createElement(
+							"div",
+							{ onClick: this.props.goToMap, className: "purple-go-button" },
+							_react2.default.createElement("img", { src: "../assets/images/arrow-right-white.svg", style: { marginTop: "-34px", verticalAlign: "middle", width: "15px", marginRight: "5px;" } })
+						),
 						_react2.default.createElement("img", { style: { verticalAlign: "middle", height: "20px", width: "20px" }, src: "../assets/images/map.svg" }),
 						_react2.default.createElement(
 							"span",
-							{ style: { verticalAlign: "middle", marginLeft: "10px" } },
+							{ style: { fontSize: "15px", verticalAlign: "middle", marginLeft: "10px" } },
 							this.props.map.title
 						),
 						_react2.default.createElement(
 							"div",
-							{ className: "flex " + (this.props.selected ? "hide" : ""), style: { fontSize: "12px", marginTop: "10px" } },
+							{ className: "flex " + (this.props.selected ? "hide" : ""), style: { fontSize: "11px", marginTop: "10px" } },
 							_react2.default.createElement(
 								"div",
 								{ className: "flex-grow-1" },
@@ -104,10 +109,15 @@ var MapBlock = function (_React$Component) {
 					{ onClick: this.props.createMap, className: "empty-map-block", style: { textAlign: "center", cursor: "pointer" } },
 					_react2.default.createElement(
 						"div",
-						{ style: { marginTop: "20px" } },
+						{ style: { marginTop: "15px" } },
 						_react2.default.createElement(
-							"span",
-							{ style: { verticalAlign: "middle", fontSize: "25px", marginRight: "10px" } },
+							"div",
+							{ style: { fontSize: "14px", marginRight: "10px" } },
+							"Create a new Map"
+						),
+						_react2.default.createElement(
+							"div",
+							{ style: { fontSize: "25px", marginRight: "10px" } },
 							"+"
 						)
 					)

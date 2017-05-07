@@ -26,6 +26,7 @@ class MapsPageComp extends React.Component {
 	    this.fetchInvites = this.fetchInvites.bind(this);
 	    this.validateInvite = this.validateInvite.bind(this);
 	    this.cancelInvite = this.cancelInvite.bind(this);
+	    this.changeName = this.changeName.bind(this);
 
 	    this.state = {
 	    	selected : 0,
@@ -36,6 +37,9 @@ class MapsPageComp extends React.Component {
 	}
 
 	componentWillMount(){
+		if(this.props.user && this.props.user.name == "placeholder"){
+			this.changeName(true, this.props.user.name);
+		}
 		this.props.replaceMaps([]);
 		this.refreshMaps(()=>{
 			this.selectMap(0, true);
@@ -44,6 +48,39 @@ class MapsPageComp extends React.Component {
 
 	componentWillUnMount(){
 		this.removeCurrentOn();
+	}
+
+	changeName(newName, current){
+		let title = "Change your name";
+		let text = "Your current name is " + current;
+		if(newName){
+			title = "Choose a name";
+			text = "It will be useful for collaborative work !";
+		}
+
+		swal({
+		  title: title,
+		  text: text,
+		  type: "input",
+		  showCancelButton: true,
+		  closeOnConfirm: false,
+		  closeOnCancel: false,
+		  animation: "slide-from-top",
+		  inputPlaceholder: "Name"
+		}, (inputValue) => {
+		  if (inputValue === false) {
+		  	swal("Name not set", "Your current name is 'placeholder'. You can click on your name on the topbar to modify it.", "warning");
+		  } else if (inputValue === "") {
+		    swal.showInputError("Please enter a name");
+		    return false;
+		  } else {
+		  	var usr = this.props.user;
+		  	usr.changeName(AuthServices.getUid(), inputValue);
+		  	this.props.replaceUser(usr);
+		  	this.forceUpdate();
+		  	swal("Nice!", "Your name has been changed", "success");	
+		  }
+		});
 	}
 
 	validateInvite(ind){
@@ -265,16 +302,25 @@ class MapsPageComp extends React.Component {
 		var selectedMap = this.props.maps[this.state.selected],
 			rightSide = null;
 		if(selectedMap){
-			if(this.state.manageUsers){
-				rightSide = <ManageUsers 
-					map={selectedMap} promptChangeTitle={this.promptChangeTitle}
-					toggleManageUsers={this.toggleManageUsers}/> ;
-			} else {
-				rightSide = <MapDetails 
-					goToMap={this.goToMap.bind(this, selectedMap.mid)}
-					map={selectedMap} promptChangeTitle={this.promptChangeTitle} 
-					leaveMap={this.promptLeaveMap} toggleManageUsers={this.toggleManageUsers}/> ;
-			}
+			rightSide = 
+				<div>
+					<div style={{display : this.state.manageUsers ? "block" : "none"}}>
+						<ManageUsers 
+							map={selectedMap} promptChangeTitle={this.promptChangeTitle}
+							toggleManageUsers={this.toggleManageUsers}/> 
+					</div>
+					<div style={{display : this.state.manageUsers ? "none" : "block"}}>
+						<MapDetails 
+							goToMap={this.goToMap.bind(this, selectedMap.mid)}
+							map={selectedMap} promptChangeTitle={this.promptChangeTitle} 
+							leaveMap={this.promptLeaveMap} toggleManageUsers={this.toggleManageUsers}/>
+					</div>
+				</div>;
+		} else {
+			rightSide = <div onClick={this.createMap} style={{textAlign:"center"}}>
+				<div style={{marginTop:"20px", fontSize:"30px"}}>Create your first Mind Map</div>
+				<img className="first-map-img" src="../assets/images/map.svg" style={{display:"block", marginLeft:"auto", marginRight:"auto"}}/>
+			</div>;
 		}
 
 		if(this.state.invites){
@@ -284,27 +330,32 @@ class MapsPageComp extends React.Component {
 				);	
 			}
 		}
+		let subSpace = window.innerHeight - 103;
 		return (
 			<div id="maps-page">
 				<div style={{maxWidth:"900px", marginLeft:"auto", marginRight:"auto"}}>
 					<div id="logo-wrapper">
 						<div id="logo">Mg.</div>
 						<div style={{float:"right", marginRight:"20px", marginTop:"-50px"}}>
-							<div style={{display:"inline-block", marginRight:"20px"}}>{this.props.user ? this.props.user.name : "John Doe"}</div>
-							<div style={{display:"inline-block", cursor : "pointer"}} onClick={this.logout}>logout</div>
+							<div className="purple-unerlined-hover" style={{fontSize:"14px", cursor:"pointer", display:"inline-block", marginRight:"20px"}} onClick={this.props.user ? this.changeName.bind(this, false, this.props.user.name) : null}>
+								{this.props.user ? this.props.user.name : "John Doe"}
+							</div>
+							<div className="purple-unerlined-hover" style={{fontSize:"14px", display:"inline-block", cursor : "pointer"}} onClick={this.logout}>
+								logout
+							</div>
 						</div>
 					</div>
 
-					<div style={{paddingLeft:"20px", paddingRight:"20px"}}>
+					<div>
 						<div className="flex">
-							<div className="flex-grow-0" style={{width:"200px"}}>
+							<div style={{width:"200px", paddingLeft:"20px", paddingRight:"20px", height: subSpace, overflow:"auto"}} className="flex-grow-0">
 								<div onClick={this.fetchInvites} className="pending-invites-cta" style={{display : (pendingInvites && !this.state.invites.length ? "block" : "none")}}>
 									{pendingInvites} pending invitation{pendingInvites > 1 ? "s" : ""}
 								</div>
 								{invitesDom}
 								{maps}
 							</div>
-							<div className="flex-grow-1">
+							<div style={{paddingLeft:"20px", paddingRight:"20px", height: subSpace, overflow:"auto"}} className="flex-grow-1">
 								{rightSide}
 							</div>
 						</div>

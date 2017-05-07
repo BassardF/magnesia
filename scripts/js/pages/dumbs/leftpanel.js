@@ -66,7 +66,7 @@ var LeftPanel = function (_React$Component) {
 			    title = "";
 			var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 			if (!nodeSelected && this.state.nav == 1) this.state.nav = 0;
-			var subSpace = window.innerHeight - (28 + 66 + 40 + 42);
+			var subSpace = window.innerHeight - (28 + 60 + 40 + 39);
 			switch (this.state.nav) {
 				case 0:
 					dom = _react2.default.createElement(NodeTree, { map: this.props.map,

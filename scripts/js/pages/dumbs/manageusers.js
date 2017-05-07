@@ -53,15 +53,22 @@ var ManageUsers = function (_React$Component) {
 
 			var val = e.target.value;
 			var arr = [];
+
 			if (val && val.length >= 3) {
 				firebase.database().ref('emails').orderByKey().startAt(val).limitToFirst(10).once("value", function (res) {
 					var results = res.val();
 					if (results) {
+						var map = _this2.props.map;
 						for (var email in results) {
-							arr.push({
-								email: email,
-								uid: results[email]
-							});
+							if (email.toLowerCase().indexOf(val.toLowerCase()) === 0) {
+								var uid = results[email];
+								if ((!map.invites || !map.invites[uid]) && !map.users[uid]) {
+									arr.push({
+										email: email,
+										uid: uid
+									});
+								}
+							}
 						}
 					}
 					_this2.setState({
@@ -133,15 +140,19 @@ var ManageUsers = function (_React$Component) {
 				),
 				_react2.default.createElement(
 					'div',
-					{ style: { fontSize: "14px", height: "20px" } },
+					{ style: { maxWidth: "500px", marginRight: "auto", marginLeft: "auto" } },
 					_react2.default.createElement(
 						'div',
-						{ onClick: this.props.toggleManageUsers, className: 'purple-unerlined-hover', style: { cursor: "pointer", display: "inline-block", marginLeft: "10px" } },
-						_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/arrow-right.svg' }),
+						{ style: { fontSize: "14px", height: "20px" } },
 						_react2.default.createElement(
-							'span',
-							{ style: { verticalAlign: "middle" } },
-							'back to my maps'
+							'div',
+							{ onClick: this.props.toggleManageUsers, className: 'purple-unerlined-hover', style: { cursor: "pointer", display: "inline-block", marginLeft: "10px" } },
+							_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/arrow-right.svg' }),
+							_react2.default.createElement(
+								'span',
+								{ style: { verticalAlign: "middle" } },
+								'back to my maps'
+							)
 						)
 					)
 				),

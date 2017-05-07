@@ -23,15 +23,22 @@ class ManageUsers extends React.Component {
 	changeSearch(e){
 		let val = e.target.value;
 		var arr = [];
+		
 		if(val && val.length >= 3){
 			firebase.database().ref('emails').orderByKey().startAt(val).limitToFirst(10).once("value", (res)=>{
 				var results = res.val();
 				if(results){
+					let map = this.props.map;
 					for(var email in results){
-						arr.push({
-							email : email,
-							uid : results[email]
-						});
+						if(email.toLowerCase().indexOf(val.toLowerCase()) === 0){
+							let uid = results[email];
+							if((!map.invites || !map.invites[uid]) && !map.users[uid]){
+								arr.push({
+									email : email,
+									uid : uid
+								});		
+							}
+						}
 					}
 				}
 				this.setState({
@@ -89,10 +96,12 @@ class ManageUsers extends React.Component {
 					</div>
 				</div>
 
-				<div style={{fontSize:"14px", height:"20px"}}>
-					<div onClick={this.props.toggleManageUsers} className="purple-unerlined-hover" style={{cursor:"pointer", display:"inline-block", marginLeft: "10px"}}>
-						<img className="rotate-180" style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/arrow-right.svg"/>
-						<span style={{verticalAlign:"middle"}}>back to my maps</span>
+				<div style={{maxWidth:"500px", marginRight:"auto", marginLeft:"auto"}}>
+					<div style={{fontSize:"14px", height:"20px"}}>
+						<div onClick={this.props.toggleManageUsers} className="purple-unerlined-hover" style={{cursor:"pointer", display:"inline-block", marginLeft: "10px"}}>
+							<img className="rotate-180" style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/arrow-right.svg"/>
+							<span style={{verticalAlign:"middle"}}>back to my maps</span>
+						</div>
 					</div>
 				</div>
 

@@ -27570,11 +27570,7 @@ var Map = function () {
 	}, {
 		key: 'leave',
 		value: function leave(uid) {
-			if (this.users && Object.keys(this.users).length > 1) {
-				firebase.database().ref('maps/' + this.mid + '/users/' + uid).remove();
-			} else {
-				firebase.database().ref('maps/' + this.mid).remove();
-			}
+			firebase.database().ref('maps/' + this.mid + '/users/' + uid).remove();
 			firebase.database().ref('users/' + uid + '/maps/' + this.mid).remove();
 		}
 	}, {
@@ -27793,6 +27789,27 @@ var User = function () {
       firebase.database().ref("maps/" + mid + "/users/" + uid).set(this.name);
       if (!this.maps) this.maps = {};
       this.maps[mid] = new Date().getTime();
+    }
+  }, {
+    key: "changeName",
+    value: function changeName(uid, newName) {
+      this.name = newName;
+      firebase.database().ref("users/" + uid + "/name").set(newName);
+      if (this.maps) {
+        for (var mid in this.maps) {
+          firebase.database().ref("maps/" + mid + "/users/" + uid).set(newName);
+          firebase.database().ref("maps/" + mid + "/messages").once("value", function (res) {
+            var msgs = res.val();
+            if (msgs) {
+              for (var messid in msgs) {
+                if (msgs[messid].uid == uid) {
+                  firebase.database().ref("maps/" + mid + "/messages/" + messid + "/name").set(newName);
+                }
+              }
+            }
+          });
+        }
+      }
     }
   }]);
 
@@ -28076,7 +28093,7 @@ var LeftPanel = function (_React$Component) {
 			    title = "";
 			var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 			if (!nodeSelected && this.state.nav == 1) this.state.nav = 0;
-			var subSpace = window.innerHeight - (28 + 66 + 40 + 42);
+			var subSpace = window.innerHeight - (28 + 60 + 40 + 39);
 			switch (this.state.nav) {
 				case 0:
 					dom = _react2.default.createElement(NodeTree, { map: this.props.map,
@@ -28824,15 +28841,22 @@ var ManageUsers = function (_React$Component) {
 
 			var val = e.target.value;
 			var arr = [];
+
 			if (val && val.length >= 3) {
 				firebase.database().ref('emails').orderByKey().startAt(val).limitToFirst(10).once("value", function (res) {
 					var results = res.val();
 					if (results) {
+						var map = _this2.props.map;
 						for (var email in results) {
-							arr.push({
-								email: email,
-								uid: results[email]
-							});
+							if (email.toLowerCase().indexOf(val.toLowerCase()) === 0) {
+								var uid = results[email];
+								if ((!map.invites || !map.invites[uid]) && !map.users[uid]) {
+									arr.push({
+										email: email,
+										uid: uid
+									});
+								}
+							}
 						}
 					}
 					_this2.setState({
@@ -28904,15 +28928,19 @@ var ManageUsers = function (_React$Component) {
 				),
 				_react2.default.createElement(
 					'div',
-					{ style: { fontSize: "14px", height: "20px" } },
+					{ style: { maxWidth: "500px", marginRight: "auto", marginLeft: "auto" } },
 					_react2.default.createElement(
 						'div',
-						{ onClick: this.props.toggleManageUsers, className: 'purple-unerlined-hover', style: { cursor: "pointer", display: "inline-block", marginLeft: "10px" } },
-						_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/arrow-right.svg' }),
+						{ style: { fontSize: "14px", height: "20px" } },
 						_react2.default.createElement(
-							'span',
-							{ style: { verticalAlign: "middle" } },
-							'back to my maps'
+							'div',
+							{ onClick: this.props.toggleManageUsers, className: 'purple-unerlined-hover', style: { cursor: "pointer", display: "inline-block", marginLeft: "10px" } },
+							_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/arrow-right.svg' }),
+							_react2.default.createElement(
+								'span',
+								{ style: { verticalAlign: "middle" } },
+								'back to my maps'
+							)
 						)
 					)
 				),
@@ -29073,15 +29101,20 @@ var MapBlock = function (_React$Component) {
 					_react2.default.createElement(
 						"div",
 						{ className: "map-block-sub" },
+						_react2.default.createElement(
+							"div",
+							{ onClick: this.props.goToMap, className: "purple-go-button" },
+							_react2.default.createElement("img", { src: "../assets/images/arrow-right-white.svg", style: { marginTop: "-34px", verticalAlign: "middle", width: "15px", marginRight: "5px;" } })
+						),
 						_react2.default.createElement("img", { style: { verticalAlign: "middle", height: "20px", width: "20px" }, src: "../assets/images/map.svg" }),
 						_react2.default.createElement(
 							"span",
-							{ style: { verticalAlign: "middle", marginLeft: "10px" } },
+							{ style: { fontSize: "15px", verticalAlign: "middle", marginLeft: "10px" } },
 							this.props.map.title
 						),
 						_react2.default.createElement(
 							"div",
-							{ className: "flex " + (this.props.selected ? "hide" : ""), style: { fontSize: "12px", marginTop: "10px" } },
+							{ className: "flex " + (this.props.selected ? "hide" : ""), style: { fontSize: "11px", marginTop: "10px" } },
 							_react2.default.createElement(
 								"div",
 								{ className: "flex-grow-1" },
@@ -29139,10 +29172,15 @@ var MapBlock = function (_React$Component) {
 					{ onClick: this.props.createMap, className: "empty-map-block", style: { textAlign: "center", cursor: "pointer" } },
 					_react2.default.createElement(
 						"div",
-						{ style: { marginTop: "20px" } },
+						{ style: { marginTop: "15px" } },
 						_react2.default.createElement(
-							"span",
-							{ style: { verticalAlign: "middle", fontSize: "25px", marginRight: "10px" } },
+							"div",
+							{ style: { fontSize: "14px", marginRight: "10px" } },
+							"Create a new Map"
+						),
+						_react2.default.createElement(
+							"div",
+							{ style: { fontSize: "25px", marginRight: "10px" } },
 							"+"
 						)
 					)
@@ -29196,20 +29234,25 @@ var MapDetails = function (_React$Component) {
 	_createClass(MapDetails, [{
 		key: "componentWillReceiveProps",
 		value: function componentWillReceiveProps(np) {
+			if (np.map && (!this.state.map || np.map.mid !== this.state.map.mid)) {
+				this.redrawStats(np);
+			}
+		}
+	}, {
+		key: "redrawStats",
+		value: function redrawStats(np) {
 			var _this2 = this;
 
-			if (np.map && (!this.state.map || np.map.title !== this.state.map.title)) {
-				this.setState({
-					map: np.map
-				}, function () {
-					var counts = _this2.getCount();
-					var max = Math.max(counts.nodes, counts.users, counts.messages, counts.links, 5);
-					_this2.refs.progressbarusers.style.width = counts.users * 100 / max + "%";
-					_this2.refs.progressbarnodes.style.width = counts.nodes * 100 / max + "%";
-					_this2.refs.progressbarlinks.style.width = counts.links * 100 / max + "%";
-					_this2.refs.progressbarmessages.style.width = counts.messages * 100 / max + "%";
-				});
-			}
+			this.setState({
+				map: np.map
+			}, function () {
+				var counts = _this2.getCount();
+				var max = Math.max(counts.nodes, counts.users, counts.messages, counts.links, 5);
+				_this2.refs.progressbarusers.style.width = counts.users * 100 / max + "%";
+				_this2.refs.progressbarnodes.style.width = counts.nodes * 100 / max + "%";
+				_this2.refs.progressbarlinks.style.width = counts.links * 100 / max + "%";
+				_this2.refs.progressbarmessages.style.width = counts.messages * 100 / max + "%";
+			});
 		}
 	}, {
 		key: "getCount",
@@ -29293,7 +29336,7 @@ var MapDetails = function (_React$Component) {
 					_react2.default.createElement(
 						"div",
 						{ onClick: this.props.goToMap, className: "purple-unerlined-hover", style: { cursor: "pointer", float: "right", display: "inline-block" } },
-						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../assets/images/map.svg" }),
+						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../assets/images/arrow-right.svg" }),
 						_react2.default.createElement(
 							"span",
 							{ style: { verticalAlign: "middle" } },
@@ -29974,6 +30017,7 @@ var MapsPageComp = function (_React$Component) {
 		_this.fetchInvites = _this.fetchInvites.bind(_this);
 		_this.validateInvite = _this.validateInvite.bind(_this);
 		_this.cancelInvite = _this.cancelInvite.bind(_this);
+		_this.changeName = _this.changeName.bind(_this);
 
 		_this.state = {
 			selected: 0,
@@ -29989,6 +30033,9 @@ var MapsPageComp = function (_React$Component) {
 		value: function componentWillMount() {
 			var _this2 = this;
 
+			if (this.props.user && this.props.user.name == "placeholder") {
+				this.changeName(true, this.props.user.name);
+			}
 			this.props.replaceMaps([]);
 			this.refreshMaps(function () {
 				_this2.selectMap(0, true);
@@ -30000,9 +30047,45 @@ var MapsPageComp = function (_React$Component) {
 			this.removeCurrentOn();
 		}
 	}, {
+		key: 'changeName',
+		value: function changeName(newName, current) {
+			var _this3 = this;
+
+			var title = "Change your name";
+			var text = "Your current name is " + current;
+			if (newName) {
+				title = "Choose a name";
+				text = "It will be useful for collaborative work !";
+			}
+
+			swal({
+				title: title,
+				text: text,
+				type: "input",
+				showCancelButton: true,
+				closeOnConfirm: false,
+				closeOnCancel: false,
+				animation: "slide-from-top",
+				inputPlaceholder: "Name"
+			}, function (inputValue) {
+				if (inputValue === false) {
+					swal("Name not set", "Your current name is 'placeholder'. You can click on your name on the topbar to modify it.", "warning");
+				} else if (inputValue === "") {
+					swal.showInputError("Please enter a name");
+					return false;
+				} else {
+					var usr = _this3.props.user;
+					usr.changeName(_auth2.default.getUid(), inputValue);
+					_this3.props.replaceUser(usr);
+					_this3.forceUpdate();
+					swal("Nice!", "Your name has been changed", "success");
+				}
+			});
+		}
+	}, {
 		key: 'validateInvite',
 		value: function validateInvite(ind) {
-			var _this3 = this;
+			var _this4 = this;
 
 			var usr = this.props.user;
 			var mid = this.state.invites[ind].mid;
@@ -30013,9 +30096,9 @@ var MapsPageComp = function (_React$Component) {
 
 			firebase.database().ref('maps/' + mid).once("value", function (snap) {
 				if (snap && snap.val()) {
-					_this3.props.addMap(new _map2.default(snap.val()));
+					_this4.props.addMap(new _map2.default(snap.val()));
 				}
-				_this3.setState({
+				_this4.setState({
 					invites: invites
 				});
 			});
@@ -30035,19 +30118,19 @@ var MapsPageComp = function (_React$Component) {
 	}, {
 		key: 'fetchInvites',
 		value: function fetchInvites() {
-			var _this4 = this;
+			var _this5 = this;
 
 			if (this.props.user && this.props.user.invites) {
 				for (var mid in this.props.user.invites) {
 					if (!this.props.user.invites[mid].answer) {
 						firebase.database().ref('maps/' + mid + '/title').once("value", function (titlesnap) {
 							var title = titlesnap.val();
-							var invites = _this4.state.invites;
+							var invites = _this5.state.invites;
 							invites.push({
 								mid: mid,
 								title: title
 							});
-							_this4.setState({
+							_this5.setState({
 								invites: invites
 							});
 						});
@@ -30078,7 +30161,7 @@ var MapsPageComp = function (_React$Component) {
 	}, {
 		key: 'selectMap',
 		value: function selectMap(ind, force) {
-			var _this5 = this;
+			var _this6 = this;
 
 			if (ind !== this.state.selected || force) {
 				var map = this.props.maps[ind];
@@ -30093,17 +30176,17 @@ var MapsPageComp = function (_React$Component) {
 				firebase.database().ref('maps/' + mid).on("value", function (snap) {
 					if (snap && snap.val()) {
 						var newMp = new _map2.default(snap.val());
-						var mps = _this5.props.maps;
+						var mps = _this6.props.maps;
 						mps[ind] = newMp;
-						_this5.props.replaceMaps(mps);
+						_this6.props.replaceMaps(mps);
 					} else {
-						_this5.removeCurrentOn();
-						var mps = _this5.props.maps;
+						_this6.removeCurrentOn();
+						var mps = _this6.props.maps;
 						mps.splice(ind, 1);
-						_this5.props.replaceMaps(mps);
-						_this5.selectMap(0);
+						_this6.props.replaceMaps(mps);
+						_this6.selectMap(0);
 					}
-					_this5.forceUpdate();
+					_this6.forceUpdate();
 				});
 
 				this.setState({
@@ -30120,11 +30203,11 @@ var MapsPageComp = function (_React$Component) {
 				var count = 0;
 				for (var mid in this.props.user.maps) {
 					(function (mid) {
-						var _this6 = this;
+						var _this7 = this;
 
 						firebase.database().ref('maps/' + mid).once("value", function (snap) {
 							if (snap && snap.val()) {
-								_this6.props.addMap(new _map2.default(snap.val()));
+								_this7.props.addMap(new _map2.default(snap.val()));
 							}
 							count++;
 							if (count == keysCount && callback) {
@@ -30138,7 +30221,7 @@ var MapsPageComp = function (_React$Component) {
 	}, {
 		key: 'createMap',
 		value: function createMap() {
-			var _this7 = this;
+			var _this8 = this;
 
 			var creationTimestamp = new Date().getTime();
 			var newMap = new _map2.default().initEmpty(_auth2.default.getUid(), creationTimestamp, this.props.user.name);
@@ -30148,15 +30231,15 @@ var MapsPageComp = function (_React$Component) {
 			newMap.mid = newMapkey;
 			newMapRef.set(newMap, function (error) {
 				if (!error) {
-					var mapArray = _this7.props.maps ? _this7.props.maps.concat(newMap) : [newMap];
-					_this7.props.replaceMaps(mapArray);
+					var mapArray = _this8.props.maps ? _this8.props.maps.concat(newMap) : [newMap];
+					_this8.props.replaceMaps(mapArray);
 					//Adding the Map to the user
 					firebase.database().ref('users/' + _auth2.default.getUid() + '/maps/' + newMapkey).set(creationTimestamp, function (error2) {
 						if (!error2) {
-							if (!_this7.props.user.maps) _this7.props.user.maps = {};
-							_this7.props.user.maps[newMapkey] = creationTimestamp;
-							_this7.props.replaceUser(_this7.props.user);
-							_this7.selectMap(mapArray.length - 1, true);
+							if (!_this8.props.user.maps) _this8.props.user.maps = {};
+							_this8.props.user.maps[newMapkey] = creationTimestamp;
+							_this8.props.replaceUser(_this8.props.user);
+							_this8.selectMap(mapArray.length - 1, true);
 						}
 					});
 				}
@@ -30241,16 +30324,36 @@ var MapsPageComp = function (_React$Component) {
 			var selectedMap = this.props.maps[this.state.selected],
 			    rightSide = null;
 			if (selectedMap) {
-				if (this.state.manageUsers) {
-					rightSide = _react2.default.createElement(_manageusers2.default, {
-						map: selectedMap, promptChangeTitle: this.promptChangeTitle,
-						toggleManageUsers: this.toggleManageUsers });
-				} else {
-					rightSide = _react2.default.createElement(_mapdetails2.default, {
-						goToMap: this.goToMap.bind(this, selectedMap.mid),
-						map: selectedMap, promptChangeTitle: this.promptChangeTitle,
-						leaveMap: this.promptLeaveMap, toggleManageUsers: this.toggleManageUsers });
-				}
+				rightSide = _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'div',
+						{ style: { display: this.state.manageUsers ? "block" : "none" } },
+						_react2.default.createElement(_manageusers2.default, {
+							map: selectedMap, promptChangeTitle: this.promptChangeTitle,
+							toggleManageUsers: this.toggleManageUsers })
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { display: this.state.manageUsers ? "none" : "block" } },
+						_react2.default.createElement(_mapdetails2.default, {
+							goToMap: this.goToMap.bind(this, selectedMap.mid),
+							map: selectedMap, promptChangeTitle: this.promptChangeTitle,
+							leaveMap: this.promptLeaveMap, toggleManageUsers: this.toggleManageUsers })
+					)
+				);
+			} else {
+				rightSide = _react2.default.createElement(
+					'div',
+					{ onClick: this.createMap, style: { textAlign: "center" } },
+					_react2.default.createElement(
+						'div',
+						{ style: { marginTop: "20px", fontSize: "30px" } },
+						'Create your first Mind Map'
+					),
+					_react2.default.createElement('img', { className: 'first-map-img', src: '../assets/images/map.svg', style: { display: "block", marginLeft: "auto", marginRight: "auto" } })
+				);
 			}
 
 			if (this.state.invites) {
@@ -30258,6 +30361,7 @@ var MapsPageComp = function (_React$Component) {
 					invitesDom.push(_react2.default.createElement(_invite2.default, { key: "invite-key-" + i, cancel: this.cancelInvite.bind(this, i), validate: this.validateInvite.bind(this, i), invite: this.state.invites[i] }));
 				}
 			}
+			var subSpace = window.innerHeight - 103;
 			return _react2.default.createElement(
 				'div',
 				{ id: 'maps-page' },
@@ -30277,25 +30381,25 @@ var MapsPageComp = function (_React$Component) {
 							{ style: { float: "right", marginRight: "20px", marginTop: "-50px" } },
 							_react2.default.createElement(
 								'div',
-								{ style: { display: "inline-block", marginRight: "20px" } },
+								{ className: 'purple-unerlined-hover', style: { fontSize: "14px", cursor: "pointer", display: "inline-block", marginRight: "20px" }, onClick: this.props.user ? this.changeName.bind(this, false, this.props.user.name) : null },
 								this.props.user ? this.props.user.name : "John Doe"
 							),
 							_react2.default.createElement(
 								'div',
-								{ style: { display: "inline-block", cursor: "pointer" }, onClick: this.logout },
+								{ className: 'purple-unerlined-hover', style: { fontSize: "14px", display: "inline-block", cursor: "pointer" }, onClick: this.logout },
 								'logout'
 							)
 						)
 					),
 					_react2.default.createElement(
 						'div',
-						{ style: { paddingLeft: "20px", paddingRight: "20px" } },
+						null,
 						_react2.default.createElement(
 							'div',
 							{ className: 'flex' },
 							_react2.default.createElement(
 								'div',
-								{ className: 'flex-grow-0', style: { width: "200px" } },
+								{ style: { width: "200px", paddingLeft: "20px", paddingRight: "20px", height: subSpace, overflow: "auto" }, className: 'flex-grow-0' },
 								_react2.default.createElement(
 									'div',
 									{ onClick: this.fetchInvites, className: 'pending-invites-cta', style: { display: pendingInvites && !this.state.invites.length ? "block" : "none" } },
@@ -30308,7 +30412,7 @@ var MapsPageComp = function (_React$Component) {
 							),
 							_react2.default.createElement(
 								'div',
-								{ className: 'flex-grow-1' },
+								{ style: { paddingLeft: "20px", paddingRight: "20px", height: subSpace, overflow: "auto" }, className: 'flex-grow-1' },
 								rightSide
 							)
 						)
@@ -30387,6 +30491,7 @@ var RegisterPage = function (_React$Component) {
 		_this.login = _this.login.bind(_this);
 		_this.isMailValid = _this.isMailValid.bind(_this);
 		_this.toggleLoading = _this.toggleLoading.bind(_this);
+		_this.pwskeyUp = _this.pwskeyUp.bind(_this);
 
 		_this.state = {
 			email: "",
@@ -30445,6 +30550,18 @@ var RegisterPage = function (_React$Component) {
 					errorMessage: null
 				};
 			});
+		}
+	}, {
+		key: 'pwskeyUp',
+		value: function pwskeyUp(e) {
+			if (e.which && e.which === 13) {
+				var showRegister = this.state.validEmail && this.state.mailTaken === false;
+				var showLogin = this.state.validEmail && this.state.mailTaken === true;
+				var refB = this.refs.regbutton;
+				var refL = this.refs.loginbutton;
+				if (showRegister && refB) refB.click();
+				if (showLogin && refL) refL.click();
+			}
 		}
 	}, {
 		key: 'register',
@@ -30512,7 +30629,7 @@ var RegisterPage = function (_React$Component) {
 				),
 				_react2.default.createElement(
 					'div',
-					{ className: 'purple', style: { display: this.state.errorMessage ? "block" : "none", textAlign: "center", paddingBottom: "40px" } },
+					{ className: 'purple', style: { display: this.state.errorMessage ? "block" : "none", textAlign: "center", marginTop: "-20px", paddingBottom: "30px" } },
 					this.state.errorMessage
 				),
 				_react2.default.createElement(
@@ -30532,7 +30649,7 @@ var RegisterPage = function (_React$Component) {
 							_react2.default.createElement(
 								'div',
 								null,
-								_react2.default.createElement('input', { className: "reg-inp " + (this.state.pwd && this.state.pwd.length >= 6 ? "validated" : ""), ref: 'pwd', type: 'password', value: this.state.pwd, onChange: this.changePwd, placeholder: 'password' })
+								_react2.default.createElement('input', { onKeyPress: this.pwskeyUp, className: "reg-inp " + (this.state.pwd && this.state.pwd.length >= 6 ? "validated" : ""), ref: 'pwd', type: 'password', value: this.state.pwd, onChange: this.changePwd, placeholder: 'password' })
 							),
 							_react2.default.createElement(
 								'button',
@@ -30545,7 +30662,7 @@ var RegisterPage = function (_React$Component) {
 							),
 							_react2.default.createElement(
 								'button',
-								{ className: (this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button"),
+								{ ref: 'regbutton', className: (this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button"),
 									style: { display: showRegister ? "block" : "none" },
 									onClick: this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.register : null },
 								_react2.default.createElement(
@@ -30566,7 +30683,7 @@ var RegisterPage = function (_React$Component) {
 							),
 							_react2.default.createElement(
 								'button',
-								{ className: (this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button"),
+								{ ref: 'loginbutton', className: (this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button"),
 									style: { display: showLogin ? "block" : "none" },
 									onClick: this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.login : null },
 								_react2.default.createElement(
@@ -30875,7 +30992,7 @@ var AuthServices = function () {
       var newUser = new _user2.default({
         email: email,
         register_date: new Date().getTime(),
-        name: "placeholder name"
+        name: "placeholder"
       });
       firebase.database().ref('users/' + uid).set(newUser, function (error) {
         if (callback) callback(error ? null : newUser);

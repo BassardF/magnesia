@@ -1,10 +1,37 @@
 #maps-page{
 
 	color : @darkgrey;
+
+	.purple-go-button{
+		width: 0;
+	    height: 0;
+	    border-top: 20px solid @lightPurple;
+	    border-bottom: 20px solid transparent;
+	    border-right: 20px solid @lightPurple;
+	    border-left: 20px solid transparent;
+	    float: right;
+	    margin-top: -31px;
+	    margin-right: -10px;
+	    cursor: pointer;
+
+	    -webkit-transition: all .5s ease;
+    	transition: all .5s ease;
+
+	    &:hover{
+	    	border-top: 20px solid @purple;
+			border-right: 20px solid @purple;
+	    }
+	}
+
+	.map-block{
+	 	.purple-go-button{
+	 		display: none;
+	 	}
+	}
 	
 	#logo{
 	    color: #9C27B0;
-	    font-size: 30px;
+	    font-size: 26px;
 	    padding: 20px;
 	    font-weight: bold;
 	}
@@ -152,6 +179,21 @@
 			border: solid 1px @greybcg;
 			background-color: @greybcg;
 			color : purple;
+		}
+	}
+
+	.first-map-img{
+		cursor: pointer;
+		-webkit-transition: all .5s ease;
+    	transition: all .5s ease;
+    	height: 80px;
+    	width: 80px;
+    	margin-top: 20px;
+
+		&:hover{
+			margin-top: 10px;
+			height: 100px;
+	    	width: 100px;
 		}
 	}
 

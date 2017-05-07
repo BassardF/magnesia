@@ -26,7 +26,7 @@ var AuthServices = function () {
       var newUser = new _user2.default({
         email: email,
         register_date: new Date().getTime(),
-        name: "placeholder name"
+        name: "placeholder"
       });
       firebase.database().ref('users/' + uid).set(newUser, function (error) {
         if (callback) callback(error ? null : newUser);

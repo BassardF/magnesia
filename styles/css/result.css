@@ -46,6 +46,7 @@ body {
   overflow: hidden;
   padding: 0px;
   margin: 0px;
+  font-family: 'Montserrat', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -83,7 +84,7 @@ body {
   border-radius: 4px;
   border: solid 1px #FAFAFA;
   padding: 2px 5px;
-  font-size: 12px;
+  font-size: 10px;
   cursor: pointer;
   -webkit-transition: all 1s ease;
   transition: all 1s ease;
@@ -162,9 +163,30 @@ body {
 #maps-page {
   color: #424242;
 }
+#maps-page .purple-go-button {
+  width: 0;
+  height: 0;
+  border-top: 20px solid #CE93D8;
+  border-bottom: 20px solid transparent;
+  border-right: 20px solid #CE93D8;
+  border-left: 20px solid transparent;
+  float: right;
+  margin-top: -31px;
+  margin-right: -10px;
+  cursor: pointer;
+  -webkit-transition: all .5s ease;
+  transition: all .5s ease;
+}
+#maps-page .purple-go-button:hover {
+  border-top: 20px solid #9C27B0;
+  border-right: 20px solid #9C27B0;
+}
+#maps-page .map-block .purple-go-button {
+  display: none;
+}
 #maps-page #logo {
   color: #9C27B0;
-  font-size: 30px;
+  font-size: 26px;
   padding: 20px;
   font-weight: bold;
 }
@@ -291,6 +313,19 @@ body {
   background-color: #FAFAFA;
   color: purple;
 }
+#maps-page .first-map-img {
+  cursor: pointer;
+  -webkit-transition: all .5s ease;
+  transition: all .5s ease;
+  height: 80px;
+  width: 80px;
+  margin-top: 20px;
+}
+#maps-page .first-map-img:hover {
+  margin-top: 10px;
+  height: 100px;
+  width: 100px;
+}
 .node-text-input {
   outline: none !important;
   border: none;
@@ -313,21 +348,24 @@ body {
   /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }
+svg {
+  font-size: 14px;
+}
 #left-panel {
   background-color: #FAFAFA;
   border-right: solid 1px #BDBDBD;
   color: #424242;
   height: 100%;
-  font-size: 15px;
+  font-size: 13px;
 }
 #left-panel #logo {
   color: #9C27B0;
-  font-size: 30px;
+  font-size: 25px;
   padding: 20px;
   font-weight: bold;
 }
 #left-panel .node-line {
-  font-size: 15px;
+  font-size: 13px;
   margin-left: 3px;
   cursor: pointer;
   margin-top: 5px;
@@ -341,7 +379,7 @@ body {
   border-left: 4px solid #424242;
 }
 #left-panel .selected-node-line {
-  font-size: 15px;
+  font-size: 13px;
   color: #9C27B0;
   margin-top: 5px;
   margin-bottom: 5px;
@@ -355,14 +393,14 @@ body {
   border-left: 4px solid transparent;
 }
 #left-panel .link-line {
-  font-size: 13px;
+  font-size: 12px;
   margin-left: 10px;
   cursor: pointer;
   margin-top: 3px;
   margin-bottom: 3px;
 }
 #left-panel .selected-link-line {
-  font-size: 13px;
+  font-size: 12px;
   margin-left: 10px;
   cursor: pointer;
   margin-top: 3px;
@@ -393,7 +431,7 @@ body {
 #left-panel .left-panel-title {
   text-align: center;
   padding: 10px;
-  font-size: 18px;
+  font-size: 16px;
   color: #424242;
   background-color: #F3E5F5;
 }
@@ -437,7 +475,7 @@ body {
 }
 #register-page #logo {
   color: #9C27B0;
-  font-size: 30px;
+  font-size: 26px;
   padding: 20px;
   font-weight: bold;
 }
@@ -527,7 +565,7 @@ body {
 }
 #register-page .step-line.valid {
   opacity: 1;
-  color: #4CAF50;
+  color: #9C27B0;
   display: none;
   display: block;
 }

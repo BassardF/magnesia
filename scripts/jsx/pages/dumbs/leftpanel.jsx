@@ -35,7 +35,7 @@ class LeftPanel extends React.Component {
 		var dom = null, title = "";
 		var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 		if(!nodeSelected && this.state.nav == 1) this.state.nav = 0;
-		let subSpace = window.innerHeight - (28 + 66 + 40 + 42);
+		let subSpace = window.innerHeight - (28 + 60 + 40 + 39);
 		switch(this.state.nav) {
 		    case 0:
 		        dom = <NodeTree map={this.props.map} 

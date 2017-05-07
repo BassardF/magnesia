@@ -35,20 +35,25 @@ var MapDetails = function (_React$Component) {
 	_createClass(MapDetails, [{
 		key: "componentWillReceiveProps",
 		value: function componentWillReceiveProps(np) {
+			if (np.map && (!this.state.map || np.map.mid !== this.state.map.mid)) {
+				this.redrawStats(np);
+			}
+		}
+	}, {
+		key: "redrawStats",
+		value: function redrawStats(np) {
 			var _this2 = this;
 
-			if (np.map && (!this.state.map || np.map.title !== this.state.map.title)) {
-				this.setState({
-					map: np.map
-				}, function () {
-					var counts = _this2.getCount();
-					var max = Math.max(counts.nodes, counts.users, counts.messages, counts.links, 5);
-					_this2.refs.progressbarusers.style.width = counts.users * 100 / max + "%";
-					_this2.refs.progressbarnodes.style.width = counts.nodes * 100 / max + "%";
-					_this2.refs.progressbarlinks.style.width = counts.links * 100 / max + "%";
-					_this2.refs.progressbarmessages.style.width = counts.messages * 100 / max + "%";
-				});
-			}
+			this.setState({
+				map: np.map
+			}, function () {
+				var counts = _this2.getCount();
+				var max = Math.max(counts.nodes, counts.users, counts.messages, counts.links, 5);
+				_this2.refs.progressbarusers.style.width = counts.users * 100 / max + "%";
+				_this2.refs.progressbarnodes.style.width = counts.nodes * 100 / max + "%";
+				_this2.refs.progressbarlinks.style.width = counts.links * 100 / max + "%";
+				_this2.refs.progressbarmessages.style.width = counts.messages * 100 / max + "%";
+			});
 		}
 	}, {
 		key: "getCount",
@@ -132,7 +137,7 @@ var MapDetails = function (_React$Component) {
 					_react2.default.createElement(
 						"div",
 						{ onClick: this.props.goToMap, className: "purple-unerlined-hover", style: { cursor: "pointer", float: "right", display: "inline-block" } },
-						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../assets/images/map.svg" }),
+						_react2.default.createElement("img", { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: "../assets/images/arrow-right.svg" }),
 						_react2.default.createElement(
 							"span",
 							{ style: { verticalAlign: "middle" } },

@@ -37,6 +37,27 @@ var User = function () {
       if (!this.maps) this.maps = {};
       this.maps[mid] = new Date().getTime();
     }
+  }, {
+    key: "changeName",
+    value: function changeName(uid, newName) {
+      this.name = newName;
+      firebase.database().ref("users/" + uid + "/name").set(newName);
+      if (this.maps) {
+        for (var mid in this.maps) {
+          firebase.database().ref("maps/" + mid + "/users/" + uid).set(newName);
+          firebase.database().ref("maps/" + mid + "/messages").once("value", function (res) {
+            var msgs = res.val();
+            if (msgs) {
+              for (var messid in msgs) {
+                if (msgs[messid].uid == uid) {
+                  firebase.database().ref("maps/" + mid + "/messages/" + messid + "/name").set(newName);
+                }
+              }
+            }
+          });
+        }
+      }
+    }
   }]);
 
   return User;

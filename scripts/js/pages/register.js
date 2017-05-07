@@ -36,6 +36,7 @@ var RegisterPage = function (_React$Component) {
 		_this.login = _this.login.bind(_this);
 		_this.isMailValid = _this.isMailValid.bind(_this);
 		_this.toggleLoading = _this.toggleLoading.bind(_this);
+		_this.pwskeyUp = _this.pwskeyUp.bind(_this);
 
 		_this.state = {
 			email: "",
@@ -94,6 +95,18 @@ var RegisterPage = function (_React$Component) {
 					errorMessage: null
 				};
 			});
+		}
+	}, {
+		key: 'pwskeyUp',
+		value: function pwskeyUp(e) {
+			if (e.which && e.which === 13) {
+				var showRegister = this.state.validEmail && this.state.mailTaken === false;
+				var showLogin = this.state.validEmail && this.state.mailTaken === true;
+				var refB = this.refs.regbutton;
+				var refL = this.refs.loginbutton;
+				if (showRegister && refB) refB.click();
+				if (showLogin && refL) refL.click();
+			}
 		}
 	}, {
 		key: 'register',
@@ -161,7 +174,7 @@ var RegisterPage = function (_React$Component) {
 				),
 				_react2.default.createElement(
 					'div',
-					{ className: 'purple', style: { display: this.state.errorMessage ? "block" : "none", textAlign: "center", paddingBottom: "40px" } },
+					{ className: 'purple', style: { display: this.state.errorMessage ? "block" : "none", textAlign: "center", marginTop: "-20px", paddingBottom: "30px" } },
 					this.state.errorMessage
 				),
 				_react2.default.createElement(
@@ -181,7 +194,7 @@ var RegisterPage = function (_React$Component) {
 							_react2.default.createElement(
 								'div',
 								null,
-								_react2.default.createElement('input', { className: "reg-inp " + (this.state.pwd && this.state.pwd.length >= 6 ? "validated" : ""), ref: 'pwd', type: 'password', value: this.state.pwd, onChange: this.changePwd, placeholder: 'password' })
+								_react2.default.createElement('input', { onKeyPress: this.pwskeyUp, className: "reg-inp " + (this.state.pwd && this.state.pwd.length >= 6 ? "validated" : ""), ref: 'pwd', type: 'password', value: this.state.pwd, onChange: this.changePwd, placeholder: 'password' })
 							),
 							_react2.default.createElement(
 								'button',
@@ -194,7 +207,7 @@ var RegisterPage = function (_React$Component) {
 							),
 							_react2.default.createElement(
 								'button',
-								{ className: (this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button"),
+								{ ref: 'regbutton', className: (this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button"),
 									style: { display: showRegister ? "block" : "none" },
 									onClick: this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.register : null },
 								_react2.default.createElement(
@@ -215,7 +228,7 @@ var RegisterPage = function (_React$Component) {
 							),
 							_react2.default.createElement(
 								'button',
-								{ className: (this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button"),
+								{ ref: 'loginbutton', className: (this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button"),
 									style: { display: showLogin ? "block" : "none" },
 									onClick: this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.login : null },
 								_react2.default.createElement(

@@ -11,8 +11,13 @@ class MapDetails extends React.Component {
 	}
 
 	componentWillReceiveProps(np){
-		if(np.map && (!this.state.map || np.map.title !== this.state.map.title)){
-			this.setState({
+		if(np.map && (!this.state.map || np.map.mid !== this.state.map.mid)){
+			this.redrawStats(np);
+		}
+	}
+
+	redrawStats(np){
+		this.setState({
 				map : np.map
 			}, () => {
 				let counts = this.getCount();
@@ -22,7 +27,6 @@ class MapDetails extends React.Component {
 				this.refs.progressbarlinks.style.width = (counts.links*100/max) + "%";
 				this.refs.progressbarmessages.style.width = (counts.messages*100/max) + "%";
 			});
-		}
 	}
 
 	getCount(){
@@ -64,7 +68,7 @@ class MapDetails extends React.Component {
 					</div>
 					<div style={{float:"right", display:"inline-block", marginLeft: "10px", marginRight: "10px"}}> | </div>
 					<div onClick={this.props.goToMap} className="purple-unerlined-hover" style={{cursor:"pointer", float:"right", display:"inline-block"}}>
-						<img style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/map.svg"/>
+						<img style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/arrow-right.svg"/>
 						<span style={{verticalAlign:"middle"}}>get in</span>
 					</div>
 				</div>

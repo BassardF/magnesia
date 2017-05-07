@@ -70,6 +70,7 @@ var MapsPageComp = function (_React$Component) {
 		_this.fetchInvites = _this.fetchInvites.bind(_this);
 		_this.validateInvite = _this.validateInvite.bind(_this);
 		_this.cancelInvite = _this.cancelInvite.bind(_this);
+		_this.changeName = _this.changeName.bind(_this);
 
 		_this.state = {
 			selected: 0,
@@ -85,6 +86,9 @@ var MapsPageComp = function (_React$Component) {
 		value: function componentWillMount() {
 			var _this2 = this;
 
+			if (this.props.user && this.props.user.name == "placeholder") {
+				this.changeName(true, this.props.user.name);
+			}
 			this.props.replaceMaps([]);
 			this.refreshMaps(function () {
 				_this2.selectMap(0, true);
@@ -96,9 +100,45 @@ var MapsPageComp = function (_React$Component) {
 			this.removeCurrentOn();
 		}
 	}, {
+		key: 'changeName',
+		value: function changeName(newName, current) {
+			var _this3 = this;
+
+			var title = "Change your name";
+			var text = "Your current name is " + current;
+			if (newName) {
+				title = "Choose a name";
+				text = "It will be useful for collaborative work !";
+			}
+
+			swal({
+				title: title,
+				text: text,
+				type: "input",
+				showCancelButton: true,
+				closeOnConfirm: false,
+				closeOnCancel: false,
+				animation: "slide-from-top",
+				inputPlaceholder: "Name"
+			}, function (inputValue) {
+				if (inputValue === false) {
+					swal("Name not set", "Your current name is 'placeholder'. You can click on your name on the topbar to modify it.", "warning");
+				} else if (inputValue === "") {
+					swal.showInputError("Please enter a name");
+					return false;
+				} else {
+					var usr = _this3.props.user;
+					usr.changeName(_auth2.default.getUid(), inputValue);
+					_this3.props.replaceUser(usr);
+					_this3.forceUpdate();
+					swal("Nice!", "Your name has been changed", "success");
+				}
+			});
+		}
+	}, {
 		key: 'validateInvite',
 		value: function validateInvite(ind) {
-			var _this3 = this;
+			var _this4 = this;
 
 			var usr = this.props.user;
 			var mid = this.state.invites[ind].mid;
@@ -109,9 +149,9 @@ var MapsPageComp = function (_React$Component) {
 
 			firebase.database().ref('maps/' + mid).once("value", function (snap) {
 				if (snap && snap.val()) {
-					_this3.props.addMap(new _map2.default(snap.val()));
+					_this4.props.addMap(new _map2.default(snap.val()));
 				}
-				_this3.setState({
+				_this4.setState({
 					invites: invites
 				});
 			});
@@ -131,19 +171,19 @@ var MapsPageComp = function (_React$Component) {
 	}, {
 		key: 'fetchInvites',
 		value: function fetchInvites() {
-			var _this4 = this;
+			var _this5 = this;
 
 			if (this.props.user && this.props.user.invites) {
 				for (var mid in this.props.user.invites) {
 					if (!this.props.user.invites[mid].answer) {
 						firebase.database().ref('maps/' + mid + '/title').once("value", function (titlesnap) {
 							var title = titlesnap.val();
-							var invites = _this4.state.invites;
+							var invites = _this5.state.invites;
 							invites.push({
 								mid: mid,
 								title: title
 							});
-							_this4.setState({
+							_this5.setState({
 								invites: invites
 							});
 						});
@@ -174,7 +214,7 @@ var MapsPageComp = function (_React$Component) {
 	}, {
 		key: 'selectMap',
 		value: function selectMap(ind, force) {
-			var _this5 = this;
+			var _this6 = this;
 
 			if (ind !== this.state.selected || force) {
 				var map = this.props.maps[ind];
@@ -189,17 +229,17 @@ var MapsPageComp = function (_React$Component) {
 				firebase.database().ref('maps/' + mid).on("value", function (snap) {
 					if (snap && snap.val()) {
 						var newMp = new _map2.default(snap.val());
-						var mps = _this5.props.maps;
+						var mps = _this6.props.maps;
 						mps[ind] = newMp;
-						_this5.props.replaceMaps(mps);
+						_this6.props.replaceMaps(mps);
 					} else {
-						_this5.removeCurrentOn();
-						var mps = _this5.props.maps;
+						_this6.removeCurrentOn();
+						var mps = _this6.props.maps;
 						mps.splice(ind, 1);
-						_this5.props.replaceMaps(mps);
-						_this5.selectMap(0);
+						_this6.props.replaceMaps(mps);
+						_this6.selectMap(0);
 					}
-					_this5.forceUpdate();
+					_this6.forceUpdate();
 				});
 
 				this.setState({
@@ -216,11 +256,11 @@ var MapsPageComp = function (_React$Component) {
 				var count = 0;
 				for (var mid in this.props.user.maps) {
 					(function (mid) {
-						var _this6 = this;
+						var _this7 = this;
 
 						firebase.database().ref('maps/' + mid).once("value", function (snap) {
 							if (snap && snap.val()) {
-								_this6.props.addMap(new _map2.default(snap.val()));
+								_this7.props.addMap(new _map2.default(snap.val()));
 							}
 							count++;
 							if (count == keysCount && callback) {
@@ -234,7 +274,7 @@ var MapsPageComp = function (_React$Component) {
 	}, {
 		key: 'createMap',
 		value: function createMap() {
-			var _this7 = this;
+			var _this8 = this;
 
 			var creationTimestamp = new Date().getTime();
 			var newMap = new _map2.default().initEmpty(_auth2.default.getUid(), creationTimestamp, this.props.user.name);
@@ -244,15 +284,15 @@ var MapsPageComp = function (_React$Component) {
 			newMap.mid = newMapkey;
 			newMapRef.set(newMap, function (error) {
 				if (!error) {
-					var mapArray = _this7.props.maps ? _this7.props.maps.concat(newMap) : [newMap];
-					_this7.props.replaceMaps(mapArray);
+					var mapArray = _this8.props.maps ? _this8.props.maps.concat(newMap) : [newMap];
+					_this8.props.replaceMaps(mapArray);
 					//Adding the Map to the user
 					firebase.database().ref('users/' + _auth2.default.getUid() + '/maps/' + newMapkey).set(creationTimestamp, function (error2) {
 						if (!error2) {
-							if (!_this7.props.user.maps) _this7.props.user.maps = {};
-							_this7.props.user.maps[newMapkey] = creationTimestamp;
-							_this7.props.replaceUser(_this7.props.user);
-							_this7.selectMap(mapArray.length - 1, true);
+							if (!_this8.props.user.maps) _this8.props.user.maps = {};
+							_this8.props.user.maps[newMapkey] = creationTimestamp;
+							_this8.props.replaceUser(_this8.props.user);
+							_this8.selectMap(mapArray.length - 1, true);
 						}
 					});
 				}
@@ -337,16 +377,36 @@ var MapsPageComp = function (_React$Component) {
 			var selectedMap = this.props.maps[this.state.selected],
 			    rightSide = null;
 			if (selectedMap) {
-				if (this.state.manageUsers) {
-					rightSide = _react2.default.createElement(_manageusers2.default, {
-						map: selectedMap, promptChangeTitle: this.promptChangeTitle,
-						toggleManageUsers: this.toggleManageUsers });
-				} else {
-					rightSide = _react2.default.createElement(_mapdetails2.default, {
-						goToMap: this.goToMap.bind(this, selectedMap.mid),
-						map: selectedMap, promptChangeTitle: this.promptChangeTitle,
-						leaveMap: this.promptLeaveMap, toggleManageUsers: this.toggleManageUsers });
-				}
+				rightSide = _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'div',
+						{ style: { display: this.state.manageUsers ? "block" : "none" } },
+						_react2.default.createElement(_manageusers2.default, {
+							map: selectedMap, promptChangeTitle: this.promptChangeTitle,
+							toggleManageUsers: this.toggleManageUsers })
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { display: this.state.manageUsers ? "none" : "block" } },
+						_react2.default.createElement(_mapdetails2.default, {
+							goToMap: this.goToMap.bind(this, selectedMap.mid),
+							map: selectedMap, promptChangeTitle: this.promptChangeTitle,
+							leaveMap: this.promptLeaveMap, toggleManageUsers: this.toggleManageUsers })
+					)
+				);
+			} else {
+				rightSide = _react2.default.createElement(
+					'div',
+					{ onClick: this.createMap, style: { textAlign: "center" } },
+					_react2.default.createElement(
+						'div',
+						{ style: { marginTop: "20px", fontSize: "30px" } },
+						'Create your first Mind Map'
+					),
+					_react2.default.createElement('img', { className: 'first-map-img', src: '../assets/images/map.svg', style: { display: "block", marginLeft: "auto", marginRight: "auto" } })
+				);
 			}
 
 			if (this.state.invites) {
@@ -354,6 +414,7 @@ var MapsPageComp = function (_React$Component) {
 					invitesDom.push(_react2.default.createElement(_invite2.default, { key: "invite-key-" + i, cancel: this.cancelInvite.bind(this, i), validate: this.validateInvite.bind(this, i), invite: this.state.invites[i] }));
 				}
 			}
+			var subSpace = window.innerHeight - 103;
 			return _react2.default.createElement(
 				'div',
 				{ id: 'maps-page' },
@@ -373,25 +434,25 @@ var MapsPageComp = function (_React$Component) {
 							{ style: { float: "right", marginRight: "20px", marginTop: "-50px" } },
 							_react2.default.createElement(
 								'div',
-								{ style: { display: "inline-block", marginRight: "20px" } },
+								{ className: 'purple-unerlined-hover', style: { fontSize: "14px", cursor: "pointer", display: "inline-block", marginRight: "20px" }, onClick: this.props.user ? this.changeName.bind(this, false, this.props.user.name) : null },
 								this.props.user ? this.props.user.name : "John Doe"
 							),
 							_react2.default.createElement(
 								'div',
-								{ style: { display: "inline-block", cursor: "pointer" }, onClick: this.logout },
+								{ className: 'purple-unerlined-hover', style: { fontSize: "14px", display: "inline-block", cursor: "pointer" }, onClick: this.logout },
 								'logout'
 							)
 						)
 					),
 					_react2.default.createElement(
 						'div',
-						{ style: { paddingLeft: "20px", paddingRight: "20px" } },
+						null,
 						_react2.default.createElement(
 							'div',
 							{ className: 'flex' },
 							_react2.default.createElement(
 								'div',
-								{ className: 'flex-grow-0', style: { width: "200px" } },
+								{ style: { width: "200px", paddingLeft: "20px", paddingRight: "20px", height: subSpace, overflow: "auto" }, className: 'flex-grow-0' },
 								_react2.default.createElement(
 									'div',
 									{ onClick: this.fetchInvites, className: 'pending-invites-cta', style: { display: pendingInvites && !this.state.invites.length ? "block" : "none" } },
@@ -404,7 +465,7 @@ var MapsPageComp = function (_React$Component) {
 							),
 							_react2.default.createElement(
 								'div',
-								{ className: 'flex-grow-1' },
+								{ style: { paddingLeft: "20px", paddingRight: "20px", height: subSpace, overflow: "auto" }, className: 'flex-grow-1' },
 								rightSide
 							)
 						)
