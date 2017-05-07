@@ -29043,7 +29043,7 @@ var ProspectLine = function (_React$Component3) {
 					_react2.default.createElement(
 						'div',
 						{ className: 'flex-grow-1' },
-						this.props.name
+						this.props.name.split("_").join(".")
 					),
 					_react2.default.createElement(
 						'div',

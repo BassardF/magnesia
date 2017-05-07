@@ -161,7 +161,7 @@ class ProspectLine extends React.Component {
 			<div className="selected-user-line">
 				<div className="flex">
 					<div className="flex-grow-1">
-						{this.props.name}
+						{this.props.name.split("_").join(".")}
 					</div>
 					<div style={{textAlign:"right"}} className="flex-grow-1 purple">
 						{rs}

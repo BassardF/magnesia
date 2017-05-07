@@ -4,11 +4,18 @@
   },
   "hosting": {
     "public": ".",
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
+    "rewrites": [{
+      "source": "**",
+      "destination": "/index.html"
+    }],
+    "redirects":[{
+        "source":"/maps",
+        "destination":"/",
+        "type":302
+    }, {
+        "source":"/map/**",
+        "destination":"/",
+        "type":302
+    }]
   }
 }
