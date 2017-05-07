@@ -163,8 +163,9 @@ class MapsPageComp extends React.Component {
 
 			this.removeCurrentOn();
 			firebase.database().ref('maps/' + mid).on("value", (snap) => {
-				if(snap && snap.val()) {
-					var newMp = new Map(snap.val());
+				var bod = snap.val();
+				if(snap && bod && bod.users && bod.users[AuthServices.getUid()]) {
+					var newMp = new Map(bod);
 					var mps = this.props.maps;
 					mps[ind] = newMp;
 					this.props.replaceMaps(mps);

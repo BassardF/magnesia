@@ -30174,8 +30174,9 @@ var MapsPageComp = function (_React$Component) {
 
 				this.removeCurrentOn();
 				firebase.database().ref('maps/' + mid).on("value", function (snap) {
-					if (snap && snap.val()) {
-						var newMp = new _map2.default(snap.val());
+					var bod = snap.val();
+					if (snap && bod && bod.users && bod.users[_auth2.default.getUid()]) {
+						var newMp = new _map2.default(bod);
 						var mps = _this6.props.maps;
 						mps[ind] = newMp;
 						_this6.props.replaceMaps(mps);
