@@ -10,7 +10,7 @@ class MapBlock extends React.Component {
 					<div className="map-block-sub">
 
 						<div onClick={this.props.goToMap} className="purple-go-button">
-							<img src="../assets/images/arrow-right-white.svg" style={{marginTop: "-34px", verticalAlign: "middle", width: "15px", marginRight: "5px;"}}/>
+							<img src="../assets/images/arrow-right-white.svg" style={{marginTop: "-34px", verticalAlign: "middle", width: "15px", marginRight: "5px"}}/>
 						</div>
 
 						<img style={{verticalAlign:"middle", height:"20px", width:"20px"}} src="../assets/images/map.svg"/>

@@ -129,8 +129,6 @@ var MapsPageComp = function (_React$Component) {
 				} else {
 					var usr = _this3.props.user;
 					usr.changeName(_auth2.default.getUid(), inputValue);
-					_this3.props.replaceUser(usr);
-					_this3.forceUpdate();
 					swal("Nice!", "Your name has been changed", "success");
 				}
 			});
@@ -143,7 +141,6 @@ var MapsPageComp = function (_React$Component) {
 			var usr = this.props.user;
 			var mid = this.state.invites[ind].mid;
 			usr.acceptInvite(mid, _auth2.default.getUid());
-			this.props.replaceUser(usr);
 			var invites = this.state.invites;
 			invites.splice(ind, 1);
 
@@ -161,7 +158,6 @@ var MapsPageComp = function (_React$Component) {
 		value: function cancelInvite(ind) {
 			var usr = this.props.user;
 			usr.cancelInvite(this.state.invites[ind].mid, _auth2.default.getUid());
-			this.props.replaceUser(usr);
 			var invites = this.state.invites;
 			invites.splice(ind, 1);
 			this.setState({
@@ -292,7 +288,6 @@ var MapsPageComp = function (_React$Component) {
 						if (!error2) {
 							if (!_this8.props.user.maps) _this8.props.user.maps = {};
 							_this8.props.user.maps[newMapkey] = creationTimestamp;
-							_this8.props.replaceUser(_this8.props.user);
 							_this8.selectMap(mapArray.length - 1, true);
 						}
 					});

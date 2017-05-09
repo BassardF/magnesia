@@ -76,8 +76,6 @@ class MapsPageComp extends React.Component {
 		  } else {
 		  	var usr = this.props.user;
 		  	usr.changeName(AuthServices.getUid(), inputValue);
-		  	this.props.replaceUser(usr);
-		  	this.forceUpdate();
 		  	swal("Nice!", "Your name has been changed", "success");	
 		  }
 		});
@@ -87,7 +85,6 @@ class MapsPageComp extends React.Component {
 		var usr = this.props.user;
 		var mid = this.state.invites[ind].mid;
 		usr.acceptInvite(mid, AuthServices.getUid());
-		this.props.replaceUser(usr);
 		var invites = this.state.invites;
 		invites.splice(ind, 1);
 
@@ -105,7 +102,6 @@ class MapsPageComp extends React.Component {
 	cancelInvite(ind){
 		var usr = this.props.user;
 		usr.cancelInvite(this.state.invites[ind].mid, AuthServices.getUid());
-		this.props.replaceUser(usr);
 		var invites = this.state.invites;
 		invites.splice(ind, 1);
 		this.setState({
@@ -222,7 +218,6 @@ class MapsPageComp extends React.Component {
 					if(!error2){
 						if(!this.props.user.maps) this.props.user.maps = {};
 						this.props.user.maps[newMapkey] = creationTimestamp;
-						this.props.replaceUser(this.props.user);
 						this.selectMap(mapArray.length - 1, true);
 					}
 				});

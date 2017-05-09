@@ -184,7 +184,7 @@ var Map = function () {
 			}
 			for (var nid2 in this.nodes) {
 				//Delete
-				if (!data[nid2]) this.nodes[nid2] = null;
+				if (!data[nid2]) this.nodes.splice(nid2, 1);
 			}
 		}
 	}, {

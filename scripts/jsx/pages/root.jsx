@@ -5,7 +5,14 @@ import { browserHistory } from 'react-router';
 import replaceUser from '../actions/users'
 import AuthServices from '../services/auth'
 
+import User from '../models/user'
+
 class RootPageComp extends React.Component {
+
+	constructor(props) {
+	    super(props);
+ 	    this.state = {};
+	}
 
 	componentWillMount(){
 		//Firebase auth event callback
@@ -17,8 +24,10 @@ class RootPageComp extends React.Component {
 					//Set email for search
 					AuthServices.uploadEmail(user.uid, user.email);
 					//Check login case
-					AuthServices.fetchUser(user.uid, (fetchedUser)=>{
-						if(fetchedUser){
+					this.setState({uid : user.uid});
+					firebase.database().ref('users/' + user.uid).on("value", (snap)=>{
+				      var fetchedUser = new User(snap.val());
+				      if(snap && snap.val() && fetchedUser){
 							this.props.replaceUser(fetchedUser);
 							browserHistory.push('/maps');
 						} else {
@@ -28,12 +37,13 @@ class RootPageComp extends React.Component {
 								browserHistory.push('/maps');
 							});	
 						}
-					});
+				    });
 				}
 			//No token
 			} else {
 				//Remove user from state
 				if(this.props.user){
+					firebase.database().ref('users/' + this.state.uid).off();
 					this.props.replaceUser(null);
 					browserHistory.push('/');
 				}

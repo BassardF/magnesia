@@ -41,7 +41,7 @@ var MapBlock = function (_React$Component) {
 						_react2.default.createElement(
 							"div",
 							{ onClick: this.props.goToMap, className: "purple-go-button" },
-							_react2.default.createElement("img", { src: "../assets/images/arrow-right-white.svg", style: { marginTop: "-34px", verticalAlign: "middle", width: "15px", marginRight: "5px;" } })
+							_react2.default.createElement("img", { src: "../assets/images/arrow-right-white.svg", style: { marginTop: "-34px", verticalAlign: "middle", width: "15px", marginRight: "5px" } })
 						),
 						_react2.default.createElement("img", { style: { verticalAlign: "middle", height: "20px", width: "20px" }, src: "../assets/images/map.svg" }),
 						_react2.default.createElement(

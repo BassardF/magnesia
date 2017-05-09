@@ -83,6 +83,7 @@ var MapPageComp = function (_React$Component) {
 							if (!_this2.state.map) _this2.setState({ map: new _map2.default(snap.val()) });else {
 								var map = _this2.state.map;
 								map.upgradeFromServer(snap.val());
+								console.log("upgraded", map, map.nodes);
 								_this2.setState({ map: map });
 							}
 						}
@@ -200,6 +201,9 @@ var MapPageComp = function (_React$Component) {
 			var gs = svg.select("g#nodes").selectAll("g.node").data(nodes, function (d, ind) {
 				return d;
 			});
+
+			console.log("Draw nodes");
+			console.log(nodes);
 
 			//Exit
 			gs.exit().remove();

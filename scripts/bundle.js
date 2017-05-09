@@ -27610,7 +27610,7 @@ var Map = function () {
 			}
 			for (var nid2 in this.nodes) {
 				//Delete
-				if (!data[nid2]) this.nodes[nid2] = null;
+				if (!data[nid2]) this.nodes.splice(nid2, 1);
 			}
 		}
 	}, {
@@ -29104,7 +29104,7 @@ var MapBlock = function (_React$Component) {
 						_react2.default.createElement(
 							"div",
 							{ onClick: this.props.goToMap, className: "purple-go-button" },
-							_react2.default.createElement("img", { src: "../assets/images/arrow-right-white.svg", style: { marginTop: "-34px", verticalAlign: "middle", width: "15px", marginRight: "5px;" } })
+							_react2.default.createElement("img", { src: "../assets/images/arrow-right-white.svg", style: { marginTop: "-34px", verticalAlign: "middle", width: "15px", marginRight: "5px" } })
 						),
 						_react2.default.createElement("img", { style: { verticalAlign: "middle", height: "20px", width: "20px" }, src: "../assets/images/map.svg" }),
 						_react2.default.createElement(
@@ -29569,6 +29569,7 @@ var MapPageComp = function (_React$Component) {
 							if (!_this2.state.map) _this2.setState({ map: new _map2.default(snap.val()) });else {
 								var map = _this2.state.map;
 								map.upgradeFromServer(snap.val());
+								console.log("upgraded", map, map.nodes);
 								_this2.setState({ map: map });
 							}
 						}
@@ -29686,6 +29687,9 @@ var MapPageComp = function (_React$Component) {
 			var gs = svg.select("g#nodes").selectAll("g.node").data(nodes, function (d, ind) {
 				return d;
 			});
+
+			console.log("Draw nodes");
+			console.log(nodes);
 
 			//Exit
 			gs.exit().remove();
@@ -30076,8 +30080,6 @@ var MapsPageComp = function (_React$Component) {
 				} else {
 					var usr = _this3.props.user;
 					usr.changeName(_auth2.default.getUid(), inputValue);
-					_this3.props.replaceUser(usr);
-					_this3.forceUpdate();
 					swal("Nice!", "Your name has been changed", "success");
 				}
 			});
@@ -30090,7 +30092,6 @@ var MapsPageComp = function (_React$Component) {
 			var usr = this.props.user;
 			var mid = this.state.invites[ind].mid;
 			usr.acceptInvite(mid, _auth2.default.getUid());
-			this.props.replaceUser(usr);
 			var invites = this.state.invites;
 			invites.splice(ind, 1);
 
@@ -30108,7 +30109,6 @@ var MapsPageComp = function (_React$Component) {
 		value: function cancelInvite(ind) {
 			var usr = this.props.user;
 			usr.cancelInvite(this.state.invites[ind].mid, _auth2.default.getUid());
-			this.props.replaceUser(usr);
 			var invites = this.state.invites;
 			invites.splice(ind, 1);
 			this.setState({
@@ -30239,7 +30239,6 @@ var MapsPageComp = function (_React$Component) {
 						if (!error2) {
 							if (!_this8.props.user.maps) _this8.props.user.maps = {};
 							_this8.props.user.maps[newMapkey] = creationTimestamp;
-							_this8.props.replaceUser(_this8.props.user);
 							_this8.selectMap(mapArray.length - 1, true);
 						}
 					});
@@ -30810,6 +30809,10 @@ var _auth = require('../services/auth');
 
 var _auth2 = _interopRequireDefault(_auth);
 
+var _user = require('../models/user');
+
+var _user2 = _interopRequireDefault(_user);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -30821,10 +30824,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var RootPageComp = function (_React$Component) {
 	_inherits(RootPageComp, _React$Component);
 
-	function RootPageComp() {
+	function RootPageComp(props) {
 		_classCallCheck(this, RootPageComp);
 
-		return _possibleConstructorReturn(this, (RootPageComp.__proto__ || Object.getPrototypeOf(RootPageComp)).apply(this, arguments));
+		var _this = _possibleConstructorReturn(this, (RootPageComp.__proto__ || Object.getPrototypeOf(RootPageComp)).call(this, props));
+
+		_this.state = {};
+		return _this;
 	}
 
 	_createClass(RootPageComp, [{
@@ -30841,8 +30847,10 @@ var RootPageComp = function (_React$Component) {
 						//Set email for search
 						_auth2.default.uploadEmail(user.uid, user.email);
 						//Check login case
-						_auth2.default.fetchUser(user.uid, function (fetchedUser) {
-							if (fetchedUser) {
+						_this2.setState({ uid: user.uid });
+						firebase.database().ref('users/' + user.uid).on("value", function (snap) {
+							var fetchedUser = new _user2.default(snap.val());
+							if (snap && snap.val() && fetchedUser) {
 								_this2.props.replaceUser(fetchedUser);
 								_reactRouter.browserHistory.push('/maps');
 							} else {
@@ -30858,6 +30866,7 @@ var RootPageComp = function (_React$Component) {
 				} else {
 					//Remove user from state
 					if (_this2.props.user) {
+						firebase.database().ref('users/' + _this2.state.uid).off();
 						_this2.props.replaceUser(null);
 						_reactRouter.browserHistory.push('/');
 					}
@@ -30898,7 +30907,7 @@ var RootPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Roo
 
 exports.default = RootPage;
 
-},{"../actions/users":279,"../services/auth":300,"react":255,"react-redux":182,"react-router":224}],296:[function(require,module,exports){
+},{"../actions/users":279,"../models/user":284,"../services/auth":300,"react":255,"react-redux":182,"react-router":224}],296:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31034,4 +31043,7 @@ var AuthServices = function () {
 
 exports.default = AuthServices;
 
-},{"../models/user":284}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300]);
+},{"../models/user":284}],301:[function(require,module,exports){
+"use strict";
+
+},{}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301]);

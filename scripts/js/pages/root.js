@@ -22,6 +22,10 @@ var _auth = require('../services/auth');
 
 var _auth2 = _interopRequireDefault(_auth);
 
+var _user = require('../models/user');
+
+var _user2 = _interopRequireDefault(_user);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -33,10 +37,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var RootPageComp = function (_React$Component) {
 	_inherits(RootPageComp, _React$Component);
 
-	function RootPageComp() {
+	function RootPageComp(props) {
 		_classCallCheck(this, RootPageComp);
 
-		return _possibleConstructorReturn(this, (RootPageComp.__proto__ || Object.getPrototypeOf(RootPageComp)).apply(this, arguments));
+		var _this = _possibleConstructorReturn(this, (RootPageComp.__proto__ || Object.getPrototypeOf(RootPageComp)).call(this, props));
+
+		_this.state = {};
+		return _this;
 	}
 
 	_createClass(RootPageComp, [{
@@ -53,8 +60,10 @@ var RootPageComp = function (_React$Component) {
 						//Set email for search
 						_auth2.default.uploadEmail(user.uid, user.email);
 						//Check login case
-						_auth2.default.fetchUser(user.uid, function (fetchedUser) {
-							if (fetchedUser) {
+						_this2.setState({ uid: user.uid });
+						firebase.database().ref('users/' + user.uid).on("value", function (snap) {
+							var fetchedUser = new _user2.default(snap.val());
+							if (snap && snap.val() && fetchedUser) {
 								_this2.props.replaceUser(fetchedUser);
 								_reactRouter.browserHistory.push('/maps');
 							} else {
@@ -70,6 +79,7 @@ var RootPageComp = function (_React$Component) {
 				} else {
 					//Remove user from state
 					if (_this2.props.user) {
+						firebase.database().ref('users/' + _this2.state.uid).off();
 						_this2.props.replaceUser(null);
 						_reactRouter.browserHistory.push('/');
 					}
