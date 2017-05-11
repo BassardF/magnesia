@@ -27881,7 +27881,7 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 		)
 ), document.getElementById('root'));
 
-},{"../reducers/maps":298,"../reducers/users":299,"./map":292,"./maps":293,"./register":294,"./root":295,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],286:[function(require,module,exports){
+},{"../reducers/maps":299,"../reducers/users":300,"./map":293,"./maps":294,"./register":295,"./root":296,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],286:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27940,6 +27940,59 @@ var DeleteButton = function (_React$Component) {
 exports.default = DeleteButton;
 
 },{"react":255}],287:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var FullButton = function (_React$Component) {
+	_inherits(FullButton, _React$Component);
+
+	function FullButton() {
+		_classCallCheck(this, FullButton);
+
+		return _possibleConstructorReturn(this, (FullButton.__proto__ || Object.getPrototypeOf(FullButton)).apply(this, arguments));
+	}
+
+	_createClass(FullButton, [{
+		key: "render",
+		value: function render() {
+
+			return _react2.default.createElement(
+				"div",
+				{ className: "full-button", onClick: this.props.action || null },
+				_react2.default.createElement(
+					"span",
+					{ className: "full-button-words", style: { marginRight: "3px" } },
+					this.props.label
+				)
+			);
+		}
+	}]);
+
+	return FullButton;
+}(_react2.default.Component);
+
+;
+
+exports.default = FullButton;
+
+},{"react":255}],288:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28024,7 +28077,7 @@ var InviteLine = function (_React$Component) {
 
 exports.default = InviteLine;
 
-},{"react":255}],288:[function(require,module,exports){
+},{"react":255}],289:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28042,6 +28095,10 @@ var _reactRouter = require('react-router');
 var _deletebutton = require('./deletebutton');
 
 var _deletebutton2 = _interopRequireDefault(_deletebutton);
+
+var _fullbutton = require('./fullbutton');
+
+var _fullbutton2 = _interopRequireDefault(_fullbutton);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28107,6 +28164,7 @@ var LeftPanel = function (_React$Component) {
 					dom = _react2.default.createElement(NodeDetails, { map: this.props.map,
 						changeNodeText: this.props.changeNodeText, changeNodeDescription: this.props.changeNodeDescription,
 						selectedNode: this.props.selectedNode, selectNode: this.props.selectNode,
+						deleteSelectedNode: this.props.deleteSelectedNode,
 						changeNodeScale: this.props.changeNodeScale });
 					title = "Node Details";
 					break;
@@ -28406,7 +28464,8 @@ var NodeDetails = function (_React$Component5) {
 		key: 'deleteNode',
 		value: function deleteNode(e) {
 			e.stopPropagation();
-			this.props.deleteSelectedNode(this.props.node.nid);
+			var node = this.props.map && this.props.map.nodes && this.props.selectedNode !== undefined && this.props.map.nodes[this.props.selectedNode];
+			this.props.deleteSelectedNode(node.nid);
 		}
 	}, {
 		key: 'changeText',
@@ -28565,6 +28624,11 @@ var NodeDetails = function (_React$Component5) {
 							_react2.default.createElement('div', { className: "scale-2 " + (node && node.scale == 2 ? "selected-scale" : "") })
 						)
 					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { marginTop: "20px", textAlign: "center" } },
+					_react2.default.createElement(_fullbutton2.default, { label: 'delete this node', action: this.deleteNode })
 				)
 			);
 		}
@@ -28785,7 +28849,7 @@ var LogsBlock = function (_React$Component8) {
 
 ;
 
-},{"./deletebutton":286,"react":255,"react-router":224}],289:[function(require,module,exports){
+},{"./deletebutton":286,"./fullbutton":287,"react":255,"react-router":224}],290:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29060,7 +29124,7 @@ var ProspectLine = function (_React$Component3) {
 
 ;
 
-},{"../../services/auth":300,"react":255}],290:[function(require,module,exports){
+},{"../../services/auth":301,"react":255}],291:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29196,7 +29260,7 @@ var MapBlock = function (_React$Component) {
 
 exports.default = MapBlock;
 
-},{"react":255}],291:[function(require,module,exports){
+},{"react":255}],292:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29483,7 +29547,7 @@ var MapDetails = function (_React$Component) {
 
 exports.default = MapDetails;
 
-},{"react":255}],292:[function(require,module,exports){
+},{"react":255}],293:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29569,7 +29633,6 @@ var MapPageComp = function (_React$Component) {
 							if (!_this2.state.map) _this2.setState({ map: new _map2.default(snap.val()) });else {
 								var map = _this2.state.map;
 								map.upgradeFromServer(snap.val());
-								console.log("upgraded", map, map.nodes);
 								_this2.setState({ map: map });
 							}
 						}
@@ -29596,8 +29659,19 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'deleteSelectedNode',
 		value: function deleteSelectedNode(optionalNid) {
-			if (optionalNid || optionalNid === 0) this.state.map.deleteNode(optionalNid);else if (this.state.selectedNode !== null) this.state.map.deleteNode(this.state.selectedNode);
-			this.selectNode(null);
+			swal({
+				title: "Are you sure?",
+				text: "Do you want to delete this node?",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "Yes!",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			}, function () {
+				if (optionalNid || optionalNid === 0) this.state.map.deleteNode(optionalNid);else if (this.state.selectedNode !== null) this.state.map.deleteNode(this.state.selectedNode);
+				this.selectNode(null);
+			}.bind(this));
 		}
 	}, {
 		key: 'deleteLink',
@@ -29687,9 +29761,6 @@ var MapPageComp = function (_React$Component) {
 			var gs = svg.select("g#nodes").selectAll("g.node").data(nodes, function (d, ind) {
 				return d;
 			});
-
-			console.log("Draw nodes");
-			console.log(nodes);
 
 			//Exit
 			gs.exit().remove();
@@ -29948,7 +30019,7 @@ var MapPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MapP
 
 exports.default = MapPage;
 
-},{"../models/map":281,"../properties/drawing":296,"../services/auth":300,"./dumbs/leftpanel":288,"react":255,"react-redux":182,"react-router":224}],293:[function(require,module,exports){
+},{"../models/map":281,"../properties/drawing":297,"../services/auth":301,"./dumbs/leftpanel":289,"react":255,"react-redux":182,"react-router":224}],294:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30452,7 +30523,7 @@ var MapsPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Map
 
 exports.default = MapsPage;
 
-},{"../actions/maps":278,"../actions/users":279,"../models/map":281,"../services/auth":300,"./dumbs/invite":287,"./dumbs/manageusers":289,"./dumbs/mapblock":290,"./dumbs/mapdetails":291,"react":255,"react-redux":182,"react-router":224}],294:[function(require,module,exports){
+},{"../actions/maps":278,"../actions/users":279,"../models/map":281,"../services/auth":301,"./dumbs/invite":288,"./dumbs/manageusers":290,"./dumbs/mapblock":291,"./dumbs/mapdetails":292,"react":255,"react-redux":182,"react-router":224}],295:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30784,7 +30855,7 @@ var RegisterPage = function (_React$Component) {
 
 exports.default = RegisterPage;
 
-},{"../services/auth":300,"react":255}],295:[function(require,module,exports){
+},{"../services/auth":301,"react":255}],296:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30907,7 +30978,7 @@ var RootPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Roo
 
 exports.default = RootPage;
 
-},{"../actions/users":279,"../models/user":284,"../services/auth":300,"react":255,"react-redux":182,"react-router":224}],296:[function(require,module,exports){
+},{"../actions/users":279,"../models/user":284,"../services/auth":301,"react":255,"react-redux":182,"react-router":224}],297:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30921,7 +30992,7 @@ exports.default = {
 	selectedCircleStrokeWidth: "4px"
 };
 
-},{}],297:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30933,7 +31004,7 @@ exports.default = {
 	2: "Link created"
 };
 
-},{}],298:[function(require,module,exports){
+},{}],299:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30954,7 +31025,7 @@ function mapsReducers() {
 	}
 }
 
-},{}],299:[function(require,module,exports){
+},{}],300:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30973,7 +31044,7 @@ function usersReducers() {
 	}
 }
 
-},{}],300:[function(require,module,exports){
+},{}],301:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31043,7 +31114,7 @@ var AuthServices = function () {
 
 exports.default = AuthServices;
 
-},{"../models/user":284}],301:[function(require,module,exports){
+},{"../models/user":284}],302:[function(require,module,exports){
 "use strict";
 
-},{}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301]);
+},{}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302]);

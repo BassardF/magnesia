@@ -2,6 +2,8 @@ import React from 'react'
 import { browserHistory } from 'react-router';
 
 import DeleteButton from './deletebutton'
+import FullButton from './fullbutton'
+
 
 class LeftPanel extends React.Component {
 
@@ -49,6 +51,7 @@ class LeftPanel extends React.Component {
 		    	dom = <NodeDetails map={this.props.map} 
 		    				   changeNodeText={this.props.changeNodeText} changeNodeDescription={this.props.changeNodeDescription}
 		        			   selectedNode={this.props.selectedNode} selectNode={this.props.selectNode} 
+		        			   deleteSelectedNode={this.props.deleteSelectedNode} 
 		        			   changeNodeScale={this.props.changeNodeScale}/>;
 		        title = "Node Details";
 		        break;
@@ -249,7 +252,8 @@ class NodeDetails extends React.Component {
 
 	deleteNode(e){
 		e.stopPropagation();
-		this.props.deleteSelectedNode(this.props.node.nid);
+		var node = this.props.map && this.props.map.nodes && this.props.selectedNode !== undefined && this.props.map.nodes[this.props.selectedNode];
+		this.props.deleteSelectedNode(node.nid);
 	}
 
 	changeText(e){
@@ -336,6 +340,9 @@ class NodeDetails extends React.Component {
 							<div className={"scale-2 " + (node && node.scale == 2 ? "selected-scale" : "")}></div>
 						</div>
 					</div>
+				</div>
+				<div style={{marginTop:"20px", textAlign:"center"}}>
+					<FullButton label="delete this node" action={this.deleteNode}/>
 				</div>
 			</div>
 		);

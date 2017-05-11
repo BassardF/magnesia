@@ -83,7 +83,6 @@ var MapPageComp = function (_React$Component) {
 							if (!_this2.state.map) _this2.setState({ map: new _map2.default(snap.val()) });else {
 								var map = _this2.state.map;
 								map.upgradeFromServer(snap.val());
-								console.log("upgraded", map, map.nodes);
 								_this2.setState({ map: map });
 							}
 						}
@@ -110,8 +109,19 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'deleteSelectedNode',
 		value: function deleteSelectedNode(optionalNid) {
-			if (optionalNid || optionalNid === 0) this.state.map.deleteNode(optionalNid);else if (this.state.selectedNode !== null) this.state.map.deleteNode(this.state.selectedNode);
-			this.selectNode(null);
+			swal({
+				title: "Are you sure?",
+				text: "Do you want to delete this node?",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "Yes!",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			}, function () {
+				if (optionalNid || optionalNid === 0) this.state.map.deleteNode(optionalNid);else if (this.state.selectedNode !== null) this.state.map.deleteNode(this.state.selectedNode);
+				this.selectNode(null);
+			}.bind(this));
 		}
 	}, {
 		key: 'deleteLink',
@@ -201,9 +211,6 @@ var MapPageComp = function (_React$Component) {
 			var gs = svg.select("g#nodes").selectAll("g.node").data(nodes, function (d, ind) {
 				return d;
 			});
-
-			console.log("Draw nodes");
-			console.log(nodes);
 
 			//Exit
 			gs.exit().remove();

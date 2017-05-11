@@ -100,6 +100,31 @@ body {
 .delete-button:hover .delete-button-words {
   opacity: 1;
 }
+.full-button {
+  color: #424242;
+  vertical-align: middle;
+  border-radius: 4px;
+  border: solid 1px #FAFAFA;
+  padding: 5px 15px;
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-block;
+  border: solid 1px #424242;
+  background-color: transparent;
+  -webkit-transition: all 1s ease;
+  transition: all 1s ease;
+}
+.full-button:hover {
+  background-color: #9C27B0;
+  border: solid 1px transparent;
+}
+.full-button .full-button-words {
+  -webkit-transition: all 1s ease;
+  transition: all 1s ease;
+}
+.full-button:hover .full-button-words {
+  color: white;
+}
 .tiny-sphere {
   border-radius: 50px;
   height: 4px;

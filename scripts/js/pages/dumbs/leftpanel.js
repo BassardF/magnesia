@@ -16,6 +16,10 @@ var _deletebutton = require('./deletebutton');
 
 var _deletebutton2 = _interopRequireDefault(_deletebutton);
 
+var _fullbutton = require('./fullbutton');
+
+var _fullbutton2 = _interopRequireDefault(_fullbutton);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -80,6 +84,7 @@ var LeftPanel = function (_React$Component) {
 					dom = _react2.default.createElement(NodeDetails, { map: this.props.map,
 						changeNodeText: this.props.changeNodeText, changeNodeDescription: this.props.changeNodeDescription,
 						selectedNode: this.props.selectedNode, selectNode: this.props.selectNode,
+						deleteSelectedNode: this.props.deleteSelectedNode,
 						changeNodeScale: this.props.changeNodeScale });
 					title = "Node Details";
 					break;
@@ -379,7 +384,8 @@ var NodeDetails = function (_React$Component5) {
 		key: 'deleteNode',
 		value: function deleteNode(e) {
 			e.stopPropagation();
-			this.props.deleteSelectedNode(this.props.node.nid);
+			var node = this.props.map && this.props.map.nodes && this.props.selectedNode !== undefined && this.props.map.nodes[this.props.selectedNode];
+			this.props.deleteSelectedNode(node.nid);
 		}
 	}, {
 		key: 'changeText',
@@ -538,6 +544,11 @@ var NodeDetails = function (_React$Component5) {
 							_react2.default.createElement('div', { className: "scale-2 " + (node && node.scale == 2 ? "selected-scale" : "") })
 						)
 					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { marginTop: "20px", textAlign: "center" } },
+					_react2.default.createElement(_fullbutton2.default, { label: 'delete this node', action: this.deleteNode })
 				)
 			);
 		}

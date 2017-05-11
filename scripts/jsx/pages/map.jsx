@@ -42,7 +42,6 @@ class MapPageComp extends React.Component {
 						else {
 							var map = this.state.map;
 							map.upgradeFromServer(snap.val());
-							console.log("upgraded", map, map.nodes);
 							this.setState({map : map});
 						}
 					}
@@ -64,9 +63,20 @@ class MapPageComp extends React.Component {
 	}
 
 	deleteSelectedNode(optionalNid){
-		if(optionalNid || optionalNid === 0) this.state.map.deleteNode(optionalNid);
-		else if(this.state.selectedNode !== null) this.state.map.deleteNode(this.state.selectedNode);
-		this.selectNode(null);
+		swal({
+		  title: "Are you sure?",
+		  text: "Do you want to delete this node?",
+		  type: "warning",
+		  showCancelButton: true,
+		  confirmButtonColor: "#DD6B55",
+		  confirmButtonText: "Yes!",
+		  closeOnConfirm: true,
+		  closeOnCancel: true
+		}, function(){
+			if(optionalNid || optionalNid === 0) this.state.map.deleteNode(optionalNid);
+			else if(this.state.selectedNode !== null) this.state.map.deleteNode(this.state.selectedNode);
+			this.selectNode(null);
+		}.bind(this));
 	}
 
 	deleteLink(l){
@@ -148,9 +158,6 @@ class MapPageComp extends React.Component {
 		let gs = svg.select("g#nodes").selectAll("g.node").data(nodes, function(d, ind) {
 			return d;
 		});
-
-		console.log("Draw nodes");
-		console.log(nodes);
 
 		//Exit
 		gs.exit().remove();
