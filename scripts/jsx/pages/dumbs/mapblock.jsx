@@ -2,6 +2,15 @@ import React from 'react'
 
 class MapBlock extends React.Component {
 
+	componentDidMount(){
+		new Tippy('.tippymapblock', {
+		    position: 'right',
+		    animation: 'shift',
+		    duration: 200,
+		    arrow: true
+		})
+	}
+
 	render() {
 
 		if(this.props.map){
@@ -9,7 +18,7 @@ class MapBlock extends React.Component {
 				<div className={this.props.selected ? "map-block-selected" : "map-block"} onClick={this.props.selected ? null : this.props.selectMap}>
 					<div className="map-block-sub">
 
-						<div onClick={this.props.goToMap} className="purple-go-button">
+						<div onClick={this.props.goToMap} title="get in" className="purple-go-button tippymapblock">
 							<img src="../assets/images/arrow-right-white.svg" style={{marginTop: "-34px", verticalAlign: "middle", width: "15px", marginRight: "5px"}}/>
 						</div>
 

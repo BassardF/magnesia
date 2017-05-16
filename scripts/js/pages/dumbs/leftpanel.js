@@ -48,6 +48,16 @@ var LeftPanel = function (_React$Component) {
 		key: 'componentWillMount',
 		value: function componentWillMount() {}
 	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			new Tippy('.tippyleftpanel', {
+				position: 'right',
+				animation: 'shift',
+				duration: 200,
+				arrow: true
+			});
+		}
+	}, {
 		key: 'componentWillUnMount',
 		value: function componentWillUnMount() {}
 	}, {
@@ -60,7 +70,9 @@ var LeftPanel = function (_React$Component) {
 	}, {
 		key: 'backToMyMaps',
 		value: function backToMyMaps() {
-			_reactRouter.browserHistory.push('/maps');
+			this.props.selectNode(null, function () {
+				_reactRouter.browserHistory.push('/maps');
+			});
 		}
 	}, {
 		key: 'render',
@@ -103,56 +115,55 @@ var LeftPanel = function (_React$Component) {
 				{ id: 'left-panel' },
 				_react2.default.createElement(
 					'div',
-					{ onClick: this.backToMyMaps, className: 'purple', style: { cursor: "pointer", paddingLeft: "20px", paddingTop: "10px" } },
-					_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/arrow-right-purple.svg' }),
-					_react2.default.createElement(
-						'span',
-						{ style: { verticalAlign: "middle" } },
-						'back to my maps'
-					)
-				),
-				_react2.default.createElement(
-					'div',
 					{ style: { paddingTop: "10px" }, id: 'logo' },
 					'Mg.'
 				),
 				_react2.default.createElement(
 					'div',
-					{ className: '' },
+					{ className: 'flex' },
 					_react2.default.createElement(
 						'div',
-						{ className: 'flex' },
+						{ className: 'flex-grow-0' },
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.selectNav.bind(this, 0), className: this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 0 ? "tree.svg" : "tree-white.svg") })
+							{ onClick: this.backToMyMaps, className: "left-panel-nav tippyleftpanel", title: 'back to my maps', style: { cursor: "pointer" } },
+							_react2.default.createElement('img', { className: 'rotate-180', style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/arrow-right-white.svg' })
 						),
 						_react2.default.createElement(
 							'div',
-							{ onClick: nodeSelected ? this.selectNav.bind(this, 1) : null, className: this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: nodeSelected ? "pointer" : "not-allowed" } },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../assets/images/" + (this.state.nav == 1 ? "node.svg" : "node-white.svg") })
+							{ onClick: this.selectNav.bind(this, 0), className: "tippyleftpanel " + (this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'navigation tree', style: { cursor: "pointer" } },
+							_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 0 ? "tree.svg" : "tree-white.svg") })
 						),
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.selectNav.bind(this, 2), className: this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 2 ? "chat.svg" : "chat-white.svg") })
+							{ onClick: nodeSelected ? this.selectNav.bind(this, 1) : null, className: "tippyleftpanel " + (this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'modify node', style: { cursor: nodeSelected ? "pointer" : "not-allowed" } },
+							_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../assets/images/" + (this.state.nav == 1 ? "node.svg" : "node-white.svg") })
 						),
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.selectNav.bind(this, 3), className: this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
+							{ onClick: this.selectNav.bind(this, 2), className: "tippyleftpanel " + (this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'chat', style: { cursor: "pointer" } },
+							_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 2 ? "chat.svg" : "chat-white.svg") })
+						),
+						_react2.default.createElement(
+							'div',
+							{ onClick: this.selectNav.bind(this, 3), className: "tippyleftpanel " + (this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'logs', style: { cursor: "pointer" } },
+							_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'flex-grow-1' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'left-panel-title' },
+							title
+						),
+						_react2.default.createElement(
+							'div',
+							{ style: { padding: "10px" } },
+							dom
 						)
 					)
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'left-panel-title' },
-					title
-				),
-				_react2.default.createElement(
-					'div',
-					{ style: { padding: "10px" } },
-					dom
 				)
 			);
 		}

@@ -24,6 +24,10 @@ var _leftpanel = require('./dumbs/leftpanel');
 
 var _leftpanel2 = _interopRequireDefault(_leftpanel);
 
+var _advice = require('./dumbs/advice');
+
+var _advice2 = _interopRequireDefault(_advice);
+
 var _drawing = require('../properties/drawing');
 
 var _drawing2 = _interopRequireDefault(_drawing);
@@ -109,19 +113,21 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'deleteSelectedNode',
 		value: function deleteSelectedNode(optionalNid) {
-			swal({
-				title: "Are you sure?",
-				text: "Do you want to delete this node?",
-				type: "warning",
-				showCancelButton: true,
-				confirmButtonColor: "#DD6B55",
-				confirmButtonText: "Yes!",
-				closeOnConfirm: true,
-				closeOnCancel: true
-			}, function () {
-				if (optionalNid || optionalNid === 0) this.state.map.deleteNode(optionalNid);else if (this.state.selectedNode !== null) this.state.map.deleteNode(this.state.selectedNode);
-				this.selectNode(null);
-			}.bind(this));
+			if (optionalNid !== undefined || this.state.selectedNode !== undefined && this.state.selectedNode !== null) {
+				swal({
+					title: "Are you sure?",
+					text: "Do you want to delete this node?",
+					type: "warning",
+					showCancelButton: true,
+					confirmButtonColor: "#DD6B55",
+					confirmButtonText: "Yes!",
+					closeOnConfirm: true,
+					closeOnCancel: true
+				}, function () {
+					if (optionalNid || optionalNid === 0) this.state.map.deleteNode(optionalNid);else if (this.state.selectedNode !== null) this.state.map.deleteNode(this.state.selectedNode);
+					this.selectNode(null);
+				}.bind(this));
+			}
 		}
 	}, {
 		key: 'deleteLink',
@@ -130,9 +136,11 @@ var MapPageComp = function (_React$Component) {
 		}
 	}, {
 		key: 'selectNode',
-		value: function selectNode(nid) {
+		value: function selectNode(nid, cb) {
 			this.setState({
 				selectedNode: this.state.selectedNode === nid ? null : nid
+			}, function () {
+				if (cb) cb();
 			});
 		}
 	}, {
@@ -222,7 +230,7 @@ var MapPageComp = function (_React$Component) {
 				return _drawing2.default.defaultCircleStrokeColor;
 			}).attr("stroke-width", function (d, i) {
 				return _drawing2.default.defaultCircleStrokeWidth;
-			}).attr("fill", "white").merge(gs.selectAll("circle")).attr("r", function (d, i) {
+			}).attr("fill", "white").style("cursor", "pointer").merge(gs.selectAll("circle")).attr("r", function (d, i) {
 				return 40 * (nodes[i].scale ? +nodes[i].scale : 1);
 			}).attr("cy", function (d, i) {
 				return height.animVal.value / 2 + (nodes[i].y ? +nodes[i].y : 0);
@@ -405,6 +413,7 @@ var MapPageComp = function (_React$Component) {
 			return _react2.default.createElement(
 				'div',
 				{ id: 'maps-page', style: { height: "100%" } },
+				_react2.default.createElement(_advice2.default, { user: this.props.user, map: this.state.map, selectedNode: this.state.selectedNode }),
 				_react2.default.createElement(
 					'div',
 					{ className: 'flex', style: { height: "100%" } },

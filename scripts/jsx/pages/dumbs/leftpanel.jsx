@@ -19,6 +19,15 @@ class LeftPanel extends React.Component {
 	componentWillMount(){
 	}
 
+	componentDidMount(){
+		new Tippy('.tippyleftpanel', {
+		    position: 'right',
+		    animation: 'shift',
+		    duration: 200,
+		    arrow: true
+		})
+	}
+
 	componentWillUnMount(){
 	}
 
@@ -29,7 +38,9 @@ class LeftPanel extends React.Component {
 	}
 
 	backToMyMaps(){
-		browserHistory.push('/maps');
+		this.props.selectNode(null, ()=>{
+			browserHistory.push('/maps');	
+		});
 	}
 
 	render() {
@@ -67,31 +78,30 @@ class LeftPanel extends React.Component {
 
 		return (
 			<div id="left-panel">
-				<div onClick={this.backToMyMaps} className="purple" style={{cursor:"pointer", paddingLeft:"20px", paddingTop:"10px"}}>
-					<img className="rotate-180" style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/arrow-right-purple.svg"/>
-	   				<span style={{verticalAlign:"middle"}}>back to my maps</span>
-   				</div>
 				<div style={{paddingTop:"10px"}} id="logo">Mg.</div>
-				<div className="">
-
-					<div className="flex">
-						<div onClick={this.selectNav.bind(this, 0)} className={this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav"} style={{cursor : "pointer"}}>
-							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (this.state.nav == 0 ? "tree.svg" : "tree-white.svg")}/>
+				<div className="flex">
+					<div className="flex-grow-0">
+						<div onClick={this.backToMyMaps} className={"left-panel-nav tippyleftpanel"} title="back to my maps" style={{cursor : "pointer"}}>
+							<img className="rotate-180" style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/arrow-right-white.svg"/>
 						</div>
-						<div onClick={nodeSelected ? this.selectNav.bind(this, 1) : null} className={this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav"} style={{cursor : (nodeSelected ? "pointer" : "not-allowed")}}>
-							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto", opacity : (nodeSelected ? "1" : ".5")}} src={"../assets/images/"+ (this.state.nav == 1 ? "node.svg" : "node-white.svg")}/>
+						<div onClick={this.selectNav.bind(this, 0)} className={"tippyleftpanel " + (this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav")} title="navigation tree" style={{cursor : "pointer"}}>
+							<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (this.state.nav == 0 ? "tree.svg" : "tree-white.svg")}/>
 						</div>
-						<div onClick={this.selectNav.bind(this, 2)} className={this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav"} style={{cursor : "pointer"}}>
-							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (this.state.nav == 2 ? "chat.svg" : "chat-white.svg")}/>
+						<div onClick={nodeSelected ? this.selectNav.bind(this, 1) : null} className={"tippyleftpanel " + (this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav")} title="modify node" style={{cursor : (nodeSelected ? "pointer" : "not-allowed")}}>
+							<img style={{display : "block", marginLeft:"auto", marginRight:"auto", opacity : (nodeSelected ? "1" : ".5")}} src={"../assets/images/"+ (this.state.nav == 1 ? "node.svg" : "node-white.svg")}/>
 						</div>
-						<div onClick={this.selectNav.bind(this, 3)} className={this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"} style={{cursor : "pointer"}}>
-							<img style={{marginTop:"10px", display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (this.state.nav == 3 ? "logs.svg" : "logs-white.svg")}/>
+						<div onClick={this.selectNav.bind(this, 2)} className={"tippyleftpanel " + (this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav")} title="chat" style={{cursor : "pointer"}}>
+							<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (this.state.nav == 2 ? "chat.svg" : "chat-white.svg")}/>
+						</div>
+						<div onClick={this.selectNav.bind(this, 3)} className={"tippyleftpanel " + (this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav")} title="logs" style={{cursor : "pointer"}}>
+							<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (this.state.nav == 3 ? "logs.svg" : "logs-white.svg")}/>
 						</div>
 					</div>
-
+					<div className="flex-grow-1">
+						<div className="left-panel-title">{title}</div>
+						<div style={{padding:"10px"}}>{dom}</div>
+					</div>
 				</div>
-				<div className="left-panel-title">{title}</div>
-				<div style={{padding:"10px"}}>{dom}</div>
 			</div>
 		);
 	}

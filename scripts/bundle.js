@@ -27881,7 +27881,165 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 		)
 ), document.getElementById('root'));
 
-},{"../reducers/maps":299,"../reducers/users":300,"./map":293,"./maps":294,"./register":295,"./root":296,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],286:[function(require,module,exports){
+},{"../reducers/maps":300,"../reducers/users":301,"./map":294,"./maps":295,"./register":296,"./root":297,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],286:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Advice = function (_React$Component) {
+	_inherits(Advice, _React$Component);
+
+	function Advice(props) {
+		_classCallCheck(this, Advice);
+
+		var _this = _possibleConstructorReturn(this, (Advice.__proto__ || Object.getPrototypeOf(Advice)).call(this, props));
+
+		_this.changePage = _this.changePage.bind(_this);
+		_this.getTutoNode = _this.getTutoNode.bind(_this);
+		_this.dismiss = _this.dismiss.bind(_this);
+
+		_this.state = {
+			map: null,
+			page: 0
+		};
+		return _this;
+	}
+
+	_createClass(Advice, [{
+		key: "dismiss",
+		value: function dismiss() {
+			console.log("dismiss");
+		}
+	}, {
+		key: "changePage",
+		value: function changePage(page) {
+			this.setState({
+				page: page
+			});
+		}
+	}, {
+		key: "getTutoNode",
+		value: function getTutoNode(count, action, how, img, mtop) {
+			return _react2.default.createElement(
+				"div",
+				{ key: "tuto-" + count, className: "flex", style: { display: this.state.page == count ? "" : "none" } },
+				_react2.default.createElement(
+					"div",
+					{ className: "flex-grow-1", style: { verticalAlign: "middle" } },
+					_react2.default.createElement(
+						"div",
+						{ style: { minWidth: "190px", fontWeight: "bold" } },
+						action
+					),
+					_react2.default.createElement(
+						"div",
+						null,
+						how
+					)
+				),
+				_react2.default.createElement(
+					"div",
+					{ className: "flex-grow-0", style: { verticalAlign: "middle" } },
+					_react2.default.createElement(
+						"div",
+						{ style: { minWidth: "40px" } },
+						_react2.default.createElement("img", { style: { height: "30px", marginRight: "5px", marginLeft: "5px" }, src: "../assets/images/" + img })
+					)
+				)
+			);
+		}
+	}, {
+		key: "render",
+		value: function render() {
+			var dom = [],
+			    pages = [],
+			    count = 0;
+			if (true) {
+				dom.push(this.getTutoNode(count, "New node", "double click on the background", "tuto-dbclick.svg", 7));
+				count++;
+			}
+			if (true) {
+				dom.push(this.getTutoNode(count, "Select a node", "click on his background", "tuto-select-node.png", 12));
+				count++;
+			}
+			if (true) {
+				dom.push(this.getTutoNode(count, "Modify title", "click on it", "tuto-change-title.png", 12));
+				count++;
+			}
+
+			for (var i = 0; i < dom.length; i++) {
+				pages.push(_react2.default.createElement(
+					"span",
+					{ onClick: this.changePage.bind(this, i), style: { cursor: "pointer" }, key: "pager-" + i, className: i == this.state.page ? "purple bold" : "extra-light-purple" },
+					"\u2609"
+				));
+			}
+
+			return _react2.default.createElement(
+				"div",
+				{ className: "border-shadow", style: { padding: "10px", position: "absolute", top: "10px", right: "10px", fontSize: "12px" } },
+				_react2.default.createElement(
+					"div",
+					null,
+					dom
+				),
+				_react2.default.createElement(
+					"div",
+					{ style: { marginTop: '3px' } },
+					pages,
+					_react2.default.createElement(
+						"span",
+						{ style: { float: "right", cursor: "pointer" }, className: "purple" },
+						_react2.default.createElement(
+							"span",
+							{ onClick: this.changePage.bind(this, this.state.page + 1), style: { display: this.state.page == pages.length - 1 ? "none" : "inline" } },
+							"next ",
+							_react2.default.createElement(
+								"span",
+								{ style: { marginLeft: "3px" } },
+								"\u276F"
+							)
+						),
+						_react2.default.createElement(
+							"span",
+							{ onClick: this.dismiss, style: { display: this.state.page == pages.length - 1 ? "inline" : "none" } },
+							"dismiss ",
+							_react2.default.createElement(
+								"span",
+								{ style: { marginLeft: "3px" } },
+								"\u2715"
+							)
+						)
+					)
+				)
+			);
+		}
+	}]);
+
+	return Advice;
+}(_react2.default.Component);
+
+;
+
+exports.default = Advice;
+
+},{"react":255}],287:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27939,7 +28097,7 @@ var DeleteButton = function (_React$Component) {
 
 exports.default = DeleteButton;
 
-},{"react":255}],287:[function(require,module,exports){
+},{"react":255}],288:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -27992,7 +28150,7 @@ var FullButton = function (_React$Component) {
 
 exports.default = FullButton;
 
-},{"react":255}],288:[function(require,module,exports){
+},{"react":255}],289:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28077,7 +28235,7 @@ var InviteLine = function (_React$Component) {
 
 exports.default = InviteLine;
 
-},{"react":255}],289:[function(require,module,exports){
+},{"react":255}],290:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28128,6 +28286,16 @@ var LeftPanel = function (_React$Component) {
 		key: 'componentWillMount',
 		value: function componentWillMount() {}
 	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			new Tippy('.tippyleftpanel', {
+				position: 'right',
+				animation: 'shift',
+				duration: 200,
+				arrow: true
+			});
+		}
+	}, {
 		key: 'componentWillUnMount',
 		value: function componentWillUnMount() {}
 	}, {
@@ -28140,7 +28308,9 @@ var LeftPanel = function (_React$Component) {
 	}, {
 		key: 'backToMyMaps',
 		value: function backToMyMaps() {
-			_reactRouter.browserHistory.push('/maps');
+			this.props.selectNode(null, function () {
+				_reactRouter.browserHistory.push('/maps');
+			});
 		}
 	}, {
 		key: 'render',
@@ -28183,56 +28353,55 @@ var LeftPanel = function (_React$Component) {
 				{ id: 'left-panel' },
 				_react2.default.createElement(
 					'div',
-					{ onClick: this.backToMyMaps, className: 'purple', style: { cursor: "pointer", paddingLeft: "20px", paddingTop: "10px" } },
-					_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/arrow-right-purple.svg' }),
-					_react2.default.createElement(
-						'span',
-						{ style: { verticalAlign: "middle" } },
-						'back to my maps'
-					)
-				),
-				_react2.default.createElement(
-					'div',
 					{ style: { paddingTop: "10px" }, id: 'logo' },
 					'Mg.'
 				),
 				_react2.default.createElement(
 					'div',
-					{ className: '' },
+					{ className: 'flex' },
 					_react2.default.createElement(
 						'div',
-						{ className: 'flex' },
+						{ className: 'flex-grow-0' },
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.selectNav.bind(this, 0), className: this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 0 ? "tree.svg" : "tree-white.svg") })
+							{ onClick: this.backToMyMaps, className: "left-panel-nav tippyleftpanel", title: 'back to my maps', style: { cursor: "pointer" } },
+							_react2.default.createElement('img', { className: 'rotate-180', style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/arrow-right-white.svg' })
 						),
 						_react2.default.createElement(
 							'div',
-							{ onClick: nodeSelected ? this.selectNav.bind(this, 1) : null, className: this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: nodeSelected ? "pointer" : "not-allowed" } },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../assets/images/" + (this.state.nav == 1 ? "node.svg" : "node-white.svg") })
+							{ onClick: this.selectNav.bind(this, 0), className: "tippyleftpanel " + (this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'navigation tree', style: { cursor: "pointer" } },
+							_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 0 ? "tree.svg" : "tree-white.svg") })
 						),
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.selectNav.bind(this, 2), className: this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 2 ? "chat.svg" : "chat-white.svg") })
+							{ onClick: nodeSelected ? this.selectNav.bind(this, 1) : null, className: "tippyleftpanel " + (this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'modify node', style: { cursor: nodeSelected ? "pointer" : "not-allowed" } },
+							_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../assets/images/" + (this.state.nav == 1 ? "node.svg" : "node-white.svg") })
 						),
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.selectNav.bind(this, 3), className: this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav", style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { style: { marginTop: "10px", display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
+							{ onClick: this.selectNav.bind(this, 2), className: "tippyleftpanel " + (this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'chat', style: { cursor: "pointer" } },
+							_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 2 ? "chat.svg" : "chat-white.svg") })
+						),
+						_react2.default.createElement(
+							'div',
+							{ onClick: this.selectNav.bind(this, 3), className: "tippyleftpanel " + (this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'logs', style: { cursor: "pointer" } },
+							_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'flex-grow-1' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'left-panel-title' },
+							title
+						),
+						_react2.default.createElement(
+							'div',
+							{ style: { padding: "10px" } },
+							dom
 						)
 					)
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'left-panel-title' },
-					title
-				),
-				_react2.default.createElement(
-					'div',
-					{ style: { padding: "10px" } },
-					dom
 				)
 			);
 		}
@@ -28849,7 +29018,7 @@ var LogsBlock = function (_React$Component8) {
 
 ;
 
-},{"./deletebutton":286,"./fullbutton":287,"react":255,"react-router":224}],290:[function(require,module,exports){
+},{"./deletebutton":287,"./fullbutton":288,"react":255,"react-router":224}],291:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29124,8 +29293,8 @@ var ProspectLine = function (_React$Component3) {
 
 ;
 
-},{"../../services/auth":301,"react":255}],291:[function(require,module,exports){
-"use strict";
+},{"../../services/auth":302,"react":255}],292:[function(require,module,exports){
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -29133,7 +29302,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
@@ -29155,76 +29324,86 @@ var MapBlock = function (_React$Component) {
 	}
 
 	_createClass(MapBlock, [{
-		key: "render",
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			new Tippy('.tippymapblock', {
+				position: 'right',
+				animation: 'shift',
+				duration: 200,
+				arrow: true
+			});
+		}
+	}, {
+		key: 'render',
 		value: function render() {
 
 			if (this.props.map) {
 				return _react2.default.createElement(
-					"div",
+					'div',
 					{ className: this.props.selected ? "map-block-selected" : "map-block", onClick: this.props.selected ? null : this.props.selectMap },
 					_react2.default.createElement(
-						"div",
-						{ className: "map-block-sub" },
+						'div',
+						{ className: 'map-block-sub' },
 						_react2.default.createElement(
-							"div",
-							{ onClick: this.props.goToMap, className: "purple-go-button" },
-							_react2.default.createElement("img", { src: "../assets/images/arrow-right-white.svg", style: { marginTop: "-34px", verticalAlign: "middle", width: "15px", marginRight: "5px" } })
+							'div',
+							{ onClick: this.props.goToMap, title: 'get in', className: 'purple-go-button tippymapblock' },
+							_react2.default.createElement('img', { src: '../assets/images/arrow-right-white.svg', style: { marginTop: "-34px", verticalAlign: "middle", width: "15px", marginRight: "5px" } })
 						),
-						_react2.default.createElement("img", { style: { verticalAlign: "middle", height: "20px", width: "20px" }, src: "../assets/images/map.svg" }),
+						_react2.default.createElement('img', { style: { verticalAlign: "middle", height: "20px", width: "20px" }, src: '../assets/images/map.svg' }),
 						_react2.default.createElement(
-							"span",
+							'span',
 							{ style: { fontSize: "15px", verticalAlign: "middle", marginLeft: "10px" } },
 							this.props.map.title
 						),
 						_react2.default.createElement(
-							"div",
+							'div',
 							{ className: "flex " + (this.props.selected ? "hide" : ""), style: { fontSize: "11px", marginTop: "10px" } },
 							_react2.default.createElement(
-								"div",
-								{ className: "flex-grow-1" },
+								'div',
+								{ className: 'flex-grow-1' },
 								_react2.default.createElement(
-									"div",
+									'div',
 									null,
 									_react2.default.createElement(
-										"span",
-										{ className: "purple" },
+										'span',
+										{ className: 'purple' },
 										this.props.map.nodes.length
 									),
-									" nodes"
+									' nodes'
 								),
 								_react2.default.createElement(
-									"div",
+									'div',
 									{ style: { marginTop: "3px" } },
 									_react2.default.createElement(
-										"span",
-										{ className: "purple" },
+										'span',
+										{ className: 'purple' },
 										this.props.map.users ? Object.keys(this.props.map.users).length : 0
 									),
-									" users"
+									' users'
 								)
 							),
 							_react2.default.createElement(
-								"div",
-								{ className: "flex-grow-1" },
+								'div',
+								{ className: 'flex-grow-1' },
 								_react2.default.createElement(
-									"div",
+									'div',
 									null,
 									_react2.default.createElement(
-										"span",
-										{ className: "purple" },
+										'span',
+										{ className: 'purple' },
 										this.props.map.messages ? Object.keys(this.props.map.messages).length : 0
 									),
-									" messages"
+									' messages'
 								),
 								_react2.default.createElement(
-									"div",
+									'div',
 									{ style: { marginTop: "3px" } },
 									_react2.default.createElement(
-										"span",
-										{ className: "purple" },
+										'span',
+										{ className: 'purple' },
 										this.props.map.links ? Object.keys(this.props.map.links).length : 0
 									),
-									" links"
+									' links'
 								)
 							)
 						)
@@ -29232,20 +29411,20 @@ var MapBlock = function (_React$Component) {
 				);
 			} else {
 				return _react2.default.createElement(
-					"div",
-					{ onClick: this.props.createMap, className: "empty-map-block", style: { textAlign: "center", cursor: "pointer" } },
+					'div',
+					{ onClick: this.props.createMap, className: 'empty-map-block', style: { textAlign: "center", cursor: "pointer" } },
 					_react2.default.createElement(
-						"div",
+						'div',
 						{ style: { marginTop: "15px" } },
 						_react2.default.createElement(
-							"div",
+							'div',
 							{ style: { fontSize: "14px", marginRight: "10px" } },
-							"Create a new Map"
+							'Create a new Map'
 						),
 						_react2.default.createElement(
-							"div",
+							'div',
 							{ style: { fontSize: "25px", marginRight: "10px" } },
-							"+"
+							'+'
 						)
 					)
 				);
@@ -29260,7 +29439,7 @@ var MapBlock = function (_React$Component) {
 
 exports.default = MapBlock;
 
-},{"react":255}],292:[function(require,module,exports){
+},{"react":255}],293:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29547,7 +29726,7 @@ var MapDetails = function (_React$Component) {
 
 exports.default = MapDetails;
 
-},{"react":255}],293:[function(require,module,exports){
+},{"react":255}],294:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29573,6 +29752,10 @@ var _map2 = _interopRequireDefault(_map);
 var _leftpanel = require('./dumbs/leftpanel');
 
 var _leftpanel2 = _interopRequireDefault(_leftpanel);
+
+var _advice = require('./dumbs/advice');
+
+var _advice2 = _interopRequireDefault(_advice);
 
 var _drawing = require('../properties/drawing');
 
@@ -29659,19 +29842,21 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'deleteSelectedNode',
 		value: function deleteSelectedNode(optionalNid) {
-			swal({
-				title: "Are you sure?",
-				text: "Do you want to delete this node?",
-				type: "warning",
-				showCancelButton: true,
-				confirmButtonColor: "#DD6B55",
-				confirmButtonText: "Yes!",
-				closeOnConfirm: true,
-				closeOnCancel: true
-			}, function () {
-				if (optionalNid || optionalNid === 0) this.state.map.deleteNode(optionalNid);else if (this.state.selectedNode !== null) this.state.map.deleteNode(this.state.selectedNode);
-				this.selectNode(null);
-			}.bind(this));
+			if (optionalNid !== undefined || this.state.selectedNode !== undefined && this.state.selectedNode !== null) {
+				swal({
+					title: "Are you sure?",
+					text: "Do you want to delete this node?",
+					type: "warning",
+					showCancelButton: true,
+					confirmButtonColor: "#DD6B55",
+					confirmButtonText: "Yes!",
+					closeOnConfirm: true,
+					closeOnCancel: true
+				}, function () {
+					if (optionalNid || optionalNid === 0) this.state.map.deleteNode(optionalNid);else if (this.state.selectedNode !== null) this.state.map.deleteNode(this.state.selectedNode);
+					this.selectNode(null);
+				}.bind(this));
+			}
 		}
 	}, {
 		key: 'deleteLink',
@@ -29680,9 +29865,11 @@ var MapPageComp = function (_React$Component) {
 		}
 	}, {
 		key: 'selectNode',
-		value: function selectNode(nid) {
+		value: function selectNode(nid, cb) {
 			this.setState({
 				selectedNode: this.state.selectedNode === nid ? null : nid
+			}, function () {
+				if (cb) cb();
 			});
 		}
 	}, {
@@ -29772,7 +29959,7 @@ var MapPageComp = function (_React$Component) {
 				return _drawing2.default.defaultCircleStrokeColor;
 			}).attr("stroke-width", function (d, i) {
 				return _drawing2.default.defaultCircleStrokeWidth;
-			}).attr("fill", "white").merge(gs.selectAll("circle")).attr("r", function (d, i) {
+			}).attr("fill", "white").style("cursor", "pointer").merge(gs.selectAll("circle")).attr("r", function (d, i) {
 				return 40 * (nodes[i].scale ? +nodes[i].scale : 1);
 			}).attr("cy", function (d, i) {
 				return height.animVal.value / 2 + (nodes[i].y ? +nodes[i].y : 0);
@@ -29955,6 +30142,7 @@ var MapPageComp = function (_React$Component) {
 			return _react2.default.createElement(
 				'div',
 				{ id: 'maps-page', style: { height: "100%" } },
+				_react2.default.createElement(_advice2.default, { user: this.props.user, map: this.state.map, selectedNode: this.state.selectedNode }),
 				_react2.default.createElement(
 					'div',
 					{ className: 'flex', style: { height: "100%" } },
@@ -30019,7 +30207,7 @@ var MapPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MapP
 
 exports.default = MapPage;
 
-},{"../models/map":281,"../properties/drawing":297,"../services/auth":301,"./dumbs/leftpanel":289,"react":255,"react-redux":182,"react-router":224}],294:[function(require,module,exports){
+},{"../models/map":281,"../properties/drawing":298,"../services/auth":302,"./dumbs/advice":286,"./dumbs/leftpanel":290,"react":255,"react-redux":182,"react-router":224}],295:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30523,7 +30711,7 @@ var MapsPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Map
 
 exports.default = MapsPage;
 
-},{"../actions/maps":278,"../actions/users":279,"../models/map":281,"../services/auth":301,"./dumbs/invite":288,"./dumbs/manageusers":290,"./dumbs/mapblock":291,"./dumbs/mapdetails":292,"react":255,"react-redux":182,"react-router":224}],295:[function(require,module,exports){
+},{"../actions/maps":278,"../actions/users":279,"../models/map":281,"../services/auth":302,"./dumbs/invite":289,"./dumbs/manageusers":291,"./dumbs/mapblock":292,"./dumbs/mapdetails":293,"react":255,"react-redux":182,"react-router":224}],296:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30855,7 +31043,7 @@ var RegisterPage = function (_React$Component) {
 
 exports.default = RegisterPage;
 
-},{"../services/auth":301,"react":255}],296:[function(require,module,exports){
+},{"../services/auth":302,"react":255}],297:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30978,7 +31166,7 @@ var RootPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Roo
 
 exports.default = RootPage;
 
-},{"../actions/users":279,"../models/user":284,"../services/auth":301,"react":255,"react-redux":182,"react-router":224}],297:[function(require,module,exports){
+},{"../actions/users":279,"../models/user":284,"../services/auth":302,"react":255,"react-redux":182,"react-router":224}],298:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30992,7 +31180,7 @@ exports.default = {
 	selectedCircleStrokeWidth: "4px"
 };
 
-},{}],298:[function(require,module,exports){
+},{}],299:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31004,7 +31192,7 @@ exports.default = {
 	2: "Link created"
 };
 
-},{}],299:[function(require,module,exports){
+},{}],300:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31025,7 +31213,7 @@ function mapsReducers() {
 	}
 }
 
-},{}],300:[function(require,module,exports){
+},{}],301:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31044,7 +31232,7 @@ function usersReducers() {
 	}
 }
 
-},{}],301:[function(require,module,exports){
+},{}],302:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31114,7 +31302,7 @@ var AuthServices = function () {
 
 exports.default = AuthServices;
 
-},{"../models/user":284}],302:[function(require,module,exports){
+},{"../models/user":284}],303:[function(require,module,exports){
 "use strict";
 
-},{}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302]);
+},{}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303]);

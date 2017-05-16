@@ -4,6 +4,7 @@ import { browserHistory } from 'react-router';
 
 import Map from '../models/map'
 import LeftPanel from './dumbs/leftpanel'
+import Advice from './dumbs/advice'
 import DRAWING from '../properties/drawing'
 import AuthServices from '../services/auth'
 
@@ -63,29 +64,34 @@ class MapPageComp extends React.Component {
 	}
 
 	deleteSelectedNode(optionalNid){
-		swal({
-		  title: "Are you sure?",
-		  text: "Do you want to delete this node?",
-		  type: "warning",
-		  showCancelButton: true,
-		  confirmButtonColor: "#DD6B55",
-		  confirmButtonText: "Yes!",
-		  closeOnConfirm: true,
-		  closeOnCancel: true
-		}, function(){
-			if(optionalNid || optionalNid === 0) this.state.map.deleteNode(optionalNid);
-			else if(this.state.selectedNode !== null) this.state.map.deleteNode(this.state.selectedNode);
-			this.selectNode(null);
-		}.bind(this));
+		if(optionalNid !== undefined || (this.state.selectedNode !== undefined && this.state.selectedNode !== null)){
+			swal({
+			  title: "Are you sure?",
+			  text: "Do you want to delete this node?",
+			  type: "warning",
+			  showCancelButton: true,
+			  confirmButtonColor: "#DD6B55",
+			  confirmButtonText: "Yes!",
+			  closeOnConfirm: true,
+			  closeOnCancel: true
+			}, function(){
+				if(optionalNid || optionalNid === 0) this.state.map.deleteNode(optionalNid);
+				else if(this.state.selectedNode !== null) this.state.map.deleteNode(this.state.selectedNode);
+				this.selectNode(null);
+			}.bind(this));
+		}
+		
 	}
 
 	deleteLink(l){
 		if(l && this.state.map) this.state.map.deleteLink(l);
 	}
 
-	selectNode(nid){
+	selectNode(nid, cb){
 		this.setState({
 			selectedNode : this.state.selectedNode === nid ? null : nid
+		}, ()=>{
+			if(cb) cb();
 		});
 	}
 
@@ -169,7 +175,8 @@ class MapPageComp extends React.Component {
 		    .attr("stroke", function(d, i){return DRAWING.defaultCircleStrokeColor})
 		    .attr("stroke-width", function(d, i){return DRAWING.defaultCircleStrokeWidth})
     		.attr("fill", "white")
-    	  .merge(gs.selectAll("circle"))
+    		.style("cursor", "pointer")
+    	 .merge(gs.selectAll("circle"))
     	    .attr("r", function(d, i) {return 40 * (nodes[i].scale ? +nodes[i].scale : 1);}) 
     	  	.attr("cy", function(d, i) {return height.animVal.value/2 + (nodes[i].y ? +nodes[i].y : 0)})
 		    .attr("cx", function(d, i) {return width.animVal.value/2 + (nodes[i].x ? +nodes[i].x : 0)})
@@ -361,7 +368,7 @@ class MapPageComp extends React.Component {
 		
 		return (
 			<div id="maps-page" style={{height:"100%"}}>
-				
+				<Advice user={this.props.user} map={this.state.map}  selectedNode={this.state.selectedNode}/>
 				<div className="flex" style={{height:"100%"}}>
 					<div id="left-panel-wrapper" style={{width:"200px", height:"100%"}} className="flex-grow-0">
 						<LeftPanel map={this.state.map} 
