@@ -18,8 +18,8 @@ class MapPageComp extends React.Component {
 		this.drawNodes = this.drawNodes.bind(this);
 		this.drawLinks = this.drawLinks.bind(this);
 		this.selectLink = this.selectLink.bind(this);
-
 		this.sendMessage = this.sendMessage.bind(this);
+		this.resizeSvg = this.resizeSvg.bind(this);
 
 		this.changeNodeText = this.changeNodeText.bind(this);
 		this.changeNodeDescription = this.changeNodeDescription.bind(this);
@@ -61,6 +61,12 @@ class MapPageComp extends React.Component {
 
 	componentWillUnMount(){
 		if(this.state.mapRef) mapRef.off();
+	}
+
+	resizeSvg(){
+		setTimeout(() => { 
+			this.draw();
+		}, 0);
 	}
 
 	deleteSelectedNode(optionalNid){
@@ -150,7 +156,7 @@ class MapPageComp extends React.Component {
 			svg.on("dblclick", (d) => {
 				if(!d3.event.defaultPrevented){
 					this.addNewNode(
-						d3.event.x - 200 - width.animVal.value/2, 
+						d3.event.x - (document.getElementById("left-panel").offsetWidth) - width.animVal.value/2, 
 						d3.event.y - height.animVal.value/2
 					);
 				}
@@ -370,20 +376,19 @@ class MapPageComp extends React.Component {
 			<div id="maps-page" style={{height:"100%"}}>
 				<Advice user={this.props.user} map={this.state.map}  selectedNode={this.state.selectedNode}/>
 				<div className="flex" style={{height:"100%"}}>
-					<div id="left-panel-wrapper" style={{width:"200px", height:"100%"}} className="flex-grow-0">
-						<LeftPanel map={this.state.map} 
-								   changeNodeText={this.changeNodeText} changeNodeDescription={this.changeNodeDescription}
-								   selectedLink={this.state.selectedLink} selectLink={this.selectLink} 
-								   selectedNode={this.state.selectedNode} selectNode={this.selectNode}
-								   changeNodeScale={this.changeNodeScale}
-								   deleteSelectedNode={this.deleteSelectedNode}
-								   deleteLink={this.deleteLink}
-								   sendMessage={this.sendMessage}
-								   />
-					</div>
+				<LeftPanel map={this.state.map} 
+						   user={this.props.user}
+						   changeNodeText={this.changeNodeText} changeNodeDescription={this.changeNodeDescription}
+						   selectedLink={this.state.selectedLink} selectLink={this.selectLink} 
+						   selectedNode={this.state.selectedNode} selectNode={this.selectNode}
+						   changeNodeScale={this.changeNodeScale}
+						   resizeSvg={this.resizeSvg}
+						   deleteSelectedNode={this.deleteSelectedNode}
+						   deleteLink={this.deleteLink}
+						   sendMessage={this.sendMessage} />
 
 					<div id="drawing-wrapper" className="flex-grow-1" style={{height:"100%"}}>
-						<svg style={{height: '100%', width: '100%'}}>
+						<svg ref="svg" style={{height: '100%', width: '100%'}}>
 							<g id="links"></g>
 							<g id="nodes"></g>
 						</svg>

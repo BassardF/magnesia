@@ -24,6 +24,14 @@ class User {
   	this.maps[mid] = new Date().getTime();
   }
 
+  dismissAdvice(uid, type){
+    firebase.database().ref("users/" + uid + "/advice/" + type).set(true);
+  }
+
+  resetTutorial(uid){
+    firebase.database().ref("users/" + uid + "/advice").remove();
+  }
+
   changeName(uid, newName){
     this.name = newName;
     firebase.database().ref("users/" + uid + "/name").set(newName);

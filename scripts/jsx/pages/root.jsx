@@ -29,7 +29,7 @@ class RootPageComp extends React.Component {
 				      var fetchedUser = new User(snap.val());
 				      if(snap && snap.val() && fetchedUser){
 							this.props.replaceUser(fetchedUser);
-							browserHistory.push('/maps');
+							if(browserHistory.getCurrentLocation().pathname == "/") browserHistory.push('/maps');
 						} else {
 							//Fallback on register
 							AuthServices.createUser(user.uid, user.email, (createdUser)=>{

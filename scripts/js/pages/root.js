@@ -65,7 +65,7 @@ var RootPageComp = function (_React$Component) {
 							var fetchedUser = new _user2.default(snap.val());
 							if (snap && snap.val() && fetchedUser) {
 								_this2.props.replaceUser(fetchedUser);
-								_reactRouter.browserHistory.push('/maps');
+								if (_reactRouter.browserHistory.getCurrentLocation().pathname == "/") _reactRouter.browserHistory.push('/maps');
 							} else {
 								//Fallback on register
 								_auth2.default.createUser(user.uid, user.email, function (createdUser) {

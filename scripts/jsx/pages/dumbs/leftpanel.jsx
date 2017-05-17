@@ -4,15 +4,19 @@ import { browserHistory } from 'react-router';
 import DeleteButton from './deletebutton'
 import FullButton from './fullbutton'
 
+import AuthServices from '../../services/auth'
 
 class LeftPanel extends React.Component {
 
 	constructor(props) {
 	    super(props);
 	    this.backToMyMaps = this.backToMyMaps.bind(this);
+	    this.resetTutorial = this.resetTutorial.bind(this);
+	    this.minimizeOrExpand = this.minimizeOrExpand.bind(this);
 
 	    this.state = {
-	    	nav : 0
+	    	nav : 0,
+	    	minimize : false
 	    };
 	}
 
@@ -31,9 +35,18 @@ class LeftPanel extends React.Component {
 	componentWillUnMount(){
 	}
 
+	minimizeOrExpand(){
+		this.setState({
+			minimize : !this.state.minimize
+		}, ()=>{
+			this.props.resizeSvg();
+		});
+	}
+
 	selectNav(nav){
 		this.setState({
-			nav : nav
+			nav : nav,
+			minimize : false
 		});
 	}
 
@@ -43,12 +56,16 @@ class LeftPanel extends React.Component {
 		});
 	}
 
+	resetTutorial(){
+		this.props.user.resetTutorial(AuthServices.getUid());
+	}
+
 	render() {
 		
 		var dom = null, title = "";
 		var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 		if(!nodeSelected && this.state.nav == 1) this.state.nav = 0;
-		let subSpace = window.innerHeight - (28 + 60 + 40 + 39);
+		let subSpace = window.innerHeight - (39);
 		switch(this.state.nav) {
 		    case 0:
 		        dom = <NodeTree map={this.props.map} 
@@ -76,30 +93,48 @@ class LeftPanel extends React.Component {
 		        break;
 		}
 
+		var ls = !this.state.minimize ? (
+			<div>
+	 			<div className="left-panel-title">{title}</div>
+	 			<div style={{padding:"10px"}}>{dom}</div>
+	 		</div>
+		 	) : null;
+
 		return (
-			<div id="left-panel">
-				<div style={{paddingTop:"10px"}} id="logo">Mg.</div>
-				<div className="flex">
-					<div className="flex-grow-0">
-						<div onClick={this.backToMyMaps} className={"left-panel-nav tippyleftpanel"} title="back to my maps" style={{cursor : "pointer"}}>
-							<img className="rotate-180" style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/arrow-right-white.svg"/>
+			<div id="left-panel-wrapper" ref="left-panel-wrapper" style={{width: (this.state.minimize ? "auto" : "250px"), height:"100%"}} className="flex-grow-0">
+				<div id="left-panel">
+					<div style={{paddingTop:"10px"}} id="logo">Mg.</div>
+					<div className="flex">
+						<div className="flex-grow-0">
+							<div onClick={this.backToMyMaps} className={"left-panel-nav tippyleftpanel"} title="back to my maps" style={{cursor : "pointer"}}>
+								<img className="rotate-180" style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/arrow-right-white.svg"/>
+							</div>
+							<div onClick={this.minimizeOrExpand} className={"left-panel-nav tippyleftpanel"} title="minimize" style={{cursor : "pointer", display : (this.state.minimize ? "none" : "block")}}>
+								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/minimize-white.svg"/>
+							</div>
+							<div onClick={this.minimizeOrExpand} className={"left-panel-nav tippyleftpanel"} title="expand" style={{cursor : "pointer", display : (this.state.minimize ? "block" : "none")}}>
+								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/expand-white.svg"/>
+							</div>
+							<div onClick={this.selectNav.bind(this, 0)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav")} title="navigation tree" style={{cursor : "pointer"}}>
+								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 0 ? "tree.svg" : "tree-white.svg")}/>
+							</div>
+							<div onClick={nodeSelected ? this.selectNav.bind(this, 1) : null} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav")} title="modify node" style={{cursor : (nodeSelected ? "pointer" : "not-allowed")}}>
+								<img style={{display : "block", marginLeft:"auto", marginRight:"auto", opacity : (nodeSelected ? "1" : ".5")}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 1 ? "node.svg" : "node-white.svg")}/>
+							</div>
+							<div onClick={this.selectNav.bind(this, 2)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav")} title="chat" style={{cursor : "pointer"}}>
+								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 2 ? "chat.svg" : "chat-white.svg")}/>
+							</div>
+							<div onClick={this.selectNav.bind(this, 3)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav")} title="logs" style={{cursor : "pointer"}}>
+								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 3 ? "logs.svg" : "logs-white.svg")}/>
+							</div>
+							<div onClick={this.resetTutorial} className="tippyleftpanel left-panel-nav" title="reset tutorials" style={{cursor : "pointer", display : (this.props.user && this.props.user.advice ? "block" : "none")}}>
+								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/graphic-white.svg"/>
+							</div>
+
 						</div>
-						<div onClick={this.selectNav.bind(this, 0)} className={"tippyleftpanel " + (this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav")} title="navigation tree" style={{cursor : "pointer"}}>
-							<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (this.state.nav == 0 ? "tree.svg" : "tree-white.svg")}/>
+						<div className="flex-grow-1">
+							{ls}
 						</div>
-						<div onClick={nodeSelected ? this.selectNav.bind(this, 1) : null} className={"tippyleftpanel " + (this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav")} title="modify node" style={{cursor : (nodeSelected ? "pointer" : "not-allowed")}}>
-							<img style={{display : "block", marginLeft:"auto", marginRight:"auto", opacity : (nodeSelected ? "1" : ".5")}} src={"../assets/images/"+ (this.state.nav == 1 ? "node.svg" : "node-white.svg")}/>
-						</div>
-						<div onClick={this.selectNav.bind(this, 2)} className={"tippyleftpanel " + (this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav")} title="chat" style={{cursor : "pointer"}}>
-							<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (this.state.nav == 2 ? "chat.svg" : "chat-white.svg")}/>
-						</div>
-						<div onClick={this.selectNav.bind(this, 3)} className={"tippyleftpanel " + (this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav")} title="logs" style={{cursor : "pointer"}}>
-							<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (this.state.nav == 3 ? "logs.svg" : "logs-white.svg")}/>
-						</div>
-					</div>
-					<div className="flex-grow-1">
-						<div className="left-panel-title">{title}</div>
-						<div style={{padding:"10px"}}>{dom}</div>
 					</div>
 				</div>
 			</div>

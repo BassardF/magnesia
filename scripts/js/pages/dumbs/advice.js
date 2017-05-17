@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -6,9 +6,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _auth = require('../../services/auth');
+
+var _auth2 = _interopRequireDefault(_auth);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32,114 +36,158 @@ var Advice = function (_React$Component) {
 
 		_this.state = {
 			map: null,
+			current: null,
 			page: 0
 		};
 		return _this;
 	}
 
 	_createClass(Advice, [{
-		key: "dismiss",
-		value: function dismiss() {
-			console.log("dismiss");
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(np) {
+			var hasNNS = np.user && np.user.advice && np.user.advice['no-node-selected'];
+			var hasNS = np.user && np.user.advice && np.user.advice['node-selected'];
+			if (np.map && !np.selectedNode && np.selectedNode !== 0 && !hasNNS) {
+				this.setState({
+					current: "no-node-selected"
+				});
+			} else if (np.map && (np.selectedNode || np.selectedNode === 0) && !hasNS) {
+				this.setState({
+					current: "node-selected"
+				});
+			} else {
+				this.setState({
+					page: 0,
+					current: null
+				});
+			}
 		}
 	}, {
-		key: "changePage",
+		key: 'dismiss',
+		value: function dismiss() {
+			var _this2 = this;
+
+			this.refs.advicewrapper.className = "border-shadow advice-wrapper";
+			setTimeout(function () {
+				if (_this2.props.user) _this2.props.user.dismissAdvice(_auth2.default.getUid(), _this2.state.current);
+				_this2.setState({
+					page: 0,
+					current: null
+				});
+			}, 500);
+		}
+	}, {
+		key: 'changePage',
 		value: function changePage(page) {
 			this.setState({
 				page: page
 			});
 		}
 	}, {
-		key: "getTutoNode",
+		key: 'getTutoNode',
 		value: function getTutoNode(count, action, how, img, mtop) {
 			return _react2.default.createElement(
-				"div",
-				{ key: "tuto-" + count, className: "flex", style: { display: this.state.page == count ? "" : "none" } },
+				'div',
+				{ key: "tuto-" + count, className: 'flex', style: { display: this.state.page == count ? "" : "none" } },
 				_react2.default.createElement(
-					"div",
-					{ className: "flex-grow-1", style: { verticalAlign: "middle" } },
+					'div',
+					{ className: 'flex-grow-1', style: { verticalAlign: "middle" } },
 					_react2.default.createElement(
-						"div",
+						'div',
 						{ style: { minWidth: "190px", fontWeight: "bold" } },
 						action
 					),
 					_react2.default.createElement(
-						"div",
+						'div',
 						null,
 						how
 					)
 				),
 				_react2.default.createElement(
-					"div",
-					{ className: "flex-grow-0", style: { verticalAlign: "middle" } },
+					'div',
+					{ className: 'flex-grow-0', style: { verticalAlign: "middle" } },
 					_react2.default.createElement(
-						"div",
+						'div',
 						{ style: { minWidth: "40px" } },
-						_react2.default.createElement("img", { style: { height: "30px", marginRight: "5px", marginLeft: "5px" }, src: "../assets/images/" + img })
+						_react2.default.createElement('img', { style: { height: "30px", marginRight: "5px", marginLeft: "5px" }, src: "../assets/images/" + img })
 					)
 				)
 			);
 		}
 	}, {
-		key: "render",
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate() {
+			if (this.state.current) {
+				this.refs.advicewrapper.className = "border-shadow advice-wrapper advice-wrapper-shown";
+			} else {
+				this.refs.advicewrapper.className = "border-shadow advice-wrapper";
+			}
+		}
+	}, {
+		key: 'render',
 		value: function render() {
 			var dom = [],
 			    pages = [],
 			    count = 0;
-			if (true) {
-				dom.push(this.getTutoNode(count, "New node", "double click on the background", "tuto-dbclick.svg", 7));
+			if (this.state.current == "no-node-selected") {
+				dom.push(this.getTutoNode(count, "New node", "double click on the background", "tuto-dbclick.svg"));
 				count++;
-			}
-			if (true) {
-				dom.push(this.getTutoNode(count, "Select a node", "click on his background", "tuto-select-node.png", 12));
+				dom.push(this.getTutoNode(count, "Select a node", "click on his background", "tuto-select-node.png"));
 				count++;
-			}
-			if (true) {
-				dom.push(this.getTutoNode(count, "Modify title", "click on it", "tuto-change-title.png", 12));
+				dom.push(this.getTutoNode(count, "Modify title", "click on it", "tuto-change-title.png"));
+				count++;
+			} else if (this.state.current == "node-selected") {
+				dom.push(this.getTutoNode(count, "New related node", "double click on the background", "tuto-dbclick.svg"));
+				count++;
+				dom.push(this.getTutoNode(count, "More options", "get into the option tab!", "node.svg"));
+				count++;
+				dom.push(this.getTutoNode(count, "Deselect", "click on the node again", "tuto-select-node.png"));
+				count++;
+				dom.push(this.getTutoNode(count, "Delete this node", "press 'delete'", "tuto-delete.svg"));
 				count++;
 			}
 
 			for (var i = 0; i < dom.length; i++) {
 				pages.push(_react2.default.createElement(
-					"span",
+					'span',
 					{ onClick: this.changePage.bind(this, i), style: { cursor: "pointer" }, key: "pager-" + i, className: i == this.state.page ? "purple bold" : "extra-light-purple" },
-					"\u2609"
+					'\u2609'
 				));
 			}
 
 			return _react2.default.createElement(
-				"div",
-				{ className: "border-shadow", style: { padding: "10px", position: "absolute", top: "10px", right: "10px", fontSize: "12px" } },
+				'div',
+				{ ref: 'advicewrapper', className: "advice-wrapper " + (count ? "border-shadow " : ""), style: { padding: "10px", position: "absolute", top: "10px", fontSize: "12px" } },
 				_react2.default.createElement(
-					"div",
+					'div',
 					null,
 					dom
 				),
 				_react2.default.createElement(
-					"div",
+					'div',
 					{ style: { marginTop: '3px' } },
 					pages,
 					_react2.default.createElement(
-						"span",
-						{ style: { float: "right", cursor: "pointer" }, className: "purple" },
+						'span',
+						{ style: { display: count ? "inline" : "none", float: "right", cursor: "pointer" }, className: 'purple' },
 						_react2.default.createElement(
-							"span",
+							'span',
 							{ onClick: this.changePage.bind(this, this.state.page + 1), style: { display: this.state.page == pages.length - 1 ? "none" : "inline" } },
-							"next ",
+							'next ',
 							_react2.default.createElement(
-								"span",
+								'span',
 								{ style: { marginLeft: "3px" } },
-								"\u276F"
+								'\u276F'
 							)
 						),
 						_react2.default.createElement(
-							"span",
+							'span',
 							{ onClick: this.dismiss, style: { display: this.state.page == pages.length - 1 ? "inline" : "none" } },
-							"dismiss ",
+							'dismiss ',
 							_react2.default.createElement(
-								"span",
+								'span',
 								{ style: { marginLeft: "3px" } },
-								"\u2715"
+								'\u2715'
 							)
 						)
 					)

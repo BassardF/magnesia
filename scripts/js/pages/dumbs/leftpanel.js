@@ -20,6 +20,10 @@ var _fullbutton = require('./fullbutton');
 
 var _fullbutton2 = _interopRequireDefault(_fullbutton);
 
+var _auth = require('../../services/auth');
+
+var _auth2 = _interopRequireDefault(_auth);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -37,9 +41,12 @@ var LeftPanel = function (_React$Component) {
 		var _this = _possibleConstructorReturn(this, (LeftPanel.__proto__ || Object.getPrototypeOf(LeftPanel)).call(this, props));
 
 		_this.backToMyMaps = _this.backToMyMaps.bind(_this);
+		_this.resetTutorial = _this.resetTutorial.bind(_this);
+		_this.minimizeOrExpand = _this.minimizeOrExpand.bind(_this);
 
 		_this.state = {
-			nav: 0
+			nav: 0,
+			minimize: false
 		};
 		return _this;
 	}
@@ -61,10 +68,22 @@ var LeftPanel = function (_React$Component) {
 		key: 'componentWillUnMount',
 		value: function componentWillUnMount() {}
 	}, {
+		key: 'minimizeOrExpand',
+		value: function minimizeOrExpand() {
+			var _this2 = this;
+
+			this.setState({
+				minimize: !this.state.minimize
+			}, function () {
+				_this2.props.resizeSvg();
+			});
+		}
+	}, {
 		key: 'selectNav',
 		value: function selectNav(nav) {
 			this.setState({
-				nav: nav
+				nav: nav,
+				minimize: false
 			});
 		}
 	}, {
@@ -75,6 +94,11 @@ var LeftPanel = function (_React$Component) {
 			});
 		}
 	}, {
+		key: 'resetTutorial',
+		value: function resetTutorial() {
+			this.props.user.resetTutorial(_auth2.default.getUid());
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 
@@ -82,7 +106,7 @@ var LeftPanel = function (_React$Component) {
 			    title = "";
 			var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 			if (!nodeSelected && this.state.nav == 1) this.state.nav = 0;
-			var subSpace = window.innerHeight - (28 + 60 + 40 + 39);
+			var subSpace = window.innerHeight - 39;
 			switch (this.state.nav) {
 				case 0:
 					dom = _react2.default.createElement(NodeTree, { map: this.props.map,
@@ -110,58 +134,83 @@ var LeftPanel = function (_React$Component) {
 					break;
 			}
 
-			return _react2.default.createElement(
+			var ls = !this.state.minimize ? _react2.default.createElement(
 				'div',
-				{ id: 'left-panel' },
+				null,
 				_react2.default.createElement(
 					'div',
-					{ style: { paddingTop: "10px" }, id: 'logo' },
-					'Mg.'
+					{ className: 'left-panel-title' },
+					title
 				),
 				_react2.default.createElement(
 					'div',
-					{ className: 'flex' },
+					{ style: { padding: "10px" } },
+					dom
+				)
+			) : null;
+
+			return _react2.default.createElement(
+				'div',
+				{ id: 'left-panel-wrapper', ref: 'left-panel-wrapper', style: { width: this.state.minimize ? "auto" : "250px", height: "100%" }, className: 'flex-grow-0' },
+				_react2.default.createElement(
+					'div',
+					{ id: 'left-panel' },
 					_react2.default.createElement(
 						'div',
-						{ className: 'flex-grow-0' },
-						_react2.default.createElement(
-							'div',
-							{ onClick: this.backToMyMaps, className: "left-panel-nav tippyleftpanel", title: 'back to my maps', style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { className: 'rotate-180', style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/arrow-right-white.svg' })
-						),
-						_react2.default.createElement(
-							'div',
-							{ onClick: this.selectNav.bind(this, 0), className: "tippyleftpanel " + (this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'navigation tree', style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 0 ? "tree.svg" : "tree-white.svg") })
-						),
-						_react2.default.createElement(
-							'div',
-							{ onClick: nodeSelected ? this.selectNav.bind(this, 1) : null, className: "tippyleftpanel " + (this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'modify node', style: { cursor: nodeSelected ? "pointer" : "not-allowed" } },
-							_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../assets/images/" + (this.state.nav == 1 ? "node.svg" : "node-white.svg") })
-						),
-						_react2.default.createElement(
-							'div',
-							{ onClick: this.selectNav.bind(this, 2), className: "tippyleftpanel " + (this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'chat', style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 2 ? "chat.svg" : "chat-white.svg") })
-						),
-						_react2.default.createElement(
-							'div',
-							{ onClick: this.selectNav.bind(this, 3), className: "tippyleftpanel " + (this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'logs', style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
-						)
+						{ style: { paddingTop: "10px" }, id: 'logo' },
+						'Mg.'
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'flex-grow-1' },
+						{ className: 'flex' },
 						_react2.default.createElement(
 							'div',
-							{ className: 'left-panel-title' },
-							title
+							{ className: 'flex-grow-0' },
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.backToMyMaps, className: "left-panel-nav tippyleftpanel", title: 'back to my maps', style: { cursor: "pointer" } },
+								_react2.default.createElement('img', { className: 'rotate-180', style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/arrow-right-white.svg' })
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.minimizeOrExpand, className: "left-panel-nav tippyleftpanel", title: 'minimize', style: { cursor: "pointer", display: this.state.minimize ? "none" : "block" } },
+								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/minimize-white.svg' })
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.minimizeOrExpand, className: "left-panel-nav tippyleftpanel", title: 'expand', style: { cursor: "pointer", display: this.state.minimize ? "block" : "none" } },
+								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/expand-white.svg' })
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.selectNav.bind(this, 0), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'navigation tree', style: { cursor: "pointer" } },
+								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 0 ? "tree.svg" : "tree-white.svg") })
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: nodeSelected ? this.selectNav.bind(this, 1) : null, className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'modify node', style: { cursor: nodeSelected ? "pointer" : "not-allowed" } },
+								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 1 ? "node.svg" : "node-white.svg") })
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.selectNav.bind(this, 2), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'chat', style: { cursor: "pointer" } },
+								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 2 ? "chat.svg" : "chat-white.svg") })
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.selectNav.bind(this, 3), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'logs', style: { cursor: "pointer" } },
+								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.resetTutorial, className: 'tippyleftpanel left-panel-nav', title: 'reset tutorials', style: { cursor: "pointer", display: this.props.user && this.props.user.advice ? "block" : "none" } },
+								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/graphic-white.svg' })
+							)
 						),
 						_react2.default.createElement(
 							'div',
-							{ style: { padding: "10px" } },
-							dom
+							{ className: 'flex-grow-1' },
+							ls
 						)
 					)
 				)
@@ -188,16 +237,16 @@ var NodeTree = function (_React$Component2) {
 	_createClass(NodeTree, [{
 		key: 'render',
 		value: function render() {
-			var _this3 = this;
+			var _this4 = this;
 
 			var domNodes = [];
 			if (this.props.map && this.props.map.nodes) {
 				domNodes = this.props.map.nodes.map(function (n, ind) {
-					return n && (n.nid || n.nid == 0) ? _react2.default.createElement(NodeLine, { key: "key-lp-node-line-" + n.nid, nodes: _this3.props.map.nodes,
-						links: _this3.props.map.links, selectedLink: _this3.props.selectedLink, selectLink: _this3.props.selectLink,
-						node: n, selectedNode: _this3.props.selectedNode, selectNode: _this3.props.selectNode,
-						deleteSelectedNode: _this3.props.deleteSelectedNode,
-						deleteLink: _this3.props.deleteLink }) : null;
+					return n && (n.nid || n.nid == 0) ? _react2.default.createElement(NodeLine, { key: "key-lp-node-line-" + n.nid, nodes: _this4.props.map.nodes,
+						links: _this4.props.map.links, selectedLink: _this4.props.selectedLink, selectLink: _this4.props.selectLink,
+						node: n, selectedNode: _this4.props.selectedNode, selectNode: _this4.props.selectNode,
+						deleteSelectedNode: _this4.props.deleteSelectedNode,
+						deleteLink: _this4.props.deleteLink }) : null;
 				});
 			}
 			return _react2.default.createElement(
@@ -219,12 +268,12 @@ var NodeLine = function (_React$Component3) {
 	function NodeLine(props) {
 		_classCallCheck(this, NodeLine);
 
-		var _this4 = _possibleConstructorReturn(this, (NodeLine.__proto__ || Object.getPrototypeOf(NodeLine)).call(this, props));
+		var _this5 = _possibleConstructorReturn(this, (NodeLine.__proto__ || Object.getPrototypeOf(NodeLine)).call(this, props));
 
-		_this4.selectNode = _this4.selectNode.bind(_this4);
-		_this4.deleteNode = _this4.deleteNode.bind(_this4);
-		_this4.state = {};
-		return _this4;
+		_this5.selectNode = _this5.selectNode.bind(_this5);
+		_this5.deleteNode = _this5.deleteNode.bind(_this5);
+		_this5.state = {};
+		return _this5;
 	}
 
 	_createClass(NodeLine, [{
@@ -297,12 +346,12 @@ var LinkLine = function (_React$Component4) {
 	function LinkLine(props) {
 		_classCallCheck(this, LinkLine);
 
-		var _this5 = _possibleConstructorReturn(this, (LinkLine.__proto__ || Object.getPrototypeOf(LinkLine)).call(this, props));
+		var _this6 = _possibleConstructorReturn(this, (LinkLine.__proto__ || Object.getPrototypeOf(LinkLine)).call(this, props));
 
-		_this5.selectLink = _this5.selectLink.bind(_this5);
-		_this5.deleteLink = _this5.deleteLink.bind(_this5);
-		_this5.state = {};
-		return _this5;
+		_this6.selectLink = _this6.selectLink.bind(_this6);
+		_this6.deleteLink = _this6.deleteLink.bind(_this6);
+		_this6.state = {};
+		return _this6;
 	}
 
 	_createClass(LinkLine, [{
@@ -362,23 +411,23 @@ var NodeDetails = function (_React$Component5) {
 	function NodeDetails(props) {
 		_classCallCheck(this, NodeDetails);
 
-		var _this6 = _possibleConstructorReturn(this, (NodeDetails.__proto__ || Object.getPrototypeOf(NodeDetails)).call(this, props));
+		var _this7 = _possibleConstructorReturn(this, (NodeDetails.__proto__ || Object.getPrototypeOf(NodeDetails)).call(this, props));
 
-		_this6.deleteNode = _this6.deleteNode.bind(_this6);
-		_this6.changeText = _this6.changeText.bind(_this6);
-		_this6.changeDescription = _this6.changeDescription.bind(_this6);
-		_this6.appl = _this6.appl.bind(_this6);
-		_this6.okd = _this6.okd.bind(_this6);
-		_this6.appl2 = _this6.appl2.bind(_this6);
-		_this6.changeNodeScale = _this6.changeNodeScale.bind(_this6);
+		_this7.deleteNode = _this7.deleteNode.bind(_this7);
+		_this7.changeText = _this7.changeText.bind(_this7);
+		_this7.changeDescription = _this7.changeDescription.bind(_this7);
+		_this7.appl = _this7.appl.bind(_this7);
+		_this7.okd = _this7.okd.bind(_this7);
+		_this7.appl2 = _this7.appl2.bind(_this7);
+		_this7.changeNodeScale = _this7.changeNodeScale.bind(_this7);
 
-		var node = _this6.props.map && _this6.props.map.nodes && _this6.props.selectedNode !== undefined && _this6.props.map.nodes[_this6.props.selectedNode];
+		var node = _this7.props.map && _this7.props.map.nodes && _this7.props.selectedNode !== undefined && _this7.props.map.nodes[_this7.props.selectedNode];
 
-		_this6.state = {
+		_this7.state = {
 			text: node ? node.title : "",
 			description: node ? node.description : ""
 		};
-		return _this6;
+		return _this7;
 	}
 
 	_createClass(NodeDetails, [{
@@ -576,13 +625,13 @@ var MessageBlock = function (_React$Component6) {
 	function MessageBlock(props) {
 		_classCallCheck(this, MessageBlock);
 
-		var _this7 = _possibleConstructorReturn(this, (MessageBlock.__proto__ || Object.getPrototypeOf(MessageBlock)).call(this, props));
+		var _this8 = _possibleConstructorReturn(this, (MessageBlock.__proto__ || Object.getPrototypeOf(MessageBlock)).call(this, props));
 
-		_this7.changePrompt = _this7.changePrompt.bind(_this7);
-		_this7.send = _this7.send.bind(_this7);
-		_this7.okd = _this7.okd.bind(_this7);
-		_this7.state = {};
-		return _this7;
+		_this8.changePrompt = _this8.changePrompt.bind(_this8);
+		_this8.send = _this8.send.bind(_this8);
+		_this8.okd = _this8.okd.bind(_this8);
+		_this8.state = {};
+		return _this8;
 	}
 
 	_createClass(MessageBlock, [{

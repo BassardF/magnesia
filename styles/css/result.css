@@ -386,6 +386,14 @@ svg {
   box-shadow: 0px 0px 5px 0px #656565;
   filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=5);
 }
+.advice-wrapper {
+  right: -300px;
+  -webkit-transition: all .4s ease;
+  transition: all .4s ease;
+}
+.advice-wrapper.advice-wrapper-shown {
+  right: 10px !important;
+}
 #left-panel {
   background-color: #FAFAFA;
   border-right: solid 1px #BDBDBD;

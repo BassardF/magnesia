@@ -27791,6 +27791,16 @@ var User = function () {
       this.maps[mid] = new Date().getTime();
     }
   }, {
+    key: "dismissAdvice",
+    value: function dismissAdvice(uid, type) {
+      firebase.database().ref("users/" + uid + "/advice/" + type).set(true);
+    }
+  }, {
+    key: "resetTutorial",
+    value: function resetTutorial(uid) {
+      firebase.database().ref("users/" + uid + "/advice").remove();
+    }
+  }, {
     key: "changeName",
     value: function changeName(uid, newName) {
       this.name = newName;
@@ -27882,7 +27892,7 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 ), document.getElementById('root'));
 
 },{"../reducers/maps":300,"../reducers/users":301,"./map":294,"./maps":295,"./register":296,"./root":297,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],286:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -27890,9 +27900,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _auth = require('../../services/auth');
+
+var _auth2 = _interopRequireDefault(_auth);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -27916,114 +27930,158 @@ var Advice = function (_React$Component) {
 
 		_this.state = {
 			map: null,
+			current: null,
 			page: 0
 		};
 		return _this;
 	}
 
 	_createClass(Advice, [{
-		key: "dismiss",
-		value: function dismiss() {
-			console.log("dismiss");
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(np) {
+			var hasNNS = np.user && np.user.advice && np.user.advice['no-node-selected'];
+			var hasNS = np.user && np.user.advice && np.user.advice['node-selected'];
+			if (np.map && !np.selectedNode && np.selectedNode !== 0 && !hasNNS) {
+				this.setState({
+					current: "no-node-selected"
+				});
+			} else if (np.map && (np.selectedNode || np.selectedNode === 0) && !hasNS) {
+				this.setState({
+					current: "node-selected"
+				});
+			} else {
+				this.setState({
+					page: 0,
+					current: null
+				});
+			}
 		}
 	}, {
-		key: "changePage",
+		key: 'dismiss',
+		value: function dismiss() {
+			var _this2 = this;
+
+			this.refs.advicewrapper.className = "border-shadow advice-wrapper";
+			setTimeout(function () {
+				if (_this2.props.user) _this2.props.user.dismissAdvice(_auth2.default.getUid(), _this2.state.current);
+				_this2.setState({
+					page: 0,
+					current: null
+				});
+			}, 500);
+		}
+	}, {
+		key: 'changePage',
 		value: function changePage(page) {
 			this.setState({
 				page: page
 			});
 		}
 	}, {
-		key: "getTutoNode",
+		key: 'getTutoNode',
 		value: function getTutoNode(count, action, how, img, mtop) {
 			return _react2.default.createElement(
-				"div",
-				{ key: "tuto-" + count, className: "flex", style: { display: this.state.page == count ? "" : "none" } },
+				'div',
+				{ key: "tuto-" + count, className: 'flex', style: { display: this.state.page == count ? "" : "none" } },
 				_react2.default.createElement(
-					"div",
-					{ className: "flex-grow-1", style: { verticalAlign: "middle" } },
+					'div',
+					{ className: 'flex-grow-1', style: { verticalAlign: "middle" } },
 					_react2.default.createElement(
-						"div",
+						'div',
 						{ style: { minWidth: "190px", fontWeight: "bold" } },
 						action
 					),
 					_react2.default.createElement(
-						"div",
+						'div',
 						null,
 						how
 					)
 				),
 				_react2.default.createElement(
-					"div",
-					{ className: "flex-grow-0", style: { verticalAlign: "middle" } },
+					'div',
+					{ className: 'flex-grow-0', style: { verticalAlign: "middle" } },
 					_react2.default.createElement(
-						"div",
+						'div',
 						{ style: { minWidth: "40px" } },
-						_react2.default.createElement("img", { style: { height: "30px", marginRight: "5px", marginLeft: "5px" }, src: "../assets/images/" + img })
+						_react2.default.createElement('img', { style: { height: "30px", marginRight: "5px", marginLeft: "5px" }, src: "../assets/images/" + img })
 					)
 				)
 			);
 		}
 	}, {
-		key: "render",
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate() {
+			if (this.state.current) {
+				this.refs.advicewrapper.className = "border-shadow advice-wrapper advice-wrapper-shown";
+			} else {
+				this.refs.advicewrapper.className = "border-shadow advice-wrapper";
+			}
+		}
+	}, {
+		key: 'render',
 		value: function render() {
 			var dom = [],
 			    pages = [],
 			    count = 0;
-			if (true) {
-				dom.push(this.getTutoNode(count, "New node", "double click on the background", "tuto-dbclick.svg", 7));
+			if (this.state.current == "no-node-selected") {
+				dom.push(this.getTutoNode(count, "New node", "double click on the background", "tuto-dbclick.svg"));
 				count++;
-			}
-			if (true) {
-				dom.push(this.getTutoNode(count, "Select a node", "click on his background", "tuto-select-node.png", 12));
+				dom.push(this.getTutoNode(count, "Select a node", "click on his background", "tuto-select-node.png"));
 				count++;
-			}
-			if (true) {
-				dom.push(this.getTutoNode(count, "Modify title", "click on it", "tuto-change-title.png", 12));
+				dom.push(this.getTutoNode(count, "Modify title", "click on it", "tuto-change-title.png"));
+				count++;
+			} else if (this.state.current == "node-selected") {
+				dom.push(this.getTutoNode(count, "New related node", "double click on the background", "tuto-dbclick.svg"));
+				count++;
+				dom.push(this.getTutoNode(count, "More options", "get into the option tab!", "node.svg"));
+				count++;
+				dom.push(this.getTutoNode(count, "Deselect", "click on the node again", "tuto-select-node.png"));
+				count++;
+				dom.push(this.getTutoNode(count, "Delete this node", "press 'delete'", "tuto-delete.svg"));
 				count++;
 			}
 
 			for (var i = 0; i < dom.length; i++) {
 				pages.push(_react2.default.createElement(
-					"span",
+					'span',
 					{ onClick: this.changePage.bind(this, i), style: { cursor: "pointer" }, key: "pager-" + i, className: i == this.state.page ? "purple bold" : "extra-light-purple" },
-					"\u2609"
+					'\u2609'
 				));
 			}
 
 			return _react2.default.createElement(
-				"div",
-				{ className: "border-shadow", style: { padding: "10px", position: "absolute", top: "10px", right: "10px", fontSize: "12px" } },
+				'div',
+				{ ref: 'advicewrapper', className: "advice-wrapper " + (count ? "border-shadow " : ""), style: { padding: "10px", position: "absolute", top: "10px", fontSize: "12px" } },
 				_react2.default.createElement(
-					"div",
+					'div',
 					null,
 					dom
 				),
 				_react2.default.createElement(
-					"div",
+					'div',
 					{ style: { marginTop: '3px' } },
 					pages,
 					_react2.default.createElement(
-						"span",
-						{ style: { float: "right", cursor: "pointer" }, className: "purple" },
+						'span',
+						{ style: { display: count ? "inline" : "none", float: "right", cursor: "pointer" }, className: 'purple' },
 						_react2.default.createElement(
-							"span",
+							'span',
 							{ onClick: this.changePage.bind(this, this.state.page + 1), style: { display: this.state.page == pages.length - 1 ? "none" : "inline" } },
-							"next ",
+							'next ',
 							_react2.default.createElement(
-								"span",
+								'span',
 								{ style: { marginLeft: "3px" } },
-								"\u276F"
+								'\u276F'
 							)
 						),
 						_react2.default.createElement(
-							"span",
+							'span',
 							{ onClick: this.dismiss, style: { display: this.state.page == pages.length - 1 ? "inline" : "none" } },
-							"dismiss ",
+							'dismiss ',
 							_react2.default.createElement(
-								"span",
+								'span',
 								{ style: { marginLeft: "3px" } },
-								"\u2715"
+								'\u2715'
 							)
 						)
 					)
@@ -28039,7 +28097,7 @@ var Advice = function (_React$Component) {
 
 exports.default = Advice;
 
-},{"react":255}],287:[function(require,module,exports){
+},{"../../services/auth":302,"react":255}],287:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28258,6 +28316,10 @@ var _fullbutton = require('./fullbutton');
 
 var _fullbutton2 = _interopRequireDefault(_fullbutton);
 
+var _auth = require('../../services/auth');
+
+var _auth2 = _interopRequireDefault(_auth);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28275,9 +28337,12 @@ var LeftPanel = function (_React$Component) {
 		var _this = _possibleConstructorReturn(this, (LeftPanel.__proto__ || Object.getPrototypeOf(LeftPanel)).call(this, props));
 
 		_this.backToMyMaps = _this.backToMyMaps.bind(_this);
+		_this.resetTutorial = _this.resetTutorial.bind(_this);
+		_this.minimizeOrExpand = _this.minimizeOrExpand.bind(_this);
 
 		_this.state = {
-			nav: 0
+			nav: 0,
+			minimize: false
 		};
 		return _this;
 	}
@@ -28299,10 +28364,22 @@ var LeftPanel = function (_React$Component) {
 		key: 'componentWillUnMount',
 		value: function componentWillUnMount() {}
 	}, {
+		key: 'minimizeOrExpand',
+		value: function minimizeOrExpand() {
+			var _this2 = this;
+
+			this.setState({
+				minimize: !this.state.minimize
+			}, function () {
+				_this2.props.resizeSvg();
+			});
+		}
+	}, {
 		key: 'selectNav',
 		value: function selectNav(nav) {
 			this.setState({
-				nav: nav
+				nav: nav,
+				minimize: false
 			});
 		}
 	}, {
@@ -28313,6 +28390,11 @@ var LeftPanel = function (_React$Component) {
 			});
 		}
 	}, {
+		key: 'resetTutorial',
+		value: function resetTutorial() {
+			this.props.user.resetTutorial(_auth2.default.getUid());
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 
@@ -28320,7 +28402,7 @@ var LeftPanel = function (_React$Component) {
 			    title = "";
 			var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 			if (!nodeSelected && this.state.nav == 1) this.state.nav = 0;
-			var subSpace = window.innerHeight - (28 + 60 + 40 + 39);
+			var subSpace = window.innerHeight - 39;
 			switch (this.state.nav) {
 				case 0:
 					dom = _react2.default.createElement(NodeTree, { map: this.props.map,
@@ -28348,58 +28430,83 @@ var LeftPanel = function (_React$Component) {
 					break;
 			}
 
-			return _react2.default.createElement(
+			var ls = !this.state.minimize ? _react2.default.createElement(
 				'div',
-				{ id: 'left-panel' },
+				null,
 				_react2.default.createElement(
 					'div',
-					{ style: { paddingTop: "10px" }, id: 'logo' },
-					'Mg.'
+					{ className: 'left-panel-title' },
+					title
 				),
 				_react2.default.createElement(
 					'div',
-					{ className: 'flex' },
+					{ style: { padding: "10px" } },
+					dom
+				)
+			) : null;
+
+			return _react2.default.createElement(
+				'div',
+				{ id: 'left-panel-wrapper', ref: 'left-panel-wrapper', style: { width: this.state.minimize ? "auto" : "250px", height: "100%" }, className: 'flex-grow-0' },
+				_react2.default.createElement(
+					'div',
+					{ id: 'left-panel' },
 					_react2.default.createElement(
 						'div',
-						{ className: 'flex-grow-0' },
-						_react2.default.createElement(
-							'div',
-							{ onClick: this.backToMyMaps, className: "left-panel-nav tippyleftpanel", title: 'back to my maps', style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { className: 'rotate-180', style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/arrow-right-white.svg' })
-						),
-						_react2.default.createElement(
-							'div',
-							{ onClick: this.selectNav.bind(this, 0), className: "tippyleftpanel " + (this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'navigation tree', style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 0 ? "tree.svg" : "tree-white.svg") })
-						),
-						_react2.default.createElement(
-							'div',
-							{ onClick: nodeSelected ? this.selectNav.bind(this, 1) : null, className: "tippyleftpanel " + (this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'modify node', style: { cursor: nodeSelected ? "pointer" : "not-allowed" } },
-							_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../assets/images/" + (this.state.nav == 1 ? "node.svg" : "node-white.svg") })
-						),
-						_react2.default.createElement(
-							'div',
-							{ onClick: this.selectNav.bind(this, 2), className: "tippyleftpanel " + (this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'chat', style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 2 ? "chat.svg" : "chat-white.svg") })
-						),
-						_react2.default.createElement(
-							'div',
-							{ onClick: this.selectNav.bind(this, 3), className: "tippyleftpanel " + (this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'logs', style: { cursor: "pointer" } },
-							_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
-						)
+						{ style: { paddingTop: "10px" }, id: 'logo' },
+						'Mg.'
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'flex-grow-1' },
+						{ className: 'flex' },
 						_react2.default.createElement(
 							'div',
-							{ className: 'left-panel-title' },
-							title
+							{ className: 'flex-grow-0' },
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.backToMyMaps, className: "left-panel-nav tippyleftpanel", title: 'back to my maps', style: { cursor: "pointer" } },
+								_react2.default.createElement('img', { className: 'rotate-180', style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/arrow-right-white.svg' })
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.minimizeOrExpand, className: "left-panel-nav tippyleftpanel", title: 'minimize', style: { cursor: "pointer", display: this.state.minimize ? "none" : "block" } },
+								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/minimize-white.svg' })
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.minimizeOrExpand, className: "left-panel-nav tippyleftpanel", title: 'expand', style: { cursor: "pointer", display: this.state.minimize ? "block" : "none" } },
+								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/expand-white.svg' })
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.selectNav.bind(this, 0), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'navigation tree', style: { cursor: "pointer" } },
+								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 0 ? "tree.svg" : "tree-white.svg") })
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: nodeSelected ? this.selectNav.bind(this, 1) : null, className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'modify node', style: { cursor: nodeSelected ? "pointer" : "not-allowed" } },
+								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 1 ? "node.svg" : "node-white.svg") })
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.selectNav.bind(this, 2), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'chat', style: { cursor: "pointer" } },
+								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 2 ? "chat.svg" : "chat-white.svg") })
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.selectNav.bind(this, 3), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'logs', style: { cursor: "pointer" } },
+								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.resetTutorial, className: 'tippyleftpanel left-panel-nav', title: 'reset tutorials', style: { cursor: "pointer", display: this.props.user && this.props.user.advice ? "block" : "none" } },
+								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/graphic-white.svg' })
+							)
 						),
 						_react2.default.createElement(
 							'div',
-							{ style: { padding: "10px" } },
-							dom
+							{ className: 'flex-grow-1' },
+							ls
 						)
 					)
 				)
@@ -28426,16 +28533,16 @@ var NodeTree = function (_React$Component2) {
 	_createClass(NodeTree, [{
 		key: 'render',
 		value: function render() {
-			var _this3 = this;
+			var _this4 = this;
 
 			var domNodes = [];
 			if (this.props.map && this.props.map.nodes) {
 				domNodes = this.props.map.nodes.map(function (n, ind) {
-					return n && (n.nid || n.nid == 0) ? _react2.default.createElement(NodeLine, { key: "key-lp-node-line-" + n.nid, nodes: _this3.props.map.nodes,
-						links: _this3.props.map.links, selectedLink: _this3.props.selectedLink, selectLink: _this3.props.selectLink,
-						node: n, selectedNode: _this3.props.selectedNode, selectNode: _this3.props.selectNode,
-						deleteSelectedNode: _this3.props.deleteSelectedNode,
-						deleteLink: _this3.props.deleteLink }) : null;
+					return n && (n.nid || n.nid == 0) ? _react2.default.createElement(NodeLine, { key: "key-lp-node-line-" + n.nid, nodes: _this4.props.map.nodes,
+						links: _this4.props.map.links, selectedLink: _this4.props.selectedLink, selectLink: _this4.props.selectLink,
+						node: n, selectedNode: _this4.props.selectedNode, selectNode: _this4.props.selectNode,
+						deleteSelectedNode: _this4.props.deleteSelectedNode,
+						deleteLink: _this4.props.deleteLink }) : null;
 				});
 			}
 			return _react2.default.createElement(
@@ -28457,12 +28564,12 @@ var NodeLine = function (_React$Component3) {
 	function NodeLine(props) {
 		_classCallCheck(this, NodeLine);
 
-		var _this4 = _possibleConstructorReturn(this, (NodeLine.__proto__ || Object.getPrototypeOf(NodeLine)).call(this, props));
+		var _this5 = _possibleConstructorReturn(this, (NodeLine.__proto__ || Object.getPrototypeOf(NodeLine)).call(this, props));
 
-		_this4.selectNode = _this4.selectNode.bind(_this4);
-		_this4.deleteNode = _this4.deleteNode.bind(_this4);
-		_this4.state = {};
-		return _this4;
+		_this5.selectNode = _this5.selectNode.bind(_this5);
+		_this5.deleteNode = _this5.deleteNode.bind(_this5);
+		_this5.state = {};
+		return _this5;
 	}
 
 	_createClass(NodeLine, [{
@@ -28535,12 +28642,12 @@ var LinkLine = function (_React$Component4) {
 	function LinkLine(props) {
 		_classCallCheck(this, LinkLine);
 
-		var _this5 = _possibleConstructorReturn(this, (LinkLine.__proto__ || Object.getPrototypeOf(LinkLine)).call(this, props));
+		var _this6 = _possibleConstructorReturn(this, (LinkLine.__proto__ || Object.getPrototypeOf(LinkLine)).call(this, props));
 
-		_this5.selectLink = _this5.selectLink.bind(_this5);
-		_this5.deleteLink = _this5.deleteLink.bind(_this5);
-		_this5.state = {};
-		return _this5;
+		_this6.selectLink = _this6.selectLink.bind(_this6);
+		_this6.deleteLink = _this6.deleteLink.bind(_this6);
+		_this6.state = {};
+		return _this6;
 	}
 
 	_createClass(LinkLine, [{
@@ -28600,23 +28707,23 @@ var NodeDetails = function (_React$Component5) {
 	function NodeDetails(props) {
 		_classCallCheck(this, NodeDetails);
 
-		var _this6 = _possibleConstructorReturn(this, (NodeDetails.__proto__ || Object.getPrototypeOf(NodeDetails)).call(this, props));
+		var _this7 = _possibleConstructorReturn(this, (NodeDetails.__proto__ || Object.getPrototypeOf(NodeDetails)).call(this, props));
 
-		_this6.deleteNode = _this6.deleteNode.bind(_this6);
-		_this6.changeText = _this6.changeText.bind(_this6);
-		_this6.changeDescription = _this6.changeDescription.bind(_this6);
-		_this6.appl = _this6.appl.bind(_this6);
-		_this6.okd = _this6.okd.bind(_this6);
-		_this6.appl2 = _this6.appl2.bind(_this6);
-		_this6.changeNodeScale = _this6.changeNodeScale.bind(_this6);
+		_this7.deleteNode = _this7.deleteNode.bind(_this7);
+		_this7.changeText = _this7.changeText.bind(_this7);
+		_this7.changeDescription = _this7.changeDescription.bind(_this7);
+		_this7.appl = _this7.appl.bind(_this7);
+		_this7.okd = _this7.okd.bind(_this7);
+		_this7.appl2 = _this7.appl2.bind(_this7);
+		_this7.changeNodeScale = _this7.changeNodeScale.bind(_this7);
 
-		var node = _this6.props.map && _this6.props.map.nodes && _this6.props.selectedNode !== undefined && _this6.props.map.nodes[_this6.props.selectedNode];
+		var node = _this7.props.map && _this7.props.map.nodes && _this7.props.selectedNode !== undefined && _this7.props.map.nodes[_this7.props.selectedNode];
 
-		_this6.state = {
+		_this7.state = {
 			text: node ? node.title : "",
 			description: node ? node.description : ""
 		};
-		return _this6;
+		return _this7;
 	}
 
 	_createClass(NodeDetails, [{
@@ -28814,13 +28921,13 @@ var MessageBlock = function (_React$Component6) {
 	function MessageBlock(props) {
 		_classCallCheck(this, MessageBlock);
 
-		var _this7 = _possibleConstructorReturn(this, (MessageBlock.__proto__ || Object.getPrototypeOf(MessageBlock)).call(this, props));
+		var _this8 = _possibleConstructorReturn(this, (MessageBlock.__proto__ || Object.getPrototypeOf(MessageBlock)).call(this, props));
 
-		_this7.changePrompt = _this7.changePrompt.bind(_this7);
-		_this7.send = _this7.send.bind(_this7);
-		_this7.okd = _this7.okd.bind(_this7);
-		_this7.state = {};
-		return _this7;
+		_this8.changePrompt = _this8.changePrompt.bind(_this8);
+		_this8.send = _this8.send.bind(_this8);
+		_this8.okd = _this8.okd.bind(_this8);
+		_this8.state = {};
+		return _this8;
 	}
 
 	_createClass(MessageBlock, [{
@@ -29018,7 +29125,7 @@ var LogsBlock = function (_React$Component8) {
 
 ;
 
-},{"./deletebutton":287,"./fullbutton":288,"react":255,"react-router":224}],291:[function(require,module,exports){
+},{"../../services/auth":302,"./deletebutton":287,"./fullbutton":288,"react":255,"react-router":224}],291:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29787,8 +29894,8 @@ var MapPageComp = function (_React$Component) {
 		_this.drawNodes = _this.drawNodes.bind(_this);
 		_this.drawLinks = _this.drawLinks.bind(_this);
 		_this.selectLink = _this.selectLink.bind(_this);
-
 		_this.sendMessage = _this.sendMessage.bind(_this);
+		_this.resizeSvg = _this.resizeSvg.bind(_this);
 
 		_this.changeNodeText = _this.changeNodeText.bind(_this);
 		_this.changeNodeDescription = _this.changeNodeDescription.bind(_this);
@@ -29838,6 +29945,15 @@ var MapPageComp = function (_React$Component) {
 		key: 'componentWillUnMount',
 		value: function componentWillUnMount() {
 			if (this.state.mapRef) mapRef.off();
+		}
+	}, {
+		key: 'resizeSvg',
+		value: function resizeSvg() {
+			var _this4 = this;
+
+			setTimeout(function () {
+				_this4.draw();
+			}, 0);
 		}
 	}, {
 		key: 'deleteSelectedNode',
@@ -29921,7 +30037,7 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'draw',
 		value: function draw() {
-			var _this4 = this;
+			var _this5 = this;
 
 			if (this.state.map) {
 				var svg = d3.select("svg"),
@@ -29934,7 +30050,7 @@ var MapPageComp = function (_React$Component) {
 
 				svg.on("dblclick", function (d) {
 					if (!d3.event.defaultPrevented) {
-						_this4.addNewNode(d3.event.x - 200 - width.animVal.value / 2, d3.event.y - height.animVal.value / 2);
+						_this5.addNewNode(d3.event.x - document.getElementById("left-panel").offsetWidth - width.animVal.value / 2, d3.event.y - height.animVal.value / 2);
 					}
 				});
 			}
@@ -29942,7 +30058,7 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'drawNodes',
 		value: function drawNodes(svg, width, height) {
-			var _this5 = this;
+			var _this6 = this;
 
 			var nodes = this.state.map.nodes;
 			var gs = svg.select("g#nodes").selectAll("g.node").data(nodes, function (d, ind) {
@@ -29966,9 +30082,9 @@ var MapPageComp = function (_React$Component) {
 			}).attr("cx", function (d, i) {
 				return width.animVal.value / 2 + (nodes[i].x ? +nodes[i].x : 0);
 			}).attr("stroke", function (d, i) {
-				return nodes[i].nid == _this5.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
+				return nodes[i].nid == _this6.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
 			}).attr("stroke-width", function (d, i) {
-				return nodes[i].nid == _this5.state.selectedNode ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
+				return nodes[i].nid == _this6.state.selectedNode ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
 			});
 
 			elemtEnter.append("text").attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").attr("class", "noselect").merge(gs.selectAll("text")).attr("dx", function (d, i) {
@@ -29985,7 +30101,7 @@ var MapPageComp = function (_React$Component) {
 			svg.selectAll("g.node").on("click", function (d) {
 				if (!d3.event.defaultPrevented) {
 					d3.event.preventDefault();
-					if (d && _typeof(d.nid) !== undefined) _this5.selectNode(d.nid);
+					if (d && _typeof(d.nid) !== undefined) _this6.selectNode(d.nid);
 				}
 			}).on("dblclick", function (d) {
 				if (!d3.event.defaultPrevented) {
@@ -29993,15 +30109,15 @@ var MapPageComp = function (_React$Component) {
 				}
 			}).call(d3.drag().on("drag", function (d) {
 				d.active = true;
-				var imap = _this5.state.map;
+				var imap = _this6.state.map;
 				var r = 40 * (d.scale ? +d.scale : 1);
 				imap.changeNodeLocation(d.nid, d3.event.x, d3.event.y);
-				_this5.setState({
+				_this6.setState({
 					map: imap
 				});
 			}).on("end", function (d) {
 				if (d.active) {
-					var imap = _this5.state.map;
+					var imap = _this6.state.map;
 					d.active = false;
 					var r = 40 * (d.scale ? +d.scale : 1);
 					imap.changeNodeLocation(d.nid, d3.event.x, d3.event.y);
@@ -30012,7 +30128,7 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'drawLinks',
 		value: function drawLinks(svg, width, height) {
-			var _this6 = this;
+			var _this7 = this;
 
 			var links = this.state.map.links;
 			var gs = svg.select("g#links").selectAll("g.link").data(links, function (d) {
@@ -30029,25 +30145,25 @@ var MapPageComp = function (_React$Component) {
 				return _drawing2.default.defaultCircleStrokeWidth;
 			}).merge(gs.selectAll("line")).attr("stroke", function (d, i) {
 				var id = Object.keys(links[i].nodes).join("");
-				var selected = _this6.state.selectedLink && id == _this6.state.selectedLink;
+				var selected = _this7.state.selectedLink && id == _this7.state.selectedLink;
 				return selected ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
 			}).attr("x1", function (d, i) {
-				var origin = _this6.state.map.nodes[Object.keys(links[i].nodes)[0]];
+				var origin = _this7.state.map.nodes[Object.keys(links[i].nodes)[0]];
 				return width.animVal.value / 2 + (origin.x ? +origin.x : 0);
 			}).attr("y1", function (d, i) {
-				var origin = _this6.state.map.nodes[Object.keys(links[i].nodes)[0]];
+				var origin = _this7.state.map.nodes[Object.keys(links[i].nodes)[0]];
 				return height.animVal.value / 2 + (origin.y ? +origin.y : 0);
 			}).attr("x2", function (d, i) {
-				var destination = _this6.state.map.nodes[Object.keys(links[i].nodes)[1]];
+				var destination = _this7.state.map.nodes[Object.keys(links[i].nodes)[1]];
 				return width.animVal.value / 2 + (destination.x ? +destination.x : 0);
 			}).attr("y2", function (d, i) {
-				var destination = _this6.state.map.nodes[Object.keys(links[i].nodes)[1]];
+				var destination = _this7.state.map.nodes[Object.keys(links[i].nodes)[1]];
 				return height.animVal.value / 2 + (destination.y ? +destination.y : 0);
 			});
 
 			svg.selectAll("g.link").on("click", function (d) {
 				d3.event.preventDefault();
-				if (d && _typeof(d.nid) !== undefined && d.nodes) _this6.selectLink(d);
+				if (d && _typeof(d.nid) !== undefined && d.nodes) _this7.selectLink(d);
 			});
 		}
 	}, {
@@ -30146,25 +30262,22 @@ var MapPageComp = function (_React$Component) {
 				_react2.default.createElement(
 					'div',
 					{ className: 'flex', style: { height: "100%" } },
-					_react2.default.createElement(
-						'div',
-						{ id: 'left-panel-wrapper', style: { width: "200px", height: "100%" }, className: 'flex-grow-0' },
-						_react2.default.createElement(_leftpanel2.default, { map: this.state.map,
-							changeNodeText: this.changeNodeText, changeNodeDescription: this.changeNodeDescription,
-							selectedLink: this.state.selectedLink, selectLink: this.selectLink,
-							selectedNode: this.state.selectedNode, selectNode: this.selectNode,
-							changeNodeScale: this.changeNodeScale,
-							deleteSelectedNode: this.deleteSelectedNode,
-							deleteLink: this.deleteLink,
-							sendMessage: this.sendMessage
-						})
-					),
+					_react2.default.createElement(_leftpanel2.default, { map: this.state.map,
+						user: this.props.user,
+						changeNodeText: this.changeNodeText, changeNodeDescription: this.changeNodeDescription,
+						selectedLink: this.state.selectedLink, selectLink: this.selectLink,
+						selectedNode: this.state.selectedNode, selectNode: this.selectNode,
+						changeNodeScale: this.changeNodeScale,
+						resizeSvg: this.resizeSvg,
+						deleteSelectedNode: this.deleteSelectedNode,
+						deleteLink: this.deleteLink,
+						sendMessage: this.sendMessage }),
 					_react2.default.createElement(
 						'div',
 						{ id: 'drawing-wrapper', className: 'flex-grow-1', style: { height: "100%" } },
 						_react2.default.createElement(
 							'svg',
-							{ style: { height: '100%', width: '100%' } },
+							{ ref: 'svg', style: { height: '100%', width: '100%' } },
 							_react2.default.createElement('g', { id: 'links' }),
 							_react2.default.createElement('g', { id: 'nodes' })
 						)
@@ -31111,7 +31224,7 @@ var RootPageComp = function (_React$Component) {
 							var fetchedUser = new _user2.default(snap.val());
 							if (snap && snap.val() && fetchedUser) {
 								_this2.props.replaceUser(fetchedUser);
-								_reactRouter.browserHistory.push('/maps');
+								if (_reactRouter.browserHistory.getCurrentLocation().pathname == "/") _reactRouter.browserHistory.push('/maps');
 							} else {
 								//Fallback on register
 								_auth2.default.createUser(user.uid, user.email, function (createdUser) {

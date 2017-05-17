@@ -58,8 +58,8 @@ var MapPageComp = function (_React$Component) {
 		_this.drawNodes = _this.drawNodes.bind(_this);
 		_this.drawLinks = _this.drawLinks.bind(_this);
 		_this.selectLink = _this.selectLink.bind(_this);
-
 		_this.sendMessage = _this.sendMessage.bind(_this);
+		_this.resizeSvg = _this.resizeSvg.bind(_this);
 
 		_this.changeNodeText = _this.changeNodeText.bind(_this);
 		_this.changeNodeDescription = _this.changeNodeDescription.bind(_this);
@@ -109,6 +109,15 @@ var MapPageComp = function (_React$Component) {
 		key: 'componentWillUnMount',
 		value: function componentWillUnMount() {
 			if (this.state.mapRef) mapRef.off();
+		}
+	}, {
+		key: 'resizeSvg',
+		value: function resizeSvg() {
+			var _this4 = this;
+
+			setTimeout(function () {
+				_this4.draw();
+			}, 0);
 		}
 	}, {
 		key: 'deleteSelectedNode',
@@ -192,7 +201,7 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'draw',
 		value: function draw() {
-			var _this4 = this;
+			var _this5 = this;
 
 			if (this.state.map) {
 				var svg = d3.select("svg"),
@@ -205,7 +214,7 @@ var MapPageComp = function (_React$Component) {
 
 				svg.on("dblclick", function (d) {
 					if (!d3.event.defaultPrevented) {
-						_this4.addNewNode(d3.event.x - 200 - width.animVal.value / 2, d3.event.y - height.animVal.value / 2);
+						_this5.addNewNode(d3.event.x - document.getElementById("left-panel").offsetWidth - width.animVal.value / 2, d3.event.y - height.animVal.value / 2);
 					}
 				});
 			}
@@ -213,7 +222,7 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'drawNodes',
 		value: function drawNodes(svg, width, height) {
-			var _this5 = this;
+			var _this6 = this;
 
 			var nodes = this.state.map.nodes;
 			var gs = svg.select("g#nodes").selectAll("g.node").data(nodes, function (d, ind) {
@@ -237,9 +246,9 @@ var MapPageComp = function (_React$Component) {
 			}).attr("cx", function (d, i) {
 				return width.animVal.value / 2 + (nodes[i].x ? +nodes[i].x : 0);
 			}).attr("stroke", function (d, i) {
-				return nodes[i].nid == _this5.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
+				return nodes[i].nid == _this6.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
 			}).attr("stroke-width", function (d, i) {
-				return nodes[i].nid == _this5.state.selectedNode ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
+				return nodes[i].nid == _this6.state.selectedNode ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
 			});
 
 			elemtEnter.append("text").attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").attr("class", "noselect").merge(gs.selectAll("text")).attr("dx", function (d, i) {
@@ -256,7 +265,7 @@ var MapPageComp = function (_React$Component) {
 			svg.selectAll("g.node").on("click", function (d) {
 				if (!d3.event.defaultPrevented) {
 					d3.event.preventDefault();
-					if (d && _typeof(d.nid) !== undefined) _this5.selectNode(d.nid);
+					if (d && _typeof(d.nid) !== undefined) _this6.selectNode(d.nid);
 				}
 			}).on("dblclick", function (d) {
 				if (!d3.event.defaultPrevented) {
@@ -264,15 +273,15 @@ var MapPageComp = function (_React$Component) {
 				}
 			}).call(d3.drag().on("drag", function (d) {
 				d.active = true;
-				var imap = _this5.state.map;
+				var imap = _this6.state.map;
 				var r = 40 * (d.scale ? +d.scale : 1);
 				imap.changeNodeLocation(d.nid, d3.event.x, d3.event.y);
-				_this5.setState({
+				_this6.setState({
 					map: imap
 				});
 			}).on("end", function (d) {
 				if (d.active) {
-					var imap = _this5.state.map;
+					var imap = _this6.state.map;
 					d.active = false;
 					var r = 40 * (d.scale ? +d.scale : 1);
 					imap.changeNodeLocation(d.nid, d3.event.x, d3.event.y);
@@ -283,7 +292,7 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'drawLinks',
 		value: function drawLinks(svg, width, height) {
-			var _this6 = this;
+			var _this7 = this;
 
 			var links = this.state.map.links;
 			var gs = svg.select("g#links").selectAll("g.link").data(links, function (d) {
@@ -300,25 +309,25 @@ var MapPageComp = function (_React$Component) {
 				return _drawing2.default.defaultCircleStrokeWidth;
 			}).merge(gs.selectAll("line")).attr("stroke", function (d, i) {
 				var id = Object.keys(links[i].nodes).join("");
-				var selected = _this6.state.selectedLink && id == _this6.state.selectedLink;
+				var selected = _this7.state.selectedLink && id == _this7.state.selectedLink;
 				return selected ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
 			}).attr("x1", function (d, i) {
-				var origin = _this6.state.map.nodes[Object.keys(links[i].nodes)[0]];
+				var origin = _this7.state.map.nodes[Object.keys(links[i].nodes)[0]];
 				return width.animVal.value / 2 + (origin.x ? +origin.x : 0);
 			}).attr("y1", function (d, i) {
-				var origin = _this6.state.map.nodes[Object.keys(links[i].nodes)[0]];
+				var origin = _this7.state.map.nodes[Object.keys(links[i].nodes)[0]];
 				return height.animVal.value / 2 + (origin.y ? +origin.y : 0);
 			}).attr("x2", function (d, i) {
-				var destination = _this6.state.map.nodes[Object.keys(links[i].nodes)[1]];
+				var destination = _this7.state.map.nodes[Object.keys(links[i].nodes)[1]];
 				return width.animVal.value / 2 + (destination.x ? +destination.x : 0);
 			}).attr("y2", function (d, i) {
-				var destination = _this6.state.map.nodes[Object.keys(links[i].nodes)[1]];
+				var destination = _this7.state.map.nodes[Object.keys(links[i].nodes)[1]];
 				return height.animVal.value / 2 + (destination.y ? +destination.y : 0);
 			});
 
 			svg.selectAll("g.link").on("click", function (d) {
 				d3.event.preventDefault();
-				if (d && _typeof(d.nid) !== undefined && d.nodes) _this6.selectLink(d);
+				if (d && _typeof(d.nid) !== undefined && d.nodes) _this7.selectLink(d);
 			});
 		}
 	}, {
@@ -417,25 +426,22 @@ var MapPageComp = function (_React$Component) {
 				_react2.default.createElement(
 					'div',
 					{ className: 'flex', style: { height: "100%" } },
-					_react2.default.createElement(
-						'div',
-						{ id: 'left-panel-wrapper', style: { width: "200px", height: "100%" }, className: 'flex-grow-0' },
-						_react2.default.createElement(_leftpanel2.default, { map: this.state.map,
-							changeNodeText: this.changeNodeText, changeNodeDescription: this.changeNodeDescription,
-							selectedLink: this.state.selectedLink, selectLink: this.selectLink,
-							selectedNode: this.state.selectedNode, selectNode: this.selectNode,
-							changeNodeScale: this.changeNodeScale,
-							deleteSelectedNode: this.deleteSelectedNode,
-							deleteLink: this.deleteLink,
-							sendMessage: this.sendMessage
-						})
-					),
+					_react2.default.createElement(_leftpanel2.default, { map: this.state.map,
+						user: this.props.user,
+						changeNodeText: this.changeNodeText, changeNodeDescription: this.changeNodeDescription,
+						selectedLink: this.state.selectedLink, selectLink: this.selectLink,
+						selectedNode: this.state.selectedNode, selectNode: this.selectNode,
+						changeNodeScale: this.changeNodeScale,
+						resizeSvg: this.resizeSvg,
+						deleteSelectedNode: this.deleteSelectedNode,
+						deleteLink: this.deleteLink,
+						sendMessage: this.sendMessage }),
 					_react2.default.createElement(
 						'div',
 						{ id: 'drawing-wrapper', className: 'flex-grow-1', style: { height: "100%" } },
 						_react2.default.createElement(
 							'svg',
-							{ style: { height: '100%', width: '100%' } },
+							{ ref: 'svg', style: { height: '100%', width: '100%' } },
 							_react2.default.createElement('g', { id: 'links' }),
 							_react2.default.createElement('g', { id: 'nodes' })
 						)

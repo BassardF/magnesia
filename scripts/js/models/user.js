@@ -38,6 +38,16 @@ var User = function () {
       this.maps[mid] = new Date().getTime();
     }
   }, {
+    key: "dismissAdvice",
+    value: function dismissAdvice(uid, type) {
+      firebase.database().ref("users/" + uid + "/advice/" + type).set(true);
+    }
+  }, {
+    key: "resetTutorial",
+    value: function resetTutorial(uid) {
+      firebase.database().ref("users/" + uid + "/advice").remove();
+    }
+  }, {
     key: "changeName",
     value: function changeName(uid, newName) {
       this.name = newName;
