@@ -24,6 +24,10 @@ var _register = require('./register');
 
 var _register2 = _interopRequireDefault(_register);
 
+var _landing = require('./landing');
+
+var _landing2 = _interopRequireDefault(_landing);
+
 var _maps3 = require('./maps');
 
 var _maps4 = _interopRequireDefault(_maps3);
@@ -53,6 +57,7 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 						_reactRouter.Route,
 						{ component: _root2.default },
 						_react2.default.createElement(_reactRouter.Route, { path: '/', component: _register2.default }),
+						_react2.default.createElement(_reactRouter.Route, { path: '/landing', component: _landing2.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/maps', component: _maps4.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/map/:mid', component: _map2.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '*', component: _register2.default })

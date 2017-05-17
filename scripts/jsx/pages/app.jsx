@@ -8,6 +8,7 @@ import usersReducers from '../reducers/users'
 import mapsReducers from '../reducers/maps'
 
 import RegisterPage from './register'
+import LandingPage  from './landing'
 import MapsPage 	from './maps'
 import MapPage 		from './map'
 import RootPage		from './root'
@@ -22,6 +23,7 @@ render((
 	  <Router history={browserHistory}>
 	    <Route component={RootPage}>
 	    	<Route path="/" component={RegisterPage}/>
+	    	<Route path="/landing" component={LandingPage}/>
 			<Route path="/maps" component={MapsPage}/>
 			<Route path="/map/:mid" component={MapPage}/>
 			<Route path="*" component={RegisterPage}/>

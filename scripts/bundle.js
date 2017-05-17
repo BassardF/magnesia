@@ -27855,6 +27855,10 @@ var _register = require('./register');
 
 var _register2 = _interopRequireDefault(_register);
 
+var _landing = require('./landing');
+
+var _landing2 = _interopRequireDefault(_landing);
+
 var _maps3 = require('./maps');
 
 var _maps4 = _interopRequireDefault(_maps3);
@@ -27884,6 +27888,7 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 						_reactRouter.Route,
 						{ component: _root2.default },
 						_react2.default.createElement(_reactRouter.Route, { path: '/', component: _register2.default }),
+						_react2.default.createElement(_reactRouter.Route, { path: '/landing', component: _landing2.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/maps', component: _maps4.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/map/:mid', component: _map2.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '*', component: _register2.default })
@@ -27891,7 +27896,7 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 		)
 ), document.getElementById('root'));
 
-},{"../reducers/maps":300,"../reducers/users":301,"./map":294,"./maps":295,"./register":296,"./root":297,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],286:[function(require,module,exports){
+},{"../reducers/maps":301,"../reducers/users":302,"./landing":294,"./map":295,"./maps":296,"./register":297,"./root":298,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],286:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28097,7 +28102,7 @@ var Advice = function (_React$Component) {
 
 exports.default = Advice;
 
-},{"../../services/auth":302,"react":255}],287:[function(require,module,exports){
+},{"../../services/auth":303,"react":255}],287:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29125,7 +29130,7 @@ var LogsBlock = function (_React$Component8) {
 
 ;
 
-},{"../../services/auth":302,"./deletebutton":287,"./fullbutton":288,"react":255,"react-router":224}],291:[function(require,module,exports){
+},{"../../services/auth":303,"./deletebutton":287,"./fullbutton":288,"react":255,"react-router":224}],291:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29400,7 +29405,7 @@ var ProspectLine = function (_React$Component3) {
 
 ;
 
-},{"../../services/auth":302,"react":255}],292:[function(require,module,exports){
+},{"../../services/auth":303,"react":255}],292:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29834,6 +29839,92 @@ var MapDetails = function (_React$Component) {
 exports.default = MapDetails;
 
 },{"react":255}],294:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var LandingPage = function (_React$Component) {
+	_inherits(LandingPage, _React$Component);
+
+	function LandingPage(props) {
+		_classCallCheck(this, LandingPage);
+
+		var _this = _possibleConstructorReturn(this, (LandingPage.__proto__ || Object.getPrototypeOf(LandingPage)).call(this, props));
+
+		_this.state = {};
+		return _this;
+	}
+
+	_createClass(LandingPage, [{
+		key: "render",
+		value: function render() {
+			return _react2.default.createElement(
+				"div",
+				{ id: "landing-page", style: { padding: "50px" } },
+				_react2.default.createElement(
+					"h1",
+					null,
+					"ideas"
+				),
+				_react2.default.createElement(
+					"h3",
+					null,
+					"Why / How / What / Ex"
+				),
+				_react2.default.createElement(
+					"div",
+					null,
+					"W : Ideas worth blooming - Growing brilliant ideas - Nurtre your best ideas"
+				),
+				_react2.default.createElement(
+					"div",
+					null,
+					"H : Visual representation | Structuration | Sharing @team"
+				),
+				_react2.default.createElement(
+					"div",
+					null,
+					"Wh : Magnesia"
+				),
+				_react2.default.createElement(
+					"h3",
+					null,
+					"tools ID"
+				),
+				_react2.default.createElement(
+					"div",
+					null,
+					"node/user count"
+				),
+				_react2.default.createElement("div", null)
+			);
+		}
+	}]);
+
+	return LandingPage;
+}(_react2.default.Component);
+
+;
+
+exports.default = LandingPage;
+
+},{"react":255}],295:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30320,7 +30411,7 @@ var MapPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MapP
 
 exports.default = MapPage;
 
-},{"../models/map":281,"../properties/drawing":298,"../services/auth":302,"./dumbs/advice":286,"./dumbs/leftpanel":290,"react":255,"react-redux":182,"react-router":224}],295:[function(require,module,exports){
+},{"../models/map":281,"../properties/drawing":299,"../services/auth":303,"./dumbs/advice":286,"./dumbs/leftpanel":290,"react":255,"react-redux":182,"react-router":224}],296:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30824,7 +30915,7 @@ var MapsPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Map
 
 exports.default = MapsPage;
 
-},{"../actions/maps":278,"../actions/users":279,"../models/map":281,"../services/auth":302,"./dumbs/invite":289,"./dumbs/manageusers":291,"./dumbs/mapblock":292,"./dumbs/mapdetails":293,"react":255,"react-redux":182,"react-router":224}],296:[function(require,module,exports){
+},{"../actions/maps":278,"../actions/users":279,"../models/map":281,"../services/auth":303,"./dumbs/invite":289,"./dumbs/manageusers":291,"./dumbs/mapblock":292,"./dumbs/mapdetails":293,"react":255,"react-redux":182,"react-router":224}],297:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30836,6 +30927,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = require('react-router');
 
 var _auth = require('../services/auth');
 
@@ -30864,6 +30957,8 @@ var RegisterPage = function (_React$Component) {
 		_this.isMailValid = _this.isMailValid.bind(_this);
 		_this.toggleLoading = _this.toggleLoading.bind(_this);
 		_this.pwskeyUp = _this.pwskeyUp.bind(_this);
+
+		_this.goToLanding = _this.goToLanding.bind(_this);
 
 		_this.state = {
 			email: "",
@@ -30973,6 +31068,11 @@ var RegisterPage = function (_React$Component) {
 			});
 		}
 	}, {
+		key: 'goToLanding',
+		value: function goToLanding() {
+			_reactRouter.browserHistory.push('/landing');
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var showRegister = this.state.validEmail && this.state.mailTaken === false;
@@ -30992,6 +31092,11 @@ var RegisterPage = function (_React$Component) {
 							{ id: 'logo' },
 							'Mg.'
 						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { float: "right", marginTop: "-75px", cursor: "pointer" }, onClick: this.goToLanding },
+						'landing'
 					)
 				),
 				_react2.default.createElement(
@@ -31156,7 +31261,7 @@ var RegisterPage = function (_React$Component) {
 
 exports.default = RegisterPage;
 
-},{"../services/auth":302,"react":255}],297:[function(require,module,exports){
+},{"../services/auth":303,"react":255,"react-router":224}],298:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31279,7 +31384,7 @@ var RootPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Roo
 
 exports.default = RootPage;
 
-},{"../actions/users":279,"../models/user":284,"../services/auth":302,"react":255,"react-redux":182,"react-router":224}],298:[function(require,module,exports){
+},{"../actions/users":279,"../models/user":284,"../services/auth":303,"react":255,"react-redux":182,"react-router":224}],299:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31293,7 +31398,7 @@ exports.default = {
 	selectedCircleStrokeWidth: "4px"
 };
 
-},{}],299:[function(require,module,exports){
+},{}],300:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31305,7 +31410,7 @@ exports.default = {
 	2: "Link created"
 };
 
-},{}],300:[function(require,module,exports){
+},{}],301:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31326,7 +31431,7 @@ function mapsReducers() {
 	}
 }
 
-},{}],301:[function(require,module,exports){
+},{}],302:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31345,7 +31450,7 @@ function usersReducers() {
 	}
 }
 
-},{}],302:[function(require,module,exports){
+},{}],303:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31415,7 +31520,7 @@ var AuthServices = function () {
 
 exports.default = AuthServices;
 
-},{"../models/user":284}],303:[function(require,module,exports){
+},{"../models/user":284}],304:[function(require,module,exports){
 "use strict";
 
-},{}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303]);
+},{}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304]);

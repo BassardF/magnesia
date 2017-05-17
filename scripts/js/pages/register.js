@@ -10,6 +10,8 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouter = require('react-router');
+
 var _auth = require('../services/auth');
 
 var _auth2 = _interopRequireDefault(_auth);
@@ -37,6 +39,8 @@ var RegisterPage = function (_React$Component) {
 		_this.isMailValid = _this.isMailValid.bind(_this);
 		_this.toggleLoading = _this.toggleLoading.bind(_this);
 		_this.pwskeyUp = _this.pwskeyUp.bind(_this);
+
+		_this.goToLanding = _this.goToLanding.bind(_this);
 
 		_this.state = {
 			email: "",
@@ -146,6 +150,11 @@ var RegisterPage = function (_React$Component) {
 			});
 		}
 	}, {
+		key: 'goToLanding',
+		value: function goToLanding() {
+			_reactRouter.browserHistory.push('/landing');
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var showRegister = this.state.validEmail && this.state.mailTaken === false;
@@ -165,6 +174,11 @@ var RegisterPage = function (_React$Component) {
 							{ id: 'logo' },
 							'Mg.'
 						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { float: "right", marginTop: "-75px", cursor: "pointer" }, onClick: this.goToLanding },
+						'landing'
 					)
 				),
 				_react2.default.createElement(
