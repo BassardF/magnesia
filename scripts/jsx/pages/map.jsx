@@ -20,6 +20,7 @@ class MapPageComp extends React.Component {
 		this.selectLink = this.selectLink.bind(this);
 		this.sendMessage = this.sendMessage.bind(this);
 		this.resizeSvg = this.resizeSvg.bind(this);
+		this.addNewLink = this.addNewLink.bind(this);
 
 		this.changeNodeText = this.changeNodeText.bind(this);
 		this.changeNodeDescription = this.changeNodeDescription.bind(this);
@@ -27,7 +28,12 @@ class MapPageComp extends React.Component {
 		
 		this.deleteSelectedNode = this.deleteSelectedNode.bind(this);
 		this.deleteLink = this.deleteLink.bind(this);
- 	    this.state = {};
+
+		this.changeMode = this.changeMode.bind(this);
+		
+ 	    this.state = {
+ 	    	mode : 1
+ 	    };
 	}
 
 	componentWillMount(){
@@ -61,6 +67,12 @@ class MapPageComp extends React.Component {
 
 	componentWillUnMount(){
 		if(this.state.mapRef) mapRef.off();
+	}
+
+	changeMode(mode){
+		this.setState({
+			mode : mode
+		});
 	}
 
 	resizeSvg(){
@@ -114,6 +126,16 @@ class MapPageComp extends React.Component {
 		map.save();
 	}
 
+	addNewLink(nid1, nid2){
+		if(this.state.map) {
+			var map = this.state.map;
+			map.addNewLink(AuthServices.getUid(), nid1, nid2);
+			this.setState({
+				map : map
+			});
+		}
+	}
+
 	sendMessage(msg){
 		var uid = AuthServices.getUid();
 		var name = this.props.user ? this.props.user.name : "John Doe";
@@ -155,10 +177,12 @@ class MapPageComp extends React.Component {
 
 			svg.on("dblclick", (d) => {
 				if(!d3.event.defaultPrevented){
-					this.addNewNode(
-						d3.event.x - (document.getElementById("left-panel").offsetWidth) - width.animVal.value/2, 
-						d3.event.y - height.animVal.value/2
-					);
+					if(this.state.mode === 1){
+						this.addNewNode(
+							d3.event.x - (document.getElementById("left-panel").offsetWidth) - width.animVal.value/2, 
+							d3.event.y - height.animVal.value/2
+						);
+					}
 				}
 			});
 		}
@@ -204,7 +228,13 @@ class MapPageComp extends React.Component {
 	    svg.selectAll("g.node").on("click", (d) => {
 	    	if(!d3.event.defaultPrevented){
 				d3.event.preventDefault();
-				if(d && typeof d.nid !== undefined) this.selectNode(d.nid);
+				if(d && typeof d.nid !== undefined) {
+					if(this.state.mode === 2 && this.state.selectedNode && d.nid != this.state.selectedNode){
+						this.addNewLink(d.nid, this.state.selectedNode);
+					} else {
+						this.selectNode(d.nid);
+					}
+				}
 			}
 		}).on("dblclick", (d) => {
 	    	if(!d3.event.defaultPrevented){
@@ -378,6 +408,8 @@ class MapPageComp extends React.Component {
 				<div className="flex" style={{height:"100%"}}>
 				<LeftPanel map={this.state.map} 
 						   user={this.props.user}
+						   mode={this.state.mode}
+						   changeMode={this.changeMode}
 						   changeNodeText={this.changeNodeText} changeNodeDescription={this.changeNodeDescription}
 						   selectedLink={this.state.selectedLink} selectLink={this.selectLink} 
 						   selectedNode={this.state.selectedNode} selectNode={this.selectNode}

@@ -13,6 +13,7 @@ class LeftPanel extends React.Component {
 	    this.backToMyMaps = this.backToMyMaps.bind(this);
 	    this.resetTutorial = this.resetTutorial.bind(this);
 	    this.minimizeOrExpand = this.minimizeOrExpand.bind(this);
+	    this.changeMode = this.changeMode.bind(this);
 
 	    this.state = {
 	    	nav : 0,
@@ -60,12 +61,16 @@ class LeftPanel extends React.Component {
 		this.props.user.resetTutorial(AuthServices.getUid());
 	}
 
+	changeMode(mode){
+		this.props.changeMode(mode);
+	}
+
 	render() {
 		
 		var dom = null, title = "";
 		var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 		if(!nodeSelected && this.state.nav == 1) this.state.nav = 0;
-		let subSpace = window.innerHeight - (39);
+		let subSpace = window.innerHeight - (45);
 		switch(this.state.nav) {
 		    case 0:
 		        dom = <NodeTree map={this.props.map} 
@@ -103,9 +108,30 @@ class LeftPanel extends React.Component {
 		return (
 			<div id="left-panel-wrapper" ref="left-panel-wrapper" style={{width: (this.state.minimize ? "auto" : "250px"), height:"100%"}} className="flex-grow-0">
 				<div id="left-panel">
-					<div style={{paddingTop:"10px"}} id="logo">Mg.</div>
+					<div className="flex" style={{paddingTop:"10px", paddingBottom:"10px"}}>
+						<div className="flex-grow-0" style={{paddingTop:"10px", paddingLeft : (this.state.minimize ? "2px" : "10px"), paddingRight : (this.state.minimize ? "2px" : "10px")}} id="logo">Mg.</div>
+						<div id="lp-node-block" className="flex-grow-1" style={{textAlign:"right", display : (this.state.minimize ? "none" : "block")}}>
+							<div title="create and modify nodes" className={"tippyleftpanel " + (this.props.mode === 1 ? "selected-mode-line" : "un-selected-mode-line")} onClick={this.changeMode.bind(this, 1)}>
+								<span style={{verticalAlign:"middle"}}>Creation</span>
+								<img style={{verticalAlign:"middle", marginLeft:"5px", marginRight:"5px", width:"15px"}} src={"../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg")}/>
+							</div>
+							<div title="create relations between nodes" className={"tippyleftpanel " + (this.props.mode === 2 ? "selected-mode-line" : "un-selected-mode-line")} onClick={this.changeMode.bind(this, 2)}>
+								<span style={{verticalAlign:"middle"}}>Relation</span>
+								<img style={{verticalAlign:"middle", marginLeft:"5px", marginRight:"5px", width:"15px"}} src={"../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg")}/>
+							</div>
+						</div>
+					</div>
+					
 					<div className="flex">
 						<div className="flex-grow-0">
+							<div style={{display : this.state.minimize ? "block" : "none"}}>
+								<div title="create and modify nodes" className={"tippyleftpanel " + (this.props.mode === 1 ? "selected-mode-line" : "un-selected-mode-line")} onClick={this.changeMode.bind(this, 1)}>
+									<img style={{cursor:"pointer", display:"block", marginLeft:"auto", marginRight:"auto", width:"20px", marginBottom:"10px"}} src={"../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg")}/>
+								</div>
+								<div title="create relations between nodes" className={"tippyleftpanel " + (this.props.mode === 2 ? "selected-mode-line" : "un-selected-mode-line")} onClick={this.changeMode.bind(this, 2)}>
+									<img style={{cursor:"pointer", display:"block", marginLeft:"auto", marginRight:"auto", width:"20px", marginBottom:"10px"}} src={"../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg")}/>
+								</div>
+							</div>
 							<div onClick={this.backToMyMaps} className={"left-panel-nav tippyleftpanel"} title="back to my maps" style={{cursor : "pointer"}}>
 								<img className="rotate-180" style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/arrow-right-white.svg"/>
 							</div>

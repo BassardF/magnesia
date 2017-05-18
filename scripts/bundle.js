@@ -27617,6 +27617,10 @@ var Map = function () {
 		key: 'addNewLink',
 		value: function addNewLink(uid, nid1, nid2) {
 			if (!this.links) this.links = [];
+			for (var i = 0; i < this.links.length; i++) {
+				if (this.links[i] && this.links[i].nodes && this.links[i].nodes[nid1] && this.links[i].nodes[nid2]) return;
+			}
+			console.log("push");
 			this.links.push(new _link2.default().initEmpty(uid, new Date().getTime(), nid1, nid2, this.mid));
 		}
 	}, {
@@ -28344,6 +28348,7 @@ var LeftPanel = function (_React$Component) {
 		_this.backToMyMaps = _this.backToMyMaps.bind(_this);
 		_this.resetTutorial = _this.resetTutorial.bind(_this);
 		_this.minimizeOrExpand = _this.minimizeOrExpand.bind(_this);
+		_this.changeMode = _this.changeMode.bind(_this);
 
 		_this.state = {
 			nav: 0,
@@ -28400,6 +28405,11 @@ var LeftPanel = function (_React$Component) {
 			this.props.user.resetTutorial(_auth2.default.getUid());
 		}
 	}, {
+		key: 'changeMode',
+		value: function changeMode(mode) {
+			this.props.changeMode(mode);
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 
@@ -28407,7 +28417,7 @@ var LeftPanel = function (_React$Component) {
 			    title = "";
 			var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 			if (!nodeSelected && this.state.nav == 1) this.state.nav = 0;
-			var subSpace = window.innerHeight - 39;
+			var subSpace = window.innerHeight - 45;
 			switch (this.state.nav) {
 				case 0:
 					dom = _react2.default.createElement(NodeTree, { map: this.props.map,
@@ -28458,8 +28468,36 @@ var LeftPanel = function (_React$Component) {
 					{ id: 'left-panel' },
 					_react2.default.createElement(
 						'div',
-						{ style: { paddingTop: "10px" }, id: 'logo' },
-						'Mg.'
+						{ className: 'flex', style: { paddingTop: "10px", paddingBottom: "10px" } },
+						_react2.default.createElement(
+							'div',
+							{ className: 'flex-grow-0', style: { paddingTop: "10px", paddingLeft: this.state.minimize ? "2px" : "10px", paddingRight: this.state.minimize ? "2px" : "10px" }, id: 'logo' },
+							'Mg.'
+						),
+						_react2.default.createElement(
+							'div',
+							{ id: 'lp-node-block', className: 'flex-grow-1', style: { textAlign: "right", display: this.state.minimize ? "none" : "block" } },
+							_react2.default.createElement(
+								'div',
+								{ title: 'create and modify nodes', className: "tippyleftpanel " + (this.props.mode === 1 ? "selected-mode-line" : "un-selected-mode-line"), onClick: this.changeMode.bind(this, 1) },
+								_react2.default.createElement(
+									'span',
+									{ style: { verticalAlign: "middle" } },
+									'Creation'
+								),
+								_react2.default.createElement('img', { style: { verticalAlign: "middle", marginLeft: "5px", marginRight: "5px", width: "15px" }, src: "../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg") })
+							),
+							_react2.default.createElement(
+								'div',
+								{ title: 'create relations between nodes', className: "tippyleftpanel " + (this.props.mode === 2 ? "selected-mode-line" : "un-selected-mode-line"), onClick: this.changeMode.bind(this, 2) },
+								_react2.default.createElement(
+									'span',
+									{ style: { verticalAlign: "middle" } },
+									'Relation'
+								),
+								_react2.default.createElement('img', { style: { verticalAlign: "middle", marginLeft: "5px", marginRight: "5px", width: "15px" }, src: "../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg") })
+							)
+						)
 					),
 					_react2.default.createElement(
 						'div',
@@ -28467,6 +28505,20 @@ var LeftPanel = function (_React$Component) {
 						_react2.default.createElement(
 							'div',
 							{ className: 'flex-grow-0' },
+							_react2.default.createElement(
+								'div',
+								{ style: { display: this.state.minimize ? "block" : "none" } },
+								_react2.default.createElement(
+									'div',
+									{ title: 'create and modify nodes', className: "tippyleftpanel " + (this.props.mode === 1 ? "selected-mode-line" : "un-selected-mode-line"), onClick: this.changeMode.bind(this, 1) },
+									_react2.default.createElement('img', { style: { cursor: "pointer", display: "block", marginLeft: "auto", marginRight: "auto", width: "20px", marginBottom: "10px" }, src: "../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg") })
+								),
+								_react2.default.createElement(
+									'div',
+									{ title: 'create relations between nodes', className: "tippyleftpanel " + (this.props.mode === 2 ? "selected-mode-line" : "un-selected-mode-line"), onClick: this.changeMode.bind(this, 2) },
+									_react2.default.createElement('img', { style: { cursor: "pointer", display: "block", marginLeft: "auto", marginRight: "auto", width: "20px", marginBottom: "10px" }, src: "../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg") })
+								)
+							),
 							_react2.default.createElement(
 								'div',
 								{ onClick: this.backToMyMaps, className: "left-panel-nav tippyleftpanel", title: 'back to my maps', style: { cursor: "pointer" } },
@@ -29890,7 +29942,7 @@ var LandingPage = function (_React$Component) {
 				_react2.default.createElement(
 					"div",
 					null,
-					"W : Ideas worth blooming - Growing brilliant ideas - Nurtre your best ideas"
+					"W : Ideas worth blooming - Growing brilliant ideas - Nurture your best ideas"
 				),
 				_react2.default.createElement(
 					"div",
@@ -29987,6 +30039,7 @@ var MapPageComp = function (_React$Component) {
 		_this.selectLink = _this.selectLink.bind(_this);
 		_this.sendMessage = _this.sendMessage.bind(_this);
 		_this.resizeSvg = _this.resizeSvg.bind(_this);
+		_this.addNewLink = _this.addNewLink.bind(_this);
 
 		_this.changeNodeText = _this.changeNodeText.bind(_this);
 		_this.changeNodeDescription = _this.changeNodeDescription.bind(_this);
@@ -29994,7 +30047,12 @@ var MapPageComp = function (_React$Component) {
 
 		_this.deleteSelectedNode = _this.deleteSelectedNode.bind(_this);
 		_this.deleteLink = _this.deleteLink.bind(_this);
-		_this.state = {};
+
+		_this.changeMode = _this.changeMode.bind(_this);
+
+		_this.state = {
+			mode: 1
+		};
 		return _this;
 	}
 
@@ -30036,6 +30094,13 @@ var MapPageComp = function (_React$Component) {
 		key: 'componentWillUnMount',
 		value: function componentWillUnMount() {
 			if (this.state.mapRef) mapRef.off();
+		}
+	}, {
+		key: 'changeMode',
+		value: function changeMode(mode) {
+			this.setState({
+				mode: mode
+			});
 		}
 	}, {
 		key: 'resizeSvg',
@@ -30095,6 +30160,17 @@ var MapPageComp = function (_React$Component) {
 			map.save();
 		}
 	}, {
+		key: 'addNewLink',
+		value: function addNewLink(nid1, nid2) {
+			if (this.state.map) {
+				var map = this.state.map;
+				map.addNewLink(_auth2.default.getUid(), nid1, nid2);
+				this.setState({
+					map: map
+				});
+			}
+		}
+	}, {
 		key: 'sendMessage',
 		value: function sendMessage(msg) {
 			var uid = _auth2.default.getUid();
@@ -30141,7 +30217,9 @@ var MapPageComp = function (_React$Component) {
 
 				svg.on("dblclick", function (d) {
 					if (!d3.event.defaultPrevented) {
-						_this5.addNewNode(d3.event.x - document.getElementById("left-panel").offsetWidth - width.animVal.value / 2, d3.event.y - height.animVal.value / 2);
+						if (_this5.state.mode === 1) {
+							_this5.addNewNode(d3.event.x - document.getElementById("left-panel").offsetWidth - width.animVal.value / 2, d3.event.y - height.animVal.value / 2);
+						}
 					}
 				});
 			}
@@ -30192,7 +30270,13 @@ var MapPageComp = function (_React$Component) {
 			svg.selectAll("g.node").on("click", function (d) {
 				if (!d3.event.defaultPrevented) {
 					d3.event.preventDefault();
-					if (d && _typeof(d.nid) !== undefined) _this6.selectNode(d.nid);
+					if (d && _typeof(d.nid) !== undefined) {
+						if (_this6.state.mode === 2 && _this6.state.selectedNode && d.nid != _this6.state.selectedNode) {
+							_this6.addNewLink(d.nid, _this6.state.selectedNode);
+						} else {
+							_this6.selectNode(d.nid);
+						}
+					}
 				}
 			}).on("dblclick", function (d) {
 				if (!d3.event.defaultPrevented) {
@@ -30355,6 +30439,8 @@ var MapPageComp = function (_React$Component) {
 					{ className: 'flex', style: { height: "100%" } },
 					_react2.default.createElement(_leftpanel2.default, { map: this.state.map,
 						user: this.props.user,
+						mode: this.state.mode,
+						changeMode: this.changeMode,
 						changeNodeText: this.changeNodeText, changeNodeDescription: this.changeNodeDescription,
 						selectedLink: this.state.selectedLink, selectLink: this.selectLink,
 						selectedNode: this.state.selectedNode, selectNode: this.selectNode,

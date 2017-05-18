@@ -8,12 +8,9 @@
 
 	#logo{
 		color: @purple;
-		font-size: 25px;
-		font-weight:bold;
-		float: right;
-		padding : 0px !important;
-		margin-right: -60px;
-    	margin-top: 5px;
+		font-size: 20px;
+		font-weight: bold;
+		padding : 10px;
 	}
 
 	.node-line{
@@ -106,47 +103,69 @@
 		font-size : 16px;
 		color: @purple;
 	}
+
+	.scale-05, .scale-1, .scale-2{
+		border-radius: 50px;
+	    border : solid 2px @darkgrey;
+		margin-left : auto;
+		margin-right : auto;
+		margin-top : 5px;
+
+		-webkit-transition: all 1s ease;
+	    transition: all 1s ease;
+	}
+
+	.scale-wrapper{
+		cursor: pointer;
+	}
+
+	.scale-wrapper:hover .scale-05,
+	.scale-wrapper:hover .scale-1, 
+	.scale-wrapper:hover .scale-2{
+		background-color : @darkgrey;
+	}
+
+
+	.scale-05{
+		height: 5px;
+		width: 5px;
+	}
+
+	.scale-1{
+		height: 10px;
+		width: 10px;
+	}
+
+	.scale-2{
+		height: 20px;
+		width: 20px;
+	}
+
+	.selected-scale{
+		border-color : @lightPurple !important;
+		background-color : @lightPurple !important;
+	}
+
+	#lp-node-block{
+
+		.selected-mode-line{
+			color: @purple;
+			cursor: pointer;
+			margin-top: 3px;
+			margin-bottom: 3px;
+		}
+
+		&:hover .selected-mode-line{
+			display: block;
+		}
+		
+		.un-selected-mode-line{
+			cursor: pointer;
+			margin-top: 3px;
+			margin-bottom: 3px;
+		}
+
+	}
 	
 }
 
-.scale-05, .scale-1, .scale-2{
-	border-radius: 50px;
-    border : solid 2px @darkgrey;
-	margin-left : auto;
-	margin-right : auto;
-	margin-top : 5px;
-
-	-webkit-transition: all 1s ease;
-    transition: all 1s ease;
-}
-
-.scale-wrapper{
-	cursor: pointer;
-}
-
-.scale-wrapper:hover .scale-05,
-.scale-wrapper:hover .scale-1, 
-.scale-wrapper:hover .scale-2{
-	background-color : @darkgrey;
-}
-
-
-.scale-05{
-	height: 5px;
-	width: 5px;
-}
-
-.scale-1{
-	height: 10px;
-	width: 10px;
-}
-
-.scale-2{
-	height: 20px;
-	width: 20px;
-}
-
-.selected-scale{
-	border-color : @lightPurple !important;
-	background-color : @lightPurple !important;
-}

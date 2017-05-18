@@ -403,12 +403,9 @@ svg {
 }
 #left-panel #logo {
   color: #9C27B0;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: bold;
-  float: right;
-  padding: 0px !important;
-  margin-right: -60px;
-  margin-top: 5px;
+  padding: 10px;
 }
 #left-panel .node-line {
   font-size: 13px;
@@ -486,9 +483,9 @@ svg {
   font-size: 16px;
   color: #9C27B0;
 }
-.scale-05,
-.scale-1,
-.scale-2 {
+#left-panel .scale-05,
+#left-panel .scale-1,
+#left-panel .scale-2 {
   border-radius: 50px;
   border: solid 2px #424242;
   margin-left: auto;
@@ -497,29 +494,43 @@ svg {
   -webkit-transition: all 1s ease;
   transition: all 1s ease;
 }
-.scale-wrapper {
+#left-panel .scale-wrapper {
   cursor: pointer;
 }
-.scale-wrapper:hover .scale-05,
-.scale-wrapper:hover .scale-1,
-.scale-wrapper:hover .scale-2 {
+#left-panel .scale-wrapper:hover .scale-05,
+#left-panel .scale-wrapper:hover .scale-1,
+#left-panel .scale-wrapper:hover .scale-2 {
   background-color: #424242;
 }
-.scale-05 {
+#left-panel .scale-05 {
   height: 5px;
   width: 5px;
 }
-.scale-1 {
+#left-panel .scale-1 {
   height: 10px;
   width: 10px;
 }
-.scale-2 {
+#left-panel .scale-2 {
   height: 20px;
   width: 20px;
 }
-.selected-scale {
+#left-panel .selected-scale {
   border-color: #CE93D8 !important;
   background-color: #CE93D8 !important;
+}
+#left-panel #lp-node-block .selected-mode-line {
+  color: #9C27B0;
+  cursor: pointer;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+#left-panel #lp-node-block:hover .selected-mode-line {
+  display: block;
+}
+#left-panel #lp-node-block .un-selected-mode-line {
+  cursor: pointer;
+  margin-top: 3px;
+  margin-bottom: 3px;
 }
 #register-page {
   color: #424242;

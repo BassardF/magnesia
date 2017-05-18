@@ -60,6 +60,7 @@ var MapPageComp = function (_React$Component) {
 		_this.selectLink = _this.selectLink.bind(_this);
 		_this.sendMessage = _this.sendMessage.bind(_this);
 		_this.resizeSvg = _this.resizeSvg.bind(_this);
+		_this.addNewLink = _this.addNewLink.bind(_this);
 
 		_this.changeNodeText = _this.changeNodeText.bind(_this);
 		_this.changeNodeDescription = _this.changeNodeDescription.bind(_this);
@@ -67,7 +68,12 @@ var MapPageComp = function (_React$Component) {
 
 		_this.deleteSelectedNode = _this.deleteSelectedNode.bind(_this);
 		_this.deleteLink = _this.deleteLink.bind(_this);
-		_this.state = {};
+
+		_this.changeMode = _this.changeMode.bind(_this);
+
+		_this.state = {
+			mode: 1
+		};
 		return _this;
 	}
 
@@ -109,6 +115,13 @@ var MapPageComp = function (_React$Component) {
 		key: 'componentWillUnMount',
 		value: function componentWillUnMount() {
 			if (this.state.mapRef) mapRef.off();
+		}
+	}, {
+		key: 'changeMode',
+		value: function changeMode(mode) {
+			this.setState({
+				mode: mode
+			});
 		}
 	}, {
 		key: 'resizeSvg',
@@ -168,6 +181,17 @@ var MapPageComp = function (_React$Component) {
 			map.save();
 		}
 	}, {
+		key: 'addNewLink',
+		value: function addNewLink(nid1, nid2) {
+			if (this.state.map) {
+				var map = this.state.map;
+				map.addNewLink(_auth2.default.getUid(), nid1, nid2);
+				this.setState({
+					map: map
+				});
+			}
+		}
+	}, {
 		key: 'sendMessage',
 		value: function sendMessage(msg) {
 			var uid = _auth2.default.getUid();
@@ -214,7 +238,9 @@ var MapPageComp = function (_React$Component) {
 
 				svg.on("dblclick", function (d) {
 					if (!d3.event.defaultPrevented) {
-						_this5.addNewNode(d3.event.x - document.getElementById("left-panel").offsetWidth - width.animVal.value / 2, d3.event.y - height.animVal.value / 2);
+						if (_this5.state.mode === 1) {
+							_this5.addNewNode(d3.event.x - document.getElementById("left-panel").offsetWidth - width.animVal.value / 2, d3.event.y - height.animVal.value / 2);
+						}
 					}
 				});
 			}
@@ -265,7 +291,13 @@ var MapPageComp = function (_React$Component) {
 			svg.selectAll("g.node").on("click", function (d) {
 				if (!d3.event.defaultPrevented) {
 					d3.event.preventDefault();
-					if (d && _typeof(d.nid) !== undefined) _this6.selectNode(d.nid);
+					if (d && _typeof(d.nid) !== undefined) {
+						if (_this6.state.mode === 2 && _this6.state.selectedNode && d.nid != _this6.state.selectedNode) {
+							_this6.addNewLink(d.nid, _this6.state.selectedNode);
+						} else {
+							_this6.selectNode(d.nid);
+						}
+					}
 				}
 			}).on("dblclick", function (d) {
 				if (!d3.event.defaultPrevented) {
@@ -428,6 +460,8 @@ var MapPageComp = function (_React$Component) {
 					{ className: 'flex', style: { height: "100%" } },
 					_react2.default.createElement(_leftpanel2.default, { map: this.state.map,
 						user: this.props.user,
+						mode: this.state.mode,
+						changeMode: this.changeMode,
 						changeNodeText: this.changeNodeText, changeNodeDescription: this.changeNodeDescription,
 						selectedLink: this.state.selectedLink, selectLink: this.selectLink,
 						selectedNode: this.state.selectedNode, selectNode: this.selectNode,
