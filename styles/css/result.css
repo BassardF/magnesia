@@ -188,6 +188,34 @@ body {
   -webkit-transform: rotate(180deg);
   transform: rotate(180deg);
 }
+#landing-page .section {
+  padding-right: 30px;
+  padding-left: 30px;
+}
+#landing-page #landing-page-top-section {
+  padding-bottom: 250px;
+}
+#landing-page #lp-header-section {
+  font-size: 26px;
+  padding: 20px;
+  font-weight: bold;
+  color: white;
+}
+#landing-page #lp-header-name {
+  color: white;
+  text-align: center;
+  font-size: 40px;
+  margin-top: 50px;
+  font-weight: bold;
+  letter-spacing: 5px;
+}
+#landing-page #lp-header-sub-name {
+  color: white;
+  text-align: center;
+  font-size: 30px;
+  margin-top: 20px;
+  letter-spacing: 2px;
+}
 #maps-page {
   color: #424242;
 }

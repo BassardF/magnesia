@@ -27899,7 +27899,7 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 		)
 ), document.getElementById('root'));
 
-},{"../reducers/maps":301,"../reducers/users":302,"./landing":294,"./map":295,"./maps":296,"./register":297,"./root":298,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],286:[function(require,module,exports){
+},{"../reducers/maps":303,"../reducers/users":304,"./landing":294,"./map":295,"./maps":296,"./register":297,"./root":298,"react":255,"react-dom":46,"react-redux":182,"react-router":224,"redux":261}],286:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28105,7 +28105,7 @@ var Advice = function (_React$Component) {
 
 exports.default = Advice;
 
-},{"../../services/auth":303,"react":255}],287:[function(require,module,exports){
+},{"../../services/auth":305,"react":255}],287:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29186,7 +29186,7 @@ var LogsBlock = function (_React$Component8) {
 
 ;
 
-},{"../../services/auth":303,"./deletebutton":287,"./fullbutton":288,"react":255,"react-router":224}],291:[function(require,module,exports){
+},{"../../services/auth":305,"./deletebutton":287,"./fullbutton":288,"react":255,"react-router":224}],291:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29466,7 +29466,7 @@ var ProspectLine = function (_React$Component3) {
 
 ;
 
-},{"../../services/auth":303,"react":255}],292:[function(require,module,exports){
+},{"../../services/auth":305,"react":255}],292:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29900,7 +29900,7 @@ var MapDetails = function (_React$Component) {
 exports.default = MapDetails;
 
 },{"react":255}],294:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -29908,9 +29908,17 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _demodrawing = require('../properties/demodrawing');
+
+var _demodrawing2 = _interopRequireDefault(_demodrawing);
+
+var _demonodes = require('../properties/demonodes');
+
+var _demonodes2 = _interopRequireDefault(_demonodes);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29933,47 +29941,48 @@ var LandingPage = function (_React$Component) {
 	}
 
 	_createClass(LandingPage, [{
-		key: "render",
+		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
-				"div",
-				{ id: "landing-page", style: { padding: "50px" } },
+				'div',
+				{ id: 'landing-page', style: { maxWidth: "1440px", marginLeft: "auto", marginRight: "auto" } },
+				_react2.default.createElement(TopSection, null),
 				_react2.default.createElement(
-					"h1",
+					'h1',
 					null,
-					"ideas"
+					'ideas'
 				),
 				_react2.default.createElement(
-					"h3",
+					'h3',
 					null,
-					"Why / How / What / Ex"
+					'Why / How / What / Ex'
 				),
 				_react2.default.createElement(
-					"div",
+					'div',
 					null,
-					"W : Ideas worth blooming - Growing brilliant ideas - Nurture your best ideas"
+					'W : Ideas worth blooming - Growing brilliant ideas - Nurture your best ideas'
 				),
 				_react2.default.createElement(
-					"div",
+					'div',
 					null,
-					"H : Visual representation | Structuration | Sharing @team"
+					'H : Visual representation | Structuration | Sharing @team'
 				),
 				_react2.default.createElement(
-					"div",
+					'div',
 					null,
-					"Wh : Magnesia"
+					'Wh : Magnesia'
 				),
 				_react2.default.createElement(
-					"h3",
+					'h3',
 					null,
-					"tools ID"
+					'tools ID'
 				),
 				_react2.default.createElement(
-					"div",
+					'div',
 					null,
-					"node/user count"
+					'node/user count'
 				),
-				_react2.default.createElement("div", null)
+				_react2.default.createElement('div', null)
 			);
 		}
 	}]);
@@ -29983,9 +29992,150 @@ var LandingPage = function (_React$Component) {
 
 ;
 
+var TopSection = function (_React$Component2) {
+	_inherits(TopSection, _React$Component2);
+
+	function TopSection(props) {
+		_classCallCheck(this, TopSection);
+
+		var _this2 = _possibleConstructorReturn(this, (TopSection.__proto__ || Object.getPrototypeOf(TopSection)).call(this, props));
+
+		_this2.draw = _this2.draw.bind(_this2);
+		_this2.drawNodes = _this2.drawNodes.bind(_this2);
+		_this2.drawLinks = _this2.drawLinks.bind(_this2);
+		_this2.state = {};
+		return _this2;
+	}
+
+	_createClass(TopSection, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			console.log("componentDidMount", _demonodes2.default);
+			this.draw();
+		}
+	}, {
+		key: 'draw',
+		value: function draw() {
+			var svg = d3.select("#headersvg"),
+			    width = svg.property("width"),
+			    height = svg.property("height");
+
+			var wd = document.body.offsetWidth;
+			this.drawNodes(svg, wd, 300);
+			this.drawLinks(svg, wd, 300);
+		}
+	}, {
+		key: 'drawNodes',
+		value: function drawNodes(svg, width, height) {
+			var _this3 = this;
+
+			var nodes = _demonodes2.default.nodes;
+
+			var gs = svg.select("g#nodes").selectAll("g.node").data(nodes, function (d, ind) {
+				return d;
+			});
+
+			//Enter
+			var elemtEnter = gs.enter().append("g").attr("class", "node");
+
+			elemtEnter.append("circle").attr("stroke", function (d, i) {
+				return _demodrawing2.default.defaultCircleStrokeColor;
+			}).attr("stroke-width", function (d, i) {
+				return _demodrawing2.default.defaultCircleStrokeWidth;
+			}).attr("fill", "#9C27B0").style("cursor", "pointer").merge(gs.selectAll("circle")).attr("r", function (d, i) {
+				return 40 * (nodes[i].scale ? +nodes[i].scale : 1);
+			}).attr("cy", function (d, i) {
+				return height / 2 + (nodes[i].y ? +nodes[i].y : 0);
+			}).attr("cx", function (d, i) {
+				return width / 2 + (nodes[i].x ? +nodes[i].x : 0);
+			}).attr("stroke", function (d, i) {
+				return nodes[i].nid == _this3.state.selectedNode ? _demodrawing2.default.selectedCircleStrokeColor : _demodrawing2.default.defaultCircleStrokeColor;
+			}).attr("stroke-width", function (d, i) {
+				return nodes[i].nid == _this3.state.selectedNode ? _demodrawing2.default.selectedCircleStrokeWidth : _demodrawing2.default.defaultCircleStrokeWidth;
+			});
+
+			elemtEnter.append("text").attr("fill", _demodrawing2.default.defaultTextColor).attr("text-anchor", "middle").attr("class", "noselect").merge(gs.selectAll("text")).attr("dx", function (d, i) {
+				return width / 2 + (nodes[i].x ? +nodes[i].x : 0);
+			}).attr("dy", function (d, i) {
+				return height / 2 + (nodes[i].y ? +nodes[i].y : 0) + 5;
+			}).text(function (d, i) {
+				return nodes[i].title;
+			});
+		}
+	}, {
+		key: 'drawLinks',
+		value: function drawLinks(svg, width, height) {
+
+			var links = _demonodes2.default.links;
+			var gs = svg.select("g#links").selectAll("g.link").data(links, function (d) {
+				return d;
+			});
+
+			//Enter
+			var elemtEnter = gs.enter().append("g").attr("class", "link");
+
+			elemtEnter.append("line").attr("stroke-width", function (d, i) {
+				return _demodrawing2.default.defaultCircleStrokeWidth;
+			}).merge(gs.selectAll("line")).attr("stroke", function (d, i) {
+				var id = Object.keys(links[i].nodes).join("");
+				return _demodrawing2.default.defaultCircleStrokeColor;
+			}).attr("x1", function (d, i) {
+				var origin = _demonodes2.default.nodes[Object.keys(links[i].nodes)[0]];
+				return width / 2 + (origin.x ? +origin.x : 0);
+			}).attr("y1", function (d, i) {
+				var origin = _demonodes2.default.nodes[Object.keys(links[i].nodes)[0]];
+				return height / 2 + (origin.y ? +origin.y : 0);
+			}).attr("x2", function (d, i) {
+				var destination = _demonodes2.default.nodes[Object.keys(links[i].nodes)[1]];
+				return width / 2 + (destination.x ? +destination.x : 0);
+			}).attr("y2", function (d, i) {
+				var destination = _demonodes2.default.nodes[Object.keys(links[i].nodes)[1]];
+				return height / 2 + (destination.y ? +destination.y : 0);
+			});
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'div',
+					{ id: 'landing-page-top-section', className: 'section purple-bcg' },
+					_react2.default.createElement(
+						'div',
+						{ id: 'lp-header-section' },
+						'Mg.'
+					),
+					_react2.default.createElement(
+						'div',
+						{ id: 'lp-header-name' },
+						'Magnesia'
+					),
+					_react2.default.createElement(
+						'div',
+						{ id: 'lp-header-sub-name' },
+						'Nurture your brilliant ideas'
+					)
+				),
+				_react2.default.createElement(
+					'svg',
+					{ id: 'headersvg', style: { width: "100%", height: "300px", marginTop: "-300px" } },
+					_react2.default.createElement('g', { id: 'links' }),
+					_react2.default.createElement('g', { id: 'nodes' })
+				)
+			);
+		}
+	}]);
+
+	return TopSection;
+}(_react2.default.Component);
+
+;
+
 exports.default = LandingPage;
 
-},{"react":255}],295:[function(require,module,exports){
+},{"../properties/demodrawing":299,"../properties/demonodes":300,"react":255}],295:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30506,7 +30656,7 @@ var MapPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MapP
 
 exports.default = MapPage;
 
-},{"../models/map":281,"../properties/drawing":299,"../services/auth":303,"./dumbs/advice":286,"./dumbs/leftpanel":290,"react":255,"react-redux":182,"react-router":224}],296:[function(require,module,exports){
+},{"../models/map":281,"../properties/drawing":301,"../services/auth":305,"./dumbs/advice":286,"./dumbs/leftpanel":290,"react":255,"react-redux":182,"react-router":224}],296:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31010,7 +31160,7 @@ var MapsPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Map
 
 exports.default = MapsPage;
 
-},{"../actions/maps":278,"../actions/users":279,"../models/map":281,"../services/auth":303,"./dumbs/invite":289,"./dumbs/manageusers":291,"./dumbs/mapblock":292,"./dumbs/mapdetails":293,"react":255,"react-redux":182,"react-router":224}],297:[function(require,module,exports){
+},{"../actions/maps":278,"../actions/users":279,"../models/map":281,"../services/auth":305,"./dumbs/invite":289,"./dumbs/manageusers":291,"./dumbs/mapblock":292,"./dumbs/mapdetails":293,"react":255,"react-redux":182,"react-router":224}],297:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31356,7 +31506,7 @@ var RegisterPage = function (_React$Component) {
 
 exports.default = RegisterPage;
 
-},{"../services/auth":303,"react":255,"react-router":224}],298:[function(require,module,exports){
+},{"../services/auth":305,"react":255,"react-router":224}],298:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31479,7 +31629,409 @@ var RootPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Roo
 
 exports.default = RootPage;
 
-},{"../actions/users":279,"../models/user":284,"../services/auth":303,"react":255,"react-redux":182,"react-router":224}],299:[function(require,module,exports){
+},{"../actions/users":279,"../models/user":284,"../services/auth":305,"react":255,"react-redux":182,"react-router":224}],299:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = {
+	defaultTextColor: "white",
+	defaultCircleStrokeColor: "white",
+	selectedCircleStrokeColor: "white",
+	defaultCircleStrokeWidth: "2px",
+	selectedCircleStrokeWidth: "4px"
+};
+
+},{}],300:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = {
+	nodes: [{
+		"bcg_color": "#ffffff",
+		"color": "#000000",
+		"description": "",
+		"events": [{
+			"timestamp": 1495192886354,
+			"type": 1,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nid": 0,
+		"scale": 1,
+		"title": "Core Idea",
+		"tmp": "Core Idea",
+		"utt": 1495192886355,
+		"x": 0,
+		"y": 0
+	}, {
+		"bcg_color": "#ffffff",
+		"color": "#000000",
+		"description": "",
+		"events": [{
+			"timestamp": 1495192927205,
+			"type": 1,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nid": 1,
+		"scale": 1,
+		"title": "notion 1",
+		"tmp": "notion",
+		"utt": 1495192927206,
+		"x": -113,
+		"y": -51
+	}, {
+		"bcg_color": "#ffffff",
+		"color": "#000000",
+		"description": "",
+		"events": [{
+			"timestamp": 1495192928175,
+			"type": 1,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nid": 2,
+		"scale": 1,
+		"title": "notion 2",
+		"tmp": "notion",
+		"utt": 1495192928175,
+		"x": -114,
+		"y": 61
+	}, {
+		"active": false,
+		"bcg_color": "#ffffff",
+		"color": "#000000",
+		"description": "",
+		"events": [{
+			"timestamp": 1495192933213,
+			"type": 1,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nid": 3,
+		"scale": 1,
+		"title": "notion 3",
+		"tmp": "notion",
+		"utt": 1495192933213,
+		"x": 127,
+		"y": 0
+	}, {
+		"bcg_color": "#ffffff",
+		"color": "#000000",
+		"description": "",
+		"events": [{
+			"timestamp": 1495192964277,
+			"type": 1,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nid": 4,
+		"scale": 0.5,
+		"title": "sub 1",
+		"tmp": "sub",
+		"utt": 1495192964277,
+		"x": 256,
+		"y": -90
+	}, {
+		"active": false,
+		"bcg_color": "#ffffff",
+		"color": "#000000",
+		"description": "",
+		"events": [{
+			"timestamp": 1495192984401,
+			"type": 1,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nid": 5,
+		"scale": 0.5,
+		"title": "sub 2",
+		"tmp": "sub",
+		"utt": 1495192984401,
+		"x": 258,
+		"y": 0
+	}, {
+		"active": false,
+		"bcg_color": "#ffffff",
+		"color": "#000000",
+		"description": "",
+		"events": [{
+			"timestamp": 1495192985285,
+			"type": 1,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nid": 6,
+		"scale": 0.5,
+		"title": "sub 3",
+		"tmp": "sub",
+		"utt": 1495192985285,
+		"x": 257,
+		"y": 98
+	}, {
+		"active": false,
+		"bcg_color": "#ffffff",
+		"color": "#000000",
+		"description": "",
+		"events": [{
+			"timestamp": 1495192998257,
+			"type": 1,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nid": 7,
+		"scale": 0.5,
+		"title": "sub 4",
+		"tmp": "sub",
+		"utt": 1495192998257,
+		"x": -206,
+		"y": -132
+	}, {
+		"active": false,
+		"bcg_color": "#ffffff",
+		"color": "#000000",
+		"description": "",
+		"events": [{
+			"timestamp": 1495192998963,
+			"type": 1,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nid": 8,
+		"scale": 0.5,
+		"title": "sub 5",
+		"tmp": "sub",
+		"utt": 1495192998963,
+		"x": -209,
+		"y": -3
+	}, {
+		"active": false,
+		"bcg_color": "#ffffff",
+		"color": "#000000",
+		"description": "",
+		"events": [{
+			"timestamp": 1495193000802,
+			"type": 1,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nid": 9,
+		"scale": 0.5,
+		"title": "sub 6",
+		"tmp": "sub",
+		"utt": 1495193000802,
+		"x": -197,
+		"y": 135
+	}],
+
+	links: [{
+		"events": [{
+			"timestamp": 1495193038380,
+			"type": 2,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"label": "",
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nodes": {
+			"1": {
+				"label": "",
+				"type": false
+			},
+			"7": {
+				"label": "",
+				"type": false
+			}
+		},
+		"scale": 1
+	}, {
+		"events": [{
+			"timestamp": 1495193041519,
+			"type": 2,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"label": "",
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nodes": {
+			"1": {
+				"label": "",
+				"type": false
+			},
+			"8": {
+				"label": "",
+				"type": false
+			}
+		},
+		"scale": 1
+	}, {
+		"events": [{
+			"timestamp": 1495193045103,
+			"type": 2,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"label": "",
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nodes": {
+			"2": {
+				"label": "",
+				"type": false
+			},
+			"9": {
+				"label": "",
+				"type": false
+			}
+		},
+		"scale": 1
+	}, {
+		"events": [{
+			"timestamp": 1495193046189,
+			"type": 2,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"label": "",
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nodes": [{
+			"label": "",
+			"type": false
+		}, null, {
+			"label": "",
+			"type": false
+		}],
+		"scale": 1
+	}, {
+		"events": [{
+			"timestamp": 1495193050995,
+			"type": 2,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"label": "",
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nodes": [{
+			"label": "",
+			"type": false
+		}, {
+			"label": "",
+			"type": false
+		}],
+		"scale": 1
+	}, {
+		"events": [{
+			"timestamp": 1495193057189,
+			"type": 2,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"label": "",
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nodes": [{
+			"label": "",
+			"type": false
+		}, null, null, {
+			"label": "",
+			"type": false
+		}],
+		"scale": 1
+	}, {
+		"events": [{
+			"timestamp": 1495193059265,
+			"type": 2,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"label": "",
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nodes": {
+			"3": {
+				"label": "",
+				"type": false
+			},
+			"4": {
+				"label": "",
+				"type": false
+			}
+		},
+		"scale": 1
+	}, {
+		"events": [{
+			"timestamp": 1495193060381,
+			"type": 2,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"label": "",
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nodes": {
+			"3": {
+				"label": "",
+				"type": false
+			},
+			"5": {
+				"label": "",
+				"type": false
+			}
+		},
+		"scale": 1
+	}, {
+		"events": [{
+			"timestamp": 1495193061466,
+			"type": 2,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"label": "",
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nodes": {
+			"3": {
+				"label": "",
+				"type": false
+			},
+			"6": {
+				"label": "",
+				"type": false
+			}
+		},
+		"scale": 1
+	}, {
+		"events": [{
+			"timestamp": 1495193061466,
+			"type": 2,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"label": "",
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nodes": {
+			"0": {
+				"label": "",
+				"type": false
+			},
+			"2": {
+				"label": "",
+				"type": false
+			}
+		},
+		"scale": 1
+	}, {
+		"events": [{
+			"timestamp": 1495193061466,
+			"type": 2,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"label": "",
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nodes": {
+			"0": {
+				"label": "",
+				"type": false
+			},
+			"3": {
+				"label": "",
+				"type": false
+			}
+		},
+		"scale": 1
+	}]
+};
+
+},{}],301:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31493,7 +32045,7 @@ exports.default = {
 	selectedCircleStrokeWidth: "4px"
 };
 
-},{}],300:[function(require,module,exports){
+},{}],302:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31505,7 +32057,7 @@ exports.default = {
 	2: "Link created"
 };
 
-},{}],301:[function(require,module,exports){
+},{}],303:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31526,7 +32078,7 @@ function mapsReducers() {
 	}
 }
 
-},{}],302:[function(require,module,exports){
+},{}],304:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31545,7 +32097,7 @@ function usersReducers() {
 	}
 }
 
-},{}],303:[function(require,module,exports){
+},{}],305:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31615,7 +32167,7 @@ var AuthServices = function () {
 
 exports.default = AuthServices;
 
-},{"../models/user":284}],304:[function(require,module,exports){
+},{"../models/user":284}],306:[function(require,module,exports){
 "use strict";
 
-},{}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304]);
+},{}]},{},[278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306]);
