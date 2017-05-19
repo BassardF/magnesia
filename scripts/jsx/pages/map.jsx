@@ -60,7 +60,8 @@ class MapPageComp extends React.Component {
 	componentDidMount(){
 		document.body.onkeydown = (e) => {
 		    if(e.keyCode == 8){
-		    	if(!document.activeElement || document.activeElement.tagName !== "INPUT" || document.activeElement.tagName !== "TEXTAREA") this.deleteSelectedNode();
+		    	if(!document.activeElement || (document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA")) 
+		    		this.deleteSelectedNode();
 		    }
 		};	
 	}

@@ -170,7 +170,7 @@ class MapsPageComp extends React.Component {
 					var mps = this.props.maps;
 					mps.splice(ind, 1);
 					this.props.replaceMaps(mps);
-					this.selectMap(0);
+					if(mps.length) this.selectMap(0, true);
 				}
 				this.forceUpdate();
 			});

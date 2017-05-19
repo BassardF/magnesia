@@ -112,7 +112,7 @@ var LeftPanel = function (_React$Component) {
 			    title = "";
 			var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 			if (!nodeSelected && this.state.nav == 1) this.state.nav = 0;
-			var subSpace = window.innerHeight - 45;
+			var subSpace = window.innerHeight - 65;
 			switch (this.state.nav) {
 				case 0:
 					dom = _react2.default.createElement(NodeTree, { map: this.props.map,
@@ -551,7 +551,7 @@ var NodeDetails = function (_React$Component5) {
 					null,
 					_react2.default.createElement(
 						'h3',
-						null,
+						{ style: { marginTop: '0px' } },
 						'Text'
 					),
 					_react2.default.createElement(
@@ -741,7 +741,7 @@ var MessageBlock = function (_React$Component6) {
 				headerHeight = headerNode.offsetHeight;
 			}
 
-			var msgHeight = this.props.vspace - 40 - headerHeight;
+			var msgHeight = this.props.vspace - 70 - headerHeight;
 			return _react2.default.createElement(
 				'div',
 				null,
@@ -771,7 +771,12 @@ var MessageBlock = function (_React$Component6) {
 				_react2.default.createElement(
 					'div',
 					{ ref: 'messages', style: { overflow: "scroll", height: msgHeight + "px" } },
-					msgs
+					msgs,
+					_react2.default.createElement(
+						'div',
+						{ style: { marginTop: "20px", textAlign: "center", fontSize: "13px", display: msgs.length ? "none" : "block" } },
+						'Empty History'
+					)
 				)
 			);
 		}

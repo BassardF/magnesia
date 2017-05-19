@@ -27620,7 +27620,6 @@ var Map = function () {
 			for (var i = 0; i < this.links.length; i++) {
 				if (this.links[i] && this.links[i].nodes && this.links[i].nodes[nid1] && this.links[i].nodes[nid2]) return;
 			}
-			console.log("push");
 			this.links.push(new _link2.default().initEmpty(uid, new Date().getTime(), nid1, nid2, this.mid));
 		}
 	}, {
@@ -28417,7 +28416,7 @@ var LeftPanel = function (_React$Component) {
 			    title = "";
 			var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 			if (!nodeSelected && this.state.nav == 1) this.state.nav = 0;
-			var subSpace = window.innerHeight - 45;
+			var subSpace = window.innerHeight - 65;
 			switch (this.state.nav) {
 				case 0:
 					dom = _react2.default.createElement(NodeTree, { map: this.props.map,
@@ -28856,7 +28855,7 @@ var NodeDetails = function (_React$Component5) {
 					null,
 					_react2.default.createElement(
 						'h3',
-						null,
+						{ style: { marginTop: '0px' } },
 						'Text'
 					),
 					_react2.default.createElement(
@@ -29046,7 +29045,7 @@ var MessageBlock = function (_React$Component6) {
 				headerHeight = headerNode.offsetHeight;
 			}
 
-			var msgHeight = this.props.vspace - 40 - headerHeight;
+			var msgHeight = this.props.vspace - 70 - headerHeight;
 			return _react2.default.createElement(
 				'div',
 				null,
@@ -29076,7 +29075,12 @@ var MessageBlock = function (_React$Component6) {
 				_react2.default.createElement(
 					'div',
 					{ ref: 'messages', style: { overflow: "scroll", height: msgHeight + "px" } },
-					msgs
+					msgs,
+					_react2.default.createElement(
+						'div',
+						{ style: { marginTop: "20px", textAlign: "center", fontSize: "13px", display: msgs.length ? "none" : "block" } },
+						'Empty History'
+					)
 				)
 			);
 		}
@@ -29220,7 +29224,8 @@ var ManageUsers = function (_React$Component) {
 
 		_this.state = {
 			search: "",
-			results: []
+			results: [],
+			loading: false
 		};
 		return _this;
 	}
@@ -29240,6 +29245,7 @@ var ManageUsers = function (_React$Component) {
 			var arr = [];
 
 			if (val && val.length >= 3) {
+				this.setState({ loading: true });
 				firebase.database().ref('emails').orderByKey().startAt(val).limitToFirst(10).once("value", function (res) {
 					var results = res.val();
 					if (results) {
@@ -29257,7 +29263,8 @@ var ManageUsers = function (_React$Component) {
 						}
 					}
 					_this2.setState({
-						results: arr
+						results: arr,
+						loading: false
 					});
 				});
 			}
@@ -29292,6 +29299,8 @@ var ManageUsers = function (_React$Component) {
 					userDom.push(_react2.default.createElement(ProspectLine, { key: "key-prospect-selected-line" + uid, invited: false, uid: uid, name: email, inviteUser: this.inviteUser.bind(this, uid, email) }));
 				}
 			}
+
+			var loadIcon = !this.state.loading ? _react2.default.createElement('img', { style: { verticalAlign: "middle", width: "20px", marginRight: "5px" }, src: '../assets/images/magnifier.svg' }) : _react2.default.createElement('img', { src: '../assets/images/spinner-purple.svg', className: 'rotate', style: { verticalAlign: "middle", width: "20px", height: "20px", marginRight: "5px" } });
 
 			return _react2.default.createElement(
 				'div',
@@ -29344,7 +29353,7 @@ var ManageUsers = function (_React$Component) {
 				_react2.default.createElement(
 					'div',
 					{ className: 'search-user-input-wrapper', style: { maxWidth: "280px", marginTop: "30px", marginRight: "auto", marginLeft: "auto" } },
-					_react2.default.createElement('img', { style: { verticalAlign: "middle", width: "20px", marginRight: "5px" }, src: '../assets/images/magnifier.svg' }),
+					loadIcon,
 					_react2.default.createElement('input', { value: this.state.value, onChange: this.changeSearch, placeholder: 'email address', style: { verticalAlign: "middle", width: "250px", fontSize: "17px", border: "none", outline: "none" } })
 				),
 				_react2.default.createElement(
@@ -30086,7 +30095,7 @@ var MapPageComp = function (_React$Component) {
 
 			document.body.onkeydown = function (e) {
 				if (e.keyCode == 8) {
-					if (!document.activeElement || document.activeElement.tagName !== "INPUT" || document.activeElement.tagName !== "TEXTAREA") _this3.deleteSelectedNode();
+					if (!document.activeElement || document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") _this3.deleteSelectedNode();
 				}
 			};
 		}
@@ -30734,7 +30743,7 @@ var MapsPageComp = function (_React$Component) {
 						var mps = _this6.props.maps;
 						mps.splice(ind, 1);
 						_this6.props.replaceMaps(mps);
-						_this6.selectMap(0);
+						if (mps.length) _this6.selectMap(0, true);
 					}
 					_this6.forceUpdate();
 				});

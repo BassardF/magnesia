@@ -35,7 +35,8 @@ var ManageUsers = function (_React$Component) {
 
 		_this.state = {
 			search: "",
-			results: []
+			results: [],
+			loading: false
 		};
 		return _this;
 	}
@@ -55,6 +56,7 @@ var ManageUsers = function (_React$Component) {
 			var arr = [];
 
 			if (val && val.length >= 3) {
+				this.setState({ loading: true });
 				firebase.database().ref('emails').orderByKey().startAt(val).limitToFirst(10).once("value", function (res) {
 					var results = res.val();
 					if (results) {
@@ -72,7 +74,8 @@ var ManageUsers = function (_React$Component) {
 						}
 					}
 					_this2.setState({
-						results: arr
+						results: arr,
+						loading: false
 					});
 				});
 			}
@@ -107,6 +110,8 @@ var ManageUsers = function (_React$Component) {
 					userDom.push(_react2.default.createElement(ProspectLine, { key: "key-prospect-selected-line" + uid, invited: false, uid: uid, name: email, inviteUser: this.inviteUser.bind(this, uid, email) }));
 				}
 			}
+
+			var loadIcon = !this.state.loading ? _react2.default.createElement('img', { style: { verticalAlign: "middle", width: "20px", marginRight: "5px" }, src: '../assets/images/magnifier.svg' }) : _react2.default.createElement('img', { src: '../assets/images/spinner-purple.svg', className: 'rotate', style: { verticalAlign: "middle", width: "20px", height: "20px", marginRight: "5px" } });
 
 			return _react2.default.createElement(
 				'div',
@@ -159,7 +164,7 @@ var ManageUsers = function (_React$Component) {
 				_react2.default.createElement(
 					'div',
 					{ className: 'search-user-input-wrapper', style: { maxWidth: "280px", marginTop: "30px", marginRight: "auto", marginLeft: "auto" } },
-					_react2.default.createElement('img', { style: { verticalAlign: "middle", width: "20px", marginRight: "5px" }, src: '../assets/images/magnifier.svg' }),
+					loadIcon,
 					_react2.default.createElement('input', { value: this.state.value, onChange: this.changeSearch, placeholder: 'email address', style: { verticalAlign: "middle", width: "250px", fontSize: "17px", border: "none", outline: "none" } })
 				),
 				_react2.default.createElement(

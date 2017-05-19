@@ -234,7 +234,7 @@ var MapsPageComp = function (_React$Component) {
 						var mps = _this6.props.maps;
 						mps.splice(ind, 1);
 						_this6.props.replaceMaps(mps);
-						_this6.selectMap(0);
+						if (mps.length) _this6.selectMap(0, true);
 					}
 					_this6.forceUpdate();
 				});

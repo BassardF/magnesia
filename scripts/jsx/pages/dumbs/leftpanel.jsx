@@ -70,7 +70,7 @@ class LeftPanel extends React.Component {
 		var dom = null, title = "";
 		var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 		if(!nodeSelected && this.state.nav == 1) this.state.nav = 0;
-		let subSpace = window.innerHeight - (45);
+		let subSpace = window.innerHeight - (65);
 		switch(this.state.nav) {
 		    case 0:
 		        dom = <NodeTree map={this.props.map} 
@@ -370,7 +370,7 @@ class NodeDetails extends React.Component {
 		return (
 			<div>
 				<div>
-					<h3>Text</h3>
+					<h3 style={{marginTop:'0px'}}>Text</h3>
 					<div className="flex">
 						<div className="flex-grow-1">
 							<div><input ref="lpnodeinput" className="no-outline" style={{textAlign:"center", fontSize:"12px", backgroundColor:"inherit", border : "none", borderBottom: "solid 1px black"}}
@@ -484,7 +484,7 @@ class MessageBlock extends React.Component {
 			headerHeight = headerNode.offsetHeight;	
 		}
 
-		let msgHeight = this.props.vspace - 40 - headerHeight;
+		let msgHeight = this.props.vspace - 70 - headerHeight;
 		return (
 			<div>
 				<div ref="msgactionwrapper">
@@ -500,6 +500,9 @@ class MessageBlock extends React.Component {
 				</div>
 				<div ref='messages' style={{overflow:"scroll", height: msgHeight + "px"}}>
 					{msgs}
+					<div style={{marginTop:"20px", textAlign:"center", fontSize:"13px", display : (msgs.length ? "none" : "block")}}>
+						Empty History
+					</div>
 				</div>
 			</div>
 		);

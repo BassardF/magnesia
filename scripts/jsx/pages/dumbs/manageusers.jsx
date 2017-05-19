@@ -11,7 +11,8 @@ class ManageUsers extends React.Component {
 
 	    this.state = {
 	    	search : "",
-	    	results : []
+	    	results : [],
+	    	loading : false
 	    };
 	}
 
@@ -25,6 +26,7 @@ class ManageUsers extends React.Component {
 		var arr = [];
 		
 		if(val && val.length >= 3){
+			this.setState({loading : true});
 			firebase.database().ref('emails').orderByKey().startAt(val).limitToFirst(10).once("value", (res)=>{
 				var results = res.val();
 				if(results){
@@ -42,7 +44,8 @@ class ManageUsers extends React.Component {
 					}
 				}
 				this.setState({
-					results : arr
+					results : arr,
+					loading : false
 				});
 			});
 		}
@@ -82,6 +85,10 @@ class ManageUsers extends React.Component {
 			
 		}
 
+		var loadIcon = !this.state.loading ? 
+			<img style={{verticalAlign:"middle", width:"20px", marginRight : "5px"}} src="../assets/images/magnifier.svg"/> :
+			<img src="../assets/images/spinner-purple.svg" className="rotate" style={{verticalAlign:"middle", width:"20px", height:"20px", marginRight : "5px"}}/>;
+
 		return (
 			<div className="map-details">
 				<div id="map-details-title" onClick={this.props.promptChangeTitle}>
@@ -106,7 +113,7 @@ class ManageUsers extends React.Component {
 				</div>
 
 				<div className="search-user-input-wrapper" style={{maxWidth: "280px", marginTop: "30px", marginRight:"auto", marginLeft:"auto"}}>
-					<img style={{verticalAlign:"middle", width:"20px", marginRight : "5px"}} src="../assets/images/magnifier.svg"/>
+					{loadIcon}
 					<input value={this.state.value} onChange={this.changeSearch} placeholder="email address" style={{verticalAlign:"middle", width:"250px", fontSize : "17px", border : "none", outline : "none"}}/>
 				</div>
 

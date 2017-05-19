@@ -194,7 +194,6 @@ var Map = function () {
 			for (var i = 0; i < this.links.length; i++) {
 				if (this.links[i] && this.links[i].nodes && this.links[i].nodes[nid1] && this.links[i].nodes[nid2]) return;
 			}
-			console.log("push");
 			this.links.push(new _link2.default().initEmpty(uid, new Date().getTime(), nid1, nid2, this.mid));
 		}
 	}, {

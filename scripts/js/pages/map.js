@@ -107,7 +107,7 @@ var MapPageComp = function (_React$Component) {
 
 			document.body.onkeydown = function (e) {
 				if (e.keyCode == 8) {
-					if (!document.activeElement || document.activeElement.tagName !== "INPUT" || document.activeElement.tagName !== "TEXTAREA") _this3.deleteSelectedNode();
+					if (!document.activeElement || document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") _this3.deleteSelectedNode();
 				}
 			};
 		}
