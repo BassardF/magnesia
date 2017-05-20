@@ -360,6 +360,40 @@ body {
   margin-right: auto;
   letter-spacing: 1px;
 }
+#landing-page .full-third-line .fg0 div {
+  -webkit-transition: all .5s ease;
+  transition: all .5s ease;
+  opacity: 0;
+}
+#landing-page .full-third-line .fg1 div {
+  -webkit-transition: all .5s linear;
+  transition: all .5s linear;
+  -webkit-transition-delay: .5s;
+  transition-delay: .5s;
+  opacity: 0;
+}
+#landing-page .full-third-line .ls {
+  -webkit-transition: margin-right 0.5s ease;
+  transition: margin-right 0.5s ease;
+  margin-right: 40px;
+}
+#landing-page .full-third-line .rs {
+  -webkit-transition: margin-right 0.5s ease;
+  transition: margin-right 0.5s ease;
+  margin-left: 40px;
+}
+#landing-page .sel-full-third-line .fg1 div {
+  opacity: 1;
+}
+#landing-page .sel-full-third-line .fg0 div {
+  opacity: 1;
+}
+#landing-page .sel-full-third-line .ls {
+  margin-right: 0px;
+}
+#landing-page .sel-full-third-line .rs {
+  margin-left: 0px;
+}
 #maps-page {
   color: #424242;
 }

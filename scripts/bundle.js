@@ -27890,7 +27890,7 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 				_react2.default.createElement(
 						_reactRouter.Route,
 						{ component: _root2.default },
-						_react2.default.createElement(_reactRouter.Route, { path: '/', component: _landing2.default /*RegisterPage*/ }),
+						_react2.default.createElement(_reactRouter.Route, { path: '/', component: _register2.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/landing', component: _landing2.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/maps', component: _maps4.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/map/:mid', component: _map2.default }),
@@ -29939,7 +29939,10 @@ var LandingPage = function (_React$Component) {
 		_this.scrollToSecondBlock = _this.scrollToSecondBlock.bind(_this);
 
 		_this.state = {
-			drawDone: false
+			drawDone: false,
+			thirdLine1: false,
+			thirdLine2: false,
+			thirdLine3: false
 		};
 		return _this;
 	}
@@ -29951,10 +29954,30 @@ var LandingPage = function (_React$Component) {
 
 			var view = document.getElementById('landing-page');
 			var target = document.getElementById('landing-page-second-section');
-			if (!this.state.drawDone) this.checkSecondSectionInView(view, target, false);
+			var tl1 = document.getElementById('third-line-1');
+			var tl2 = document.getElementById('third-line-2');
+			var tl3 = document.getElementById('third-line-3');
+			this.checkSecondSectionInView(view, target, false);
+			this.checkTlInVew(view, tl1, false);
+			this.checkTlInVew(view, tl2, false);
+			this.checkTlInVew(view, tl3, false);
 			view.addEventListener('scroll', function () {
 				if (!_this2.state.drawDone) _this2.checkSecondSectionInView(view, target, true);
+				if (!_this2.state.thirdLine1) _this2.checkTlInVew(view, tl1, true, "thirdLine1");
+				if (!_this2.state.thirdLine2) _this2.checkTlInVew(view, tl2, true, "thirdLine2");
+				if (!_this2.state.thirdLine3) _this2.checkTlInVew(view, tl3, true, "thirdLine3");
 			});
+		}
+	}, {
+		key: 'checkTlInVew',
+		value: function checkTlInVew(view, target, scroll, name) {
+			var elemTop = target.getBoundingClientRect().top;
+			var elemBottom = target.getBoundingClientRect().bottom;
+			if (elemTop < window.innerHeight && elemBottom >= 0) {
+				var st = this.state;
+				st[name] = true;
+				this.setState(st);
+			}
 		}
 	}, {
 		key: 'checkSecondSectionInView',
@@ -30015,7 +30038,7 @@ var LandingPage = function (_React$Component) {
 				{ id: 'landing-page', style: { maxWidth: "1440px", marginLeft: "auto", marginRight: "auto", overflow: "auto", height: "100%" } },
 				_react2.default.createElement(TopSection, { scrollToSecondBlock: this.scrollToSecondBlock }),
 				_react2.default.createElement(SecondSection, { drawDone: this.state.drawDone }),
-				_react2.default.createElement(ThirdSection, null),
+				_react2.default.createElement(ThirdSection, { thirdLine1: this.state.thirdLine1, thirdLine2: this.state.thirdLine2, thirdLine3: this.state.thirdLine3 }),
 				_react2.default.createElement(
 					'div',
 					{ style: { display: "none" } },
@@ -30424,10 +30447,10 @@ var ThirdSection = function (_React$Component4) {
 					{ id: 'landing-page-third-section' },
 					_react2.default.createElement(
 						'div',
-						{ style: { display: "flex" } },
+						{ id: 'third-line-1', className: this.props.thirdLine1 ? "sel-full-third-line full-third-line" : "full-third-line", style: { display: "flex" } },
 						_react2.default.createElement(
 							'div',
-							{ style: { flexGrow: 0 } },
+							{ className: 'fg0 ls', style: { flexGrow: 0 } },
 							_react2.default.createElement(
 								'div',
 								{ className: 'value-wrapper' },
@@ -30436,7 +30459,7 @@ var ThirdSection = function (_React$Component4) {
 						),
 						_react2.default.createElement(
 							'div',
-							{ style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
+							{ className: 'fg1 rs', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
 							_react2.default.createElement(
 								'div',
 								{ style: { fontSize: "22px", letterSpacing: "1px", fontWeight: "bold", marginTop: "5px" } },
@@ -30451,10 +30474,10 @@ var ThirdSection = function (_React$Component4) {
 					),
 					_react2.default.createElement(
 						'div',
-						{ style: { display: "flex", marginTop: "70px", marginBottom: "70px" } },
+						{ id: 'third-line-2', className: this.props.thirdLine2 ? "sel-full-third-line full-third-line" : "full-third-line", style: { display: "flex", marginTop: "70px", marginBottom: "70px" } },
 						_react2.default.createElement(
 							'div',
-							{ style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
+							{ className: 'fg1 ls', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
 							_react2.default.createElement(
 								'div',
 								{ style: { fontSize: "22px", letterSpacing: "1px", textAlign: "right", fontWeight: "bold", marginTop: "15px" } },
@@ -30468,7 +30491,7 @@ var ThirdSection = function (_React$Component4) {
 						),
 						_react2.default.createElement(
 							'div',
-							{ style: { flexGrow: 0 } },
+							{ className: 'fg0 rs', style: { flexGrow: 0 } },
 							_react2.default.createElement(
 								'div',
 								{ className: 'value-wrapper' },
@@ -30478,10 +30501,10 @@ var ThirdSection = function (_React$Component4) {
 					),
 					_react2.default.createElement(
 						'div',
-						{ style: { display: "flex" } },
+						{ id: 'third-line-3', className: this.props.thirdLine3 ? "sel-full-third-line full-third-line" : "full-third-line", style: { display: "flex" } },
 						_react2.default.createElement(
 							'div',
-							{ style: { flexGrow: 0 } },
+							{ className: 'fg0 ls', style: { flexGrow: 0 } },
 							_react2.default.createElement(
 								'div',
 								{ className: 'value-wrapper' },
@@ -30490,7 +30513,7 @@ var ThirdSection = function (_React$Component4) {
 						),
 						_react2.default.createElement(
 							'div',
-							{ style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
+							{ className: 'fg1 rs', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
 							_react2.default.createElement(
 								'div',
 								{ style: { fontSize: "22px", letterSpacing: "1px", fontWeight: "bold", marginTop: "15px" } },

@@ -11,17 +11,39 @@ class LandingPage extends React.Component {
 	    this.scrollToSecondBlock = this.scrollToSecondBlock.bind(this);
 
 	    this.state = {
-	    	drawDone : false
+	    	drawDone : false,
+	    	thirdLine1 : false,
+	    	thirdLine2 : false,
+	    	thirdLine3 : false
 	    };
 	}
 
 	componentDidMount(){
 		let view = document.getElementById('landing-page');
 		let target = document.getElementById('landing-page-second-section');
-		if(!this.state.drawDone) this.checkSecondSectionInView(view, target, false);
+		let tl1 = document.getElementById('third-line-1');
+		let tl2 = document.getElementById('third-line-2');
+		let tl3 = document.getElementById('third-line-3');
+		this.checkSecondSectionInView(view, target, false);
+		this.checkTlInVew(view, tl1, false);
+		this.checkTlInVew(view, tl2, false);
+		this.checkTlInVew(view, tl3, false);
 		view.addEventListener('scroll', () => {
 			if(!this.state.drawDone) this.checkSecondSectionInView(view, target, true);
+			if(!this.state.thirdLine1) this.checkTlInVew(view, tl1, true, "thirdLine1");
+			if(!this.state.thirdLine2) this.checkTlInVew(view, tl2, true, "thirdLine2");
+			if(!this.state.thirdLine3) this.checkTlInVew(view, tl3, true, "thirdLine3");
 		});
+	}
+
+	checkTlInVew(view, target, scroll, name){
+		var elemTop = target.getBoundingClientRect().top;
+	    var elemBottom = target.getBoundingClientRect().bottom;
+	    if(elemTop < window.innerHeight && elemBottom >= 0){
+	    	var st = this.state;
+	    	st[name] = true
+	    	this.setState(st);
+	    }
 	}
 
 	checkSecondSectionInView(view, target, scroll){
@@ -76,7 +98,7 @@ class LandingPage extends React.Component {
 			<div id="landing-page" style={{maxWidth:"1440px", marginLeft:"auto", marginRight:"auto", overflow:"auto", height:"100%"}}>
 				<TopSection scrollToSecondBlock={this.scrollToSecondBlock}/>
 				<SecondSection drawDone={this.state.drawDone}/>
-				<ThirdSection/>
+				<ThirdSection thirdLine1={this.state.thirdLine1} thirdLine2={this.state.thirdLine2} thirdLine3={this.state.thirdLine3}/>
 
 				<div style={{display:"none"}}>
 					<h1>ideas</h1>
@@ -372,11 +394,11 @@ class ThirdSection extends React.Component {
 		return (
 			<div>
 				<div id="landing-page-third-section">
-					<div style={{display:"flex"}}>
-						<div style={{flexGrow:0}}>
+					<div id="third-line-1" className={this.props.thirdLine1 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex"}}>
+						<div className="fg0 ls" style={{flexGrow:0}}>
 							<div className="value-wrapper">Team</div>
 						</div>
-						<div style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
+						<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
 							<div style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"5px"}}>Thought out for teams</div>
 							<div style={{fontSize:"16px", marginTop:"5px"}}>
 								Idea are better grown in teams. 
@@ -384,26 +406,25 @@ class ThirdSection extends React.Component {
 							</div>
 						</div>
 					</div>
-					<div style={{display:"flex", marginTop:"70px", marginBottom:"70px"}}>
-						<div style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
-						<div style={{fontSize:"22px", letterSpacing:"1px", textAlign:"right", fontWeight:"bold", marginTop:"15px"}}>Instant visual</div>
+					<div id="third-line-2" className={this.props.thirdLine2 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex", marginTop:"70px", marginBottom:"70px"}}>
+						<div className="fg1 ls" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
+							<div style={{fontSize:"22px", letterSpacing:"1px", textAlign:"right", fontWeight:"bold", marginTop:"15px"}}>Instant visual</div>
 							<div style={{fontSize:"16px", marginTop:"5px", textAlign:"right"}}>
 								Mouvement is key as most of us are visual first. We made every modification live to ease communication.
 							</div>
 						</div>
-						<div style={{flexGrow:0}}>
+						<div  className="fg0 rs" style={{flexGrow:0}}>
 							<div className="value-wrapper">Live</div>
 						</div>
 					</div>
-					<div style={{display:"flex"}}>
-						<div style={{flexGrow:0}}>
+					<div id="third-line-3" className={this.props.thirdLine3 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex"}}>
+						<div className="fg0 ls" style={{flexGrow:0}}>
 							<div className="value-wrapper">Simple</div>
 						</div>
-						<div style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
+						<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
 							<div style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"15px"}}>Simplicity is a priority</div>
 							<div style={{fontSize:"16px", marginTop:"5px"}}>
 								Keep all your brain power for your ideas. We focus on the main features to make it as easy to use as possible.
-
 							</div>
 						</div>
 					</div>
