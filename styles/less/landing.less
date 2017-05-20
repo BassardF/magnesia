@@ -6,7 +6,6 @@
 	}
 
 	#landing-page-top-section{
-		padding-bottom: 250px;
 	}
 	
 	#lp-header-section{
@@ -20,7 +19,7 @@
 		color: white;
 		text-align: center;
 		font-size:40px;
-		margin-top: 50px;
+		margin-top: 30px;
 		font-weight:bold;
 		letter-spacing: 5px;
 	}
@@ -33,4 +32,109 @@
 		letter-spacing: 2px;
 	}
 
+	#triangle-left{
+		width: 0; 
+		height: 0; 
+		border-top: 30px solid transparent;
+		border-right: 80px solid transparent;
+		border-bottom: 30px solid white;
+		border-left: 80px solid white;
+	}
+
+	#triangle-right{
+		width: 0; 
+		height: 0; 
+		float: right;
+		border-top: 30px solid transparent;
+		border-left: 80px solid transparent;
+		border-bottom: 30px solid white;
+		border-right: 80px solid white;
+	}
+
+	#landing-page-second-section{
+		max-width: 500px;
+		margin-left : auto;
+		margin-right : auto;
+		padding-top: 50px;
+		padding-bottom: 50px;
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
+	#get-access-block{
+		
+		float: right;
+	    height: 0px;
+	    top: 190px;
+	    position: relative;
+	    text-align: center;
+	    opacity:0;
+
+	    -webkit-transition: all 1s ease;
+    	transition: all 1s ease;
+
+    	&.show{
+    		opacity:1 !important;
+    	}
+
+		input {
+			border: none;
+			border-bottom: solid 1px @purple;
+			margin-top: 15px;
+			margin-bottom: 15px;
+			text-align: center;
+			font-size: 18px;
+			outline: none !important;
+		}
+
+		#gyac{
+			color: #9C27B0;
+		    font-size: 21px;
+		    letter-spacing: 1px;
+		}
+
+		#i-m-in{
+			background-color: @purple;
+			padding: 10px;
+			color: white;
+			letter-spacing: 1px;
+			cursor: pointer;
+		}
+	}
+
+	#scroll-down-circle{
+		border-radius : 50px;
+		text-align: center;
+		width: 50px;
+		height: 50px;
+		margin-left: auto;
+		margin-right: auto;
+		color : #424242;
+	}
+
+	#landing-page-third-section{
+		
+		max-width: 600px;
+		padding-top: 30px;
+		padding-bottom: 30px;
+		margin-left: auto;
+		margin-right: auto;
+		color: #424242;
+
+		.value-wrapper{
+			font-size: 22px;
+		    border-radius: 200px;
+		    background-color: #2196F3;
+		    color: white;
+		    height: 65px;
+		    width: 100px;
+		    text-align: center;
+		    margin-left: auto;
+		    padding-top: 35px;
+		    margin-right: auto;
+		    letter-spacing: 1px;
+		}
+
+	}
+	
 }

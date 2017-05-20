@@ -1,3 +1,22 @@
+@-webkit-keyframes verticalbounce
+{
+    0%{margin-top:0px}
+    50%{margin-top:5px}
+    100%{margin-top:0px}
+}
+@-moz-keyframes verticalbounce
+{
+    0%{margin-top:0px}
+    50%{margin-top:5px}
+    100%{margin-top:0px}
+}
+@-ms-keyframes verticalbounce
+{
+    0%{margin-top:0px}
+    50%{margin-top:5px}
+    100%{margin-top:0px}
+}
+
 @-webkit-keyframes spinnerRotate
 {
     from{-webkit-transform:rotate(0deg);}
@@ -30,6 +49,31 @@
     animation-duration: 5s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
+}
+
+.vertical-bounce{
+	-webkit-animation-name: verticalbounce;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: verticalbounce;
+    -moz-animation-duration: 1s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    -ms-animation-name: verticalbounce;
+    -ms-animation-duration: 1s;
+    -ms-animation-iteration-count: infinite;
+    -ms-animation-timing-function: linear;
+    animation-name: verticalbounce;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+.rotate-90 {
+    -ms-transform: rotate(70deg);
+    -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+    transform: rotate(90deg);
 }
 
 html, body {

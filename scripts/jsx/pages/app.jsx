@@ -22,7 +22,7 @@ render((
 	<Provider store={store}>
 	  <Router history={browserHistory}>
 	    <Route component={RootPage}>
-	    	<Route path="/" component={RegisterPage}/>
+	    	<Route path="/" component={LandingPage/*RegisterPage*/}/>
 	    	<Route path="/landing" component={LandingPage}/>
 			<Route path="/maps" component={MapsPage}/>
 			<Route path="/map/:mid" component={MapPage}/>
