@@ -99,6 +99,7 @@ class LandingPage extends React.Component {
 				<TopSection scrollToSecondBlock={this.scrollToSecondBlock}/>
 				<SecondSection drawDone={this.state.drawDone}/>
 				<ThirdSection thirdLine1={this.state.thirdLine1} thirdLine2={this.state.thirdLine2} thirdLine3={this.state.thirdLine3}/>
+				<FourthSection/>
 
 				<div style={{display:"none"}}>
 					<h1>ideas</h1>
@@ -258,8 +259,16 @@ class SecondSection extends React.Component {
 	constructor(props) {
 	    super(props);
 	   	this.draw = this.draw.bind(this);
+	   	this.changeEmail = this.changeEmail.bind(this);
+	   	this.send = this.send.bind(this);
+	   	
 	    this.state = {
+	    	email : ""
 	    };
+	}
+
+	changeEmail(e){
+		this.setState({email: e.target.value});
 	}
 
 	componentWillReceiveProps(np){
@@ -364,14 +373,29 @@ class SecondSection extends React.Component {
 	      	.attr("y2", (d, i) => {return d[1];})
 	}
 
+	send(){
+		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    	if(!this.state.email || !re.test(this.state.email)){
+    		swal("Invalid Email", "Please check your email address, it seems to be invalid", "warning");
+    	} else {
+    		swal("Thank You", "We are glad to count you in !", "success");
+    		firebase.database().ref("prospects").push({
+    			email : this.state.email,
+    			date : new Date().getTime()
+    		});
+    		document.getElementById("get-access-block").style.display = "none";
+    		document.getElementById("landing-page-second-section").style.maxWidth = "300px";
+    	}
+	}
+
 	render() {
 		return (
 			<div>
 				<div id="landing-page-second-section">
 					<div ref="getaccessblock" id="get-access-block">
 						<div id="gyac">Get your early access</div>
-						<input type="text" placeholder="Email Address"/>
-						<div id="i-m-in">I'm in !</div>
+						<input value={this.state.email} onChange={this.changeEmail} type="email" placeholder="Email Address"/>
+						<div onClick={this.send} id="i-m-in">I'm in !</div>
 					</div>
 					<svg id="secondsvg" style={{width:"100%", height:"400px"}}>
 						<g id="sline"></g>
@@ -426,6 +450,34 @@ class ThirdSection extends React.Component {
 							<div style={{fontSize:"16px", marginTop:"5px"}}>
 								Keep all your brain power for your ideas. We focus on the main features to make it as easy to use as possible.
 							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
+};
+
+class FourthSection extends React.Component {
+
+	render() {
+		return (
+			<div style={{backgroundColor:"#2196F3"}}>
+				<div id="landing-page-fourth-section">
+					<div>
+						<div>
+							<div style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"5px"}}>Your vision matters</div>
+							<div style={{fontSize:"18px", marginTop:"10px"}}>
+								Magnesia is based on feedback from Mind Map users. Let us know abour your vision and needs !
+							</div>
+							<div style={{fontSize:"18px", marginTop:"5px"}}>
+								Or just get in touch, we are always keen on having a chat !
+							</div>
+						</div>
+						<div>
+							<input type="email" placeholder="email address"/>
+							<textarea rows="6" placeholder="Share your vision or get in touch !"></textarea>
+							<div id="send">Send</div>
 						</div>
 					</div>
 				</div>

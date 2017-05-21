@@ -3,6 +3,9 @@
     "emails": {
       ".read": true
     },
+    "prospects": {
+      ".write": true
+    },
     ".read": "auth != null",
     ".write": "auth != null"
   }

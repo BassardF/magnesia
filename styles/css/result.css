@@ -295,6 +295,8 @@ body {
   padding-bottom: 50px;
   padding-left: 20px;
   padding-right: 20px;
+  -webkit-transition: all 1s ease;
+  transition: all 1s ease;
 }
 #landing-page #get-access-block {
   float: right;
@@ -341,8 +343,8 @@ body {
 }
 #landing-page #landing-page-third-section {
   max-width: 600px;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding-top: 50px;
+  padding-bottom: 50px;
   margin-left: auto;
   margin-right: auto;
   color: #424242;
@@ -393,6 +395,60 @@ body {
 }
 #landing-page .sel-full-third-line .rs {
   margin-left: 0px;
+}
+#landing-page #landing-page-fourth-section {
+  max-width: 800px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  color: white;
+}
+#landing-page #landing-page-fourth-section input {
+  width: 80%;
+  display: block;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  max-width: 100%!important;
+  padding: 10px;
+  outline: none;
+  font-size: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  border: none;
+  background-color: #E3F2FD;
+  color: #424242;
+}
+#landing-page #landing-page-fourth-section textarea {
+  width: 80%;
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  max-width: 100%!important;
+  padding: 10px;
+  outline: none;
+  font-size: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  border: none;
+  background-color: #E3F2FD;
+  color: #424242;
+}
+#landing-page #landing-page-fourth-section #send {
+  width: 80%;
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  max-width: 100%!important;
+  padding: 10px;
+  outline: none;
+  font-size: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+  color: #2196F3;
+  text-align: center;
+  cursor: pointer;
 }
 #maps-page {
   color: #424242;

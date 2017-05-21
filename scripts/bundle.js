@@ -27890,7 +27890,7 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 				_react2.default.createElement(
 						_reactRouter.Route,
 						{ component: _root2.default },
-						_react2.default.createElement(_reactRouter.Route, { path: '/', component: _register2.default }),
+						_react2.default.createElement(_reactRouter.Route, { path: '/', component: _landing2.default /*RegisterPage*/ }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/landing', component: _landing2.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/maps', component: _maps4.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/map/:mid', component: _map2.default }),
@@ -30039,6 +30039,7 @@ var LandingPage = function (_React$Component) {
 				_react2.default.createElement(TopSection, { scrollToSecondBlock: this.scrollToSecondBlock }),
 				_react2.default.createElement(SecondSection, { drawDone: this.state.drawDone }),
 				_react2.default.createElement(ThirdSection, { thirdLine1: this.state.thirdLine1, thirdLine2: this.state.thirdLine2, thirdLine3: this.state.thirdLine3 }),
+				_react2.default.createElement(FourthSection, null),
 				_react2.default.createElement(
 					'div',
 					{ style: { display: "none" } },
@@ -30276,11 +30277,21 @@ var SecondSection = function (_React$Component3) {
 		var _this7 = _possibleConstructorReturn(this, (SecondSection.__proto__ || Object.getPrototypeOf(SecondSection)).call(this, props));
 
 		_this7.draw = _this7.draw.bind(_this7);
-		_this7.state = {};
+		_this7.changeEmail = _this7.changeEmail.bind(_this7);
+		_this7.send = _this7.send.bind(_this7);
+
+		_this7.state = {
+			email: ""
+		};
 		return _this7;
 	}
 
 	_createClass(SecondSection, [{
+		key: 'changeEmail',
+		value: function changeEmail(e) {
+			this.setState({ email: e.target.value });
+		}
+	}, {
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(np) {
 			if (np && np.drawDone) {
@@ -30384,6 +30395,22 @@ var SecondSection = function (_React$Component3) {
 			});
 		}
 	}, {
+		key: 'send',
+		value: function send() {
+			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			if (!this.state.email || !re.test(this.state.email)) {
+				swal("Invalid Email", "Please check your email address, it seems to be invalid", "warning");
+			} else {
+				swal("Thank You", "We are glad to count you in !", "success");
+				firebase.database().ref("prospects").push({
+					email: this.state.email,
+					date: new Date().getTime()
+				});
+				document.getElementById("get-access-block").style.display = "none";
+				document.getElementById("landing-page-second-section").style.maxWidth = "300px";
+			}
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
@@ -30400,10 +30427,10 @@ var SecondSection = function (_React$Component3) {
 							{ id: 'gyac' },
 							'Get your early access'
 						),
-						_react2.default.createElement('input', { type: 'text', placeholder: 'Email Address' }),
+						_react2.default.createElement('input', { value: this.state.email, onChange: this.changeEmail, type: 'email', placeholder: 'Email Address' }),
 						_react2.default.createElement(
 							'div',
-							{ id: 'i-m-in' },
+							{ onClick: this.send, id: 'i-m-in' },
 							'I\'m in !'
 						)
 					),
@@ -30532,6 +30559,68 @@ var ThirdSection = function (_React$Component4) {
 	}]);
 
 	return ThirdSection;
+}(_react2.default.Component);
+
+;
+
+var FourthSection = function (_React$Component5) {
+	_inherits(FourthSection, _React$Component5);
+
+	function FourthSection() {
+		_classCallCheck(this, FourthSection);
+
+		return _possibleConstructorReturn(this, (FourthSection.__proto__ || Object.getPrototypeOf(FourthSection)).apply(this, arguments));
+	}
+
+	_createClass(FourthSection, [{
+		key: 'render',
+		value: function render() {
+			return _react2.default.createElement(
+				'div',
+				{ style: { backgroundColor: "#2196F3" } },
+				_react2.default.createElement(
+					'div',
+					{ id: 'landing-page-fourth-section' },
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement(
+								'div',
+								{ style: { fontSize: "22px", letterSpacing: "1px", fontWeight: "bold", marginTop: "5px" } },
+								'Your vision matters'
+							),
+							_react2.default.createElement(
+								'div',
+								{ style: { fontSize: "18px", marginTop: "10px" } },
+								'Magnesia is based on feedback from Mind Map users. Let us know abour your vision and needs !'
+							),
+							_react2.default.createElement(
+								'div',
+								{ style: { fontSize: "18px", marginTop: "5px" } },
+								'Or just get in touch, we are always keen on having a chat !'
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement('input', { type: 'email', placeholder: 'email address' }),
+							_react2.default.createElement('textarea', { rows: '6', placeholder: 'Share your vision or get in touch !' }),
+							_react2.default.createElement(
+								'div',
+								{ id: 'send' },
+								'Send'
+							)
+						)
+					)
+				)
+			);
+		}
+	}]);
+
+	return FourthSection;
 }(_react2.default.Component);
 
 ;
