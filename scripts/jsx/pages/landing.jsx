@@ -8,13 +8,19 @@ class LandingPage extends React.Component {
 	constructor(props) {
 	    super(props);
 
+	    this.scrollToId = this.scrollToId.bind(this);
 	    this.scrollToSecondBlock = this.scrollToSecondBlock.bind(this);
+	    this.scrollToThirdBlock = this.scrollToThirdBlock.bind(this);
+		this.scrollToFourthBlock = this.scrollToFourthBlock.bind(this);
+		this.checkTlInVew = this.checkTlInVew.bind(this);
+		this.checkSecondSectionInView = this.checkSecondSectionInView.bind(this);
 
 	    this.state = {
 	    	drawDone : false,
 	    	thirdLine1 : false,
 	    	thirdLine2 : false,
-	    	thirdLine3 : false
+	    	thirdLine3 : false,
+	    	autoScroll: false
 	    };
 	}
 
@@ -25,9 +31,9 @@ class LandingPage extends React.Component {
 		let tl2 = document.getElementById('third-line-2');
 		let tl3 = document.getElementById('third-line-3');
 		this.checkSecondSectionInView(view, target, false);
-		this.checkTlInVew(view, tl1, false);
-		this.checkTlInVew(view, tl2, false);
-		this.checkTlInVew(view, tl3, false);
+		this.checkTlInVew(view, tl1, false, "thirdLine1");
+		this.checkTlInVew(view, tl2, false, "thirdLine2");
+		this.checkTlInVew(view, tl3, false, "thirdLine3");
 		view.addEventListener('scroll', () => {
 			if(!this.state.drawDone) this.checkSecondSectionInView(view, target, true);
 			if(!this.state.thirdLine1) this.checkTlInVew(view, tl1, true, "thirdLine1");
@@ -41,6 +47,7 @@ class LandingPage extends React.Component {
 	    var elemBottom = target.getBoundingClientRect().bottom;
 	    if(elemTop < window.innerHeight && elemBottom >= 0){
 	    	var st = this.state;
+	    	st.drawDone = true;
 	    	st[name] = true
 	    	this.setState(st);
 	    }
@@ -53,15 +60,33 @@ class LandingPage extends React.Component {
 	    	this.setState({
 	    		drawDone: true
 	    	}, ()=>{
-	    		if(scroll) this.scrollToSecondBlock();
+	    		if(scroll && !this.state.autoScroll) this.scrollToSecondBlock();
 	    	});
 	    }
 	}
 
 	scrollToSecondBlock(){
- 		let startY = document.getElementById('landing-page').scrollTop;
+		this.setState({autoScroll:true});
+ 		this.scrollToId("landing-page-second-section");
+ 		setTimeout(()=>{ this.setState({autoScroll:false}); }, 2000);
+	}
+
+	scrollToThirdBlock(){
+		this.setState({autoScroll:true});
+ 		this.scrollToId("landing-page-third-section");
+ 		setTimeout(()=>{ this.setState({autoScroll:false}); }, 2000);
+	}
+
+	scrollToFourthBlock(){
+		this.setState({autoScroll:true});
+ 		this.scrollToId("landing-page-fourth-section");
+ 		setTimeout(()=>{ this.setState({autoScroll:false}); }, 2000);
+	}
+
+	scrollToId(id){
+		let startY = document.getElementById('landing-page').scrollTop;
  		var stopY = 0;
- 		var elm = document.getElementById("landing-page-second-section");
+ 		var elm = document.getElementById(id);
  		if(elm){
  			var y = elm.offsetTop;
 	 		var node = elm;
@@ -96,7 +121,10 @@ class LandingPage extends React.Component {
 	render() {
 		return (
 			<div id="landing-page" style={{maxWidth:"1440px", marginLeft:"auto", marginRight:"auto", overflow:"auto", height:"100%"}}>
-				<TopSection scrollToSecondBlock={this.scrollToSecondBlock}/>
+				<TopSection 
+					scrollToSecondBlock={this.scrollToSecondBlock} 
+					scrollToThirdBlock={this.scrollToThirdBlock}
+					scrollToFourthBlock={this.scrollToFourthBlock}/>
 				<SecondSection drawDone={this.state.drawDone}/>
 				<ThirdSection thirdLine1={this.state.thirdLine1} thirdLine2={this.state.thirdLine2} thirdLine3={this.state.thirdLine3}/>
 				<FourthSection/>
@@ -226,9 +254,18 @@ class TopSection extends React.Component {
 		return (
 			<div>
 				<div id="landing-page-top-section" className="purple-bcg">
-					<div id="lp-header-section">Mg.</div>
+
+					<div id="lp-header-section">
+						Mg.
+						<div id="header-rs-wrapper" className="hidden-xs">
+							<div onClick={this.props.scrollToSecondBlock}>Early Access</div>
+							<div onClick={this.props.scrollToThirdBlock}>Foundations</div>
+							<div onClick={this.props.scrollToFourthBlock}>Contact</div>
+						</div>
+					</div>
 					<div id="lp-header-name">Magnesia</div>
 					<div id="lp-header-sub-name">Nurture your brilliant ideas</div>
+					
 
 					<svg id="headersvg" style={{width:"100%", height:"300px"}}>
 						<g id="links1"></g>
@@ -240,7 +277,7 @@ class TopSection extends React.Component {
 					<div style={{display:"flex"}}>
 						<div id="triangle-left" style={{flexGrow:0}}></div>
 						<div onClick={this.props.scrollToSecondBlock} id="" style={{flexGrow:1, textAlign:"center", color:"white", cursor:"pointer"}}>
-							<div>Get your early access</div>
+							<div style={{fontSize:"20px"}}>Get your early access</div>
 							<div style={{height:"20px", width:"20px", marginLeft:"auto", marginRight:"auto"}} className="rotate-90 vertical-bounce">
 								&#10095;
 							</div>
@@ -261,7 +298,8 @@ class SecondSection extends React.Component {
 	   	this.draw = this.draw.bind(this);
 	   	this.changeEmail = this.changeEmail.bind(this);
 	   	this.send = this.send.bind(this);
-	   	
+	   	this.onKeyUp = this.onKeyUp.bind(this);
+
 	    this.state = {
 	    	email : ""
 	    };
@@ -271,10 +309,22 @@ class SecondSection extends React.Component {
 		this.setState({email: e.target.value});
 	}
 
+	componentDidMount(){
+		if(this.props && this.props.drawDone){
+			this.draw();
+		}
+	}
+
 	componentWillReceiveProps(np){
 		if(np && np.drawDone){
 			this.draw();
 		}
+	}
+
+	onKeyUp(evt){
+	    if(evt && evt.which && evt.which === 13){
+	    	this.send();
+	    }
 	}
 
 	draw(){
@@ -394,7 +444,7 @@ class SecondSection extends React.Component {
 				<div id="landing-page-second-section">
 					<div ref="getaccessblock" id="get-access-block">
 						<div id="gyac">Get your early access</div>
-						<input value={this.state.email} onChange={this.changeEmail} type="email" placeholder="Email Address"/>
+						<input onKeyUp={this.onKeyUp} value={this.state.email} onChange={this.changeEmail} type="email" placeholder="Email Address"/>
 						<div onClick={this.send} id="i-m-in">I'm in !</div>
 					</div>
 					<svg id="secondsvg" style={{width:"100%", height:"400px"}}>
@@ -460,6 +510,51 @@ class ThirdSection extends React.Component {
 
 class FourthSection extends React.Component {
 
+	constructor(props) {
+	    super(props);
+	   	this.changeEmail = this.changeEmail.bind(this);
+	   	this.changeText = this.changeText.bind(this);
+	   	this.onKeyUp = this.onKeyUp.bind(this);
+	   	this.send = this.send.bind(this);
+
+	    this.state = {
+	    	email : "",
+	    	text : ""
+	    };
+	}
+
+	changeEmail(e){
+		this.setState({email: e.target.value});
+	}
+
+	changeText(e){
+		this.setState({text: e.target.value});
+	}
+
+	send(){
+		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    	if(!this.state.email || !re.test(this.state.email)){
+    		swal("Invalid Email", "Please check your email address, it seems to be invalid", "warning");
+    	} else {
+    		swal("Thank You", "We are glad to count you in !", "success");
+    		firebase.database().ref("prospects").push({
+    			email : this.state.email,
+    			date : new Date().getTime(),
+    			text : this.state.text
+    		});
+    		this.setState({
+    			email : "",
+				text : ""
+    		});
+    	}
+	}
+
+	onKeyUp(evt){
+	    if(evt && evt.which && evt.which === 13){
+	    	this.send();
+	    }
+	}
+
 	render() {
 		return (
 			<div style={{backgroundColor:"#2196F3"}}>
@@ -475,8 +570,8 @@ class FourthSection extends React.Component {
 							</div>
 						</div>
 						<div>
-							<input type="email" placeholder="email address"/>
-							<textarea rows="6" placeholder="Share your vision or get in touch !"></textarea>
+							<input ref="inp" onKeyUp={this.onKeyUp} value={this.state.email} onChange={this.changeEmail} type="email" placeholder="email address"/>
+							<textarea ref="texta" value={this.state.text} onChange={this.changeText} rows="6" placeholder="Share your vision or get in touch !"></textarea>
 							<div id="send">Send</div>
 						</div>
 					</div>

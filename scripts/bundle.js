@@ -29936,13 +29936,19 @@ var LandingPage = function (_React$Component) {
 
 		var _this = _possibleConstructorReturn(this, (LandingPage.__proto__ || Object.getPrototypeOf(LandingPage)).call(this, props));
 
+		_this.scrollToId = _this.scrollToId.bind(_this);
 		_this.scrollToSecondBlock = _this.scrollToSecondBlock.bind(_this);
+		_this.scrollToThirdBlock = _this.scrollToThirdBlock.bind(_this);
+		_this.scrollToFourthBlock = _this.scrollToFourthBlock.bind(_this);
+		_this.checkTlInVew = _this.checkTlInVew.bind(_this);
+		_this.checkSecondSectionInView = _this.checkSecondSectionInView.bind(_this);
 
 		_this.state = {
 			drawDone: false,
 			thirdLine1: false,
 			thirdLine2: false,
-			thirdLine3: false
+			thirdLine3: false,
+			autoScroll: false
 		};
 		return _this;
 	}
@@ -29958,9 +29964,9 @@ var LandingPage = function (_React$Component) {
 			var tl2 = document.getElementById('third-line-2');
 			var tl3 = document.getElementById('third-line-3');
 			this.checkSecondSectionInView(view, target, false);
-			this.checkTlInVew(view, tl1, false);
-			this.checkTlInVew(view, tl2, false);
-			this.checkTlInVew(view, tl3, false);
+			this.checkTlInVew(view, tl1, false, "thirdLine1");
+			this.checkTlInVew(view, tl2, false, "thirdLine2");
+			this.checkTlInVew(view, tl3, false, "thirdLine3");
 			view.addEventListener('scroll', function () {
 				if (!_this2.state.drawDone) _this2.checkSecondSectionInView(view, target, true);
 				if (!_this2.state.thirdLine1) _this2.checkTlInVew(view, tl1, true, "thirdLine1");
@@ -29975,6 +29981,7 @@ var LandingPage = function (_React$Component) {
 			var elemBottom = target.getBoundingClientRect().bottom;
 			if (elemTop < window.innerHeight && elemBottom >= 0) {
 				var st = this.state;
+				st.drawDone = true;
 				st[name] = true;
 				this.setState(st);
 			}
@@ -29990,16 +29997,49 @@ var LandingPage = function (_React$Component) {
 				this.setState({
 					drawDone: true
 				}, function () {
-					if (scroll) _this3.scrollToSecondBlock();
+					if (scroll && !_this3.state.autoScroll) _this3.scrollToSecondBlock();
 				});
 			}
 		}
 	}, {
 		key: 'scrollToSecondBlock',
 		value: function scrollToSecondBlock() {
+			var _this4 = this;
+
+			this.setState({ autoScroll: true });
+			this.scrollToId("landing-page-second-section");
+			setTimeout(function () {
+				_this4.setState({ autoScroll: false });
+			}, 2000);
+		}
+	}, {
+		key: 'scrollToThirdBlock',
+		value: function scrollToThirdBlock() {
+			var _this5 = this;
+
+			this.setState({ autoScroll: true });
+			this.scrollToId("landing-page-third-section");
+			setTimeout(function () {
+				_this5.setState({ autoScroll: false });
+			}, 2000);
+		}
+	}, {
+		key: 'scrollToFourthBlock',
+		value: function scrollToFourthBlock() {
+			var _this6 = this;
+
+			this.setState({ autoScroll: true });
+			this.scrollToId("landing-page-fourth-section");
+			setTimeout(function () {
+				_this6.setState({ autoScroll: false });
+			}, 2000);
+		}
+	}, {
+		key: 'scrollToId',
+		value: function scrollToId(id) {
 			var startY = document.getElementById('landing-page').scrollTop;
 			var stopY = 0;
-			var elm = document.getElementById("landing-page-second-section");
+			var elm = document.getElementById(id);
 			if (elm) {
 				var y = elm.offsetTop;
 				var node = elm;
@@ -30036,7 +30076,10 @@ var LandingPage = function (_React$Component) {
 			return _react2.default.createElement(
 				'div',
 				{ id: 'landing-page', style: { maxWidth: "1440px", marginLeft: "auto", marginRight: "auto", overflow: "auto", height: "100%" } },
-				_react2.default.createElement(TopSection, { scrollToSecondBlock: this.scrollToSecondBlock }),
+				_react2.default.createElement(TopSection, {
+					scrollToSecondBlock: this.scrollToSecondBlock,
+					scrollToThirdBlock: this.scrollToThirdBlock,
+					scrollToFourthBlock: this.scrollToFourthBlock }),
 				_react2.default.createElement(SecondSection, { drawDone: this.state.drawDone }),
 				_react2.default.createElement(ThirdSection, { thirdLine1: this.state.thirdLine1, thirdLine2: this.state.thirdLine2, thirdLine3: this.state.thirdLine3 }),
 				_react2.default.createElement(FourthSection, null),
@@ -30095,13 +30138,13 @@ var TopSection = function (_React$Component2) {
 	function TopSection(props) {
 		_classCallCheck(this, TopSection);
 
-		var _this4 = _possibleConstructorReturn(this, (TopSection.__proto__ || Object.getPrototypeOf(TopSection)).call(this, props));
+		var _this7 = _possibleConstructorReturn(this, (TopSection.__proto__ || Object.getPrototypeOf(TopSection)).call(this, props));
 
-		_this4.draw = _this4.draw.bind(_this4);
-		_this4.drawNodes = _this4.drawNodes.bind(_this4);
-		_this4.drawLinks = _this4.drawLinks.bind(_this4);
-		_this4.state = {};
-		return _this4;
+		_this7.draw = _this7.draw.bind(_this7);
+		_this7.drawNodes = _this7.drawNodes.bind(_this7);
+		_this7.drawLinks = _this7.drawLinks.bind(_this7);
+		_this7.state = {};
+		return _this7;
 	}
 
 	_createClass(TopSection, [{
@@ -30112,7 +30155,7 @@ var TopSection = function (_React$Component2) {
 	}, {
 		key: 'draw',
 		value: function draw() {
-			var _this5 = this;
+			var _this8 = this;
 
 			var svg = d3.select("#headersvg"),
 			    width = svg.property("width"),
@@ -30121,23 +30164,23 @@ var TopSection = function (_React$Component2) {
 			var wd = document.getElementById("landing-page-top-section").offsetWidth;
 			this.drawNodes(svg, wd, 300, _demonodes2.default.mainNode, 1);
 			setTimeout(function () {
-				_this5.drawNodes(svg, wd, 300, _demonodes2.default.secondaryNodes, 2);
+				_this8.drawNodes(svg, wd, 300, _demonodes2.default.secondaryNodes, 2);
 			}, 1000);
 			setTimeout(function () {
-				_this5.drawNodes(svg, wd, 300, _demonodes2.default.tertiaryNodes, 3);
+				_this8.drawNodes(svg, wd, 300, _demonodes2.default.tertiaryNodes, 3);
 			}, 2000);
 
 			setTimeout(function () {
-				_this5.drawLinks(svg, wd, 300, _demonodes2.default.firstLinks, 1);
+				_this8.drawLinks(svg, wd, 300, _demonodes2.default.firstLinks, 1);
 			}, 1500);
 			setTimeout(function () {
-				_this5.drawLinks(svg, wd, 300, _demonodes2.default.secondaryLinks, 2);
+				_this8.drawLinks(svg, wd, 300, _demonodes2.default.secondaryLinks, 2);
 			}, 2500);
 		}
 	}, {
 		key: 'drawNodes',
 		value: function drawNodes(svg, width, height, nodes, nb) {
-			var _this6 = this;
+			var _this9 = this;
 
 			var gs = svg.select("g#nodes" + nb).selectAll("g.node").data(nodes, function (d, ind) {
 				return d;
@@ -30159,9 +30202,9 @@ var TopSection = function (_React$Component2) {
 			}).attr("cx", function (d, i) {
 				return width / 2 + (nodes[i].x ? +nodes[i].x : 0);
 			}).attr("stroke", function (d, i) {
-				return nodes[i].nid == _this6.state.selectedNode ? _demodrawing2.default.selectedCircleStrokeColor : _demodrawing2.default.defaultCircleStrokeColor;
+				return nodes[i].nid == _this9.state.selectedNode ? _demodrawing2.default.selectedCircleStrokeColor : _demodrawing2.default.defaultCircleStrokeColor;
 			}).attr("stroke-width", function (d, i) {
-				return nodes[i].nid == _this6.state.selectedNode ? _demodrawing2.default.selectedCircleStrokeWidth : _demodrawing2.default.defaultCircleStrokeWidth;
+				return nodes[i].nid == _this9.state.selectedNode ? _demodrawing2.default.selectedCircleStrokeWidth : _demodrawing2.default.defaultCircleStrokeWidth;
 			}).style("opacity", 0).transition(t).style("opacity", 1);
 
 			elemtEnter.append("text").attr("fill", _demodrawing2.default.defaultTextColor).attr("text-anchor", "middle").attr("class", "noselect").attr("dx", function (d, i) {
@@ -30217,7 +30260,26 @@ var TopSection = function (_React$Component2) {
 					_react2.default.createElement(
 						'div',
 						{ id: 'lp-header-section' },
-						'Mg.'
+						'Mg.',
+						_react2.default.createElement(
+							'div',
+							{ id: 'header-rs-wrapper', className: 'hidden-xs' },
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.props.scrollToSecondBlock },
+								'Early Access'
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.props.scrollToThirdBlock },
+								'Foundations'
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.props.scrollToFourthBlock },
+								'Contact'
+							)
+						)
 					),
 					_react2.default.createElement(
 						'div',
@@ -30247,7 +30309,7 @@ var TopSection = function (_React$Component2) {
 							{ onClick: this.props.scrollToSecondBlock, id: '', style: { flexGrow: 1, textAlign: "center", color: "white", cursor: "pointer" } },
 							_react2.default.createElement(
 								'div',
-								null,
+								{ style: { fontSize: "20px" } },
 								'Get your early access'
 							),
 							_react2.default.createElement(
@@ -30274,22 +30336,30 @@ var SecondSection = function (_React$Component3) {
 	function SecondSection(props) {
 		_classCallCheck(this, SecondSection);
 
-		var _this7 = _possibleConstructorReturn(this, (SecondSection.__proto__ || Object.getPrototypeOf(SecondSection)).call(this, props));
+		var _this10 = _possibleConstructorReturn(this, (SecondSection.__proto__ || Object.getPrototypeOf(SecondSection)).call(this, props));
 
-		_this7.draw = _this7.draw.bind(_this7);
-		_this7.changeEmail = _this7.changeEmail.bind(_this7);
-		_this7.send = _this7.send.bind(_this7);
+		_this10.draw = _this10.draw.bind(_this10);
+		_this10.changeEmail = _this10.changeEmail.bind(_this10);
+		_this10.send = _this10.send.bind(_this10);
+		_this10.onKeyUp = _this10.onKeyUp.bind(_this10);
 
-		_this7.state = {
+		_this10.state = {
 			email: ""
 		};
-		return _this7;
+		return _this10;
 	}
 
 	_createClass(SecondSection, [{
 		key: 'changeEmail',
 		value: function changeEmail(e) {
 			this.setState({ email: e.target.value });
+		}
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			if (this.props && this.props.drawDone) {
+				this.draw();
+			}
 		}
 	}, {
 		key: 'componentWillReceiveProps',
@@ -30299,9 +30369,16 @@ var SecondSection = function (_React$Component3) {
 			}
 		}
 	}, {
+		key: 'onKeyUp',
+		value: function onKeyUp(evt) {
+			if (evt && evt.which && evt.which === 13) {
+				this.send();
+			}
+		}
+	}, {
 		key: 'draw',
 		value: function draw() {
-			var _this8 = this;
+			var _this11 = this;
 
 			var svg = d3.select("#secondsvg"),
 			    width = svg.property("width"),
@@ -30314,21 +30391,21 @@ var SecondSection = function (_React$Component3) {
 			this.drawLine(svg, wd, 300, [[50, 150]], "#424242");
 			//Version 0
 			setTimeout(function () {
-				_this8.drawNodes(svg, wd, 300, [150], 1, "#424242");
-				_this8.drawText(svg, wd, 300, [{ x: 80, y: 155, text: "First Version" }], 2, "#424242");
-				_this8.drawLine(svg, wd, 300, [[150, 250]], "#424242");
+				_this11.drawNodes(svg, wd, 300, [150], 1, "#424242");
+				_this11.drawText(svg, wd, 300, [{ x: 80, y: 155, text: "First Version" }], 2, "#424242");
+				_this11.drawLine(svg, wd, 300, [[150, 250]], "#424242");
 			}, 1000);
 			//Pre launch
 			setTimeout(function () {
-				_this8.drawNodes(svg, wd, 300, [250], 1, "#424242");
-				_this8.drawText(svg, wd, 300, [{ x: -80, y: 255, text: "Pre-Launch" }], 3, "#424242");
-				_this8.drawLine(svg, wd, 300, [[250, 350]], "#BDBDBD");
+				_this11.drawNodes(svg, wd, 300, [250], 1, "#424242");
+				_this11.drawText(svg, wd, 300, [{ x: -80, y: 255, text: "Pre-Launch" }], 3, "#424242");
+				_this11.drawLine(svg, wd, 300, [[250, 350]], "#BDBDBD");
 			}, 2000);
 			//Release
 			setTimeout(function () {
-				_this8.drawNodes(svg, wd, 300, [350], 1, "#BDBDBD");
-				_this8.drawText(svg, wd, 300, [{ x: 0, y: 390, text: "Release" }], 4, "#BDBDBD");
-				_this8.refs.getaccessblock.className = "show";
+				_this11.drawNodes(svg, wd, 300, [350], 1, "#BDBDBD");
+				_this11.drawText(svg, wd, 300, [{ x: 0, y: 390, text: "Release" }], 4, "#BDBDBD");
+				_this11.refs.getaccessblock.className = "show";
 			}, 3000);
 		}
 	}, {
@@ -30427,7 +30504,7 @@ var SecondSection = function (_React$Component3) {
 							{ id: 'gyac' },
 							'Get your early access'
 						),
-						_react2.default.createElement('input', { value: this.state.email, onChange: this.changeEmail, type: 'email', placeholder: 'Email Address' }),
+						_react2.default.createElement('input', { onKeyUp: this.onKeyUp, value: this.state.email, onChange: this.changeEmail, type: 'email', placeholder: 'Email Address' }),
 						_react2.default.createElement(
 							'div',
 							{ onClick: this.send, id: 'i-m-in' },
@@ -30566,13 +30643,60 @@ var ThirdSection = function (_React$Component4) {
 var FourthSection = function (_React$Component5) {
 	_inherits(FourthSection, _React$Component5);
 
-	function FourthSection() {
+	function FourthSection(props) {
 		_classCallCheck(this, FourthSection);
 
-		return _possibleConstructorReturn(this, (FourthSection.__proto__ || Object.getPrototypeOf(FourthSection)).apply(this, arguments));
+		var _this13 = _possibleConstructorReturn(this, (FourthSection.__proto__ || Object.getPrototypeOf(FourthSection)).call(this, props));
+
+		_this13.changeEmail = _this13.changeEmail.bind(_this13);
+		_this13.changeText = _this13.changeText.bind(_this13);
+		_this13.onKeyUp = _this13.onKeyUp.bind(_this13);
+		_this13.send = _this13.send.bind(_this13);
+
+		_this13.state = {
+			email: "",
+			text: ""
+		};
+		return _this13;
 	}
 
 	_createClass(FourthSection, [{
+		key: 'changeEmail',
+		value: function changeEmail(e) {
+			this.setState({ email: e.target.value });
+		}
+	}, {
+		key: 'changeText',
+		value: function changeText(e) {
+			this.setState({ text: e.target.value });
+		}
+	}, {
+		key: 'send',
+		value: function send() {
+			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			if (!this.state.email || !re.test(this.state.email)) {
+				swal("Invalid Email", "Please check your email address, it seems to be invalid", "warning");
+			} else {
+				swal("Thank You", "We are glad to count you in !", "success");
+				firebase.database().ref("prospects").push({
+					email: this.state.email,
+					date: new Date().getTime(),
+					text: this.state.text
+				});
+				this.setState({
+					email: "",
+					text: ""
+				});
+			}
+		}
+	}, {
+		key: 'onKeyUp',
+		value: function onKeyUp(evt) {
+			if (evt && evt.which && evt.which === 13) {
+				this.send();
+			}
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
@@ -30606,8 +30730,8 @@ var FourthSection = function (_React$Component5) {
 						_react2.default.createElement(
 							'div',
 							null,
-							_react2.default.createElement('input', { type: 'email', placeholder: 'email address' }),
-							_react2.default.createElement('textarea', { rows: '6', placeholder: 'Share your vision or get in touch !' }),
+							_react2.default.createElement('input', { ref: 'inp', onKeyUp: this.onKeyUp, value: this.state.email, onChange: this.changeEmail, type: 'email', placeholder: 'email address' }),
+							_react2.default.createElement('textarea', { ref: 'texta', value: this.state.text, onChange: this.changeText, rows: '6', placeholder: 'Share your vision or get in touch !' }),
 							_react2.default.createElement(
 								'div',
 								{ id: 'send' },
