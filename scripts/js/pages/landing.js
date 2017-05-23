@@ -1207,9 +1207,9 @@ var RegisterModal = function (_React$Component7) {
 	_createClass(RegisterModal, [{
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(np) {
-			if (np && np.show && !this.state.show) {
+			if (np && np.show && !this.props.show) {
 				this.showModal();
-			} else if (!np.show && this.state.show) {
+			} else if (!np.show && this.props.show) {
 				this.hideModal();
 			}
 		}
@@ -1221,7 +1221,6 @@ var RegisterModal = function (_React$Component7) {
 	}, {
 		key: 'hideModal',
 		value: function hideModal() {
-			this.props.hideRegisterModal();
 			this.refs.modal.hide();
 		}
 	}, {
@@ -1232,7 +1231,7 @@ var RegisterModal = function (_React$Component7) {
 				null,
 				_react2.default.createElement(
 					_DropModal2.default,
-					{ ref: 'modal' },
+					{ ref: 'modal', onHide: this.props.hideRegisterModal },
 					_react2.default.createElement(_register2.default, null)
 				)
 			);

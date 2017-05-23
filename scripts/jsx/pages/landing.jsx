@@ -801,9 +801,9 @@ class RegisterModal extends React.Component {
 	}
 
 	componentWillReceiveProps(np){
-		if(np && np.show && !this.state.show){
+		if(np && np.show && !this.props.show){
 			this.showModal();
-		} else if(!np.show && this.state.show){
+		} else if(!np.show && this.props.show){
 			this.hideModal();
 		}
 	}
@@ -813,14 +813,13 @@ class RegisterModal extends React.Component {
     }
 
     hideModal(){
-    	this.props.hideRegisterModal();
         this.refs.modal.hide();
     }
 
     render() {
         return (
             <div>
-                <Modal ref="modal">
+                <Modal ref="modal" onHide={this.props.hideRegisterModal}>
                     <RegisterPage/>
                 </Modal>
             </div>
