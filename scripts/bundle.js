@@ -30081,48 +30081,9 @@ var LandingPage = function (_React$Component) {
 					scrollToThirdBlock: this.scrollToThirdBlock,
 					scrollToFourthBlock: this.scrollToFourthBlock }),
 				_react2.default.createElement(SecondSection, { drawDone: this.state.drawDone }),
+				_react2.default.createElement(QuoteSection, null),
 				_react2.default.createElement(ThirdSection, { thirdLine1: this.state.thirdLine1, thirdLine2: this.state.thirdLine2, thirdLine3: this.state.thirdLine3 }),
-				_react2.default.createElement(FourthSection, null),
-				_react2.default.createElement(
-					'div',
-					{ style: { display: "none" } },
-					_react2.default.createElement(
-						'h1',
-						null,
-						'ideas'
-					),
-					_react2.default.createElement(
-						'h3',
-						null,
-						'Why / How / What / Ex'
-					),
-					_react2.default.createElement(
-						'div',
-						null,
-						'W : Ideas worth blooming - Growing brilliant ideas - Nurture your best ideas'
-					),
-					_react2.default.createElement(
-						'div',
-						null,
-						'H : Visual representation | Structuration | Sharing @team'
-					),
-					_react2.default.createElement(
-						'div',
-						null,
-						'Wh : Magnesia'
-					),
-					_react2.default.createElement(
-						'h3',
-						null,
-						'tools ID'
-					),
-					_react2.default.createElement(
-						'div',
-						null,
-						'node/user count'
-					),
-					_react2.default.createElement('div', null)
-				)
+				_react2.default.createElement(FourthSection, null)
 			);
 		}
 	}]);
@@ -30289,7 +30250,7 @@ var TopSection = function (_React$Component2) {
 					_react2.default.createElement(
 						'div',
 						{ id: 'lp-header-sub-name' },
-						'Nurture your brilliant ideas'
+						'Nurturing brilliant ideas'
 					),
 					_react2.default.createElement(
 						'svg',
@@ -30392,21 +30353,21 @@ var SecondSection = function (_React$Component3) {
 			//Version 0
 			setTimeout(function () {
 				_this11.drawNodes(svg, wd, 300, [150], 1, "#424242");
-				_this11.drawText(svg, wd, 300, [{ x: 80, y: 155, text: "First Version" }], 2, "#424242");
+				_this11.drawText(svg, wd, 300, [{ x: 80, y: 155, text: "Closed Beta" }], 2, "#424242");
 				_this11.drawLine(svg, wd, 300, [[150, 250]], "#424242");
-			}, 1000);
+			}, 500);
 			//Pre launch
 			setTimeout(function () {
 				_this11.drawNodes(svg, wd, 300, [250], 1, "#424242");
 				_this11.drawText(svg, wd, 300, [{ x: -80, y: 255, text: "Pre-Launch" }], 3, "#424242");
 				_this11.drawLine(svg, wd, 300, [[250, 350]], "#BDBDBD");
-			}, 2000);
+			}, 1000);
 			//Release
 			setTimeout(function () {
 				_this11.drawNodes(svg, wd, 300, [350], 1, "#BDBDBD");
 				_this11.drawText(svg, wd, 300, [{ x: 0, y: 390, text: "Release" }], 4, "#BDBDBD");
 				_this11.refs.getaccessblock.className = "show";
-			}, 3000);
+			}, 1500);
 		}
 	}, {
 		key: 'drawText',
@@ -30745,6 +30706,40 @@ var FourthSection = function (_React$Component5) {
 	}]);
 
 	return FourthSection;
+}(_react2.default.Component);
+
+;
+
+var QuoteSection = function (_React$Component6) {
+	_inherits(QuoteSection, _React$Component6);
+
+	function QuoteSection() {
+		_classCallCheck(this, QuoteSection);
+
+		return _possibleConstructorReturn(this, (QuoteSection.__proto__ || Object.getPrototypeOf(QuoteSection)).apply(this, arguments));
+	}
+
+	_createClass(QuoteSection, [{
+		key: 'render',
+		value: function render() {
+			return _react2.default.createElement(
+				'div',
+				{ style: { textAlign: "center", paddingTop: "70px", paddingBottom: "60px" } },
+				_react2.default.createElement(
+					'div',
+					{ style: { fontWeight: "bold", letterSpacing: ".5px", fontSize: "23px", marginBottom: "10px" } },
+					'"Mind Maps are the Meta-language of the human race"'
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { fontSize: "18px" } },
+					' -Tony Buzan'
+				)
+			);
+		}
+	}]);
+
+	return QuoteSection;
 }(_react2.default.Component);
 
 ;

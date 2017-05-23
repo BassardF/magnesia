@@ -126,22 +126,9 @@ class LandingPage extends React.Component {
 					scrollToThirdBlock={this.scrollToThirdBlock}
 					scrollToFourthBlock={this.scrollToFourthBlock}/>
 				<SecondSection drawDone={this.state.drawDone}/>
+				<QuoteSection/>
 				<ThirdSection thirdLine1={this.state.thirdLine1} thirdLine2={this.state.thirdLine2} thirdLine3={this.state.thirdLine3}/>
 				<FourthSection/>
-
-				<div style={{display:"none"}}>
-					<h1>ideas</h1>
-					
-					<h3>Why / How / What / Ex</h3>
-					<div>W : Ideas worth blooming - Growing brilliant ideas - Nurture your best ideas</div>
-					<div>H : Visual representation | Structuration | Sharing @team</div>
-					<div>Wh : Magnesia</div>
-
-					<h3>tools ID</h3>
-					<div>node/user count</div>
-
-					<div></div>
-				</div>
 			</div>
 		);
 	}
@@ -264,8 +251,7 @@ class TopSection extends React.Component {
 						</div>
 					</div>
 					<div id="lp-header-name">Magnesia</div>
-					<div id="lp-header-sub-name">Nurture your brilliant ideas</div>
-					
+					<div id="lp-header-sub-name">Nurturing brilliant ideas</div>
 
 					<svg id="headersvg" style={{width:"100%", height:"300px"}}>
 						<g id="links1"></g>
@@ -340,21 +326,21 @@ class SecondSection extends React.Component {
     	//Version 0
     	setTimeout(()=>{ 
     		this.drawNodes(svg, wd, 300, [150], 1, "#424242"); 
-    		this.drawText(svg, wd, 300, [{x : 80, y: 155, text:"First Version"}], 2, "#424242");
+    		this.drawText(svg, wd, 300, [{x : 80, y: 155, text:"Closed Beta"}], 2, "#424242");
     		this.drawLine(svg, wd, 300, [[150, 250]], "#424242");
-    	}, 1000);
+    	}, 500);
     	//Pre launch
     	setTimeout(()=>{
     		this.drawNodes(svg, wd, 300, [250], 1, "#424242");
     		this.drawText(svg, wd, 300, [{x : -80, y: 255, text:"Pre-Launch"}], 3, "#424242");
     		this.drawLine(svg, wd, 300, [[250, 350]], "#BDBDBD");
-    	}, 2000);
+    	}, 1000);
     	//Release
     	setTimeout(()=>{
     		this.drawNodes(svg, wd, 300, [350], 1, "#BDBDBD");
     		this.drawText(svg, wd, 300, [{x : 0, y: 390, text:"Release"}], 4, "#BDBDBD"); 
     		this.refs.getaccessblock.className = "show";
-    	}, 3000);
+    	}, 1500);
 	}
 
 	drawText(svg, width, height, texts, nb, color){
@@ -580,5 +566,19 @@ class FourthSection extends React.Component {
 		);
 	}
 };
+
+class QuoteSection extends React.Component {
+
+	render() {
+		return (
+			<div style={{textAlign:"center", paddingTop:"70px", paddingBottom:"60px"}}>
+				<div style={{fontWeight:"bold", letterSpacing:".5px",fontSize:"23px", marginBottom:"10px"}}>"Mind Maps are the Meta-language of the human race"</div>
+				<div style={{fontSize:"18px"}}> -Tony Buzan</div>
+			</div>
+		);
+	}
+};
+
+
 
 export default LandingPage;
