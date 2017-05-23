@@ -29938,6 +29938,7 @@ var LandingPage = function (_React$Component) {
 
 		_this.scrollToId = _this.scrollToId.bind(_this);
 		_this.scrollToSecondBlock = _this.scrollToSecondBlock.bind(_this);
+		_this.scrollToSecondBlockMobile = _this.scrollToSecondBlockMobile.bind(_this);
 		_this.scrollToThirdBlock = _this.scrollToThirdBlock.bind(_this);
 		_this.scrollToFourthBlock = _this.scrollToFourthBlock.bind(_this);
 		_this.checkTlInVew = _this.checkTlInVew.bind(_this);
@@ -30013,6 +30014,11 @@ var LandingPage = function (_React$Component) {
 			setTimeout(function () {
 				_this4.setState({ autoScroll: false });
 			}, 2000);
+		}
+	}, {
+		key: 'scrollToSecondBlockMobile',
+		value: function scrollToSecondBlockMobile() {
+			this.scrollToId("mob-landing-page-second-section");
 		}
 	}, {
 		key: 'scrollToThirdBlock',
@@ -30101,6 +30107,7 @@ var LandingPage = function (_React$Component) {
 				{ id: 'landing-page', style: { maxWidth: "1440px", marginLeft: "auto", marginRight: "auto", overflow: "auto", height: "100%" } },
 				_react2.default.createElement(TopSection, {
 					scrollToSecondBlock: this.scrollToSecondBlock,
+					scrollToSecondBlockMobile: this.scrollToSecondBlockMobile,
 					scrollToThirdBlock: this.scrollToThirdBlock,
 					scrollToFourthBlock: this.scrollToFourthBlock }),
 				_react2.default.createElement(SecondSection, { generateAccessCode: this.generateAccessCode, sendPropsectMail: this.sendPropsectMail, drawDone: this.state.drawDone }),
@@ -30356,7 +30363,7 @@ var TopSection = function (_React$Component2) {
 						_react2.default.createElement('div', { id: 'mob-triangle-left', style: { flexGrow: 0 } }),
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.props.scrollToSecondBlock, id: '', style: { flexGrow: 1, textAlign: "center", color: "white", cursor: "pointer" } },
+							{ onClick: this.props.scrollToSecondBlockMobile, id: '', style: { flexGrow: 1, textAlign: "center", color: "white", cursor: "pointer" } },
 							_react2.default.createElement(
 								'div',
 								{ style: { fontSize: "14px" } },

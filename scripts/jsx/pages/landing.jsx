@@ -10,6 +10,7 @@ class LandingPage extends React.Component {
 
 	    this.scrollToId = this.scrollToId.bind(this);
 	    this.scrollToSecondBlock = this.scrollToSecondBlock.bind(this);
+		this.scrollToSecondBlockMobile = this.scrollToSecondBlockMobile.bind(this);
 	    this.scrollToThirdBlock = this.scrollToThirdBlock.bind(this);
 		this.scrollToFourthBlock = this.scrollToFourthBlock.bind(this);
 		this.checkTlInVew = this.checkTlInVew.bind(this);
@@ -71,6 +72,10 @@ class LandingPage extends React.Component {
 		this.setState({autoScroll:true});
  		this.scrollToId("landing-page-second-section");
  		setTimeout(()=>{ this.setState({autoScroll:false}); }, 2000);
+	}
+
+	scrollToSecondBlockMobile(){
+ 		this.scrollToId("mob-landing-page-second-section");
 	}
 
 	scrollToThirdBlock(){
@@ -143,6 +148,7 @@ class LandingPage extends React.Component {
 			<div id="landing-page" style={{maxWidth:"1440px", marginLeft:"auto", marginRight:"auto", overflow:"auto", height:"100%"}}>
 				<TopSection 
 					scrollToSecondBlock={this.scrollToSecondBlock} 
+					scrollToSecondBlockMobile={this.scrollToSecondBlockMobile}
 					scrollToThirdBlock={this.scrollToThirdBlock}
 					scrollToFourthBlock={this.scrollToFourthBlock}/>
 				<SecondSection generateAccessCode={this.generateAccessCode} sendPropsectMail={this.sendPropsectMail} drawDone={this.state.drawDone}/>
@@ -322,7 +328,7 @@ class TopSection extends React.Component {
 					</svg>
 					<div style={{display:"flex"}}>
 						<div id="mob-triangle-left" style={{flexGrow:0}}></div>
-						<div onClick={this.props.scrollToSecondBlock} id="" style={{flexGrow:1, textAlign:"center", color:"white", cursor:"pointer"}}>
+						<div onClick={this.props.scrollToSecondBlockMobile} id="" style={{flexGrow:1, textAlign:"center", color:"white", cursor:"pointer"}}>
 							<div style={{fontSize:"14px"}}>Get your early access</div>
 							<div style={{height:"20px", width:"20px", marginLeft:"auto", marginRight:"auto"}} className="rotate-90 vertical-bounce">
 								&#10095;
