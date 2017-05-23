@@ -18,6 +18,14 @@ var _demonodes = require('../properties/demonodes');
 
 var _demonodes2 = _interopRequireDefault(_demonodes);
 
+var _register = require('./register');
+
+var _register2 = _interopRequireDefault(_register);
+
+var _DropModal = require('boron/DropModal');
+
+var _DropModal2 = _interopRequireDefault(_DropModal);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -43,18 +51,35 @@ var LandingPage = function (_React$Component) {
 		_this.checkSecondSectionInView = _this.checkSecondSectionInView.bind(_this);
 		_this.sendPropsectMail = _this.sendPropsectMail.bind(_this);
 		_this.generateAccessCode = _this.generateAccessCode.bind(_this);
+		_this.showRegisterModal = _this.showRegisterModal.bind(_this);
+		_this.hideRegisterModal = _this.hideRegisterModal.bind(_this);
 
 		_this.state = {
 			drawDone: false,
 			thirdLine1: false,
 			thirdLine2: false,
 			thirdLine3: false,
-			autoScroll: false
+			autoScroll: false,
+			showRegisterModal: false
 		};
 		return _this;
 	}
 
 	_createClass(LandingPage, [{
+		key: 'showRegisterModal',
+		value: function showRegisterModal() {
+			this.setState({
+				showRegisterModal: true
+			});
+		}
+	}, {
+		key: 'hideRegisterModal',
+		value: function hideRegisterModal() {
+			this.setState({
+				showRegisterModal: false
+			});
+		}
+	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
 			var _this2 = this;
@@ -203,11 +228,13 @@ var LandingPage = function (_React$Component) {
 			return _react2.default.createElement(
 				'div',
 				{ id: 'landing-page', style: { maxWidth: "1440px", marginLeft: "auto", marginRight: "auto", overflow: "auto", height: "100%" } },
+				_react2.default.createElement(RegisterModal, { show: this.state.showRegisterModal, showRegisterModal: this.showRegisterModal, hideRegisterModal: this.hideRegisterModal }),
 				_react2.default.createElement(TopSection, {
 					scrollToSecondBlock: this.scrollToSecondBlock,
 					scrollToSecondBlockMobile: this.scrollToSecondBlockMobile,
 					scrollToThirdBlock: this.scrollToThirdBlock,
-					scrollToFourthBlock: this.scrollToFourthBlock }),
+					scrollToFourthBlock: this.scrollToFourthBlock,
+					showRegisterModal: this.showRegisterModal }),
 				_react2.default.createElement(SecondSection, { generateAccessCode: this.generateAccessCode, sendPropsectMail: this.sendPropsectMail, drawDone: this.state.drawDone }),
 				_react2.default.createElement(QuoteSection, null),
 				_react2.default.createElement(ThirdSection, { thirdLine1: this.state.thirdLine1, thirdLine2: this.state.thirdLine2, thirdLine3: this.state.thirdLine3 }),
@@ -392,7 +419,7 @@ var TopSection = function (_React$Component2) {
 					),
 					_react2.default.createElement(
 						'div',
-						{ id: 'lp-header-name' },
+						{ id: 'lp-header-name', onClick: this.props.showRegisterModal },
 						'Magnesia'
 					),
 					_react2.default.createElement(
@@ -440,7 +467,7 @@ var TopSection = function (_React$Component2) {
 					),
 					_react2.default.createElement(
 						'div',
-						{ id: 'mob-lp-header-name' },
+						{ id: 'mob-lp-header-name', onClick: this.props.showRegisterModal },
 						'Magnesia'
 					),
 					_react2.default.createElement(
@@ -1156,6 +1183,63 @@ var QuoteSection = function (_React$Component6) {
 	}]);
 
 	return QuoteSection;
+}(_react2.default.Component);
+
+;
+
+var RegisterModal = function (_React$Component7) {
+	_inherits(RegisterModal, _React$Component7);
+
+	function RegisterModal(props) {
+		_classCallCheck(this, RegisterModal);
+
+		var _this17 = _possibleConstructorReturn(this, (RegisterModal.__proto__ || Object.getPrototypeOf(RegisterModal)).call(this, props));
+
+		_this17.showModal = _this17.showModal.bind(_this17);
+		_this17.hideModal = _this17.hideModal.bind(_this17);
+
+		_this17.state = {
+			email: ""
+		};
+		return _this17;
+	}
+
+	_createClass(RegisterModal, [{
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(np) {
+			if (np && np.show && !this.state.show) {
+				this.showModal();
+			} else if (!np.show && this.state.show) {
+				this.hideModal();
+			}
+		}
+	}, {
+		key: 'showModal',
+		value: function showModal() {
+			this.refs.modal.show();
+		}
+	}, {
+		key: 'hideModal',
+		value: function hideModal() {
+			this.props.hideRegisterModal();
+			this.refs.modal.hide();
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					_DropModal2.default,
+					{ ref: 'modal' },
+					_react2.default.createElement(_register2.default, null)
+				)
+			);
+		}
+	}]);
+
+	return RegisterModal;
 }(_react2.default.Component);
 
 ;

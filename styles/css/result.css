@@ -986,6 +986,7 @@ svg {
 }
 #register-page {
   color: #424242;
+  padding-bottom: 30px;
 }
 #register-page #logo {
   color: #9C27B0;
@@ -1003,8 +1004,8 @@ svg {
   border-bottom: solid 2px #F3E5F5;
   padding: 5px;
   text-align: center;
-  min-width: 300px;
   margin-bottom: 30px;
+  width: 80%;
   display: block;
   margin-left: auto;
   margin-right: auto;

@@ -3,6 +3,10 @@ import React from 'react'
 import DRAWING from '../properties/demodrawing'
 import DEMONODES from '../properties/demonodes'
 
+import RegisterPage from './register';
+
+import Modal from 'boron/DropModal';
+
 class LandingPage extends React.Component {
 
 	constructor(props) {
@@ -17,14 +21,29 @@ class LandingPage extends React.Component {
 		this.checkSecondSectionInView = this.checkSecondSectionInView.bind(this);
 		this.sendPropsectMail = this.sendPropsectMail.bind(this);
 		this.generateAccessCode = this.generateAccessCode.bind(this);
+		this.showRegisterModal = this.showRegisterModal.bind(this);
+		this.hideRegisterModal = this.hideRegisterModal.bind(this);
 
 	    this.state = {
 	    	drawDone : false,
 	    	thirdLine1 : false,
 	    	thirdLine2 : false,
 	    	thirdLine3 : false,
-	    	autoScroll: false
+	    	autoScroll: false,
+	    	showRegisterModal : false
 	    };
+	}
+
+	showRegisterModal(){
+		this.setState({
+			showRegisterModal : true
+		});
+	}
+
+	hideRegisterModal(){
+		this.setState({
+			showRegisterModal : false
+		});
 	}
 
 	componentDidMount(){
@@ -146,11 +165,13 @@ class LandingPage extends React.Component {
 	render() {
 		return (
 			<div id="landing-page" style={{maxWidth:"1440px", marginLeft:"auto", marginRight:"auto", overflow:"auto", height:"100%"}}>
+				<RegisterModal show={this.state.showRegisterModal} showRegisterModal={this.showRegisterModal} hideRegisterModal={this.hideRegisterModal}/>
 				<TopSection 
 					scrollToSecondBlock={this.scrollToSecondBlock} 
 					scrollToSecondBlockMobile={this.scrollToSecondBlockMobile}
 					scrollToThirdBlock={this.scrollToThirdBlock}
-					scrollToFourthBlock={this.scrollToFourthBlock}/>
+					scrollToFourthBlock={this.scrollToFourthBlock}
+					showRegisterModal={this.showRegisterModal}/>
 				<SecondSection generateAccessCode={this.generateAccessCode} sendPropsectMail={this.sendPropsectMail} drawDone={this.state.drawDone}/>
 				<QuoteSection/>
 				<ThirdSection thirdLine1={this.state.thirdLine1} thirdLine2={this.state.thirdLine2} thirdLine3={this.state.thirdLine3}/>
@@ -291,7 +312,7 @@ class TopSection extends React.Component {
 							<div onClick={this.props.scrollToFourthBlock}>Contact</div>
 						</div>
 					</div>
-					<div id="lp-header-name">Magnesia</div>
+					<div id="lp-header-name" onClick={this.props.showRegisterModal}>Magnesia</div>
 					<div id="lp-header-sub-name">Nurturing brilliant ideas</div>
 
 					<svg id="headersvg" style={{width:"100%", height:"300px"}}>
@@ -318,7 +339,7 @@ class TopSection extends React.Component {
 					<div id="mob-lp-header-section">
 						Mg.
 					</div>
-					<div id="mob-lp-header-name">Magnesia</div>
+					<div id="mob-lp-header-name" onClick={this.props.showRegisterModal}>Magnesia</div>
 					<div id="mob-lp-header-sub-name">Nurturing brilliant ideas</div>
 
 					<svg id="mobheadersvg" style={{width:"100%", height:"250px"}}>
@@ -765,6 +786,46 @@ class QuoteSection extends React.Component {
 			</div>
 		);
 	}
+};
+
+class RegisterModal extends React.Component {
+
+	constructor(props) {
+	    super(props);
+	   	this.showModal = this.showModal.bind(this);
+	   	this.hideModal = this.hideModal.bind(this);
+
+	    this.state = {
+	    	email : ""
+	    };
+	}
+
+	componentWillReceiveProps(np){
+		if(np && np.show && !this.state.show){
+			this.showModal();
+		} else if(!np.show && this.state.show){
+			this.hideModal();
+		}
+	}
+    
+    showModal(){
+        this.refs.modal.show();
+    }
+
+    hideModal(){
+    	this.props.hideRegisterModal();
+        this.refs.modal.hide();
+    }
+
+    render() {
+        return (
+            <div>
+                <Modal ref="modal">
+                    <RegisterPage/>
+                </Modal>
+            </div>
+        );
+    }
 };
 
 export default LandingPage;

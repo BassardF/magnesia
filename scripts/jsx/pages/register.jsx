@@ -15,8 +15,6 @@ class RegisterPage extends React.Component {
 		this.toggleLoading = this.toggleLoading.bind(this);
 		this.pwskeyUp = this.pwskeyUp.bind(this);
 
-		this.goToLanding = this.goToLanding.bind(this);
-
 	    this.state = {
 	    	email : "",
 			pwd : "",
@@ -103,25 +101,13 @@ class RegisterPage extends React.Component {
 		});
 	}
 
-	goToLanding(){
-		browserHistory.push('/landing');
-	}
-
 	render() {
 		var showRegister = this.state.validEmail && this.state.mailTaken === false;
 		var showLogin = this.state.validEmail && this.state.mailTaken === true;
 
 		return (
 			<div id="register-page">
-				<div style={{maxWidth:"900px", marginLeft:"auto", marginRight:"auto"}}>
-					<div id="logo-wrapper">
-						<div id="logo">Mg.</div>
-					</div>
-					<div style={{float:"right", marginTop:"-75px", cursor:"pointer"}} onClick={this.goToLanding}>
-						landing
-					</div>
-				</div>
-				<h1 style={{marginTop: "60px", marginBottom: "60px", fontSize : "20px", textAlign:"center"}}>
+				<h1 style={{marginTop: "30px", marginBottom: "30px", fontSize : "20px", textAlign:"center"}}>
 					Join Us - or - Login
 				</h1>
 				<div className="purple" style={{display :(this.state.errorMessage ? "block" : "none"), textAlign:"center", marginTop:"-20px", paddingBottom:"30px"}}>

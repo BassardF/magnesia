@@ -40,8 +40,6 @@ var RegisterPage = function (_React$Component) {
 		_this.toggleLoading = _this.toggleLoading.bind(_this);
 		_this.pwskeyUp = _this.pwskeyUp.bind(_this);
 
-		_this.goToLanding = _this.goToLanding.bind(_this);
-
 		_this.state = {
 			email: "",
 			pwd: "",
@@ -150,11 +148,6 @@ var RegisterPage = function (_React$Component) {
 			});
 		}
 	}, {
-		key: 'goToLanding',
-		value: function goToLanding() {
-			_reactRouter.browserHistory.push('/landing');
-		}
-	}, {
 		key: 'render',
 		value: function render() {
 			var showRegister = this.state.validEmail && this.state.mailTaken === false;
@@ -164,26 +157,8 @@ var RegisterPage = function (_React$Component) {
 				'div',
 				{ id: 'register-page' },
 				_react2.default.createElement(
-					'div',
-					{ style: { maxWidth: "900px", marginLeft: "auto", marginRight: "auto" } },
-					_react2.default.createElement(
-						'div',
-						{ id: 'logo-wrapper' },
-						_react2.default.createElement(
-							'div',
-							{ id: 'logo' },
-							'Mg.'
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ style: { float: "right", marginTop: "-75px", cursor: "pointer" }, onClick: this.goToLanding },
-						'landing'
-					)
-				),
-				_react2.default.createElement(
 					'h1',
-					{ style: { marginTop: "60px", marginBottom: "60px", fontSize: "20px", textAlign: "center" } },
+					{ style: { marginTop: "30px", marginBottom: "30px", fontSize: "20px", textAlign: "center" } },
 					'Join Us - or - Login'
 				),
 				_react2.default.createElement(
