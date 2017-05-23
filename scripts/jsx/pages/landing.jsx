@@ -14,6 +14,8 @@ class LandingPage extends React.Component {
 		this.scrollToFourthBlock = this.scrollToFourthBlock.bind(this);
 		this.checkTlInVew = this.checkTlInVew.bind(this);
 		this.checkSecondSectionInView = this.checkSecondSectionInView.bind(this);
+		this.sendPropsectMail = this.sendPropsectMail.bind(this);
+		this.generateAccessCode = this.generateAccessCode.bind(this);
 
 	    this.state = {
 	    	drawDone : false,
@@ -73,7 +75,8 @@ class LandingPage extends React.Component {
 
 	scrollToThirdBlock(){
 		this.setState({autoScroll:true});
- 		this.scrollToId("landing-page-third-section");
+ 		//this.scrollToId("landing-page-third-section");
+ 		this.scrollToId("landing-page-quote-section-sub");
  		setTimeout(()=>{ this.setState({autoScroll:false}); }, 2000);
 	}
 
@@ -118,6 +121,23 @@ class LandingPage extends React.Component {
  		}
 	}
 
+	generateAccessCode(){
+		var text = "";
+	    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	    var len = 10;
+	    for(var i=0; i < len; i++ ) text += possible.charAt(Math.floor(Math.random() * possible.length));
+	    return text;
+	}
+
+	sendPropsectMail(email, code){
+		var url = "https://hooks.zapier.com/hooks/catch/1087623/9hib4q";
+		var params = "email="+email+"&code="+code;
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", url, true);
+		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhr.send(params);
+	}
+
 	render() {
 		return (
 			<div id="landing-page" style={{maxWidth:"1440px", marginLeft:"auto", marginRight:"auto", overflow:"auto", height:"100%"}}>
@@ -125,10 +145,10 @@ class LandingPage extends React.Component {
 					scrollToSecondBlock={this.scrollToSecondBlock} 
 					scrollToThirdBlock={this.scrollToThirdBlock}
 					scrollToFourthBlock={this.scrollToFourthBlock}/>
-				<SecondSection drawDone={this.state.drawDone}/>
+				<SecondSection generateAccessCode={this.generateAccessCode} sendPropsectMail={this.sendPropsectMail} drawDone={this.state.drawDone}/>
 				<QuoteSection/>
 				<ThirdSection thirdLine1={this.state.thirdLine1} thirdLine2={this.state.thirdLine2} thirdLine3={this.state.thirdLine3}/>
-				<FourthSection/>
+				<FourthSection generateAccessCode={this.generateAccessCode} sendPropsectMail={this.sendPropsectMail}/>
 			</div>
 		);
 	}
@@ -147,6 +167,7 @@ class TopSection extends React.Component {
 
 	componentDidMount(){
 		this.draw();
+		this.drawMob();
 	}
 
 	draw(){
@@ -159,8 +180,20 @@ class TopSection extends React.Component {
     	setTimeout(()=>{ this.drawNodes(svg, wd, 300, DEMONODES.secondaryNodes, 2); }, 1000);
     	setTimeout(()=>{ this.drawNodes(svg, wd, 300, DEMONODES.tertiaryNodes, 3); }, 2000);
 
-    	setTimeout(()=>{ this.drawLinks(svg, wd, 300, DEMONODES.firstLinks, 1); }, 1500);
-    	setTimeout(()=>{ this.drawLinks(svg, wd, 300, DEMONODES.secondaryLinks, 2); }, 2500);
+    	setTimeout(()=>{ this.drawLinks(svg, wd, 300, DEMONODES.firstLinks, 1, true); }, 1500);
+    	setTimeout(()=>{ this.drawLinks(svg, wd, 300, DEMONODES.secondaryLinks, 2, true); }, 2500);
+	}
+
+	drawMob(){
+		let svg = d3.select("#mobheadersvg"),
+			width = svg.property("width"),
+    		height = svg.property("height");
+
+    	var wd = document.getElementById("mob-landing-page-top-section").offsetWidth;
+    	this.drawNodes(svg, wd, 300, DEMONODES.mobMainNode, 1);
+    	setTimeout(()=>{ this.drawNodes(svg, wd, 300, DEMONODES.mobSecondaryNodes, 2); }, 1000);
+
+    	setTimeout(()=>{ this.drawLinks(svg, wd, 300, DEMONODES.mobFirstLinks, 1, false); }, 1500);
 	}
 
 	drawNodes(svg, width, height, nodes, nb){
@@ -177,7 +210,7 @@ class TopSection extends React.Component {
 		elemtEnter.append("circle")
 		    .attr("stroke", function(d, i){return DRAWING.defaultCircleStrokeColor})
 		    .attr("stroke-width", function(d, i){return DRAWING.defaultCircleStrokeWidth})
-    		.attr("fill", "#9C27B0")
+    		.attr("fill", DRAWING.defaultCircleFillColor)
     	    .attr("r", function(d, i) {return 40 * (nodes[i].scale ? +nodes[i].scale : 1);}) 
     	  	.attr("cy", function(d, i) {return height/2 + (nodes[i].y ? +nodes[i].y : 0)})
 		    .attr("cx", function(d, i) {return width/2 + (nodes[i].x ? +nodes[i].x : 0)})
@@ -200,13 +233,15 @@ class TopSection extends React.Component {
 
 	}
 
-	drawLinks(svg, width, height, links, nb){
+	drawLinks(svg, width, height, links, nb, isDesktop){
 		
 		let gs = svg.select("g#links" + nb).selectAll("g.link").data(links, function(d) { return d; });
 
 		//Enter
 		let elemtEnter = gs.enter().append("g").attr("class", "link");
-		var allNodes = DEMONODES.mainNode.concat(DEMONODES.secondaryNodes).concat(DEMONODES.tertiaryNodes);
+		var allNodes = isDesktop ?
+			DEMONODES.mainNode.concat(DEMONODES.secondaryNodes).concat(DEMONODES.tertiaryNodes) :
+			DEMONODES.mobMainNode.concat(DEMONODES.mobSecondaryNodes) ;
 
 		let t = d3.transition().duration(500);
 
@@ -240,13 +275,13 @@ class TopSection extends React.Component {
 	render() {
 		return (
 			<div>
-				<div id="landing-page-top-section" className="purple-bcg">
+				<div id="landing-page-top-section" className="purple-bcg hidden-xs">
 
 					<div id="lp-header-section">
 						Mg.
-						<div id="header-rs-wrapper" className="hidden-xs">
+						<div id="header-rs-wrapper">
 							<div onClick={this.props.scrollToSecondBlock}>Early Access</div>
-							<div onClick={this.props.scrollToThirdBlock}>Foundations</div>
+							<div onClick={this.props.scrollToThirdBlock}>Pillars</div>
 							<div onClick={this.props.scrollToFourthBlock}>Contact</div>
 						</div>
 					</div>
@@ -269,6 +304,31 @@ class TopSection extends React.Component {
 							</div>
 						</div>
 						<div id="triangle-right" style={{flexGrow:0}}></div>
+					</div>
+				</div>
+
+				<div id="mob-landing-page-top-section" className="purple-bcg shown-xs">
+
+					<div id="mob-lp-header-section">
+						Mg.
+					</div>
+					<div id="mob-lp-header-name">Magnesia</div>
+					<div id="mob-lp-header-sub-name">Nurturing brilliant ideas</div>
+
+					<svg id="mobheadersvg" style={{width:"100%", height:"250px"}}>
+						<g id="links1"></g>
+						<g id="nodes1"></g>
+						<g id="nodes2"></g>
+					</svg>
+					<div style={{display:"flex"}}>
+						<div id="mob-triangle-left" style={{flexGrow:0}}></div>
+						<div onClick={this.props.scrollToSecondBlock} id="" style={{flexGrow:1, textAlign:"center", color:"white", cursor:"pointer"}}>
+							<div style={{fontSize:"14px"}}>Get your early access</div>
+							<div style={{height:"20px", width:"20px", marginLeft:"auto", marginRight:"auto"}} className="rotate-90 vertical-bounce">
+								&#10095;
+							</div>
+						</div>
+						<div id="mob-triangle-right" style={{flexGrow:0}}></div>
 					</div>
 				</div>
 				
@@ -296,6 +356,7 @@ class SecondSection extends React.Component {
 	}
 
 	componentDidMount(){
+		this.drawMob();
 		if(this.props && this.props.drawDone){
 			this.draw();
 		}
@@ -321,7 +382,7 @@ class SecondSection extends React.Component {
     	var wd = document.getElementById("landing-page-second-section").offsetWidth;
     	//The idea
     	this.drawNodes(svg, wd, 300, [50], 1, "#424242");
-    	this.drawText(svg, wd, 300, [{x : 0, y: 20, text:"The Idea"}], 1, "#424242");
+    	this.drawText(svg, wd, 300, [{x : 0, y: 20, text:"The Journey Began"}], 1, "#424242");
     	this.drawLine(svg, wd, 300, [[50, 150]], "#424242");
     	//Version 0
     	setTimeout(()=>{ 
@@ -343,7 +404,37 @@ class SecondSection extends React.Component {
     	}, 1500);
 	}
 
-	drawText(svg, width, height, texts, nb, color){
+	drawMob(){
+		let svg = d3.select("#mob-secondsvg"),
+			width = svg.property("width"),
+    		height = svg.property("height");
+
+    	var wd = document.getElementById("mob-secondsvg").clientWidth;
+    	//The idea
+    	this.drawNodes(svg, wd, 300, [50], 1, "#424242", true);
+    	this.drawText(svg, wd, 300, [{x : 0, y: 20, text:"The Journey Began"}], 1, "#424242", true);
+    	this.drawLine(svg, wd, 300, [[50, 150]], "#424242", true);
+    	//Version 0
+    	setTimeout(()=>{ 
+    		this.drawNodes(svg, wd, 300, [150], 1, "#424242", true); 
+    		this.drawText(svg, wd, 300, [{x : 80, y: 155, text:"Closed Beta"}], 2, "#424242", true);
+    		this.drawLine(svg, wd, 300, [[150, 250]], "#424242", true);
+    	}, 500);
+    	//Pre launch
+    	setTimeout(()=>{
+    		this.drawNodes(svg, wd, 300, [250], 1, "#424242", true);
+    		this.drawText(svg, wd, 300, [{x : -80, y: 255, text:"Pre-Launch"}], 3, "#424242", true);
+    		this.drawLine(svg, wd, 300, [[250, 350]], "#BDBDBD", true);
+    	}, 1000);
+    	//Release
+    	setTimeout(()=>{
+    		this.drawNodes(svg, wd, 300, [350], 1, "#BDBDBD", true);
+    		this.drawText(svg, wd, 300, [{x : 0, y: 390, text:"Release"}], 4, "#BDBDBD", true); 
+    		this.refs.getaccessblock.className = "show";
+    	}, 1500);
+	}
+
+	drawText(svg, width, height, texts, nb, color, isMobile){
 
 		let gs = svg.select("g#stexts"+nb).selectAll("g.text").data(texts, function(d, ind) {
 			return d;
@@ -358,8 +449,8 @@ class SecondSection extends React.Component {
 	        .attr("fill", color)
 	        .attr("text-anchor", "middle")
 	        .attr("class", "noselect")
-	        .attr("font-size", "20px")
-	        .attr("dx", function(d, i) {return 150 + d.x})
+	        .attr("font-size", isMobile ? "16px" : "20px")
+	        .attr("dx", function(d, i) {return (isMobile ? width/2 : 150) + d.x})
 	        .attr("dy", function(d, i) {return d.y})
 	        .text((d, i) => {return d.text;})
 	        .style("opacity", 0)
@@ -367,7 +458,7 @@ class SecondSection extends React.Component {
 	      	.style("opacity", 1);
 	}
 
-	drawNodes(svg, width, height, node, nb, color){
+	drawNodes(svg, width, height, node, nb, color, isMobile){
 		
 		let gs = svg.select("g#snodes" + nb).selectAll("g.node").data(node, function(d, ind) {
 			return d;
@@ -382,14 +473,14 @@ class SecondSection extends React.Component {
     		.attr("fill", color)
     	    .attr("r", function(d, i) {return 10;}) 
     	  	.attr("cy", function(d, i) {return node[0]})
-		    .attr("cx", function(d, i) {return 150})
+		    .attr("cx", function(d, i) {return (isMobile ? width/2 : 150)})
 		    .style("opacity", 0)
 	      .transition(t)
 	      	.style("opacity", 1);
 
 	}
 
-	drawLine(svg, width, height, line, color){
+	drawLine(svg, width, height, line, color, isMobile){
 		
 		let gs = svg.select("g#sline").selectAll("g.link").data(line, function(d) { return d; });
 
@@ -401,9 +492,9 @@ class SecondSection extends React.Component {
 		elemtEnter.append("line")
 		    .attr("stroke-width", "5px")
     	  	.attr("stroke", color)
-    	  	.attr("x1", 150)
+    	  	.attr("x1", (isMobile ? width/2 : 150))
 		    .attr("y1", (d, i) => {return d[0];})
-		    .attr("x2", 150)
+		    .attr("x2", (isMobile ? width/2 : 150))
 		    .attr("y2", (d, i) => {return d[0];})
 	      .transition(t)
 	      	.attr("y2", (d, i) => {return d[1];})
@@ -415,10 +506,13 @@ class SecondSection extends React.Component {
     		swal("Invalid Email", "Please check your email address, it seems to be invalid", "warning");
     	} else {
     		swal("Thank You", "We are glad to count you in !", "success");
+    		var code = this.props.generateAccessCode();
     		firebase.database().ref("prospects").push({
     			email : this.state.email,
-    			date : new Date().getTime()
+    			date : new Date().getTime(),
+    			code : code
     		});
+    		this.props.sendPropsectMail(this.state.email, code);
     		document.getElementById("get-access-block").style.display = "none";
     		document.getElementById("landing-page-second-section").style.maxWidth = "300px";
     	}
@@ -427,7 +521,7 @@ class SecondSection extends React.Component {
 	render() {
 		return (
 			<div>
-				<div id="landing-page-second-section">
+				<div id="landing-page-second-section" className="hidden-xs">
 					<div ref="getaccessblock" id="get-access-block">
 						<div id="gyac">Get your early access</div>
 						<input onKeyUp={this.onKeyUp} value={this.state.email} onChange={this.changeEmail} type="email" placeholder="Email Address"/>
@@ -442,6 +536,22 @@ class SecondSection extends React.Component {
 						<g id="stexts4"></g>
 					</svg>
 				</div>
+
+				<div id="mob-landing-page-second-section" className="shown-xs">
+					<svg id="mob-secondsvg" style={{width:"100%", height:"400px"}}>
+						<g id="sline"></g>
+						<g id="snodes1"></g>
+						<g id="stexts1"></g>
+						<g id="stexts2"></g>
+						<g id="stexts3"></g>
+						<g id="stexts4"></g>
+					</svg>
+					<div ref="getaccessblock-2" id="mob-get-access-block">
+						<div id="mob-gyac">Get your early access</div>
+						<input onKeyUp={this.onKeyUp} value={this.state.email} onChange={this.changeEmail} type="email" placeholder="Email Address"/>
+						<div onClick={this.send} id="mob-i-m-in">I'm in !</div>
+					</div>
+				</div>
 				
 			</div>
 		);
@@ -453,24 +563,24 @@ class ThirdSection extends React.Component {
 	render() {
 		return (
 			<div>
-				<div id="landing-page-third-section">
+				<div id="landing-page-third-section" className="hidden-xs">
 					<div id="third-line-1" className={this.props.thirdLine1 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex"}}>
 						<div className="fg0 ls" style={{flexGrow:0}}>
 							<div className="value-wrapper">Team</div>
 						</div>
 						<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
-							<div style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"5px"}}>Thought out for teams</div>
+							<div style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"5px"}}>Stronger in teams</div>
 							<div style={{fontSize:"16px", marginTop:"5px"}}>
-								Idea are better grown in teams. 
-								Wether you are working in the same room or on opposite emispheres, we will provide the best experience.
+								Concepts are born in one mind and grown by groups.
+								Magnesia has been made to maximize user experience as teams.
 							</div>
 						</div>
 					</div>
 					<div id="third-line-2" className={this.props.thirdLine2 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex", marginTop:"70px", marginBottom:"70px"}}>
 						<div className="fg1 ls" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
-							<div style={{fontSize:"22px", letterSpacing:"1px", textAlign:"right", fontWeight:"bold", marginTop:"15px"}}>Instant visual</div>
+							<div style={{fontSize:"22px", letterSpacing:"1px", textAlign:"right", fontWeight:"bold", marginTop:"15px"}}>The Power of Vizualisation</div>
 							<div style={{fontSize:"16px", marginTop:"5px", textAlign:"right"}}>
-								Mouvement is key as most of us are visual first. We made every modification live to ease communication.
+								Mouvement makes team work easier than ever before. Vizualisation doesn't have to be static !
 							</div>
 						</div>
 						<div  className="fg0 rs" style={{flexGrow:0}}>
@@ -482,10 +592,54 @@ class ThirdSection extends React.Component {
 							<div className="value-wrapper">Simple</div>
 						</div>
 						<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
-							<div style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"15px"}}>Simplicity is a priority</div>
+							<div style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"15px"}}>Simplicity as a priority</div>
 							<div style={{fontSize:"16px", marginTop:"5px"}}>
-								Keep all your brain power for your ideas. We focus on the main features to make it as easy to use as possible.
+								Keep all your brain power for your ideas. We envision our plateform as a tool to grow your ideas, minimizing usage complexity. 
 							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="mob-landing-page-third-section" className="shown-xs">
+					<div>
+						<div id="mob-third-line-1" className={this.props.thirdLine1 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex"}}>
+							<div className="fg0 ls" style={{flexGrow:0}}>
+								<div className="value-wrapper">Team</div>
+							</div>
+							<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
+								<div style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"9px"}}>Stronger in teams</div>
+								
+							</div>
+						</div>
+						<div style={{fontSize:"16px", marginTop:"10px"}}>
+							Concepts are born in one mind and grown by groups.
+							Magnesia has been made to maximize user experience as teams.
+						</div>
+					</div>
+					<div style={{marginTop:"70px", marginBottom:"70px"}}>
+						<div id="mob-third-line-2" className={this.props.thirdLine2 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex"}}>
+							<div className="fg1 ls" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
+								<div style={{fontSize:"22px", letterSpacing:"1px", textAlign:"right", fontWeight:"bold", marginTop:"9px"}}>The Power of Vizualisation</div>
+							</div>
+							<div  className="fg0 rs" style={{flexGrow:0}}>
+								<div className="value-wrapper">Live</div>
+							</div>
+						</div>
+						<div style={{fontSize:"16px", marginTop:"10px", textAlign:"right"}}>
+							Mouvement makes team work easier than ever before. Vizualisation doesn't have to be static !
+						</div>
+					</div>
+					<div>
+						<div id="mob-third-line-3" className={this.props.thirdLine3 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex"}}>
+							<div className="fg0 ls" style={{flexGrow:0}}>
+								<div className="value-wrapper">Simple</div>
+							</div>
+							<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
+								<div style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"9px"}}>Simplicity as a priority</div>
+							</div>
+						</div>
+						<div style={{fontSize:"16px", marginTop:"10px"}}>
+							Keep all your brain power for your ideas. We envision our plateform as a tool to grow your ideas, minimizing usage complexity. 
 						</div>
 					</div>
 				</div>
@@ -523,11 +677,14 @@ class FourthSection extends React.Component {
     		swal("Invalid Email", "Please check your email address, it seems to be invalid", "warning");
     	} else {
     		swal("Thank You", "We are glad to count you in !", "success");
+    		var code = this.props.generateAccessCode();
     		firebase.database().ref("prospects").push({
     			email : this.state.email,
     			date : new Date().getTime(),
-    			text : this.state.text
+    			text : this.state.text,
+    			code : code
     		});
+    		this.props.sendPropsectMail(this.state.email, code);
     		this.setState({
     			email : "",
 				text : ""
@@ -544,21 +701,39 @@ class FourthSection extends React.Component {
 	render() {
 		return (
 			<div style={{backgroundColor:"#2196F3"}}>
-				<div id="landing-page-fourth-section">
+				<div id="landing-page-fourth-section" className="hidden-xs">
 					<div>
 						<div>
 							<div style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"5px"}}>Your vision matters</div>
 							<div style={{fontSize:"18px", marginTop:"10px"}}>
-								Magnesia is based on feedback from Mind Map users. Let us know abour your vision and needs !
+								Magnesia is based on feedback from users. Let us know abour your own vision and needs !
 							</div>
 							<div style={{fontSize:"18px", marginTop:"5px"}}>
-								Or just get in touch, we are always keen on having a chat !
+								Alternatively just get in touch, we are always keen on having a chat !
 							</div>
 						</div>
 						<div>
-							<input ref="inp" onKeyUp={this.onKeyUp} value={this.state.email} onChange={this.changeEmail} type="email" placeholder="email address"/>
+							<input ref="inp" onKeyUp={this.onKeyUp} value={this.state.email} onChange={this.changeEmail} type="email" placeholder="Email Address"/>
 							<textarea ref="texta" value={this.state.text} onChange={this.changeText} rows="6" placeholder="Share your vision or get in touch !"></textarea>
-							<div id="send">Send</div>
+							<div onClick={this.send} id="send">Send</div>
+						</div>
+					</div>
+				</div>
+				<div id="mob-landing-page-fourth-section" className="shown-xs">
+					<div>
+						<div>
+							<div style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"5px"}}>Your vision matters</div>
+							<div style={{fontSize:"16px", marginTop:"10px"}}>
+								Magnesia is based on feedback from users. Let us know abour your own vision and needs !
+							</div>
+							<div style={{fontSize:"16px", marginTop:"5px"}}>
+								Alternatively just get in touch, we are always keen on having a chat !
+							</div>
+						</div>
+						<div>
+							<input ref="inp" onKeyUp={this.onKeyUp} value={this.state.email} onChange={this.changeEmail} type="email" placeholder="Email Address"/>
+							<textarea ref="texta" value={this.state.text} onChange={this.changeText} rows="6" placeholder="Share your vision or get in touch !"></textarea>
+							<div onClick={this.send} id="send">Send</div>
 						</div>
 					</div>
 				</div>
@@ -571,14 +746,19 @@ class QuoteSection extends React.Component {
 
 	render() {
 		return (
-			<div style={{textAlign:"center", paddingTop:"70px", paddingBottom:"60px"}}>
-				<div style={{fontWeight:"bold", letterSpacing:".5px",fontSize:"23px", marginBottom:"10px"}}>"Mind Maps are the Meta-language of the human race"</div>
-				<div style={{fontSize:"18px"}}> -Tony Buzan</div>
+			<div>
+				<div id="landing-page-quote-section" className="hidden-xs" style={{textAlign:"center", paddingTop:"70px", paddingBottom:"60px"}}>
+					<div id="landing-page-quote-section-sub" style={{fontWeight:"bold", letterSpacing:".5px",fontSize:"23px", marginBottom:"10px"}}>"Mind Maps are the Meta-language of the human race"</div>
+					<div style={{fontSize:"18px"}}> -Tony Buzan</div>
+				</div>
+
+				<div id="mob-landing-page-quote-section" className="shown-xs" style={{textAlign:"center", paddingTop:"30px", paddingBottom:"40px"}}>
+					<div id="landing-page-quote-section-sub" style={{fontWeight:"bold", letterSpacing:".5px",fontSize:"18px", marginBottom:"10px"}}>"Mind Maps are the Meta-language of the human race"</div>
+					<div style={{fontSize:"14px"}}> -Tony Buzan</div>
+				</div>
 			</div>
 		);
 	}
 };
-
-
 
 export default LandingPage;

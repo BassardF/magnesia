@@ -352,5 +352,132 @@ exports.default = {
 			}
 		},
 		"scale": 1
+	}],
+
+	mobMainNode: [{
+		"bcg_color": "#ffffff",
+		"color": "#000000",
+		"description": "",
+		"events": [{
+			"timestamp": 1495192886354,
+			"type": 1,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nid": 0,
+		"scale": 1,
+		"title": "Core Idea",
+		"tmp": "Core Idea",
+		"utt": 1495192886355,
+		"x": 0,
+		"y": 0
+	}],
+	mobSecondaryNodes: [{
+		"bcg_color": "#ffffff",
+		"color": "#000000",
+		"description": "",
+		"events": [{
+			"timestamp": 1495192927205,
+			"type": 1,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nid": 1,
+		"scale": 0.7,
+		"title": "notion",
+		"tmp": "notion",
+		"utt": 1495192927206,
+		"x": -100,
+		"y": -51
+	}, {
+		"bcg_color": "#ffffff",
+		"color": "#000000",
+		"description": "",
+		"events": [{
+			"timestamp": 1495192928175,
+			"type": 1,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nid": 2,
+		"scale": 0.7,
+		"title": "notion",
+		"tmp": "notion",
+		"utt": 1495192928175,
+		"x": -100,
+		"y": 61
+	}, {
+		"active": false,
+		"bcg_color": "#ffffff",
+		"color": "#000000",
+		"description": "",
+		"events": [{
+			"timestamp": 1495192933213,
+			"type": 1,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nid": 3,
+		"scale": 0.7,
+		"title": "notion",
+		"tmp": "notion",
+		"utt": 1495192933213,
+		"x": 100,
+		"y": 0
+	}],
+	mobFirstLinks: [{
+		"events": [{
+			"timestamp": 1495193061466,
+			"type": 2,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"label": "",
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nodes": {
+			"0": {
+				"label": "",
+				"type": false
+			},
+			"2": {
+				"label": "",
+				"type": false
+			}
+		},
+		"scale": 1
+	}, {
+		"events": [{
+			"timestamp": 1495193061466,
+			"type": 2,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"label": "",
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nodes": {
+			"0": {
+				"label": "",
+				"type": false
+			},
+			"3": {
+				"label": "",
+				"type": false
+			}
+		},
+		"scale": 1
+	}, {
+		"events": [{
+			"timestamp": 1495193046189,
+			"type": 2,
+			"uid": "YzSinD7TALYTNUCsPMbnlctYBTl2"
+		}],
+		"label": "",
+		"mid": "-KkVRCjuhU-W--kXecKA",
+		"nodes": [{
+			"label": "",
+			"type": false
+		}, null, {
+			"label": "",
+			"type": false
+		}],
+		"scale": 1
 	}]
 };
