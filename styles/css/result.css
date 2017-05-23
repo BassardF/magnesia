@@ -270,6 +270,9 @@ body {
   -webkit-transform: rotate(180deg);
   transform: rotate(180deg);
 }
+#landing-page {
+  -webkit-overflow-scrolling: touch;
+}
 #landing-page .section {
   padding-right: 30px;
   padding-left: 30px;
