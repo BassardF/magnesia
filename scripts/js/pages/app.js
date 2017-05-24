@@ -52,11 +52,15 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 		{ store: store },
 		_react2.default.createElement(
 				_reactRouter.Router,
-				{ history: _reactRouter.browserHistory },
+				{ history: _reactRouter.browserHistory, onUpdate: function onUpdate() {
+								if (typeof ga !== "undefined" && location && location.pathname) {
+										ga('send', 'pageview', location.pathname);
+								}
+						} },
 				_react2.default.createElement(
 						_reactRouter.Route,
 						{ component: _root2.default },
-						_react2.default.createElement(_reactRouter.Route, { path: '/', component: _landing2.default /*RegisterPage*/ }),
+						_react2.default.createElement(_reactRouter.Route, { path: '/', component: _landing2.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/landing', component: _landing2.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/maps', component: _maps4.default }),
 						_react2.default.createElement(_reactRouter.Route, { path: '/map/:mid', component: _map2.default }),

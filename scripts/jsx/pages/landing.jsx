@@ -35,12 +35,14 @@ class LandingPage extends React.Component {
 	}
 
 	showRegisterModal(){
+		ga('send', 'pageview', "/register");
 		this.setState({
 			showRegisterModal : true
 		});
 	}
 
 	hideRegisterModal(){
+		ga('send', 'pageview', "/");
 		this.setState({
 			showRegisterModal : false
 		});
@@ -88,16 +90,34 @@ class LandingPage extends React.Component {
 	}
 
 	scrollToSecondBlock(){
+		ga('send', {
+			hitType: 'event',
+			eventCategory: "landing page",
+			eventAction: "scroll to early access",
+			eventLabel: ""
+		});
 		this.setState({autoScroll:true});
  		this.scrollToId("landing-page-second-section");
  		setTimeout(()=>{ this.setState({autoScroll:false}); }, 2000);
 	}
 
 	scrollToSecondBlockMobile(){
+		ga('send', {
+			hitType: 'event',
+			eventCategory: "landing page",
+			eventAction: "scroll to early access",
+			eventLabel: ""
+		});
  		this.scrollToId("mob-landing-page-second-section");
 	}
 
 	scrollToThirdBlock(){
+		ga('send', {
+			hitType: 'event',
+			eventCategory: "landing page",
+			eventAction: "scroll to description section",
+			eventLabel: ""
+		});
 		this.setState({autoScroll:true});
  		//this.scrollToId("landing-page-third-section");
  		this.scrollToId("landing-page-quote-section-sub");
@@ -105,6 +125,12 @@ class LandingPage extends React.Component {
 	}
 
 	scrollToFourthBlock(){
+		ga('send', {
+			hitType: 'event',
+			eventCategory: "landing page",
+			eventAction: "scroll to contact",
+			eventLabel: ""
+		});
 		this.setState({autoScroll:true});
  		this.scrollToId("landing-page-fourth-section");
  		setTimeout(()=>{ this.setState({autoScroll:false}); }, 2000);
@@ -146,6 +172,12 @@ class LandingPage extends React.Component {
 	}
 
 	generateAccessCode(){
+		ga('send', {
+			hitType: 'event',
+			eventCategory: "landing page",
+			eventAction: "generate access code",
+			eventLabel: ""
+		});
 		var text = "";
 	    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	    var len = 10;
@@ -527,6 +559,12 @@ class SecondSection extends React.Component {
 	}
 
 	send(){
+		ga('send', {
+			hitType: 'event',
+			eventCategory: "landing page",
+			eventAction: "clicked on I'm in",
+			eventLabel: ""
+		});
 		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     	if(!this.state.email || !re.test(this.state.email)){
     		swal("Invalid Email", "Please check your email address, it seems to be invalid", "warning");
@@ -697,6 +735,12 @@ class FourthSection extends React.Component {
 	}
 
 	send(){
+		ga('send', {
+			hitType: 'event',
+			eventCategory: "landing page",
+			eventAction: "clicked on 'send'",
+			eventLabel: ""
+		});
 		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     	if(!this.state.email || !re.test(this.state.email)){
     		swal("Invalid Email", "Please check your email address, it seems to be invalid", "warning");

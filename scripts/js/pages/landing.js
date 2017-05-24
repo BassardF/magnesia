@@ -68,6 +68,7 @@ var LandingPage = function (_React$Component) {
 	_createClass(LandingPage, [{
 		key: 'showRegisterModal',
 		value: function showRegisterModal() {
+			ga('send', 'pageview', "/register");
 			this.setState({
 				showRegisterModal: true
 			});
@@ -75,6 +76,7 @@ var LandingPage = function (_React$Component) {
 	}, {
 		key: 'hideRegisterModal',
 		value: function hideRegisterModal() {
+			ga('send', 'pageview', "/");
 			this.setState({
 				showRegisterModal: false
 			});
@@ -132,6 +134,12 @@ var LandingPage = function (_React$Component) {
 		value: function scrollToSecondBlock() {
 			var _this4 = this;
 
+			ga('send', {
+				hitType: 'event',
+				eventCategory: "landing page",
+				eventAction: "scroll to early access",
+				eventLabel: ""
+			});
 			this.setState({ autoScroll: true });
 			this.scrollToId("landing-page-second-section");
 			setTimeout(function () {
@@ -141,6 +149,12 @@ var LandingPage = function (_React$Component) {
 	}, {
 		key: 'scrollToSecondBlockMobile',
 		value: function scrollToSecondBlockMobile() {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: "landing page",
+				eventAction: "scroll to early access",
+				eventLabel: ""
+			});
 			this.scrollToId("mob-landing-page-second-section");
 		}
 	}, {
@@ -148,6 +162,12 @@ var LandingPage = function (_React$Component) {
 		value: function scrollToThirdBlock() {
 			var _this5 = this;
 
+			ga('send', {
+				hitType: 'event',
+				eventCategory: "landing page",
+				eventAction: "scroll to description section",
+				eventLabel: ""
+			});
 			this.setState({ autoScroll: true });
 			//this.scrollToId("landing-page-third-section");
 			this.scrollToId("landing-page-quote-section-sub");
@@ -160,6 +180,12 @@ var LandingPage = function (_React$Component) {
 		value: function scrollToFourthBlock() {
 			var _this6 = this;
 
+			ga('send', {
+				hitType: 'event',
+				eventCategory: "landing page",
+				eventAction: "scroll to contact",
+				eventLabel: ""
+			});
 			this.setState({ autoScroll: true });
 			this.scrollToId("landing-page-fourth-section");
 			setTimeout(function () {
@@ -205,6 +231,12 @@ var LandingPage = function (_React$Component) {
 	}, {
 		key: 'generateAccessCode',
 		value: function generateAccessCode() {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: "landing page",
+				eventAction: "generate access code",
+				eventLabel: ""
+			});
 			var text = "";
 			var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 			var len = 10;
@@ -689,6 +721,12 @@ var SecondSection = function (_React$Component3) {
 	}, {
 		key: 'send',
 		value: function send() {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: "landing page",
+				eventAction: "clicked on I'm in",
+				eventLabel: ""
+			});
 			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 			if (!this.state.email || !re.test(this.state.email)) {
 				swal("Invalid Email", "Please check your email address, it seems to be invalid", "warning");
@@ -1017,6 +1055,12 @@ var FourthSection = function (_React$Component5) {
 	}, {
 		key: 'send',
 		value: function send() {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: "landing page",
+				eventAction: "clicked on 'send'",
+				eventLabel: ""
+			});
 			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 			if (!this.state.email || !re.test(this.state.email)) {
 				swal("Invalid Email", "Please check your email address, it seems to be invalid", "warning");

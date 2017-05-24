@@ -20,9 +20,13 @@ const store = createStore(combineReducers({
 
 render((
 	<Provider store={store}>
-	  <Router history={browserHistory}>
+	  <Router history={browserHistory} onUpdate={function() {
+	        if(typeof ga !== "undefined" && location && location.pathname){
+	        	ga('send', 'pageview', location.pathname);
+	        }
+	    }}>
 	    <Route component={RootPage}>
-	    	<Route path="/" component={LandingPage/*RegisterPage*/}/>
+	    	<Route path="/" component={LandingPage}/>
 	    	<Route path="/landing" component={LandingPage}/>
 			<Route path="/maps" component={MapsPage}/>
 			<Route path="/map/:mid" component={MapPage}/>
