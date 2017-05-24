@@ -588,7 +588,7 @@ var SecondSection = function (_React$Component3) {
 			setTimeout(function () {
 				_this12.drawNodes(svg, wd, 300, [350], 1, "#BDBDBD");
 				_this12.drawText(svg, wd, 300, [{ x: 0, y: 390, text: "Release" }], 4, "#BDBDBD");
-				_this12.refs.getaccessblock.className = "show";
+				if (_this12.refs.getaccessblock) _this12.refs.getaccessblock.className = "show";
 			}, 1500);
 		}
 	}, {
@@ -621,7 +621,6 @@ var SecondSection = function (_React$Component3) {
 			setTimeout(function () {
 				_this13.drawNodes(svg, wd, 300, [350], 1, "#BDBDBD", true);
 				_this13.drawText(svg, wd, 300, [{ x: 0, y: 390, text: "Release" }], 4, "#BDBDBD", true);
-				_this13.refs.getaccessblock.className = "show";
 			}, 1500);
 		}
 	}, {

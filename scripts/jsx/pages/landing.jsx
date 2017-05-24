@@ -427,7 +427,7 @@ class SecondSection extends React.Component {
     	setTimeout(()=>{
     		this.drawNodes(svg, wd, 300, [350], 1, "#BDBDBD");
     		this.drawText(svg, wd, 300, [{x : 0, y: 390, text:"Release"}], 4, "#BDBDBD"); 
-    		this.refs.getaccessblock.className = "show";
+    		if(this.refs.getaccessblock) this.refs.getaccessblock.className = "show";
     	}, 1500);
 	}
 
@@ -457,7 +457,6 @@ class SecondSection extends React.Component {
     	setTimeout(()=>{
     		this.drawNodes(svg, wd, 300, [350], 1, "#BDBDBD", true);
     		this.drawText(svg, wd, 300, [{x : 0, y: 390, text:"Release"}], 4, "#BDBDBD", true); 
-    		this.refs.getaccessblock.className = "show";
     	}, 1500);
 	}
 

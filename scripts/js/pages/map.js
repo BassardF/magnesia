@@ -186,9 +186,7 @@ var MapPageComp = function (_React$Component) {
 			if (this.state.map) {
 				var map = this.state.map;
 				map.addNewLink(_auth2.default.getUid(), nid1, nid2);
-				this.setState({
-					map: map
-				});
+				map.save();
 			}
 		}
 	}, {
@@ -292,7 +290,7 @@ var MapPageComp = function (_React$Component) {
 				if (!d3.event.defaultPrevented) {
 					d3.event.preventDefault();
 					if (d && _typeof(d.nid) !== undefined) {
-						if (_this6.state.mode === 2 && _this6.state.selectedNode && d.nid != _this6.state.selectedNode) {
+						if (_this6.state.mode === 2 && (_this6.state.selectedNode || _this6.state.selectedNode === 0) && d.nid != _this6.state.selectedNode) {
 							_this6.addNewLink(d.nid, _this6.state.selectedNode);
 						} else {
 							_this6.selectNode(d.nid);

@@ -131,9 +131,7 @@ class MapPageComp extends React.Component {
 		if(this.state.map) {
 			var map = this.state.map;
 			map.addNewLink(AuthServices.getUid(), nid1, nid2);
-			this.setState({
-				map : map
-			});
+			map.save();
 		}
 	}
 
@@ -230,7 +228,7 @@ class MapPageComp extends React.Component {
 	    	if(!d3.event.defaultPrevented){
 				d3.event.preventDefault();
 				if(d && typeof d.nid !== undefined) {
-					if(this.state.mode === 2 && this.state.selectedNode && d.nid != this.state.selectedNode){
+					if(this.state.mode === 2 && (this.state.selectedNode || this.state.selectedNode === 0) && d.nid != this.state.selectedNode){
 						this.addNewLink(d.nid, this.state.selectedNode);
 					} else {
 						this.selectNode(d.nid);

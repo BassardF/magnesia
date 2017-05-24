@@ -31046,7 +31046,7 @@ var SecondSection = function (_React$Component3) {
 			setTimeout(function () {
 				_this12.drawNodes(svg, wd, 300, [350], 1, "#BDBDBD");
 				_this12.drawText(svg, wd, 300, [{ x: 0, y: 390, text: "Release" }], 4, "#BDBDBD");
-				_this12.refs.getaccessblock.className = "show";
+				if (_this12.refs.getaccessblock) _this12.refs.getaccessblock.className = "show";
 			}, 1500);
 		}
 	}, {
@@ -31079,7 +31079,6 @@ var SecondSection = function (_React$Component3) {
 			setTimeout(function () {
 				_this13.drawNodes(svg, wd, 300, [350], 1, "#BDBDBD", true);
 				_this13.drawText(svg, wd, 300, [{ x: 0, y: 390, text: "Release" }], 4, "#BDBDBD", true);
-				_this13.refs.getaccessblock.className = "show";
 			}, 1500);
 		}
 	}, {
@@ -31892,9 +31891,7 @@ var MapPageComp = function (_React$Component) {
 			if (this.state.map) {
 				var map = this.state.map;
 				map.addNewLink(_auth2.default.getUid(), nid1, nid2);
-				this.setState({
-					map: map
-				});
+				map.save();
 			}
 		}
 	}, {
@@ -31998,7 +31995,7 @@ var MapPageComp = function (_React$Component) {
 				if (!d3.event.defaultPrevented) {
 					d3.event.preventDefault();
 					if (d && _typeof(d.nid) !== undefined) {
-						if (_this6.state.mode === 2 && _this6.state.selectedNode && d.nid != _this6.state.selectedNode) {
+						if (_this6.state.mode === 2 && (_this6.state.selectedNode || _this6.state.selectedNode === 0) && d.nid != _this6.state.selectedNode) {
 							_this6.addNewLink(d.nid, _this6.state.selectedNode);
 						} else {
 							_this6.selectNode(d.nid);
