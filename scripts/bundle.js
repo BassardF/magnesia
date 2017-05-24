@@ -30876,12 +30876,12 @@ var TopSection = function (_React$Component2) {
 						)
 					),
 					_react2.default.createElement(
-						'div',
+						'h1',
 						{ id: 'lp-header-name', onClick: this.props.showRegisterModal },
 						'Magnesia'
 					),
 					_react2.default.createElement(
-						'div',
+						'h2',
 						{ id: 'lp-header-sub-name' },
 						'Nurturing brilliant ideas'
 					),
@@ -30924,12 +30924,12 @@ var TopSection = function (_React$Component2) {
 						'Mg.'
 					),
 					_react2.default.createElement(
-						'div',
+						'h1',
 						{ id: 'mob-lp-header-name', onClick: this.props.showRegisterModal },
 						'Magnesia'
 					),
 					_react2.default.createElement(
-						'div',
+						'h2',
 						{ id: 'mob-lp-header-sub-name' },
 						'Nurturing brilliant ideas'
 					),
@@ -31270,8 +31270,8 @@ var ThirdSection = function (_React$Component4) {
 							'div',
 							{ className: 'fg1 rs', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
 							_react2.default.createElement(
-								'div',
-								{ style: { fontSize: "22px", letterSpacing: "1px", fontWeight: "bold", marginTop: "5px" } },
+								'h2',
+								{ style: { fontSize: "22px", letterSpacing: "1px", fontWeight: "bold", marginTop: "5px", marginBottom: "5px" } },
 								'Stronger in teams'
 							),
 							_react2.default.createElement(
@@ -31288,8 +31288,8 @@ var ThirdSection = function (_React$Component4) {
 							'div',
 							{ className: 'fg1 ls', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
 							_react2.default.createElement(
-								'div',
-								{ style: { fontSize: "22px", letterSpacing: "1px", textAlign: "right", fontWeight: "bold", marginTop: "15px" } },
+								'h2',
+								{ style: { fontSize: "22px", letterSpacing: "1px", textAlign: "right", fontWeight: "bold", marginTop: "15px", marginBottom: "5px" } },
 								'The Power of Vizualisation'
 							),
 							_react2.default.createElement(
@@ -31324,8 +31324,8 @@ var ThirdSection = function (_React$Component4) {
 							'div',
 							{ className: 'fg1 rs', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
 							_react2.default.createElement(
-								'div',
-								{ style: { fontSize: "22px", letterSpacing: "1px", fontWeight: "bold", marginTop: "15px" } },
+								'h2',
+								{ style: { fontSize: "22px", letterSpacing: "1px", fontWeight: "bold", marginTop: "9px", marginBottom: "5px" } },
 								'Simplicity as a priority'
 							),
 							_react2.default.createElement(
@@ -31358,7 +31358,7 @@ var ThirdSection = function (_React$Component4) {
 								'div',
 								{ className: 'fg1 rs', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
 								_react2.default.createElement(
-									'div',
+									'h2',
 									{ style: { fontSize: "22px", letterSpacing: "1px", fontWeight: "bold", marginTop: "9px" } },
 									'Stronger in teams'
 								)
@@ -31380,8 +31380,8 @@ var ThirdSection = function (_React$Component4) {
 								'div',
 								{ className: 'fg1 ls', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
 								_react2.default.createElement(
-									'div',
-									{ style: { fontSize: "22px", letterSpacing: "1px", textAlign: "right", fontWeight: "bold", marginTop: "9px" } },
+									'h2',
+									{ style: { fontSize: "22px", letterSpacing: "1px", textAlign: "right", fontWeight: "bold", marginTop: "27px" } },
 									'The Power of Vizualisation'
 								)
 							),
@@ -31389,7 +31389,7 @@ var ThirdSection = function (_React$Component4) {
 								'div',
 								{ className: 'fg0 rs', style: { flexGrow: 0 } },
 								_react2.default.createElement(
-									'div',
+									'h2',
 									{ className: 'value-wrapper' },
 									'Live'
 								)

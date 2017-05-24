@@ -312,8 +312,8 @@ class TopSection extends React.Component {
 							<div onClick={this.props.scrollToFourthBlock}>Contact</div>
 						</div>
 					</div>
-					<div id="lp-header-name" onClick={this.props.showRegisterModal}>Magnesia</div>
-					<div id="lp-header-sub-name">Nurturing brilliant ideas</div>
+					<h1 id="lp-header-name" onClick={this.props.showRegisterModal}>Magnesia</h1>
+					<h2 id="lp-header-sub-name">Nurturing brilliant ideas</h2>
 
 					<svg id="headersvg" style={{width:"100%", height:"300px"}}>
 						<g id="links1"></g>
@@ -339,8 +339,8 @@ class TopSection extends React.Component {
 					<div id="mob-lp-header-section">
 						Mg.
 					</div>
-					<div id="mob-lp-header-name" onClick={this.props.showRegisterModal}>Magnesia</div>
-					<div id="mob-lp-header-sub-name">Nurturing brilliant ideas</div>
+					<h1 id="mob-lp-header-name" onClick={this.props.showRegisterModal}>Magnesia</h1>
+					<h2 id="mob-lp-header-sub-name">Nurturing brilliant ideas</h2>
 
 					<svg id="mobheadersvg" style={{width:"100%", height:"250px"}}>
 						<g id="links1"></g>
@@ -595,7 +595,7 @@ class ThirdSection extends React.Component {
 							<div className="value-wrapper">Team</div>
 						</div>
 						<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
-							<div style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"5px"}}>Stronger in teams</div>
+							<h2 style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"5px", marginBottom:"5px"}}>Stronger in teams</h2>
 							<div style={{fontSize:"16px", marginTop:"5px"}}>
 								Concepts are born in one mind and grown by groups.
 								Magnesia has been made to maximize user experience as teams.
@@ -604,7 +604,7 @@ class ThirdSection extends React.Component {
 					</div>
 					<div id="third-line-2" className={this.props.thirdLine2 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex", marginTop:"70px", marginBottom:"70px"}}>
 						<div className="fg1 ls" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
-							<div style={{fontSize:"22px", letterSpacing:"1px", textAlign:"right", fontWeight:"bold", marginTop:"15px"}}>The Power of Vizualisation</div>
+							<h2 style={{fontSize:"22px", letterSpacing:"1px", textAlign:"right", fontWeight:"bold", marginTop:"15px", marginBottom:"5px"}}>The Power of Vizualisation</h2>
 							<div style={{fontSize:"16px", marginTop:"5px", textAlign:"right"}}>
 								Mouvement makes team work easier than ever before. Vizualisation doesn't have to be static !
 							</div>
@@ -618,7 +618,7 @@ class ThirdSection extends React.Component {
 							<div className="value-wrapper">Simple</div>
 						</div>
 						<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
-							<div style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"15px"}}>Simplicity as a priority</div>
+							<h2 style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"9px", marginBottom:"5px"}}>Simplicity as a priority</h2>
 							<div style={{fontSize:"16px", marginTop:"5px"}}>
 								Keep all your brain power for your ideas. We envision our plateform as a tool to grow your ideas, minimizing usage complexity. 
 							</div>
@@ -633,8 +633,7 @@ class ThirdSection extends React.Component {
 								<div className="value-wrapper">Team</div>
 							</div>
 							<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
-								<div style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"9px"}}>Stronger in teams</div>
-								
+								<h2 style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"9px"}}>Stronger in teams</h2>
 							</div>
 						</div>
 						<div style={{fontSize:"16px", marginTop:"10px"}}>
@@ -645,10 +644,10 @@ class ThirdSection extends React.Component {
 					<div style={{marginTop:"70px", marginBottom:"70px"}}>
 						<div id="mob-third-line-2" className={this.props.thirdLine2 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex"}}>
 							<div className="fg1 ls" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
-								<div style={{fontSize:"22px", letterSpacing:"1px", textAlign:"right", fontWeight:"bold", marginTop:"9px"}}>The Power of Vizualisation</div>
+								<h2 style={{fontSize:"22px", letterSpacing:"1px", textAlign:"right", fontWeight:"bold", marginTop:"27px"}}>The Power of Vizualisation</h2>
 							</div>
 							<div  className="fg0 rs" style={{flexGrow:0}}>
-								<div className="value-wrapper">Live</div>
+								<h2 className="value-wrapper">Live</h2>
 							</div>
 						</div>
 						<div style={{fontSize:"16px", marginTop:"10px", textAlign:"right"}}>
