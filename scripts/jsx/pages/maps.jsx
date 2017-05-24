@@ -37,6 +37,7 @@ class MapsPageComp extends React.Component {
 	}
 
 	componentWillMount(){
+		document.title = "Maps";
 		if(this.props.user && this.props.user.name == "placeholder"){
 			this.changeName(true, this.props.user.name);
 		}

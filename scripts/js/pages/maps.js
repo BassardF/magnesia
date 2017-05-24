@@ -86,6 +86,7 @@ var MapsPageComp = function (_React$Component) {
 		value: function componentWillMount() {
 			var _this2 = this;
 
+			document.title = "Maps";
 			if (this.props.user && this.props.user.name == "placeholder") {
 				this.changeName(true, this.props.user.name);
 			}

@@ -31795,9 +31795,14 @@ var MapPageComp = function (_React$Component) {
 					this.setState({ mapRef: mapRef });
 					mapRef.on("value", function (snap) {
 						if (snap && snap.val()) {
-							if (!_this2.state.map) _this2.setState({ map: new _map2.default(snap.val()) });else {
+							if (!_this2.state.map) {
+								var map = new _map2.default(snap.val());
+								_this2.setState({ map: map });
+								document.title = map.title;
+							} else {
 								var map = _this2.state.map;
 								map.upgradeFromServer(snap.val());
+								document.title = map.title;
 								_this2.setState({ map: map });
 							}
 						}
@@ -32310,6 +32315,7 @@ var MapsPageComp = function (_React$Component) {
 		value: function componentWillMount() {
 			var _this2 = this;
 
+			document.title = "Maps";
 			if (this.props.user && this.props.user.name == "placeholder") {
 				this.changeName(true, this.props.user.name);
 			}

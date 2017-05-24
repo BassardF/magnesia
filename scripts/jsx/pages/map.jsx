@@ -45,10 +45,14 @@ class MapPageComp extends React.Component {
 				this.setState({mapRef : mapRef});
 				mapRef.on("value", (snap) => {
 					if(snap && snap.val()) {
-						if(!this.state.map) this.setState({map : new Map(snap.val())});
-						else {
+						if(!this.state.map) {
+							var map = new Map(snap.val());
+							this.setState({map : map});
+							document.title = map.title;
+						} else {
 							var map = this.state.map;
 							map.upgradeFromServer(snap.val());
+							document.title = map.title;
 							this.setState({map : map});
 						}
 					}
