@@ -105,7 +105,7 @@ class ManageUsers extends React.Component {
 
 				<div style={{maxWidth:"500px", marginRight:"auto", marginLeft:"auto"}}>
 					<div style={{fontSize:"14px", height:"20px"}}>
-						<div onClick={this.props.toggleManageUsers} className="purple-unerlined-hover" style={{cursor:"pointer", display:"inline-block", marginLeft: "10px"}}>
+						<div onClick={this.props.toggleManageUsers} className="purple-unerlined-hover" style={{cursor:"pointer", display:"inline-block", marginLeft: "10px", float:"right"}}>
 							<img className="rotate-180" style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/arrow-right.svg"/>
 							<span style={{verticalAlign:"middle"}}>back to my maps</span>
 						</div>

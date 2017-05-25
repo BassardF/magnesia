@@ -29900,7 +29900,7 @@ var ManageUsers = function (_React$Component) {
 						{ style: { fontSize: "14px", height: "20px" } },
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.props.toggleManageUsers, className: 'purple-unerlined-hover', style: { cursor: "pointer", display: "inline-block", marginLeft: "10px" } },
+							{ onClick: this.props.toggleManageUsers, className: 'purple-unerlined-hover', style: { cursor: "pointer", display: "inline-block", marginLeft: "10px", float: "right" } },
 							_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/arrow-right.svg' }),
 							_react2.default.createElement(
 								'span',
