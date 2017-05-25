@@ -32939,9 +32939,27 @@ var RegisterPage = function (_React$Component) {
 				'div',
 				{ id: 'register-page' },
 				_react2.default.createElement(
-					'h1',
-					{ style: { marginTop: "30px", marginBottom: "30px", fontSize: "20px", textAlign: "center" } },
-					'Join Us - or - Login'
+					'div',
+					{ style: { paddingLeft: "30px", paddingRight: "30px", marginTop: "20px", marginBottom: "20px", display: "flex" } },
+					_react2.default.createElement(
+						'div',
+						{ style: { flexGrow: 1 } },
+						_react2.default.createElement('hr', { style: { opacity: ".3", borderTop: "solid 1px #424242", borderBottom: "none" } })
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { flexGrow: 0, fontSize: "14px", paddingLeft: "10px", paddingRight: "10px" } },
+						_react2.default.createElement(
+							'div',
+							null,
+							'Join Us - or - Login'
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { flexGrow: 1 } },
+						_react2.default.createElement('hr', { style: { opacity: ".3", borderTop: "solid 1px #424242", borderBottom: "none" } })
+					)
 				),
 				_react2.default.createElement(
 					'div',
@@ -32950,7 +32968,64 @@ var RegisterPage = function (_React$Component) {
 				),
 				_react2.default.createElement(
 					'div',
-					{ style: { maxWidth: "700px", marginLeft: "auto", marginRight: "auto" } },
+					null,
+					_react2.default.createElement(
+						'div',
+						{ className: 'oath-button', id: 'oath-google' },
+						_react2.default.createElement('img', { style: { height: "15px", marginRight: "10px", verticalAlign: "middle", marginLeft: "-18px" }, src: '../assets/images/social-google.svg' }),
+						_react2.default.createElement(
+							'span',
+							{ style: { verticalAlign: "middle" } },
+							'with Google'
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'oath-button', id: 'oath-facebook' },
+						_react2.default.createElement('img', { style: { height: "15px", marginRight: "10px", verticalAlign: "middle" }, src: '../assets/images/social-facebook.svg' }),
+						_react2.default.createElement(
+							'span',
+							{ style: { verticalAlign: "middle" } },
+							'with Facebook'
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ className: 'oath-button', id: 'oath-twitter' },
+						_react2.default.createElement('img', { style: { height: "15px", marginRight: "10px", verticalAlign: "middle", marginLeft: "-18px" }, src: '../assets/images/social-twitter.svg' }),
+						_react2.default.createElement(
+							'span',
+							{ style: { verticalAlign: "middle" } },
+							'with Twitter'
+						)
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { paddingLeft: "30px", paddingRight: "30px", marginTop: "20px", marginBottom: "20px", display: "flex" } },
+					_react2.default.createElement(
+						'div',
+						{ style: { flexGrow: 1 } },
+						_react2.default.createElement('hr', { style: { opacity: ".3", borderTop: "solid 1px #424242", borderBottom: "none" } })
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { flexGrow: 0, fontSize: "14px", paddingLeft: "10px", paddingRight: "10px" } },
+						_react2.default.createElement(
+							'div',
+							null,
+							'Or with an email'
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { flexGrow: 1 } },
+						_react2.default.createElement('hr', { style: { opacity: ".3", borderTop: "solid 1px #424242", borderBottom: "none" } })
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { maxWidth: "700px", marginTop: "20px", marginLeft: "auto", marginRight: "auto" } },
 					_react2.default.createElement(
 						'div',
 						{ className: 'col-wrap' },
@@ -32966,57 +33041,6 @@ var RegisterPage = function (_React$Component) {
 								'div',
 								null,
 								_react2.default.createElement('input', { onKeyPress: this.pwskeyUp, className: "reg-inp " + (this.state.pwd && this.state.pwd.length >= 6 ? "validated" : ""), ref: 'pwd', type: 'password', value: this.state.pwd, onChange: this.changePwd, placeholder: 'password' })
-							),
-							_react2.default.createElement(
-								'button',
-								{ className: 'pre-loading-button', style: { display: !showRegister && !showLogin ? "block" : "none" } },
-								_react2.default.createElement(
-									'span',
-									null,
-									'login / register'
-								)
-							),
-							_react2.default.createElement(
-								'button',
-								{ ref: 'regbutton', className: (this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button"),
-									style: { display: showRegister ? "block" : "none" },
-									onClick: this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.register : null },
-								_react2.default.createElement(
-									'span',
-									{ style: { display: this.state.loading ? "inline" : "none" } },
-									_react2.default.createElement('img', { src: '../assets/images/spinner-purple.svg', className: 'rotate', style: { display: "block", width: "20px", height: "20px", marginRight: "auto", marginLeft: "auto" } }),
-									_react2.default.createElement(
-										'span',
-										{ style: { verticalAlgin: "middle" } },
-										'Loading'
-									)
-								),
-								_react2.default.createElement(
-									'span',
-									{ style: { display: this.state.loading ? "none" : "inline" } },
-									'register'
-								)
-							),
-							_react2.default.createElement(
-								'button',
-								{ ref: 'loginbutton', className: (this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button"),
-									style: { display: showLogin ? "block" : "none" },
-									onClick: this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.login : null },
-								_react2.default.createElement(
-									'span',
-									{ style: { display: this.state.loading ? "inline" : "none" } },
-									_react2.default.createElement('img', { src: '../assets/images/spinner-purple.svg', className: 'rotate', style: { display: "block", width: "20px", height: "20px", marginRight: "auto", marginLeft: "auto" } }),
-									_react2.default.createElement(
-										'span',
-										{ style: { verticalAlgin: "middle" } },
-										'Loading'
-									)
-								),
-								_react2.default.createElement(
-									'span',
-									{ style: { display: this.state.loading ? "none" : "inline" } },
-									'login'
-								)
 							)
 						),
 						_react2.default.createElement(
@@ -33024,7 +33048,7 @@ var RegisterPage = function (_React$Component) {
 							{ className: 'half' },
 							_react2.default.createElement(
 								'div',
-								{ style: { marginTop: "20px", paddingLeft: "30px" } },
+								{ style: { marginTop: this.state.validEmail ? "20px" : "30px", paddingLeft: "30px" } },
 								_react2.default.createElement(
 									'div',
 									{ className: "invalid-step-line " + (this.state.validEmail ? "hide" : "") },
@@ -33086,6 +33110,61 @@ var RegisterPage = function (_React$Component) {
 									' Password too short'
 								)
 							)
+						)
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { maxWidth: "300px", marginLeft: "auto", marginRight: "auto" } },
+					_react2.default.createElement(
+						'button',
+						{ className: 'pre-loading-button', style: { display: !showRegister && !showLogin ? "block" : "none" } },
+						_react2.default.createElement(
+							'span',
+							null,
+							'login / register'
+						)
+					),
+					_react2.default.createElement(
+						'button',
+						{ ref: 'regbutton', className: (this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button"),
+							style: { display: showRegister ? "block" : "none" },
+							onClick: this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.register : null },
+						_react2.default.createElement(
+							'span',
+							{ style: { display: this.state.loading ? "inline" : "none" } },
+							_react2.default.createElement('img', { src: '../assets/images/spinner-purple.svg', className: 'rotate', style: { display: "block", width: "20px", height: "20px", marginRight: "auto", marginLeft: "auto" } }),
+							_react2.default.createElement(
+								'span',
+								{ style: { verticalAlgin: "middle" } },
+								'Loading'
+							)
+						),
+						_react2.default.createElement(
+							'span',
+							{ style: { display: this.state.loading ? "none" : "inline" } },
+							'register'
+						)
+					),
+					_react2.default.createElement(
+						'button',
+						{ ref: 'loginbutton', className: (this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button"),
+							style: { display: showLogin ? "block" : "none" },
+							onClick: this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.login : null },
+						_react2.default.createElement(
+							'span',
+							{ style: { display: this.state.loading ? "inline" : "none" } },
+							_react2.default.createElement('img', { src: '../assets/images/spinner-purple.svg', className: 'rotate', style: { display: "block", width: "20px", height: "20px", marginRight: "auto", marginLeft: "auto" } }),
+							_react2.default.createElement(
+								'span',
+								{ style: { verticalAlgin: "middle" } },
+								'Loading'
+							)
+						),
+						_react2.default.createElement(
+							'span',
+							{ style: { display: this.state.loading ? "none" : "inline" } },
+							'login'
 						)
 					)
 				)

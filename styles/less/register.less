@@ -2,6 +2,7 @@
 	
 	color : @darkgrey;
 	padding-bottom: 30px;
+	padding-top: 20px;
 	
 	#logo{
 	    color: #9C27B0;
@@ -38,10 +39,10 @@
 	}
 
 	.reg-button{
+		width:100%;
 		font-size : 14px;
 		border-radius : 5px;
 		background-color : white;
-		width : 100px;
 		padding : 10px;
 		border: solid 1px @purple;
 		color : @purple;
@@ -66,10 +67,10 @@
 	}
 
 	.loading-button{
+		width: 100%;
 		font-size : 14px;
 		border-radius : 5px;
 		background-color : white;
-		width : 100px;
 		padding : 10px;
 		border: solid 1px @purple;
 		color : @purple;
@@ -82,10 +83,10 @@
 	}
 
 	.pre-loading-button{
+		width: 100%;
 		font-size : 14px;
 		border-radius : 5px;
 		background-color : white;
-		width : 150px;
 		padding : 10px;
 		border: solid 1px @purple;
 		color : @purple;
@@ -104,6 +105,7 @@
 		opacity: 0;
 		-webkit-transition: all .5s ease;
     	transition: all .5s ease;
+    	font-size : 14px;
 
 		&.valid{
 			opacity: 1;
@@ -117,6 +119,7 @@
 
 		margin-top: 10px;
 		margin-bottom: 10px;
+		font-size : 14px;
 
 		&.hide{
 			display: none;
@@ -129,5 +132,35 @@
 			vertical-align: top;
 			width: 50%;
 		}
+	}
+
+	.oath-button{
+		margin-top: 10px;
+		margin-bottom: 10px;
+		cursor : pointer;
+		max-width : 300px;
+		margin-left: auto;
+		margin-right: auto;
+		text-align: center;
+		font-size: 14px;
+		padding: 10px;
+		font-size: 14px;
+    	border-radius: 5px;
+    	letter-spacing: .5px;
+	}
+
+	#oath-google{
+		background-color : rgb(271, 78, 50);
+		color: white;
+	}
+
+	#oath-facebook{
+		background-color : rgb(60, 87, 158);
+		color: white;
+	}
+
+	#oath-twitter{
+		background-color : rgb(37, 170, 244);
+		color: white;
 	}
 }

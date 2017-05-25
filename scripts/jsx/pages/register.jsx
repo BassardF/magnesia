@@ -107,13 +107,34 @@ class RegisterPage extends React.Component {
 
 		return (
 			<div id="register-page">
-				<h1 style={{marginTop: "30px", marginBottom: "30px", fontSize : "20px", textAlign:"center"}}>
-					Join Us - or - Login
-				</h1>
+				<div style={{paddingLeft:"30px", paddingRight:"30px", marginTop: "20px", marginBottom: "20px", display:"flex"}}>
+					<div style={{flexGrow:1}}><hr style={{opacity:".3", borderTop:"solid 1px #424242", borderBottom:"none"}}/></div>
+					<div style={{flexGrow:0, fontSize:"14px", paddingLeft:"10px", paddingRight:"10px"}}><div>Join Us - or - Login</div></div>
+					<div style={{flexGrow:1}}><hr style={{opacity:".3", borderTop:"solid 1px #424242", borderBottom:"none"}}/></div>
+				</div>
 				<div className="purple" style={{display :(this.state.errorMessage ? "block" : "none"), textAlign:"center", marginTop:"-20px", paddingBottom:"30px"}}>
 					{this.state.errorMessage}
 				</div>
-				<div style={{maxWidth:"700px", marginLeft:"auto", marginRight:"auto"}}>
+				<div>
+					<div className="oath-button" id="oath-google">
+						<img style={{height:"15px", marginRight:"10px", verticalAlign:"middle", marginLeft:"-18px"}} src="../assets/images/social-google.svg"/>
+						<span style={{verticalAlign:"middle"}}>with Google</span>
+					</div>
+					<div className="oath-button" id="oath-facebook">
+						<img style={{height:"15px", marginRight:"10px", verticalAlign:"middle"}} src="../assets/images/social-facebook.svg"/>
+						<span style={{verticalAlign:"middle"}}>with Facebook</span>
+					</div>
+					<div className="oath-button" id="oath-twitter">
+						<img style={{height:"15px", marginRight:"10px", verticalAlign:"middle", marginLeft:"-18px"}} src="../assets/images/social-twitter.svg"/>
+						<span style={{verticalAlign:"middle"}}>with Twitter</span>
+					</div>
+				</div>
+				<div style={{paddingLeft:"30px", paddingRight:"30px", marginTop: "20px", marginBottom: "20px", display:"flex"}}>
+					<div style={{flexGrow:1}}><hr style={{opacity:".3", borderTop:"solid 1px #424242", borderBottom:"none"}}/></div>
+					<div style={{flexGrow:0, fontSize:"14px", paddingLeft:"10px", paddingRight:"10px"}}><div>Or with an email</div></div>
+					<div style={{flexGrow:1}}><hr style={{opacity:".3", borderTop:"solid 1px #424242", borderBottom:"none"}}/></div>
+				</div>
+				<div style={{maxWidth:"700px", marginTop:"20px", marginLeft:"auto", marginRight:"auto"}}>
 					<div className="col-wrap">
 						<div className="half">
 							<div>
@@ -122,34 +143,9 @@ class RegisterPage extends React.Component {
 							<div>
 								<input onKeyPress={this.pwskeyUp} className={"reg-inp " + (this.state.pwd && this.state.pwd.length >= 6 ? "validated" : "")} ref="pwd" type="password" value={this.state.pwd} onChange={this.changePwd} placeholder="password"/>
 							</div>
-							<button className="pre-loading-button" style={{display : (!showRegister && !showLogin ? "block" : "none")}}>
-								<span>login / register</span>
-							</button>
-							<button ref="regbutton" className={(this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button")} 
-									style={{display : (showRegister ? "block" : "none")}} 
-									onClick={this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.register : null}>
-									<span style={{display: this.state.loading ? "inline" : "none"}}>
-										<img src="../assets/images/spinner-purple.svg" className="rotate" style={{display:"block", width:"20px", height:"20px", marginRight:"auto", marginLeft:"auto"}}/> 
-										<span style={{verticalAlgin : "middle"}}>Loading</span> 
-									</span>
-									<span style={{display: this.state.loading ? "none" : "inline"}}>
-										register
-									</span>
-							</button>
-							<button ref="loginbutton" className={(this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button")} 
-									style={{display : (showLogin ? "block" : "none")}} 
-									onClick={this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.login : null}>
-									<span style={{display: this.state.loading ? "inline" : "none"}}>
-										<img src="../assets/images/spinner-purple.svg" className="rotate" style={{display:"block", width:"20px", height:"20px", marginRight:"auto", marginLeft:"auto"}}/> 
-										<span style={{verticalAlgin : "middle"}}>Loading</span> 
-									</span>
-									<span style={{display: this.state.loading ? "none" : "inline"}}>
-										login
-									</span>
-							</button>
 						</div>
 						<div className="half">
-							<div style={{marginTop :"20px", paddingLeft: "30px"}}>
+							<div style={{marginTop :(this.state.validEmail ? "20px" : "30px"), paddingLeft: "30px"}}>
 								<div className={"invalid-step-line " + (this.state.validEmail ? "hide" : "")}>
 									<span style={{marginRight:"5px"}}>&#10007;</span> Invalid email address
 								</div>
@@ -171,6 +167,34 @@ class RegisterPage extends React.Component {
 							</div>
 						</div>
 					</div>
+				</div>
+
+				<div style={{maxWidth:"300px", marginLeft:"auto", marginRight : "auto"}}>
+					<button className="pre-loading-button" style={{display : (!showRegister && !showLogin ? "block" : "none")}}>
+						<span>login / register</span>
+					</button>
+					<button ref="regbutton" className={(this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button")} 
+							style={{display : (showRegister ? "block" : "none")}} 
+							onClick={this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.register : null}>
+							<span style={{display: this.state.loading ? "inline" : "none"}}>
+								<img src="../assets/images/spinner-purple.svg" className="rotate" style={{display:"block", width:"20px", height:"20px", marginRight:"auto", marginLeft:"auto"}}/> 
+								<span style={{verticalAlgin : "middle"}}>Loading</span> 
+							</span>
+							<span style={{display: this.state.loading ? "none" : "inline"}}>
+								register
+							</span>
+					</button>
+					<button ref="loginbutton" className={(this.state.loading ? "loading-button " : "reg-button ") + (this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? "" : "disabled-button")} 
+							style={{display : (showLogin ? "block" : "none")}} 
+							onClick={this.state.validEmail && this.state.pwd && this.state.pwd.length >= 6 ? this.login : null}>
+							<span style={{display: this.state.loading ? "inline" : "none"}}>
+								<img src="../assets/images/spinner-purple.svg" className="rotate" style={{display:"block", width:"20px", height:"20px", marginRight:"auto", marginLeft:"auto"}}/> 
+								<span style={{verticalAlgin : "middle"}}>Loading</span> 
+							</span>
+							<span style={{display: this.state.loading ? "none" : "inline"}}>
+								login
+							</span>
+					</button>
 				</div>
 			</div>
 		);

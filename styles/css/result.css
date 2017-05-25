@@ -991,6 +991,7 @@ svg {
 #register-page {
   color: #424242;
   padding-bottom: 30px;
+  padding-top: 20px;
 }
 #register-page #logo {
   color: #9C27B0;
@@ -1021,10 +1022,10 @@ svg {
   border-bottom: solid 2px #9C27B0;
 }
 #register-page .reg-button {
+  width: 100%;
   font-size: 14px;
   border-radius: 5px;
   background-color: white;
-  width: 100px;
   padding: 10px;
   border: solid 1px #9C27B0;
   color: #9C27B0;
@@ -1045,10 +1046,10 @@ svg {
   opacity: .5;
 }
 #register-page .loading-button {
+  width: 100%;
   font-size: 14px;
   border-radius: 5px;
   background-color: white;
-  width: 100px;
   padding: 10px;
   border: solid 1px #9C27B0;
   color: #9C27B0;
@@ -1060,10 +1061,10 @@ svg {
   opacity: .5;
 }
 #register-page .pre-loading-button {
+  width: 100%;
   font-size: 14px;
   border-radius: 5px;
   background-color: white;
-  width: 150px;
   padding: 10px;
   border: solid 1px #9C27B0;
   color: #9C27B0;
@@ -1081,6 +1082,7 @@ svg {
   opacity: 0;
   -webkit-transition: all .5s ease;
   transition: all .5s ease;
+  font-size: 14px;
 }
 #register-page .step-line.valid {
   opacity: 1;
@@ -1091,6 +1093,7 @@ svg {
 #register-page .invalid-step-line {
   margin-top: 10px;
   margin-bottom: 10px;
+  font-size: 14px;
 }
 #register-page .invalid-step-line.hide {
   display: none;
@@ -1099,4 +1102,29 @@ svg {
   display: inline-block;
   vertical-align: top;
   width: 50%;
+}
+#register-page .oath-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 5px;
+  letter-spacing: .5px;
+}
+#register-page #oath-google {
+  background-color: #ff4e32;
+  color: white;
+}
+#register-page #oath-facebook {
+  background-color: #3c579e;
+  color: white;
+}
+#register-page #oath-twitter {
+  background-color: #25aaf4;
+  color: white;
 }
