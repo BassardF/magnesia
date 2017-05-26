@@ -382,7 +382,8 @@ var MapsPageComp = function (_React$Component) {
 						{ style: { display: this.state.manageUsers ? "block" : "none" } },
 						_react2.default.createElement(_manageusers2.default, {
 							map: selectedMap, promptChangeTitle: this.promptChangeTitle,
-							toggleManageUsers: this.toggleManageUsers })
+							toggleManageUsers: this.toggleManageUsers,
+							user: this.props.user })
 					),
 					_react2.default.createElement(
 						'div',

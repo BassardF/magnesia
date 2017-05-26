@@ -304,7 +304,8 @@ class MapsPageComp extends React.Component {
 					<div style={{display : this.state.manageUsers ? "block" : "none"}}>
 						<ManageUsers 
 							map={selectedMap} promptChangeTitle={this.promptChangeTitle}
-							toggleManageUsers={this.toggleManageUsers}/> 
+							toggleManageUsers={this.toggleManageUsers}
+							user={this.props.user}/> 
 					</div>
 					<div style={{display : this.state.manageUsers ? "none" : "block"}}>
 						<MapDetails 

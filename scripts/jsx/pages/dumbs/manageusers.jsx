@@ -21,6 +21,16 @@ class ManageUsers extends React.Component {
 	inviteExternalUser(email){
 		let map = this.props.map;
 		map.externalInvite(email, AuthServices.getUid());
+		let mid = map.mid,
+			title = map.title,
+			name = this.props.user ? this.props.user.name : '';
+
+		var url = "https://hooks.zapier.com/hooks/catch/1087623/91dvog/";
+		var params = "email="+email+"&title="+title+"&mid="+mid+"&name="+name;
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", url, true);
+		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhr.send(params);
 	}
 
 	inviteUser(uid, email){

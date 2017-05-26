@@ -81,7 +81,7 @@ class Advice extends React.Component {
 		if(this.state.current == "no-node-selected"){
 			dom.push(this.getTutoNode(count, "New node", "double click on the background", "tuto-dbclick.svg"));
 			count++;
-			dom.push(this.getTutoNode(count, "Select a node", "click on his background", "tuto-select-node.png"));
+			dom.push(this.getTutoNode(count, "Select a node", "click on its background", "tuto-select-node.png"));
 			count++;
 			dom.push(this.getTutoNode(count, "Modify title", "click on it", "tuto-change-title.png"));
 			count++;

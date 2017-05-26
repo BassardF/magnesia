@@ -28606,7 +28606,7 @@ var Advice = function (_React$Component) {
 			if (this.state.current == "no-node-selected") {
 				dom.push(this.getTutoNode(count, "New node", "double click on the background", "tuto-dbclick.svg"));
 				count++;
-				dom.push(this.getTutoNode(count, "Select a node", "click on his background", "tuto-select-node.png"));
+				dom.push(this.getTutoNode(count, "Select a node", "click on its background", "tuto-select-node.png"));
 				count++;
 				dom.push(this.getTutoNode(count, "Modify title", "click on it", "tuto-change-title.png"));
 				count++;
@@ -29809,6 +29809,16 @@ var ManageUsers = function (_React$Component) {
 		value: function inviteExternalUser(email) {
 			var map = this.props.map;
 			map.externalInvite(email, _auth2.default.getUid());
+			var mid = map.mid,
+			    title = map.title,
+			    name = this.props.user ? this.props.user.name : '';
+
+			var url = "https://hooks.zapier.com/hooks/catch/1087623/91dvog/";
+			var params = "email=" + email + "&title=" + title + "&mid=" + mid + "&name=" + name;
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", url, true);
+			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhr.send(params);
 		}
 	}, {
 		key: 'inviteUser',
@@ -32762,7 +32772,8 @@ var MapsPageComp = function (_React$Component) {
 						{ style: { display: this.state.manageUsers ? "block" : "none" } },
 						_react2.default.createElement(_manageusers2.default, {
 							map: selectedMap, promptChangeTitle: this.promptChangeTitle,
-							toggleManageUsers: this.toggleManageUsers })
+							toggleManageUsers: this.toggleManageUsers,
+							user: this.props.user })
 					),
 					_react2.default.createElement(
 						'div',

@@ -48,6 +48,16 @@ var ManageUsers = function (_React$Component) {
 		value: function inviteExternalUser(email) {
 			var map = this.props.map;
 			map.externalInvite(email, _auth2.default.getUid());
+			var mid = map.mid,
+			    title = map.title,
+			    name = this.props.user ? this.props.user.name : '';
+
+			var url = "https://hooks.zapier.com/hooks/catch/1087623/91dvog/";
+			var params = "email=" + email + "&title=" + title + "&mid=" + mid + "&name=" + name;
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", url, true);
+			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhr.send(params);
 		}
 	}, {
 		key: 'inviteUser',
