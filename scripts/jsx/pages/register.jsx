@@ -86,7 +86,7 @@ class RegisterPage extends React.Component {
 	    if(validEmail){
 	    	var unauthorized = [".", "#", "$", "[", "]"];
 			for (var i = 0; i < unauthorized.length; i++) {
-				email = email.split(unauthorized[i]).join("_");
+				email = email.split(unauthorized[i]).join("___");
 			}
     		firebase.database().ref('emails/' + email).once("value", (snap) => {
     			this.setState((prevState) => ({

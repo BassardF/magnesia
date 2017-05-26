@@ -121,7 +121,7 @@ var RegisterPage = function (_React$Component) {
 			if (validEmail) {
 				var unauthorized = [".", "#", "$", "[", "]"];
 				for (var i = 0; i < unauthorized.length; i++) {
-					email = email.split(unauthorized[i]).join("_");
+					email = email.split(unauthorized[i]).join("___");
 				}
 				firebase.database().ref('emails/' + email).once("value", function (snap) {
 					_this2.setState(function (prevState) {

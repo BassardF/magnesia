@@ -32,6 +32,8 @@ var ManageUsers = function (_React$Component) {
 
 		_this.changeSearch = _this.changeSearch.bind(_this);
 		_this.inviteUser = _this.inviteUser.bind(_this);
+		_this.inviteExternalUser = _this.inviteExternalUser.bind(_this);
+		_this.isInvited = _this.isInvited.bind(_this);
 
 		_this.state = {
 			search: "",
@@ -42,6 +44,12 @@ var ManageUsers = function (_React$Component) {
 	}
 
 	_createClass(ManageUsers, [{
+		key: 'inviteExternalUser',
+		value: function inviteExternalUser(email) {
+			var map = this.props.map;
+			map.externalInvite(email, _auth2.default.getUid());
+		}
+	}, {
 		key: 'inviteUser',
 		value: function inviteUser(uid, email) {
 			var map = this.props.map;
@@ -84,16 +92,30 @@ var ManageUsers = function (_React$Component) {
 			});
 		}
 	}, {
+		key: 'isInvited',
+		value: function isInvited(email) {
+			var map = this.props.map;
+			if (map.invites) {
+				for (var uid in map.invites) {
+					if (map.invites[uid].email == email) return true;
+				}
+			}
+			if (map.externalInvites) {
+				for (var i = 0; i < map.externalInvites.length; i++) {
+					if (map.externalInvites[i].email == email) return true;
+				}
+			}
+			return false;
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var map = this.props.map;
-
 			var userDom = [],
-			    invitedDom = [],
-			    prospectDom = [];;
+			    prospectDom = [];
 
-			for (var uid in map.users) {
-				userDom.push(_react2.default.createElement(UserLine, { key: "key-user-selected-line" + uid, uid: uid, name: map.users[uid] }));
+			for (var _uid in map.users) {
+				userDom.push(_react2.default.createElement(UserLine, { key: "key-user-selected-line" + _uid, uid: _uid, name: map.users[_uid] }));
 			}
 
 			if (map.invites) {
@@ -102,13 +124,24 @@ var ManageUsers = function (_React$Component) {
 				}
 			}
 
-			for (var i = 0; i < this.state.results.length; i++) {
-				var uid = this.state.results[i].uid;
-				var email = this.state.results[i].email;
-				var invited = !!(map.invites && map.invites[uid]);
-				if (!invited) {
-					userDom.push(_react2.default.createElement(ProspectLine, { key: "key-prospect-selected-line" + uid, invited: false, uid: uid, name: email, inviteUser: this.inviteUser.bind(this, uid, email) }));
+			if (map.externalInvites) {
+				for (var i = 0; i < map.externalInvites.length; i++) {
+					if (!map.externalInvites[i].joined) userDom.push(_react2.default.createElement(ProspectLine, { key: "key-external-prospect-selected-line" + i, invited: true, external: true, name: map.externalInvites[i].email }));
 				}
+			}
+
+			for (var _i = 0; _i < this.state.results.length; _i++) {
+				var _uid2 = this.state.results[_i].uid;
+				var email = this.state.results[_i].email;
+				if (!this.isInvited(email)) {
+					userDom.push(_react2.default.createElement(ProspectLine, { key: "key-prospect-result-selected-line" + _uid2, invited: false, uid: _uid2, name: email, inviteUser: this.inviteUser.bind(this, _uid2, email) }));
+				}
+			}
+
+			var externalInvite = null;
+			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			if (!this.isInvited(this.state.search) && !this.state.results.length && !this.state.loading && re.test(this.state.search)) {
+				externalInvite = _react2.default.createElement(ExternalProspectLine, { key: "key-external-prospect-selected-line", name: this.state.search, inviteUser: this.inviteExternalUser.bind(this, this.state.search) });
 			}
 
 			var loadIcon = !this.state.loading ? _react2.default.createElement('img', { style: { verticalAlign: "middle", width: "20px", marginRight: "5px" }, src: '../assets/images/magnifier.svg' }) : _react2.default.createElement('img', { src: '../assets/images/spinner-purple.svg', className: 'rotate', style: { verticalAlign: "middle", width: "20px", height: "20px", marginRight: "5px" } });
@@ -169,6 +202,11 @@ var ManageUsers = function (_React$Component) {
 				),
 				_react2.default.createElement(
 					'div',
+					{ style: { display: this.state.search.length && this.isInvited(this.state.search) ? "block" : "none", marginTop: "30px", maxWidth: "500px", marginRight: "auto", marginLeft: "auto", textAlign: "center" } },
+					'User already invited'
+				),
+				_react2.default.createElement(
+					'div',
 					{ style: { marginTop: "30px", maxWidth: "500px", marginRight: "auto", marginLeft: "auto" } },
 					userDom
 				),
@@ -176,6 +214,11 @@ var ManageUsers = function (_React$Component) {
 					'div',
 					{ style: { marginTop: "30px", maxWidth: "500px", marginRight: "auto", marginLeft: "auto" } },
 					prospectDom
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { marginTop: "30px", maxWidth: "500px", marginRight: "auto", marginLeft: "auto" } },
+					externalInvite
 				)
 			);
 		}
@@ -242,7 +285,8 @@ var ProspectLine = function (_React$Component3) {
 			var rs = this.props.invited ? _react2.default.createElement(
 				'div',
 				{ style: { textAlign: "right" }, className: 'flex-grow-1 purple' },
-				'\u2713 invited'
+				'\u2713 invited ',
+				this.props.external ? " to Mg." : ""
 			) : _react2.default.createElement(
 				'span',
 				{ className: 'invite-user-button', onClick: this.props.inviteUser || null },
@@ -260,7 +304,7 @@ var ProspectLine = function (_React$Component3) {
 					_react2.default.createElement(
 						'div',
 						{ className: 'flex-grow-1' },
-						this.props.name.split("_").join(".")
+						this.props.name.split("___").join(".")
 					),
 					_react2.default.createElement(
 						'div',
@@ -273,6 +317,51 @@ var ProspectLine = function (_React$Component3) {
 	}]);
 
 	return ProspectLine;
+}(_react2.default.Component);
+
+;
+
+var ExternalProspectLine = function (_React$Component4) {
+	_inherits(ExternalProspectLine, _React$Component4);
+
+	function ExternalProspectLine() {
+		_classCallCheck(this, ExternalProspectLine);
+
+		return _possibleConstructorReturn(this, (ExternalProspectLine.__proto__ || Object.getPrototypeOf(ExternalProspectLine)).apply(this, arguments));
+	}
+
+	_createClass(ExternalProspectLine, [{
+		key: 'render',
+		value: function render() {
+
+			return _react2.default.createElement(
+				'div',
+				{ className: 'selected-user-line' },
+				_react2.default.createElement(
+					'div',
+					{ className: 'flex' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'flex-grow-1' },
+						this.props.name.split("___").join(".")
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { textAlign: "right" }, className: 'flex-grow-1 purple' },
+						_react2.default.createElement(
+							'span',
+							{ className: 'invite-user-button', onClick: this.props.inviteUser || null },
+							_react2.default.createElement('img', { className: 'hide-hover', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/invite-purple.svg' }),
+							_react2.default.createElement('img', { className: 'show-hover', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/invite-grey.svg' }),
+							'invite to Mg.'
+						)
+					)
+				)
+			);
+		}
+	}]);
+
+	return ExternalProspectLine;
 }(_react2.default.Component);
 
 ;

@@ -26,6 +26,7 @@ class AuthServices {
   }
 
   static logout(){
+    document.title = "Magnesia";
     firebase.auth().signOut();
   }
 
@@ -33,7 +34,7 @@ class AuthServices {
     var unauthorized = [".", "#", "$", "[", "]"];
     if(uid && email){
       for (var i = 0; i < unauthorized.length; i++) {
-        email = email.split(unauthorized[i]).join("_");
+        email = email.split(unauthorized[i]).join("___");
       }
       firebase.database().ref('emails/' + email).set(uid);
     }

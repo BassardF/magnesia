@@ -106,11 +106,22 @@ class Map {
 		this.invites[to] = {
 			from : from,
 			timestamp : new Date().getTime(),
-			email : email
+			email : email.split("___").join(".")
 		};
 		firebase.database().ref('users/' + to + '/invites/' + this.mid).set({
 			from : from,
 			timestamp : new Date().getTime()	
+		});
+		this.save();
+	}
+
+	externalInvite(email, from){
+		if(!this.externalInvites) this.externalInvites = [];
+		this.externalInvites.push({
+			from : from,
+			timestamp : new Date().getTime(),
+			email : email,
+			joined : false
 		});
 		this.save();
 	}

@@ -56,8 +56,8 @@ class Advice extends React.Component {
 
 	getTutoNode(count, action, how, img, mtop){
 		return <div key={"tuto-" + count} className="flex" style={{display : this.state.page == count ? "" : "none"}}>
-			<div className="flex-grow-1"  style={{verticalAlign:"middle"}}>
-				<div style={{minWidth:"190px", fontWeight:"bold"}}>{action}</div>
+			<div className="flex-grow-1"  style={{verticalAlign:"middle", marginBottom:"3px"}}>
+				<div style={{minWidth:"190px", fontWeight:"bold", marginBottom:"3px"}}>{action}</div>
 				<div>{how}</div>
 			</div>
 			<div className="flex-grow-0" style={{verticalAlign:"middle"}}>
@@ -109,7 +109,7 @@ class Advice extends React.Component {
 				<div>{dom}</div>
 				<div style={{marginTop:'3px'}}>
 					{pages}
-					<span style={{display : (count ? "inline" : "none"), float:"right", cursor:"pointer"}} className="purple">
+					<span style={{display : (count ? "inline" : "none"), float:"right", cursor:"pointer", fontSize: "14px"}} className="purple">
 						<span onClick={this.changePage.bind(this, this.state.page + 1)} style={{display : this.state.page == pages.length - 1 ? "none" : "inline"}}>next <span style={{marginLeft:"3px"}}>&#10095;</span></span>
 						<span onClick={this.dismiss} style={{display : this.state.page == pages.length - 1 ? "inline" : "none"}}>dismiss <span style={{marginLeft:"3px"}}>&#10005;</span></span>
 					</span>

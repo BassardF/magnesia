@@ -91,10 +91,10 @@ var Advice = function (_React$Component) {
 				{ key: "tuto-" + count, className: 'flex', style: { display: this.state.page == count ? "" : "none" } },
 				_react2.default.createElement(
 					'div',
-					{ className: 'flex-grow-1', style: { verticalAlign: "middle" } },
+					{ className: 'flex-grow-1', style: { verticalAlign: "middle", marginBottom: "3px" } },
 					_react2.default.createElement(
 						'div',
-						{ style: { minWidth: "190px", fontWeight: "bold" } },
+						{ style: { minWidth: "190px", fontWeight: "bold", marginBottom: "3px" } },
 						action
 					),
 					_react2.default.createElement(
@@ -169,7 +169,7 @@ var Advice = function (_React$Component) {
 					pages,
 					_react2.default.createElement(
 						'span',
-						{ style: { display: count ? "inline" : "none", float: "right", cursor: "pointer" }, className: 'purple' },
+						{ style: { display: count ? "inline" : "none", float: "right", cursor: "pointer", fontSize: "14px" }, className: 'purple' },
 						_react2.default.createElement(
 							'span',
 							{ onClick: this.changePage.bind(this, this.state.page + 1), style: { display: this.state.page == pages.length - 1 ? "none" : "inline" } },

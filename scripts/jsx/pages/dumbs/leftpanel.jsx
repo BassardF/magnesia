@@ -150,7 +150,7 @@ class LeftPanel extends React.Component {
 							<div onClick={this.selectNav.bind(this, 2)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav")} title="chat" style={{cursor : "pointer"}}>
 								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 2 ? "chat.svg" : "chat-white.svg")}/>
 							</div>
-							<div onClick={this.selectNav.bind(this, 3)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav")} title="logs" style={{cursor : "pointer"}}>
+							<div onClick={this.selectNav.bind(this, 3)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav")} title="logs" style={{cursor : "pointer", display: "none"}}>
 								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 3 ? "logs.svg" : "logs-white.svg")}/>
 							</div>
 							<div onClick={this.resetTutorial} className="tippyleftpanel left-panel-nav" title="reset tutorials" style={{cursor : "pointer", display : (this.props.user && this.props.user.advice ? "block" : "none")}}>

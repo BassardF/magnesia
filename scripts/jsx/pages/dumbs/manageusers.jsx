@@ -8,12 +8,19 @@ class ManageUsers extends React.Component {
 	    super(props);
 	    this.changeSearch = this.changeSearch.bind(this);
 	    this.inviteUser = this.inviteUser.bind(this);
+	    this.inviteExternalUser = this.inviteExternalUser.bind(this);
+	    this.isInvited = this.isInvited.bind(this);
 
 	    this.state = {
 	    	search : "",
 	    	results : [],
 	    	loading : false
 	    };
+	}
+
+	inviteExternalUser(email){
+		let map = this.props.map;
+		map.externalInvite(email, AuthServices.getUid());
 	}
 
 	inviteUser(uid, email){
@@ -54,12 +61,26 @@ class ManageUsers extends React.Component {
 		});
 	}
 
+	isInvited(email) {
+		let map = this.props.map;
+		if(map.invites){
+			for (let uid in map.invites) {
+				if(map.invites[uid].email == email) return true
+			}
+		}
+		if(map.externalInvites){
+			for (let i = 0; i < map.externalInvites.length; i++) {
+				if(map.externalInvites[i].email == email) return true;
+			}
+		}
+		return false;
+	}
+
 	render() {
 		let map = this.props.map;
+		let userDom = [], prospectDom = [];
 
-		var userDom = [], invitedDom = [], prospectDom = [];;
-
-		for(var uid in map.users){
+		for(let uid in map.users){
 			userDom.push(
 				<UserLine key={"key-user-selected-line" + uid} uid={uid} name={map.users[uid]} />
 			);			
@@ -73,19 +94,32 @@ class ManageUsers extends React.Component {
 			}
 		}
 
-		for (var i = 0; i < this.state.results.length; i++) {
-			var uid = this.state.results[i].uid;
-			var email = this.state.results[i].email;
-			var invited = !!(map.invites && map.invites[uid]);
-			if(!invited){
-				userDom.push(
-					<ProspectLine key={"key-prospect-selected-line" + uid} invited={false} uid={uid} name={email} inviteUser={this.inviteUser.bind(this, uid, email)}/>
-				);
+		if(map.externalInvites){
+			for (var i = 0; i < map.externalInvites.length; i++) {
+				if(!map.externalInvites[i].joined)
+					userDom.push(
+						<ProspectLine key={"key-external-prospect-selected-line" + i} invited={true} external={true} name={map.externalInvites[i].email}/>
+					);
 			}
-			
 		}
 
-		var loadIcon = !this.state.loading ? 
+		for (let i = 0; i < this.state.results.length; i++) {
+			let uid = this.state.results[i].uid;
+			let email = this.state.results[i].email;
+			if(!this.isInvited(email)){
+				userDom.push(
+					<ProspectLine key={"key-prospect-result-selected-line" + uid} invited={false} uid={uid} name={email} inviteUser={this.inviteUser.bind(this, uid, email)}/>
+				);
+			}
+		}
+
+		let externalInvite = null;
+		let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		if(!this.isInvited(this.state.search) && !this.state.results.length && !this.state.loading && re.test(this.state.search)){
+			externalInvite = <ExternalProspectLine key={"key-external-prospect-selected-line"} name={this.state.search} inviteUser={this.inviteExternalUser.bind(this, this.state.search)}/>
+		}
+
+		let loadIcon = !this.state.loading ? 
 			<img style={{verticalAlign:"middle", width:"20px", marginRight : "5px"}} src="../assets/images/magnifier.svg"/> :
 			<img src="../assets/images/spinner-purple.svg" className="rotate" style={{verticalAlign:"middle", width:"20px", height:"20px", marginRight : "5px"}}/>;
 
@@ -117,12 +151,20 @@ class ManageUsers extends React.Component {
 					<input value={this.state.value} onChange={this.changeSearch} placeholder="email address" style={{verticalAlign:"middle", width:"250px", fontSize : "17px", border : "none", outline : "none"}}/>
 				</div>
 
+				<div style={{display: (this.state.search.length && this.isInvited(this.state.search) ? "block" : "none"), marginTop: "30px", maxWidth:"500px", marginRight:"auto", marginLeft:"auto", textAlign: "center"}}>
+					User already invited
+				</div>
+
 				<div style={{marginTop: "30px", maxWidth:"500px", marginRight:"auto", marginLeft:"auto"}}>
 					{userDom}
 				</div>
 				
 				<div style={{marginTop: "30px", maxWidth:"500px", marginRight:"auto", marginLeft:"auto"}}>
 					{prospectDom}
+				</div>
+
+				<div style={{marginTop: "30px", maxWidth:"500px", marginRight:"auto", marginLeft:"auto"}}>
+					{externalInvite}
 				</div>
 			</div>
 		);
@@ -155,7 +197,7 @@ class ProspectLine extends React.Component {
 
 		var rs = this.props.invited ? 
 			<div style={{textAlign:"right"}} className="flex-grow-1 purple">
-				&#x2713; invited
+				&#x2713; invited {this.props.external ? " to Mg." : ""}
 			</div> 
 		:
 			<span className="invite-user-button" onClick={this.props.inviteUser || null}>
@@ -168,10 +210,33 @@ class ProspectLine extends React.Component {
 			<div className="selected-user-line">
 				<div className="flex">
 					<div className="flex-grow-1">
-						{this.props.name.split("_").join(".")}
+						{this.props.name.split("___").join(".")}
 					</div>
 					<div style={{textAlign:"right"}} className="flex-grow-1 purple">
 						{rs}
+					</div>
+				</div>
+			</div>
+		);
+	}
+};
+
+class ExternalProspectLine extends React.Component {
+
+	render() {
+
+		return (
+			<div className="selected-user-line">
+				<div className="flex">
+					<div className="flex-grow-1">
+						{this.props.name.split("___").join(".")}
+					</div>
+					<div style={{textAlign:"right"}} className="flex-grow-1 purple">
+						<span className="invite-user-button" onClick={this.props.inviteUser || null}>
+							<img className="hide-hover" style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/invite-purple.svg"/>
+							<img className="show-hover" style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/invite-grey.svg"/>
+							invite to Mg.
+						</span>
 					</div>
 				</div>
 			</div>
