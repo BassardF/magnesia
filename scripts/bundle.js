@@ -30548,6 +30548,9 @@ var LandingPage = function (_React$Component) {
 		value: function componentDidMount() {
 			var _this2 = this;
 
+			//show modal hook
+			if (location && location.search && location.search.indexOf("register") !== -1) this.showRegisterModal();
+
 			var view = document.getElementById('landing-page');
 			var target = document.getElementById('landing-page-second-section');
 			var tl1 = document.getElementById('third-line-1');
@@ -30727,8 +30730,7 @@ var LandingPage = function (_React$Component) {
 					scrollToSecondBlock: this.scrollToSecondBlock,
 					scrollToSecondBlockMobile: this.scrollToSecondBlockMobile,
 					scrollToThirdBlock: this.scrollToThirdBlock,
-					scrollToFourthBlock: this.scrollToFourthBlock,
-					showRegisterModal: this.showRegisterModal }),
+					scrollToFourthBlock: this.scrollToFourthBlock }),
 				_react2.default.createElement(SecondSection, { generateAccessCode: this.generateAccessCode, sendPropsectMail: this.sendPropsectMail, drawDone: this.state.drawDone }),
 				_react2.default.createElement(QuoteSection, null),
 				_react2.default.createElement(ThirdSection, { thirdLine1: this.state.thirdLine1, thirdLine2: this.state.thirdLine2, thirdLine3: this.state.thirdLine3 }),
@@ -30913,7 +30915,7 @@ var TopSection = function (_React$Component2) {
 					),
 					_react2.default.createElement(
 						'h1',
-						{ id: 'lp-header-name', onClick: this.props.showRegisterModal },
+						{ id: 'lp-header-name' },
 						'Magnesia'
 					),
 					_react2.default.createElement(
@@ -30961,7 +30963,7 @@ var TopSection = function (_React$Component2) {
 					),
 					_react2.default.createElement(
 						'h1',
-						{ id: 'mob-lp-header-name', onClick: this.props.showRegisterModal },
+						{ id: 'mob-lp-header-name' },
 						'Magnesia'
 					),
 					_react2.default.createElement(

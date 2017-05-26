@@ -49,6 +49,9 @@ class LandingPage extends React.Component {
 	}
 
 	componentDidMount(){
+		//show modal hook
+		if(location && location.search && location.search.indexOf("register") !== -1) this.showRegisterModal();
+
 		let view = document.getElementById('landing-page');
 		let target = document.getElementById('landing-page-second-section');
 		let tl1 = document.getElementById('third-line-1');
@@ -202,8 +205,7 @@ class LandingPage extends React.Component {
 					scrollToSecondBlock={this.scrollToSecondBlock} 
 					scrollToSecondBlockMobile={this.scrollToSecondBlockMobile}
 					scrollToThirdBlock={this.scrollToThirdBlock}
-					scrollToFourthBlock={this.scrollToFourthBlock}
-					showRegisterModal={this.showRegisterModal}/>
+					scrollToFourthBlock={this.scrollToFourthBlock}/>
 				<SecondSection generateAccessCode={this.generateAccessCode} sendPropsectMail={this.sendPropsectMail} drawDone={this.state.drawDone}/>
 				<QuoteSection/>
 				<ThirdSection thirdLine1={this.state.thirdLine1} thirdLine2={this.state.thirdLine2} thirdLine3={this.state.thirdLine3}/>
@@ -344,7 +346,7 @@ class TopSection extends React.Component {
 							<div onClick={this.props.scrollToFourthBlock}>Contact</div>
 						</div>
 					</div>
-					<h1 id="lp-header-name" onClick={this.props.showRegisterModal}>Magnesia</h1>
+					<h1 id="lp-header-name">Magnesia</h1>
 					<h2 id="lp-header-sub-name">Nurturing brilliant ideas</h2>
 
 					<svg id="headersvg" style={{width:"100%", height:"300px"}}>
@@ -371,7 +373,7 @@ class TopSection extends React.Component {
 					<div id="mob-lp-header-section">
 						Mg.
 					</div>
-					<h1 id="mob-lp-header-name" onClick={this.props.showRegisterModal}>Magnesia</h1>
+					<h1 id="mob-lp-header-name">Magnesia</h1>
 					<h2 id="mob-lp-header-sub-name">Nurturing brilliant ideas</h2>
 
 					<svg id="mobheadersvg" style={{width:"100%", height:"250px"}}>
