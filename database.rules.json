@@ -1,22 +1,22 @@
 {
-"rules": {
-"emails": {
-".read": true
-},
-"prospects": {
-".write": true
-},
-"maps" : {
-"$maps" : {
-"externalInvites" : {
-".read": true,
-"joined" : {
-".write": true
-}
-},
-},
-},
-".read": "auth != null",
-".write": "auth != null"
-}
+  "rules": {
+    "emails": {
+      ".read": true
+    },
+    "prospects": {
+      ".write": true
+    },
+    "maps" : {
+      "$maps" : {
+        "externalInvites" : {
+          ".read": true,
+          "joined" : {
+            ".write": true
+          }
+        },
+      },
+    },
+    ".read": "auth != null",
+    ".write": "auth != null"
+  }
 }
