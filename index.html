@@ -46,6 +46,15 @@
 	    messagingSenderId: "796267518473"
 	  };
 	  firebase.initializeApp(config);
+
+	  var googleProvider = new firebase.auth.GoogleAuthProvider();
+      googleProvider.addScope('https://www.googleapis.com/auth/userinfo.email');
+
+      var facebookProvider = new firebase.auth.FacebookAuthProvider();
+      facebookProvider.addScope('email');
+
+      var twitterProvider = new firebase.auth.TwitterAuthProvider();
+
 	</script>
 
 	<script>

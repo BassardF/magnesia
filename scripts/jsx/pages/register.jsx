@@ -14,6 +14,9 @@ class RegisterPage extends React.Component {
 		this.isMailValid = this.isMailValid.bind(this);
 		this.toggleLoading = this.toggleLoading.bind(this);
 		this.pwskeyUp = this.pwskeyUp.bind(this);
+		this.withGoogle = this.withGoogle.bind(this);
+		this.withFacebook = this.withFacebook.bind(this);
+		this.withTwitter = this.withTwitter.bind(this);
 
 	    this.state = {
 	    	email : "",
@@ -26,6 +29,48 @@ class RegisterPage extends React.Component {
 	isMailValid(email){
 		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		return re.test(email);
+	}
+
+	withGoogle (){
+		firebase.auth().signInWithPopup(googleProvider).then(function(result) {
+			console.log("result", result);
+			var token = result.credential.accessToken;
+			var user = result.user;
+		}).catch(function(error) {
+			console.log("error", error);
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			var email = error.email;
+			var credential = error.credential;
+		});
+	}
+
+	withFacebook(){
+		firebase.auth().signInWithPopup(facebookProvider).then(function(result) {
+			console.log("result", result);
+			var token = result.credential.accessToken;
+			var user = result.user;
+		}).catch(function(error) {
+			console.log("error", error);
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			var email = error.email;
+			var credential = error.credential;
+		});
+	}
+
+	withTwitter(){
+		firebase.auth().signInWithPopup(twitterProvider).then(function(result) {
+			console.log("result", result);
+			var token = result.credential.accessToken;
+			var user = result.user;
+		}).catch(function(error) {
+			console.log("error", error);
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			var email = error.email;
+			var credential = error.credential;
+		});
 	}
 
 	changeEmail (){
@@ -116,15 +161,15 @@ class RegisterPage extends React.Component {
 					{this.state.errorMessage}
 				</div>
 				<div>
-					<div className="oath-button" id="oath-google">
+					<div className="oath-button" id="oath-google" onClick={this.withGoogle}>
 						<img style={{height:"15px", marginRight:"10px", verticalAlign:"middle", marginLeft:"-18px"}} src="../assets/images/social-google.svg"/>
 						<span style={{verticalAlign:"middle"}}>with Google</span>
 					</div>
-					<div className="oath-button" id="oath-facebook">
+					<div className="oath-button" id="oath-facebook" onClick={this.withFacebook}>
 						<img style={{height:"15px", marginRight:"10px", verticalAlign:"middle"}} src="../assets/images/social-facebook.svg"/>
 						<span style={{verticalAlign:"middle"}}>with Facebook</span>
 					</div>
-					<div className="oath-button" id="oath-twitter">
+					<div className="oath-button" id="oath-twitter" onClick={this.withTwitter}>
 						<img style={{height:"15px", marginRight:"10px", verticalAlign:"middle", marginLeft:"-18px"}} src="../assets/images/social-twitter.svg"/>
 						<span style={{verticalAlign:"middle"}}>with Twitter</span>
 					</div>

@@ -39,6 +39,9 @@ var RegisterPage = function (_React$Component) {
 		_this.isMailValid = _this.isMailValid.bind(_this);
 		_this.toggleLoading = _this.toggleLoading.bind(_this);
 		_this.pwskeyUp = _this.pwskeyUp.bind(_this);
+		_this.withGoogle = _this.withGoogle.bind(_this);
+		_this.withFacebook = _this.withFacebook.bind(_this);
+		_this.withTwitter = _this.withTwitter.bind(_this);
 
 		_this.state = {
 			email: "",
@@ -54,6 +57,51 @@ var RegisterPage = function (_React$Component) {
 		value: function isMailValid(email) {
 			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 			return re.test(email);
+		}
+	}, {
+		key: 'withGoogle',
+		value: function withGoogle() {
+			firebase.auth().signInWithPopup(googleProvider).then(function (result) {
+				console.log("result", result);
+				var token = result.credential.accessToken;
+				var user = result.user;
+			}).catch(function (error) {
+				console.log("error", error);
+				var errorCode = error.code;
+				var errorMessage = error.message;
+				var email = error.email;
+				var credential = error.credential;
+			});
+		}
+	}, {
+		key: 'withFacebook',
+		value: function withFacebook() {
+			firebase.auth().signInWithPopup(facebookProvider).then(function (result) {
+				console.log("result", result);
+				var token = result.credential.accessToken;
+				var user = result.user;
+			}).catch(function (error) {
+				console.log("error", error);
+				var errorCode = error.code;
+				var errorMessage = error.message;
+				var email = error.email;
+				var credential = error.credential;
+			});
+		}
+	}, {
+		key: 'withTwitter',
+		value: function withTwitter() {
+			firebase.auth().signInWithPopup(twitterProvider).then(function (result) {
+				console.log("result", result);
+				var token = result.credential.accessToken;
+				var user = result.user;
+			}).catch(function (error) {
+				console.log("error", error);
+				var errorCode = error.code;
+				var errorMessage = error.message;
+				var email = error.email;
+				var credential = error.credential;
+			});
 		}
 	}, {
 		key: 'changeEmail',
@@ -189,7 +237,7 @@ var RegisterPage = function (_React$Component) {
 					null,
 					_react2.default.createElement(
 						'div',
-						{ className: 'oath-button', id: 'oath-google' },
+						{ className: 'oath-button', id: 'oath-google', onClick: this.withGoogle },
 						_react2.default.createElement('img', { style: { height: "15px", marginRight: "10px", verticalAlign: "middle", marginLeft: "-18px" }, src: '../assets/images/social-google.svg' }),
 						_react2.default.createElement(
 							'span',
@@ -199,7 +247,7 @@ var RegisterPage = function (_React$Component) {
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'oath-button', id: 'oath-facebook' },
+						{ className: 'oath-button', id: 'oath-facebook', onClick: this.withFacebook },
 						_react2.default.createElement('img', { style: { height: "15px", marginRight: "10px", verticalAlign: "middle" }, src: '../assets/images/social-facebook.svg' }),
 						_react2.default.createElement(
 							'span',
@@ -209,7 +257,7 @@ var RegisterPage = function (_React$Component) {
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'oath-button', id: 'oath-twitter' },
+						{ className: 'oath-button', id: 'oath-twitter', onClick: this.withTwitter },
 						_react2.default.createElement('img', { style: { height: "15px", marginRight: "10px", verticalAlign: "middle", marginLeft: "-18px" }, src: '../assets/images/social-twitter.svg' }),
 						_react2.default.createElement(
 							'span',
