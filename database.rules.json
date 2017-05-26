@@ -13,8 +13,8 @@
           "joined" : {
             ".write": true
           }
-        },
-      },
+        }
+      }
     },
     ".read": "auth != null",
     ".write": "auth != null"
