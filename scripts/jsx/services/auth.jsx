@@ -2,13 +2,17 @@ import User from '../models/user'
 
 class AuthServices {
 
-  static createUser(uid, email, callback) {
+  static createUser(uid, email, pontentialMap, callback) {
 
     var newUser = new User({
       email: email,
       register_date : new Date().getTime(),
       name : "placeholder"
     });
+    if(pontentialMap){
+      newUser.maps = {};
+      newUser.maps[pontentialMap] = new Date().getTime();
+    }
     firebase.database().ref('users/' + uid).set(newUser, (error)=>{
       if(callback) callback(error ? null : newUser);
     });

@@ -42,11 +42,30 @@ var RootPageComp = function (_React$Component) {
 
 		var _this = _possibleConstructorReturn(this, (RootPageComp.__proto__ || Object.getPrototypeOf(RootPageComp)).call(this, props));
 
+		_this.getPotentialMapToAdd = _this.getPotentialMapToAdd.bind(_this);
 		_this.state = {};
 		return _this;
 	}
 
 	_createClass(RootPageComp, [{
+		key: 'getPotentialMapToAdd',
+		value: function getPotentialMapToAdd(uid) {
+			try {
+				var mid = sessionStorage.getItem('classToJoin');
+				var inviteToUse = sessionStorage.getItem('inviteToUse');
+				if (mid && inviteToUse) {
+					sessionStorage.removeItem('classToJoin');
+					sessionStorage.removeItem('inviteToUse');
+					firebase.database().ref(inviteToUse).set(true);
+					firebase.database().ref('maps/' + mid + "/users/" + uid).set("placeholder");
+					return mid;
+				}
+			} catch (e) {
+				return null;
+			}
+			return null;
+		}
+	}, {
 		key: 'componentWillMount',
 		value: function componentWillMount() {
 			var _this2 = this;
@@ -68,7 +87,8 @@ var RootPageComp = function (_React$Component) {
 								if (_reactRouter.browserHistory.getCurrentLocation().pathname == "/") _reactRouter.browserHistory.push('/maps');
 							} else {
 								//Fallback on register
-								_auth2.default.createUser(user.uid, user.email, function (createdUser) {
+								var joinMap = _this2.getPotentialMapToAdd(user.uid);
+								_auth2.default.createUser(user.uid, user.email, joinMap, function (createdUser) {
 									_this2.props.replaceUser(createdUser);
 									_reactRouter.browserHistory.push('/maps');
 								});

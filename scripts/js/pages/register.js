@@ -47,12 +47,37 @@ var RegisterPage = function (_React$Component) {
 			email: "",
 			pwd: "",
 			loading: false,
-			errorMessage: null
+			errorMessage: null,
+			externalInviteValidated: false
 		};
 		return _this;
 	}
 
 	_createClass(RegisterPage, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			var _this2 = this;
+
+			if (this.props.externalInvite && this.props.externalInvite.mid) {
+				firebase.database().ref('maps/' + this.props.externalInvite.mid + '/externalInvites').once("value", function (snap) {
+					var invites = snap.val();
+					if (invites) {
+						for (var i = 0; i < invites.length; i++) {
+							if (!invites[i].joined && invites[i].email == _this2.props.externalInvite.email) {
+								_this2.setState({ externalInviteValidated: true });
+								try {
+									sessionStorage.setItem('classToJoin', _this2.props.externalInvite.mid);
+									sessionStorage.setItem('inviteToUse', 'maps/' + _this2.props.externalInvite.mid + '/externalInvites/' + i + '/joined');
+								} catch (e) {}
+							}
+						}
+					}
+				}, function (error) {
+					console.log("error", error);
+				});
+			}
+		}
+	}, {
 		key: 'isMailValid',
 		value: function isMailValid(email) {
 			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -106,13 +131,13 @@ var RegisterPage = function (_React$Component) {
 	}, {
 		key: 'changeEmail',
 		value: function changeEmail() {
-			var _this2 = this;
+			var _this3 = this;
 
 			var email = this.refs.email.value;
 			var validEmail = email && this.isMailValid(email);
 			this.setState(function (prevState) {
 				return {
-					email: _this2.refs.email.value,
+					email: _this3.refs.email.value,
 					validEmail: validEmail,
 					mailTaken: null,
 					errorMessage: null
@@ -124,7 +149,7 @@ var RegisterPage = function (_React$Component) {
 					email = email.split(unauthorized[i]).join("___");
 				}
 				firebase.database().ref('emails/' + email).once("value", function (snap) {
-					_this2.setState(function (prevState) {
+					_this3.setState(function (prevState) {
 						return {
 							mailTaken: !!snap.val()
 						};
@@ -137,11 +162,11 @@ var RegisterPage = function (_React$Component) {
 	}, {
 		key: 'changePwd',
 		value: function changePwd() {
-			var _this3 = this;
+			var _this4 = this;
 
 			this.setState(function (prevState) {
 				return {
-					pwd: _this3.refs.pwd.value,
+					pwd: _this4.refs.pwd.value,
 					errorMessage: null
 				};
 			});
@@ -161,13 +186,13 @@ var RegisterPage = function (_React$Component) {
 	}, {
 		key: 'register',
 		value: function register() {
-			var _this4 = this;
+			var _this5 = this;
 
 			this.toggleLoading();
 			firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.pwd).catch(function (error, ad) {
 				var errorCode = error.code;
 				var errorMessage = error.message;
-				_this4.setState({
+				_this5.setState({
 					errorMessage: errorMessage,
 					loading: false
 				});
@@ -176,13 +201,13 @@ var RegisterPage = function (_React$Component) {
 	}, {
 		key: 'login',
 		value: function login() {
-			var _this5 = this;
+			var _this6 = this;
 
 			this.toggleLoading();
 			firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.pwd).catch(function (error) {
 				var errorCode = error.code;
 				var errorMessage = error.message;
-				_this5.setState({
+				_this6.setState({
 					errorMessage: errorMessage,
 					loading: false
 				});
@@ -204,6 +229,24 @@ var RegisterPage = function (_React$Component) {
 			return _react2.default.createElement(
 				'div',
 				{ id: 'register-page' },
+				_react2.default.createElement(
+					'div',
+					{ style: { textAlign: "center", display: this.state.externalInviteValidated ? "block" : "none" } },
+					_react2.default.createElement(
+						'div',
+						{ style: { fontWeight: "bold", marginBottom: "5px" } },
+						this.props.externalInvite ? this.props.externalInvite.name : "",
+						' invited you to join ',
+						this.props.externalInvite ? this.props.externalInvite.title : ""
+					),
+					_react2.default.createElement(
+						'div',
+						null,
+						'Register below and ',
+						this.props.externalInvite ? this.props.externalInvite.title : "",
+						' will be joined automatically'
+					)
+				),
 				_react2.default.createElement(
 					'div',
 					{ style: { paddingLeft: "30px", paddingRight: "30px", marginTop: "20px", marginBottom: "20px", display: "flex" } },

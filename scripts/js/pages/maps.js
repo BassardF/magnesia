@@ -87,12 +87,12 @@ var MapsPageComp = function (_React$Component) {
 			var _this2 = this;
 
 			document.title = "Maps";
-			if (this.props.user && this.props.user.name == "placeholder") {
-				this.changeName(true, this.props.user.name);
-			}
 			this.props.replaceMaps([]);
 			this.refreshMaps(function () {
 				_this2.selectMap(0, true);
+				if (_this2.props.user && _this2.props.user.name == "placeholder") {
+					_this2.changeName(true, _this2.props.user.name);
+				}
 			});
 		}
 	}, {

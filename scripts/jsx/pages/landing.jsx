@@ -30,14 +30,16 @@ class LandingPage extends React.Component {
 	    	thirdLine2 : false,
 	    	thirdLine3 : false,
 	    	autoScroll: false,
-	    	showRegisterModal : false
+	    	showRegisterModal : false,
+	    	externalInvite : null
 	    };
 	}
 
-	showRegisterModal(){
+	showRegisterModal(ei){
 		ga('send', 'pageview', "/register");
 		this.setState({
-			showRegisterModal : true
+			showRegisterModal : true,
+			externalInvite : ei || null
 		});
 	}
 
@@ -51,6 +53,18 @@ class LandingPage extends React.Component {
 	componentDidMount(){
 		//show modal hook
 		if(location && location.search && location.search.indexOf("register") !== -1) this.showRegisterModal();
+		//external invite
+		if(location && location.search && location.search.indexOf("invited=true") !== -1){
+			let search = location.search.substring(1);
+			let split = search.split("&");
+			let ei = {};
+			for (var i = 0; i < split.length; i++) {
+				let insplit = split[i].split("=");
+				ei[insplit[0]] = insplit[1];
+			};
+
+			this.showRegisterModal(ei);
+		}
 
 		let view = document.getElementById('landing-page');
 		let target = document.getElementById('landing-page-second-section');
@@ -200,7 +214,7 @@ class LandingPage extends React.Component {
 	render() {
 		return (
 			<div id="landing-page" style={{maxWidth:"1440px", marginLeft:"auto", marginRight:"auto", overflow:"auto", height:"100%"}}>
-				<RegisterModal show={this.state.showRegisterModal} showRegisterModal={this.showRegisterModal} hideRegisterModal={this.hideRegisterModal}/>
+				<RegisterModal externalInvite={this.state.externalInvite} show={this.state.showRegisterModal} showRegisterModal={this.showRegisterModal} hideRegisterModal={this.hideRegisterModal}/>
 				<TopSection 
 					scrollToSecondBlock={this.scrollToSecondBlock} 
 					scrollToSecondBlockMobile={this.scrollToSecondBlockMobile}
@@ -864,7 +878,7 @@ class RegisterModal extends React.Component {
         return (
             <div>
                 <Modal ref="modal" onHide={this.props.hideRegisterModal}>
-                    <RegisterPage/>
+                    <RegisterPage externalInvite={this.props.externalInvite}/>
                 </Modal>
             </div>
         );

@@ -21,13 +21,17 @@ var AuthServices = function () {
 
   _createClass(AuthServices, null, [{
     key: 'createUser',
-    value: function createUser(uid, email, callback) {
+    value: function createUser(uid, email, pontentialMap, callback) {
 
       var newUser = new _user2.default({
         email: email,
         register_date: new Date().getTime(),
         name: "placeholder"
       });
+      if (pontentialMap) {
+        newUser.maps = {};
+        newUser.maps[pontentialMap] = new Date().getTime();
+      }
       firebase.database().ref('users/' + uid).set(newUser, function (error) {
         if (callback) callback(error ? null : newUser);
       });

@@ -30633,17 +30633,19 @@ var LandingPage = function (_React$Component) {
 			thirdLine2: false,
 			thirdLine3: false,
 			autoScroll: false,
-			showRegisterModal: false
+			showRegisterModal: false,
+			externalInvite: null
 		};
 		return _this;
 	}
 
 	_createClass(LandingPage, [{
 		key: 'showRegisterModal',
-		value: function showRegisterModal() {
+		value: function showRegisterModal(ei) {
 			ga('send', 'pageview', "/register");
 			this.setState({
-				showRegisterModal: true
+				showRegisterModal: true,
+				externalInvite: ei || null
 			});
 		}
 	}, {
@@ -30661,6 +30663,18 @@ var LandingPage = function (_React$Component) {
 
 			//show modal hook
 			if (location && location.search && location.search.indexOf("register") !== -1) this.showRegisterModal();
+			//external invite
+			if (location && location.search && location.search.indexOf("invited=true") !== -1) {
+				var search = location.search.substring(1);
+				var split = search.split("&");
+				var ei = {};
+				for (var i = 0; i < split.length; i++) {
+					var insplit = split[i].split("=");
+					ei[insplit[0]] = insplit[1];
+				};
+
+				this.showRegisterModal(ei);
+			}
 
 			var view = document.getElementById('landing-page');
 			var target = document.getElementById('landing-page-second-section');
@@ -30836,7 +30850,7 @@ var LandingPage = function (_React$Component) {
 			return _react2.default.createElement(
 				'div',
 				{ id: 'landing-page', style: { maxWidth: "1440px", marginLeft: "auto", marginRight: "auto", overflow: "auto", height: "100%" } },
-				_react2.default.createElement(RegisterModal, { show: this.state.showRegisterModal, showRegisterModal: this.showRegisterModal, hideRegisterModal: this.hideRegisterModal }),
+				_react2.default.createElement(RegisterModal, { externalInvite: this.state.externalInvite, show: this.state.showRegisterModal, showRegisterModal: this.showRegisterModal, hideRegisterModal: this.hideRegisterModal }),
 				_react2.default.createElement(TopSection, {
 					scrollToSecondBlock: this.scrollToSecondBlock,
 					scrollToSecondBlockMobile: this.scrollToSecondBlockMobile,
@@ -31850,7 +31864,7 @@ var RegisterModal = function (_React$Component7) {
 				_react2.default.createElement(
 					_DropModal2.default,
 					{ ref: 'modal', onHide: this.props.hideRegisterModal },
-					_react2.default.createElement(_register2.default, null)
+					_react2.default.createElement(_register2.default, { externalInvite: this.props.externalInvite })
 				)
 			);
 		}
@@ -32477,12 +32491,12 @@ var MapsPageComp = function (_React$Component) {
 			var _this2 = this;
 
 			document.title = "Maps";
-			if (this.props.user && this.props.user.name == "placeholder") {
-				this.changeName(true, this.props.user.name);
-			}
 			this.props.replaceMaps([]);
 			this.refreshMaps(function () {
 				_this2.selectMap(0, true);
+				if (_this2.props.user && _this2.props.user.name == "placeholder") {
+					_this2.changeName(true, _this2.props.user.name);
+				}
 			});
 		}
 	}, {
@@ -32943,12 +32957,37 @@ var RegisterPage = function (_React$Component) {
 			email: "",
 			pwd: "",
 			loading: false,
-			errorMessage: null
+			errorMessage: null,
+			externalInviteValidated: false
 		};
 		return _this;
 	}
 
 	_createClass(RegisterPage, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			var _this2 = this;
+
+			if (this.props.externalInvite && this.props.externalInvite.mid) {
+				firebase.database().ref('maps/' + this.props.externalInvite.mid + '/externalInvites').once("value", function (snap) {
+					var invites = snap.val();
+					if (invites) {
+						for (var i = 0; i < invites.length; i++) {
+							if (!invites[i].joined && invites[i].email == _this2.props.externalInvite.email) {
+								_this2.setState({ externalInviteValidated: true });
+								try {
+									sessionStorage.setItem('classToJoin', _this2.props.externalInvite.mid);
+									sessionStorage.setItem('inviteToUse', 'maps/' + _this2.props.externalInvite.mid + '/externalInvites/' + i + '/joined');
+								} catch (e) {}
+							}
+						}
+					}
+				}, function (error) {
+					console.log("error", error);
+				});
+			}
+		}
+	}, {
 		key: 'isMailValid',
 		value: function isMailValid(email) {
 			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -33002,13 +33041,13 @@ var RegisterPage = function (_React$Component) {
 	}, {
 		key: 'changeEmail',
 		value: function changeEmail() {
-			var _this2 = this;
+			var _this3 = this;
 
 			var email = this.refs.email.value;
 			var validEmail = email && this.isMailValid(email);
 			this.setState(function (prevState) {
 				return {
-					email: _this2.refs.email.value,
+					email: _this3.refs.email.value,
 					validEmail: validEmail,
 					mailTaken: null,
 					errorMessage: null
@@ -33020,7 +33059,7 @@ var RegisterPage = function (_React$Component) {
 					email = email.split(unauthorized[i]).join("___");
 				}
 				firebase.database().ref('emails/' + email).once("value", function (snap) {
-					_this2.setState(function (prevState) {
+					_this3.setState(function (prevState) {
 						return {
 							mailTaken: !!snap.val()
 						};
@@ -33033,11 +33072,11 @@ var RegisterPage = function (_React$Component) {
 	}, {
 		key: 'changePwd',
 		value: function changePwd() {
-			var _this3 = this;
+			var _this4 = this;
 
 			this.setState(function (prevState) {
 				return {
-					pwd: _this3.refs.pwd.value,
+					pwd: _this4.refs.pwd.value,
 					errorMessage: null
 				};
 			});
@@ -33057,13 +33096,13 @@ var RegisterPage = function (_React$Component) {
 	}, {
 		key: 'register',
 		value: function register() {
-			var _this4 = this;
+			var _this5 = this;
 
 			this.toggleLoading();
 			firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.pwd).catch(function (error, ad) {
 				var errorCode = error.code;
 				var errorMessage = error.message;
-				_this4.setState({
+				_this5.setState({
 					errorMessage: errorMessage,
 					loading: false
 				});
@@ -33072,13 +33111,13 @@ var RegisterPage = function (_React$Component) {
 	}, {
 		key: 'login',
 		value: function login() {
-			var _this5 = this;
+			var _this6 = this;
 
 			this.toggleLoading();
 			firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.pwd).catch(function (error) {
 				var errorCode = error.code;
 				var errorMessage = error.message;
-				_this5.setState({
+				_this6.setState({
 					errorMessage: errorMessage,
 					loading: false
 				});
@@ -33100,6 +33139,24 @@ var RegisterPage = function (_React$Component) {
 			return _react2.default.createElement(
 				'div',
 				{ id: 'register-page' },
+				_react2.default.createElement(
+					'div',
+					{ style: { textAlign: "center", display: this.state.externalInviteValidated ? "block" : "none" } },
+					_react2.default.createElement(
+						'div',
+						{ style: { fontWeight: "bold", marginBottom: "5px" } },
+						this.props.externalInvite ? this.props.externalInvite.name : "",
+						' invited you to join ',
+						this.props.externalInvite ? this.props.externalInvite.title : ""
+					),
+					_react2.default.createElement(
+						'div',
+						null,
+						'Register below and ',
+						this.props.externalInvite ? this.props.externalInvite.title : "",
+						' will be joined automatically'
+					)
+				),
 				_react2.default.createElement(
 					'div',
 					{ style: { paddingLeft: "30px", paddingRight: "30px", marginTop: "20px", marginBottom: "20px", display: "flex" } },
@@ -33386,11 +33443,30 @@ var RootPageComp = function (_React$Component) {
 
 		var _this = _possibleConstructorReturn(this, (RootPageComp.__proto__ || Object.getPrototypeOf(RootPageComp)).call(this, props));
 
+		_this.getPotentialMapToAdd = _this.getPotentialMapToAdd.bind(_this);
 		_this.state = {};
 		return _this;
 	}
 
 	_createClass(RootPageComp, [{
+		key: 'getPotentialMapToAdd',
+		value: function getPotentialMapToAdd(uid) {
+			try {
+				var mid = sessionStorage.getItem('classToJoin');
+				var inviteToUse = sessionStorage.getItem('inviteToUse');
+				if (mid && inviteToUse) {
+					sessionStorage.removeItem('classToJoin');
+					sessionStorage.removeItem('inviteToUse');
+					firebase.database().ref(inviteToUse).set(true);
+					firebase.database().ref('maps/' + mid + "/users/" + uid).set("placeholder");
+					return mid;
+				}
+			} catch (e) {
+				return null;
+			}
+			return null;
+		}
+	}, {
 		key: 'componentWillMount',
 		value: function componentWillMount() {
 			var _this2 = this;
@@ -33412,7 +33488,8 @@ var RootPageComp = function (_React$Component) {
 								if (_reactRouter.browserHistory.getCurrentLocation().pathname == "/") _reactRouter.browserHistory.push('/maps');
 							} else {
 								//Fallback on register
-								_auth2.default.createUser(user.uid, user.email, function (createdUser) {
+								var joinMap = _this2.getPotentialMapToAdd(user.uid);
+								_auth2.default.createUser(user.uid, user.email, joinMap, function (createdUser) {
 									_this2.props.replaceUser(createdUser);
 									_reactRouter.browserHistory.push('/maps');
 								});
@@ -34054,13 +34131,17 @@ var AuthServices = function () {
 
   _createClass(AuthServices, null, [{
     key: 'createUser',
-    value: function createUser(uid, email, callback) {
+    value: function createUser(uid, email, pontentialMap, callback) {
 
       var newUser = new _user2.default({
         email: email,
         register_date: new Date().getTime(),
         name: "placeholder"
       });
+      if (pontentialMap) {
+        newUser.maps = {};
+        newUser.maps[pontentialMap] = new Date().getTime();
+      }
       firebase.database().ref('users/' + uid).set(newUser, function (error) {
         if (callback) callback(error ? null : newUser);
       });

@@ -60,17 +60,19 @@ var LandingPage = function (_React$Component) {
 			thirdLine2: false,
 			thirdLine3: false,
 			autoScroll: false,
-			showRegisterModal: false
+			showRegisterModal: false,
+			externalInvite: null
 		};
 		return _this;
 	}
 
 	_createClass(LandingPage, [{
 		key: 'showRegisterModal',
-		value: function showRegisterModal() {
+		value: function showRegisterModal(ei) {
 			ga('send', 'pageview', "/register");
 			this.setState({
-				showRegisterModal: true
+				showRegisterModal: true,
+				externalInvite: ei || null
 			});
 		}
 	}, {
@@ -88,6 +90,18 @@ var LandingPage = function (_React$Component) {
 
 			//show modal hook
 			if (location && location.search && location.search.indexOf("register") !== -1) this.showRegisterModal();
+			//external invite
+			if (location && location.search && location.search.indexOf("invited=true") !== -1) {
+				var search = location.search.substring(1);
+				var split = search.split("&");
+				var ei = {};
+				for (var i = 0; i < split.length; i++) {
+					var insplit = split[i].split("=");
+					ei[insplit[0]] = insplit[1];
+				};
+
+				this.showRegisterModal(ei);
+			}
 
 			var view = document.getElementById('landing-page');
 			var target = document.getElementById('landing-page-second-section');
@@ -263,7 +277,7 @@ var LandingPage = function (_React$Component) {
 			return _react2.default.createElement(
 				'div',
 				{ id: 'landing-page', style: { maxWidth: "1440px", marginLeft: "auto", marginRight: "auto", overflow: "auto", height: "100%" } },
-				_react2.default.createElement(RegisterModal, { show: this.state.showRegisterModal, showRegisterModal: this.showRegisterModal, hideRegisterModal: this.hideRegisterModal }),
+				_react2.default.createElement(RegisterModal, { externalInvite: this.state.externalInvite, show: this.state.showRegisterModal, showRegisterModal: this.showRegisterModal, hideRegisterModal: this.hideRegisterModal }),
 				_react2.default.createElement(TopSection, {
 					scrollToSecondBlock: this.scrollToSecondBlock,
 					scrollToSecondBlockMobile: this.scrollToSecondBlockMobile,
@@ -1277,7 +1291,7 @@ var RegisterModal = function (_React$Component7) {
 				_react2.default.createElement(
 					_DropModal2.default,
 					{ ref: 'modal', onHide: this.props.hideRegisterModal },
-					_react2.default.createElement(_register2.default, null)
+					_react2.default.createElement(_register2.default, { externalInvite: this.props.externalInvite })
 				)
 			);
 		}

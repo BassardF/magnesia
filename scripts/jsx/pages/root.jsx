@@ -11,7 +11,25 @@ class RootPageComp extends React.Component {
 
 	constructor(props) {
 	    super(props);
+	    this.getPotentialMapToAdd = this.getPotentialMapToAdd.bind(this);
  	    this.state = {};
+	}
+
+	getPotentialMapToAdd(uid){
+		try{
+			let mid = sessionStorage.getItem('classToJoin');
+			let inviteToUse = sessionStorage.getItem('inviteToUse');
+			if(mid && inviteToUse){
+				sessionStorage.removeItem('classToJoin');
+				sessionStorage.removeItem('inviteToUse');
+				firebase.database().ref(inviteToUse).set(true);
+				firebase.database().ref('maps/' + mid + "/users/" + uid).set("placeholder");
+				return mid;
+			}
+		} catch(e){
+			return null;
+		}
+		return null;
 	}
 
 	componentWillMount(){
@@ -32,7 +50,8 @@ class RootPageComp extends React.Component {
 							if(browserHistory.getCurrentLocation().pathname == "/") browserHistory.push('/maps');
 						} else {
 							//Fallback on register
-							AuthServices.createUser(user.uid, user.email, (createdUser)=>{
+							let joinMap = this.getPotentialMapToAdd(user.uid);
+							AuthServices.createUser(user.uid, user.email, joinMap, (createdUser)=>{
 								this.props.replaceUser(createdUser);
 								browserHistory.push('/maps');
 							});	

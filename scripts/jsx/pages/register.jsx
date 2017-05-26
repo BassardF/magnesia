@@ -22,8 +22,30 @@ class RegisterPage extends React.Component {
 	    	email : "",
 			pwd : "",
 			loading : false,
-			errorMessage : null
+			errorMessage : null,
+			externalInviteValidated : false
 	    };
+	}
+
+	componentDidMount(){
+		if(this.props.externalInvite && this.props.externalInvite.mid){
+			firebase.database().ref('maps/' + this.props.externalInvite.mid + '/externalInvites').once("value", (snap) => {
+				var invites = snap.val();
+				if(invites){
+					for (var i = 0; i < invites.length; i++) {
+						if(!invites[i].joined && invites[i].email == this.props.externalInvite.email){
+							this.setState({externalInviteValidated: true});
+							try{
+								sessionStorage.setItem('classToJoin', this.props.externalInvite.mid);
+								sessionStorage.setItem('inviteToUse', 'maps/' + this.props.externalInvite.mid + '/externalInvites/'+ i + '/joined');
+							} catch(e){}
+						}
+					}
+				}
+			}, (error)=>{
+				console.log("error", error);
+			});
+		}
 	}
 
 	isMailValid(email){
@@ -152,6 +174,10 @@ class RegisterPage extends React.Component {
 
 		return (
 			<div id="register-page">
+				<div style={{textAlign:"center", display : (this.state.externalInviteValidated ? "block" : "none")}}>
+					<div style={{fontWeight:"bold", marginBottom:"5px"}}>{this.props.externalInvite ? this.props.externalInvite.name : ""} invited you to join {this.props.externalInvite ? this.props.externalInvite.title : ""}</div>
+					<div>Register below and {this.props.externalInvite ? this.props.externalInvite.title : ""} will be joined automatically</div>
+				</div>
 				<div style={{paddingLeft:"30px", paddingRight:"30px", marginTop: "20px", marginBottom: "20px", display:"flex"}}>
 					<div style={{flexGrow:1}}><hr style={{opacity:".3", borderTop:"solid 1px #424242", borderBottom:"none"}}/></div>
 					<div style={{flexGrow:0, fontSize:"14px", paddingLeft:"10px", paddingRight:"10px"}}><div>Join Us - or - Login</div></div>
