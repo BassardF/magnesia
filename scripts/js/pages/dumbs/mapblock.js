@@ -119,7 +119,7 @@ var MapBlock = function (_React$Component) {
 					{ onClick: this.props.createMap, className: 'empty-map-block', style: { textAlign: "center", cursor: "pointer" } },
 					_react2.default.createElement(
 						'div',
-						{ style: { marginTop: "15px" } },
+						{ style: { marginTop: "10px" } },
 						_react2.default.createElement(
 							'div',
 							{ style: { fontSize: "14px", marginRight: "10px" } },
@@ -128,7 +128,7 @@ var MapBlock = function (_React$Component) {
 						_react2.default.createElement(
 							'div',
 							{ style: { fontSize: "25px", marginRight: "10px" } },
-							'+'
+							_react2.default.createElement('img', { className: 'first-map-small-img', src: '../assets/images/newmap.svg', style: { display: "block", marginLeft: "auto", marginRight: "auto" } })
 						)
 					)
 				);

@@ -706,6 +706,17 @@ body * {
   margin-bottom: 5px;
   background-color: #FAFAFA;
 }
+#maps-page .empty-map-block .first-map-small-img {
+  cursor: pointer;
+  -webkit-transition: all .5s ease;
+  transition: all .5s ease;
+  height: 25px;
+  margin-top: 10px;
+}
+#maps-page .empty-map-block:hover .first-map-small-img {
+  margin-top: 5px;
+  height: 30px;
+}
 #maps-page #map-details-title {
   text-align: center;
   cursor: pointer;
@@ -801,14 +812,12 @@ body * {
   cursor: pointer;
   -webkit-transition: all .5s ease;
   transition: all .5s ease;
-  height: 80px;
-  width: 80px;
-  margin-top: 20px;
+  height: 120px;
+  margin-top: 40px;
 }
 #maps-page .first-map-img:hover {
-  margin-top: 10px;
-  height: 100px;
-  width: 100px;
+  margin-top: 30px;
+  height: 140px;
 }
 .node-text-input {
   outline: none !important;

@@ -29056,7 +29056,7 @@ var LeftPanel = function (_React$Component) {
 									{ style: { verticalAlign: "middle" } },
 									'Creation'
 								),
-								_react2.default.createElement('img', { style: { verticalAlign: "middle", marginLeft: "5px", marginRight: "5px", width: "15px" }, src: "../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg") })
+								_react2.default.createElement('img', { style: { verticalAlign: "middle", marginLeft: "5px", marginRight: "5px", width: "30px", marginTop: "3px" }, src: "../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg") })
 							),
 							_react2.default.createElement(
 								'div',
@@ -29066,7 +29066,7 @@ var LeftPanel = function (_React$Component) {
 									{ style: { verticalAlign: "middle" } },
 									'Relation'
 								),
-								_react2.default.createElement('img', { style: { verticalAlign: "middle", marginLeft: "5px", marginRight: "5px", width: "15px" }, src: "../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg") })
+								_react2.default.createElement('img', { style: { verticalAlign: "middle", marginLeft: "5px", marginRight: "5px", width: "30px", marginTop: "3px" }, src: "../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg") })
 							)
 						)
 					),
@@ -29122,7 +29122,7 @@ var LeftPanel = function (_React$Component) {
 							),
 							_react2.default.createElement(
 								'div',
-								{ onClick: this.selectNav.bind(this, 3), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'logs', style: { cursor: "pointer", display: "none" } },
+								{ onClick: this.selectNav.bind(this, 3), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'logs', style: { cursor: "pointer", display: "block" } },
 								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
 							),
 							_react2.default.createElement(
@@ -30259,7 +30259,7 @@ var MapBlock = function (_React$Component) {
 					{ onClick: this.props.createMap, className: 'empty-map-block', style: { textAlign: "center", cursor: "pointer" } },
 					_react2.default.createElement(
 						'div',
-						{ style: { marginTop: "15px" } },
+						{ style: { marginTop: "10px" } },
 						_react2.default.createElement(
 							'div',
 							{ style: { fontSize: "14px", marginRight: "10px" } },
@@ -30268,7 +30268,7 @@ var MapBlock = function (_React$Component) {
 						_react2.default.createElement(
 							'div',
 							{ style: { fontSize: "25px", marginRight: "10px" } },
-							'+'
+							_react2.default.createElement('img', { className: 'first-map-small-img', src: '../assets/images/newmap.svg', style: { display: "block", marginLeft: "auto", marginRight: "auto" } })
 						)
 					)
 				);
@@ -32807,7 +32807,7 @@ var MapsPageComp = function (_React$Component) {
 						{ style: { marginTop: "20px", fontSize: "30px" } },
 						'Create your first Mind Map'
 					),
-					_react2.default.createElement('img', { className: 'first-map-img', src: '../assets/images/map.svg', style: { display: "block", marginLeft: "auto", marginRight: "auto" } })
+					_react2.default.createElement('img', { className: 'first-map-img', src: '../assets/images/newmap.svg', style: { display: "block", marginLeft: "auto", marginRight: "auto" } })
 				);
 			}
 
@@ -34048,8 +34048,8 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.default = {
-	defaultTextColor: "black",
-	defaultCircleStrokeColor: "black",
+	defaultTextColor: "#424242",
+	defaultCircleStrokeColor: "rgb(200, 200, 200)",
 	selectedCircleStrokeColor: "#c380ac",
 	defaultCircleStrokeWidth: "2px",
 	selectedCircleStrokeWidth: "4px"

@@ -113,11 +113,11 @@ class LeftPanel extends React.Component {
 						<div id="lp-node-block" className="flex-grow-1" style={{textAlign:"right", display : (this.state.minimize ? "none" : "block")}}>
 							<div title="create and modify nodes" className={"tippyleftpanel " + (this.props.mode === 1 ? "selected-mode-line" : "un-selected-mode-line")} onClick={this.changeMode.bind(this, 1)}>
 								<span style={{verticalAlign:"middle"}}>Creation</span>
-								<img style={{verticalAlign:"middle", marginLeft:"5px", marginRight:"5px", width:"15px"}} src={"../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg")}/>
+								<img style={{verticalAlign:"middle", marginLeft:"5px", marginRight:"5px", width:"30px", marginTop:"3px"}} src={"../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg")}/>
 							</div>
 							<div title="create relations between nodes" className={"tippyleftpanel " + (this.props.mode === 2 ? "selected-mode-line" : "un-selected-mode-line")} onClick={this.changeMode.bind(this, 2)}>
 								<span style={{verticalAlign:"middle"}}>Relation</span>
-								<img style={{verticalAlign:"middle", marginLeft:"5px", marginRight:"5px", width:"15px"}} src={"../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg")}/>
+								<img style={{verticalAlign:"middle", marginLeft:"5px", marginRight:"5px", width:"30px", marginTop:"3px"}} src={"../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg")}/>
 							</div>
 						</div>
 					</div>
@@ -150,7 +150,7 @@ class LeftPanel extends React.Component {
 							<div onClick={this.selectNav.bind(this, 2)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav")} title="chat" style={{cursor : "pointer"}}>
 								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 2 ? "chat.svg" : "chat-white.svg")}/>
 							</div>
-							<div onClick={this.selectNav.bind(this, 3)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav")} title="logs" style={{cursor : "pointer", display: "none"}}>
+							<div onClick={this.selectNav.bind(this, 3)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav")} title="logs" style={{cursor : "pointer", display: "block"}}>
 								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 3 ? "logs.svg" : "logs-white.svg")}/>
 							</div>
 							<div onClick={this.resetTutorial} className="tippyleftpanel left-panel-nav" title="reset tutorials" style={{cursor : "pointer", display : (this.props.user && this.props.user.advice ? "block" : "none")}}>

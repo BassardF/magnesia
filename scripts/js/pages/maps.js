@@ -403,7 +403,7 @@ var MapsPageComp = function (_React$Component) {
 						{ style: { marginTop: "20px", fontSize: "30px" } },
 						'Create your first Mind Map'
 					),
-					_react2.default.createElement('img', { className: 'first-map-img', src: '../assets/images/map.svg', style: { display: "block", marginLeft: "auto", marginRight: "auto" } })
+					_react2.default.createElement('img', { className: 'first-map-img', src: '../assets/images/newmap.svg', style: { display: "block", marginLeft: "auto", marginRight: "auto" } })
 				);
 			}
 

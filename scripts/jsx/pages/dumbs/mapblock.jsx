@@ -48,9 +48,11 @@ class MapBlock extends React.Component {
 		} else {
 			return (
 				<div onClick={this.props.createMap} className="empty-map-block" style={{textAlign:"center", cursor : "pointer"}}>
-					<div style={{marginTop:"15px"}}>
+					<div style={{marginTop:"10px"}}>
 						<div style={{fontSize:"14px", marginRight:"10px"}}>Create a new Map</div>
-						<div style={{fontSize:"25px", marginRight:"10px"}}>+</div>
+						<div style={{fontSize:"25px", marginRight:"10px"}}>
+							<img className="first-map-small-img" src="../assets/images/newmap.svg" style={{display:"block", marginLeft:"auto", marginRight:"auto"}}/>
+						</div>
 					</div>
 				</div>
 			);

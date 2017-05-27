@@ -180,7 +180,7 @@ var LeftPanel = function (_React$Component) {
 									{ style: { verticalAlign: "middle" } },
 									'Creation'
 								),
-								_react2.default.createElement('img', { style: { verticalAlign: "middle", marginLeft: "5px", marginRight: "5px", width: "15px" }, src: "../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg") })
+								_react2.default.createElement('img', { style: { verticalAlign: "middle", marginLeft: "5px", marginRight: "5px", width: "30px", marginTop: "3px" }, src: "../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg") })
 							),
 							_react2.default.createElement(
 								'div',
@@ -190,7 +190,7 @@ var LeftPanel = function (_React$Component) {
 									{ style: { verticalAlign: "middle" } },
 									'Relation'
 								),
-								_react2.default.createElement('img', { style: { verticalAlign: "middle", marginLeft: "5px", marginRight: "5px", width: "15px" }, src: "../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg") })
+								_react2.default.createElement('img', { style: { verticalAlign: "middle", marginLeft: "5px", marginRight: "5px", width: "30px", marginTop: "3px" }, src: "../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg") })
 							)
 						)
 					),
@@ -246,7 +246,7 @@ var LeftPanel = function (_React$Component) {
 							),
 							_react2.default.createElement(
 								'div',
-								{ onClick: this.selectNav.bind(this, 3), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'logs', style: { cursor: "pointer", display: "none" } },
+								{ onClick: this.selectNav.bind(this, 3), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'logs', style: { cursor: "pointer", display: "block" } },
 								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
 							),
 							_react2.default.createElement(

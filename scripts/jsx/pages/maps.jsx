@@ -317,7 +317,7 @@ class MapsPageComp extends React.Component {
 		} else {
 			rightSide = <div onClick={this.createMap} style={{textAlign:"center"}}>
 				<div style={{marginTop:"20px", fontSize:"30px"}}>Create your first Mind Map</div>
-				<img className="first-map-img" src="../assets/images/map.svg" style={{display:"block", marginLeft:"auto", marginRight:"auto"}}/>
+				<img className="first-map-img" src="../assets/images/newmap.svg" style={{display:"block", marginLeft:"auto", marginRight:"auto"}}/>
 			</div>;
 		}
 
