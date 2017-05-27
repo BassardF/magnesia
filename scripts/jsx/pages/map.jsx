@@ -29,10 +29,15 @@ class MapPageComp extends React.Component {
 		this.deleteSelectedNode = this.deleteSelectedNode.bind(this);
 		this.deleteLink = this.deleteLink.bind(this);
 
+		this.drawPointers = this.drawPointers.bind(this);
+
 		this.changeMode = this.changeMode.bind(this);
-		
+		this.makeSideInView = this.makeSideInView.bind(this);
+
  	    this.state = {
- 	    	mode : 1
+ 	    	mode : 1,
+ 	    	yShift : 0,
+ 	    	xShift : 0
  	    };
 	}
 
@@ -175,8 +180,10 @@ class MapPageComp extends React.Component {
 			if(this.state.map.links)
 				this.drawLinks(svg, width, height);
 
-			if(this.state.map.nodes)
+			if(this.state.map.nodes){
 				this.drawNodes(svg, width, height);
+				this.drawPointers(svg, width, height);
+			}
 
 			svg.on("dblclick", (d) => {
 				if(!d3.event.defaultPrevented){
@@ -189,6 +196,143 @@ class MapPageComp extends React.Component {
 				}
 			});
 		}
+	}
+
+	makeSideInView(side){
+		let svg = d3.select("svg"),
+			width = svg.property("width"),
+    		height = svg.property("height");
+    	let nodes = this.state.map.nodes;
+    	let extreme = 0;
+    	
+    	if(side && side == "top"){
+    		for (var i = 0; i < nodes.length; i++) {
+    			if(-nodes[i].y > height.animVal.value/2 && -nodes[i].y - height.animVal.value/3 > extreme) extreme = -nodes[i].y - height.animVal.value/3;
+    		}
+    		this.setState({yShift : extreme});
+    	} else if(side && side == "bottom"){
+    		for (var i = 0; i < nodes.length; i++) {
+    			if(nodes[i].y > height.animVal.value/2 && nodes[i].y - height.animVal.value/3 > extreme) extreme = nodes[i].y - height.animVal.value/3;
+    		}
+    		this.setState({yShift : -extreme});
+		} else if(side && side == "left"){
+			for (var i = 0; i < nodes.length; i++) {
+    			if(-nodes[i].x > width.animVal.value/2 && -nodes[i].x - width.animVal.value/3 > extreme) extreme = -nodes[i].x - width.animVal.value/3;
+    		}
+    		this.setState({xShift : extreme});
+		} else if(side && side == "right"){
+			for (var i = 0; i < nodes.length; i++) {
+    			if(nodes[i].x > width.animVal.value/2 && nodes[i].x - width.animVal.value/3 > extreme) extreme = nodes[i].x - width.animVal.value/3;
+    		}
+    		this.setState({xShift : -extreme});
+		}
+	}
+
+	drawPointers(svg, width, height){
+		let nodes = this.state.map.nodes;
+		let oob = {left:0, top:0, right:0, bottom:0};
+		if(nodes && nodes.length){
+			for (let i = 0; i < nodes.length; i++) {
+				let node = nodes[i];
+				if(node.x > width.animVal.value/2 - this.state.xShift) oob.right++;
+				if(-node.x > width.animVal.value/2 + this.state.xShift) oob.left++;
+				if(node.y > height.animVal.value/2 - this.state.yShift) oob.bottom++;
+				if(-node.y > height.animVal.value/2 + this.state.yShift) oob.top++;
+			}
+		}
+		let pointers = [], counters = [];
+		for(let side in oob){
+			let d = {}, t = {};
+			if(side === "left"){
+				d.x = 10, d.y = height.animVal.value/2 - 10;
+				t.x = 18, t.y = height.animVal.value/2;
+				d.transform = 180;
+			}
+			if(side === "right"){
+				d.x = width.animVal.value - 10, d.y = height.animVal.value/2;
+				t.x = width.animVal.value - 18, t.y = height.animVal.value/2;
+				d.transform = 0;
+			}
+			if(side === "top"){
+				d.x = width.animVal.value/2 + 5, d.y = 10;
+				t.x = width.animVal.value/2, t.y = 25;
+				d.transform = -90;
+			}
+			if(side === "bottom"){
+				d.x = width.animVal.value/2 - 5, d.y = height.animVal.value - 10;
+				t.x = width.animVal.value/2, t.y = height.animVal.value - 15;
+				d.transform = 90;
+			}
+			d.side = side;
+			d.text = "&#10095;";
+			pointers.push(d);
+
+			t.side = side;
+			t.text = oob[side];
+			counters.push(t);
+		}
+		
+		//pointers
+		let gs = svg.select("g#pointers").selectAll("g.pointers").data(pointers, function(d, ind) {
+			return d;
+		});
+
+		//Exit
+		gs.exit().remove();
+
+		//Enter
+		let elemtEnter = gs.enter().append("g").attr("class", "pointers");
+
+		elemtEnter.append("text")
+	        .attr("fill", "#CE93D8")
+	        .attr("text-anchor", "middle")
+	        .attr("class", "noselect")
+	        .attr("cursor", "pointer")
+	      .merge(gs.selectAll("text")) 
+	        .attr("dx", function(d, i) {return 0})
+	        .attr("dy", function(d, i) {return 0})
+	        .html((d, i) => {return pointers[i].text;})
+	        .attr("transform", function(d, i) {
+				return "translate("+pointers[i].x+","+pointers[i].y+") rotate("+pointers[i].transform+")";
+			});
+
+	    //counters
+		let gs2 = svg.select("g#counters").selectAll("g.counters").data(counters, function(d, ind) {
+			return d;
+		});
+
+		//Exit
+		gs2.exit().remove();
+
+		//Enter
+		let elemtEnter2 = gs2.enter().append("g").attr("class", "counters");
+
+		elemtEnter2.append("text")
+	        .attr("fill", "#CE93D8")
+	        .attr("text-anchor", "middle")
+	        .attr("class", "noselect")
+	        .attr("cursor", "pointer")
+	      .merge(gs2.selectAll("text")) 
+	        .attr("dx", function(d, i) {return counters[i].x})
+	        .attr("dy", function(d, i) {return counters[i].y})
+	        .text((d, i) => {return counters[i].text;});
+
+	    svg.selectAll("g.pointers").on("click", (d) => {
+	    	if(!d3.event.defaultPrevented){
+				d3.event.preventDefault();
+				if(d && typeof d.nid !== undefined) {
+					this.makeSideInView(d.side);
+				}
+			}
+		});
+		svg.selectAll("g.counters").on("click", (d) => {
+	    	if(!d3.event.defaultPrevented){
+				d3.event.preventDefault();
+				if(d && typeof d.nid !== undefined) {
+					this.makeSideInView(d.side);
+				}
+			}
+		});
 	}
 
 	drawNodes(svg, width, height){
@@ -211,8 +355,8 @@ class MapPageComp extends React.Component {
     		.style("cursor", "pointer")
     	 .merge(gs.selectAll("circle"))
     	    .attr("r", function(d, i) {return 40 * (nodes[i].scale ? +nodes[i].scale : 1);}) 
-    	  	.attr("cy", function(d, i) {return height.animVal.value/2 + (nodes[i].y ? +nodes[i].y : 0)})
-		    .attr("cx", function(d, i) {return width.animVal.value/2 + (nodes[i].x ? +nodes[i].x : 0)})
+    	  	.attr("cy", (d, i) => {return this.state.yShift + height.animVal.value/2 + (nodes[i].y ? +nodes[i].y : 0)})
+		    .attr("cx", (d, i) => {return this.state.xShift + width.animVal.value/2 + (nodes[i].x ? +nodes[i].x : 0)})
 		    .attr("stroke", (d, i) => {return nodes[i].nid == this.state.selectedNode ? DRAWING.selectedCircleStrokeColor : DRAWING.defaultCircleStrokeColor})
 		    .attr("stroke-width", (d, i) => {return nodes[i].nid == this.state.selectedNode ? DRAWING.selectedCircleStrokeWidth : DRAWING.defaultCircleStrokeWidth});
     		
@@ -221,8 +365,8 @@ class MapPageComp extends React.Component {
 	        .attr("text-anchor", "middle")
 	        .attr("class", "noselect")
 	      .merge(gs.selectAll("text")) 
-	        .attr("dx", function(d, i) {return width.animVal.value/2 + (nodes[i].x ? +nodes[i].x : 0);})
-	        .attr("dy", function(d, i) {return height.animVal.value/2 + (nodes[i].y ? +nodes[i].y : 0) + 5;})
+	        .attr("dx", (d, i) => {return this.state.xShift + width.animVal.value/2 + (nodes[i].x ? +nodes[i].x : 0);})
+	        .attr("dy", (d, i) => {return this.state.yShift + height.animVal.value/2 + (nodes[i].y ? +nodes[i].y : 0) + 5;})
 	        .text((d, i) => {return nodes[i].title;});
 
 	    //Actions
@@ -287,19 +431,19 @@ class MapPageComp extends React.Component {
     	  	})
     	  	.attr("x1", (d, i) => {
     	  		let origin = this.state.map.nodes[Object.keys(links[i].nodes)[0]];
-    	  		return width.animVal.value/2 + (origin.x ? +origin.x : 0);
+    	  		return width.animVal.value/2 + this.state.xShift + (origin.x ? +origin.x : 0);
     	  	})
 		    .attr("y1", (d, i) => {
 		    	let origin = this.state.map.nodes[Object.keys(links[i].nodes)[0]];
-		    	return height.animVal.value/2 + (origin.y ? +origin.y : 0);
+		    	return height.animVal.value/2 + this.state.yShift + (origin.y ? +origin.y : 0);
 		    })
 		    .attr("x2", (d, i) => {
 		    	let destination = this.state.map.nodes[Object.keys(links[i].nodes)[1]];
-    	  		return width.animVal.value/2 + (destination.x ? +destination.x : 0);
+    	  		return width.animVal.value/2 + this.state.xShift +  (destination.x ? +destination.x : 0);
 		    })
 		    .attr("y2", (d, i) => {
 		    	let destination = this.state.map.nodes[Object.keys(links[i].nodes)[1]];
-		    	return height.animVal.value/2 + (destination.y ? +destination.y : 0);
+		    	return height.animVal.value/2 + this.state.yShift + (destination.y ? +destination.y : 0);
 		    })
 
 		    svg.selectAll("g.link").on("click", (d) => {
@@ -404,7 +548,7 @@ class MapPageComp extends React.Component {
 	}
 
 	render() {
-		
+
 		return (
 			<div id="maps-page" style={{height:"100%"}}>
 				<Advice user={this.props.user} map={this.state.map}  selectedNode={this.state.selectedNode}/>
@@ -426,6 +570,8 @@ class MapPageComp extends React.Component {
 						<svg ref="svg" style={{height: '100%', width: '100%'}}>
 							<g id="links"></g>
 							<g id="nodes"></g>
+							<g id="pointers"></g>
+							<g id="counters"></g>
 						</svg>
 					</div>
 				</div>

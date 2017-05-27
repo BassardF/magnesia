@@ -31949,10 +31949,15 @@ var MapPageComp = function (_React$Component) {
 		_this.deleteSelectedNode = _this.deleteSelectedNode.bind(_this);
 		_this.deleteLink = _this.deleteLink.bind(_this);
 
+		_this.drawPointers = _this.drawPointers.bind(_this);
+
 		_this.changeMode = _this.changeMode.bind(_this);
+		_this.makeSideInView = _this.makeSideInView.bind(_this);
 
 		_this.state = {
-			mode: 1
+			mode: 1,
+			yShift: 0,
+			xShift: 0
 		};
 		return _this;
 	}
@@ -32117,7 +32122,10 @@ var MapPageComp = function (_React$Component) {
 
 				if (this.state.map.links) this.drawLinks(svg, width, height);
 
-				if (this.state.map.nodes) this.drawNodes(svg, width, height);
+				if (this.state.map.nodes) {
+					this.drawNodes(svg, width, height);
+					this.drawPointers(svg, width, height);
+				}
 
 				svg.on("dblclick", function (d) {
 					if (!d3.event.defaultPrevented) {
@@ -32129,9 +32137,147 @@ var MapPageComp = function (_React$Component) {
 			}
 		}
 	}, {
+		key: 'makeSideInView',
+		value: function makeSideInView(side) {
+			var svg = d3.select("svg"),
+			    width = svg.property("width"),
+			    height = svg.property("height");
+			var nodes = this.state.map.nodes;
+			var extreme = 0;
+
+			if (side && side == "top") {
+				for (var i = 0; i < nodes.length; i++) {
+					if (-nodes[i].y > height.animVal.value / 2 && -nodes[i].y - height.animVal.value / 3 > extreme) extreme = -nodes[i].y - height.animVal.value / 3;
+				}
+				this.setState({ yShift: extreme });
+			} else if (side && side == "bottom") {
+				for (var i = 0; i < nodes.length; i++) {
+					if (nodes[i].y > height.animVal.value / 2 && nodes[i].y - height.animVal.value / 3 > extreme) extreme = nodes[i].y - height.animVal.value / 3;
+				}
+				this.setState({ yShift: -extreme });
+			} else if (side && side == "left") {
+				for (var i = 0; i < nodes.length; i++) {
+					if (-nodes[i].x > width.animVal.value / 2 && -nodes[i].x - width.animVal.value / 3 > extreme) extreme = -nodes[i].x - width.animVal.value / 3;
+				}
+				this.setState({ xShift: extreme });
+			} else if (side && side == "right") {
+				for (var i = 0; i < nodes.length; i++) {
+					if (nodes[i].x > width.animVal.value / 2 && nodes[i].x - width.animVal.value / 3 > extreme) extreme = nodes[i].x - width.animVal.value / 3;
+				}
+				this.setState({ xShift: -extreme });
+			}
+		}
+	}, {
+		key: 'drawPointers',
+		value: function drawPointers(svg, width, height) {
+			var _this6 = this;
+
+			var nodes = this.state.map.nodes;
+			var oob = { left: 0, top: 0, right: 0, bottom: 0 };
+			if (nodes && nodes.length) {
+				for (var i = 0; i < nodes.length; i++) {
+					var node = nodes[i];
+					if (node.x > width.animVal.value / 2 - this.state.xShift) oob.right++;
+					if (-node.x > width.animVal.value / 2 + this.state.xShift) oob.left++;
+					if (node.y > height.animVal.value / 2 - this.state.yShift) oob.bottom++;
+					if (-node.y > height.animVal.value / 2 + this.state.yShift) oob.top++;
+				}
+			}
+			var pointers = [],
+			    counters = [];
+			for (var side in oob) {
+				var d = {},
+				    t = {};
+				if (side === "left") {
+					d.x = 10, d.y = height.animVal.value / 2 - 10;
+					t.x = 18, t.y = height.animVal.value / 2;
+					d.transform = 180;
+				}
+				if (side === "right") {
+					d.x = width.animVal.value - 10, d.y = height.animVal.value / 2;
+					t.x = width.animVal.value - 18, t.y = height.animVal.value / 2;
+					d.transform = 0;
+				}
+				if (side === "top") {
+					d.x = width.animVal.value / 2 + 5, d.y = 10;
+					t.x = width.animVal.value / 2, t.y = 25;
+					d.transform = -90;
+				}
+				if (side === "bottom") {
+					d.x = width.animVal.value / 2 - 5, d.y = height.animVal.value - 10;
+					t.x = width.animVal.value / 2, t.y = height.animVal.value - 15;
+					d.transform = 90;
+				}
+				d.side = side;
+				d.text = "&#10095;";
+				pointers.push(d);
+
+				t.side = side;
+				t.text = oob[side];
+				counters.push(t);
+			}
+
+			//pointers
+			var gs = svg.select("g#pointers").selectAll("g.pointers").data(pointers, function (d, ind) {
+				return d;
+			});
+
+			//Exit
+			gs.exit().remove();
+
+			//Enter
+			var elemtEnter = gs.enter().append("g").attr("class", "pointers");
+
+			elemtEnter.append("text").attr("fill", "#CE93D8").attr("text-anchor", "middle").attr("class", "noselect").attr("cursor", "pointer").merge(gs.selectAll("text")).attr("dx", function (d, i) {
+				return 0;
+			}).attr("dy", function (d, i) {
+				return 0;
+			}).html(function (d, i) {
+				return pointers[i].text;
+			}).attr("transform", function (d, i) {
+				return "translate(" + pointers[i].x + "," + pointers[i].y + ") rotate(" + pointers[i].transform + ")";
+			});
+
+			//counters
+			var gs2 = svg.select("g#counters").selectAll("g.counters").data(counters, function (d, ind) {
+				return d;
+			});
+
+			//Exit
+			gs2.exit().remove();
+
+			//Enter
+			var elemtEnter2 = gs2.enter().append("g").attr("class", "counters");
+
+			elemtEnter2.append("text").attr("fill", "#CE93D8").attr("text-anchor", "middle").attr("class", "noselect").attr("cursor", "pointer").merge(gs2.selectAll("text")).attr("dx", function (d, i) {
+				return counters[i].x;
+			}).attr("dy", function (d, i) {
+				return counters[i].y;
+			}).text(function (d, i) {
+				return counters[i].text;
+			});
+
+			svg.selectAll("g.pointers").on("click", function (d) {
+				if (!d3.event.defaultPrevented) {
+					d3.event.preventDefault();
+					if (d && _typeof(d.nid) !== undefined) {
+						_this6.makeSideInView(d.side);
+					}
+				}
+			});
+			svg.selectAll("g.counters").on("click", function (d) {
+				if (!d3.event.defaultPrevented) {
+					d3.event.preventDefault();
+					if (d && _typeof(d.nid) !== undefined) {
+						_this6.makeSideInView(d.side);
+					}
+				}
+			});
+		}
+	}, {
 		key: 'drawNodes',
 		value: function drawNodes(svg, width, height) {
-			var _this6 = this;
+			var _this7 = this;
 
 			var nodes = this.state.map.nodes;
 			var gs = svg.select("g#nodes").selectAll("g.node").data(nodes, function (d, ind) {
@@ -32151,19 +32297,19 @@ var MapPageComp = function (_React$Component) {
 			}).attr("fill", "white").style("cursor", "pointer").merge(gs.selectAll("circle")).attr("r", function (d, i) {
 				return 40 * (nodes[i].scale ? +nodes[i].scale : 1);
 			}).attr("cy", function (d, i) {
-				return height.animVal.value / 2 + (nodes[i].y ? +nodes[i].y : 0);
+				return _this7.state.yShift + height.animVal.value / 2 + (nodes[i].y ? +nodes[i].y : 0);
 			}).attr("cx", function (d, i) {
-				return width.animVal.value / 2 + (nodes[i].x ? +nodes[i].x : 0);
+				return _this7.state.xShift + width.animVal.value / 2 + (nodes[i].x ? +nodes[i].x : 0);
 			}).attr("stroke", function (d, i) {
-				return nodes[i].nid == _this6.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
+				return nodes[i].nid == _this7.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
 			}).attr("stroke-width", function (d, i) {
-				return nodes[i].nid == _this6.state.selectedNode ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
+				return nodes[i].nid == _this7.state.selectedNode ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
 			});
 
 			elemtEnter.append("text").attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").attr("class", "noselect").merge(gs.selectAll("text")).attr("dx", function (d, i) {
-				return width.animVal.value / 2 + (nodes[i].x ? +nodes[i].x : 0);
+				return _this7.state.xShift + width.animVal.value / 2 + (nodes[i].x ? +nodes[i].x : 0);
 			}).attr("dy", function (d, i) {
-				return height.animVal.value / 2 + (nodes[i].y ? +nodes[i].y : 0) + 5;
+				return _this7.state.yShift + height.animVal.value / 2 + (nodes[i].y ? +nodes[i].y : 0) + 5;
 			}).text(function (d, i) {
 				return nodes[i].title;
 			});
@@ -32175,10 +32321,10 @@ var MapPageComp = function (_React$Component) {
 				if (!d3.event.defaultPrevented) {
 					d3.event.preventDefault();
 					if (d && _typeof(d.nid) !== undefined) {
-						if (_this6.state.mode === 2 && (_this6.state.selectedNode || _this6.state.selectedNode === 0) && d.nid != _this6.state.selectedNode) {
-							_this6.addNewLink(d.nid, _this6.state.selectedNode);
+						if (_this7.state.mode === 2 && (_this7.state.selectedNode || _this7.state.selectedNode === 0) && d.nid != _this7.state.selectedNode) {
+							_this7.addNewLink(d.nid, _this7.state.selectedNode);
 						} else {
-							_this6.selectNode(d.nid);
+							_this7.selectNode(d.nid);
 						}
 					}
 				}
@@ -32188,15 +32334,15 @@ var MapPageComp = function (_React$Component) {
 				}
 			}).call(d3.drag().on("drag", function (d) {
 				d.active = true;
-				var imap = _this6.state.map;
+				var imap = _this7.state.map;
 				var r = 40 * (d.scale ? +d.scale : 1);
 				imap.changeNodeLocation(d.nid, d3.event.x, d3.event.y);
-				_this6.setState({
+				_this7.setState({
 					map: imap
 				});
 			}).on("end", function (d) {
 				if (d.active) {
-					var imap = _this6.state.map;
+					var imap = _this7.state.map;
 					d.active = false;
 					var r = 40 * (d.scale ? +d.scale : 1);
 					imap.changeNodeLocation(d.nid, d3.event.x, d3.event.y);
@@ -32207,7 +32353,7 @@ var MapPageComp = function (_React$Component) {
 	}, {
 		key: 'drawLinks',
 		value: function drawLinks(svg, width, height) {
-			var _this7 = this;
+			var _this8 = this;
 
 			var links = this.state.map.links;
 			var gs = svg.select("g#links").selectAll("g.link").data(links, function (d) {
@@ -32224,25 +32370,25 @@ var MapPageComp = function (_React$Component) {
 				return _drawing2.default.defaultCircleStrokeWidth;
 			}).merge(gs.selectAll("line")).attr("stroke", function (d, i) {
 				var id = Object.keys(links[i].nodes).join("");
-				var selected = _this7.state.selectedLink && id == _this7.state.selectedLink;
+				var selected = _this8.state.selectedLink && id == _this8.state.selectedLink;
 				return selected ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
 			}).attr("x1", function (d, i) {
-				var origin = _this7.state.map.nodes[Object.keys(links[i].nodes)[0]];
-				return width.animVal.value / 2 + (origin.x ? +origin.x : 0);
+				var origin = _this8.state.map.nodes[Object.keys(links[i].nodes)[0]];
+				return width.animVal.value / 2 + _this8.state.xShift + (origin.x ? +origin.x : 0);
 			}).attr("y1", function (d, i) {
-				var origin = _this7.state.map.nodes[Object.keys(links[i].nodes)[0]];
-				return height.animVal.value / 2 + (origin.y ? +origin.y : 0);
+				var origin = _this8.state.map.nodes[Object.keys(links[i].nodes)[0]];
+				return height.animVal.value / 2 + _this8.state.yShift + (origin.y ? +origin.y : 0);
 			}).attr("x2", function (d, i) {
-				var destination = _this7.state.map.nodes[Object.keys(links[i].nodes)[1]];
-				return width.animVal.value / 2 + (destination.x ? +destination.x : 0);
+				var destination = _this8.state.map.nodes[Object.keys(links[i].nodes)[1]];
+				return width.animVal.value / 2 + _this8.state.xShift + (destination.x ? +destination.x : 0);
 			}).attr("y2", function (d, i) {
-				var destination = _this7.state.map.nodes[Object.keys(links[i].nodes)[1]];
-				return height.animVal.value / 2 + (destination.y ? +destination.y : 0);
+				var destination = _this8.state.map.nodes[Object.keys(links[i].nodes)[1]];
+				return height.animVal.value / 2 + _this8.state.yShift + (destination.y ? +destination.y : 0);
 			});
 
 			svg.selectAll("g.link").on("click", function (d) {
 				d3.event.preventDefault();
-				if (d && _typeof(d.nid) !== undefined && d.nodes) _this7.selectLink(d);
+				if (d && _typeof(d.nid) !== undefined && d.nodes) _this8.selectLink(d);
 			});
 		}
 	}, {
@@ -32360,7 +32506,9 @@ var MapPageComp = function (_React$Component) {
 							'svg',
 							{ ref: 'svg', style: { height: '100%', width: '100%' } },
 							_react2.default.createElement('g', { id: 'links' }),
-							_react2.default.createElement('g', { id: 'nodes' })
+							_react2.default.createElement('g', { id: 'nodes' }),
+							_react2.default.createElement('g', { id: 'pointers' }),
+							_react2.default.createElement('g', { id: 'counters' })
 						)
 					)
 				)
