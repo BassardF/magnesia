@@ -32130,10 +32130,15 @@ var MapPageComp = function (_React$Component) {
 				svg.on("dblclick", function (d) {
 					if (!d3.event.defaultPrevented) {
 						if (_this5.state.mode === 1) {
-							_this5.addNewNode(d3.event.x - document.getElementById("left-panel").offsetWidth - width.animVal.value / 2, d3.event.y - height.animVal.value / 2);
+							_this5.addNewNode(d3.event.x - document.getElementById("left-panel").offsetWidth - width.animVal.value / 2 - _this5.state.xShift, d3.event.y - height.animVal.value / 2 - _this5.state.yShift);
 						}
 					}
-				});
+				}).call(d3.drag().on("drag", function (d) {
+					_this5.setState({
+						xShift: _this5.state.xShift + d3.event.dx,
+						yShift: _this5.state.yShift + d3.event.dy
+					});
+				}));
 			}
 		}
 	}, {
@@ -32188,33 +32193,35 @@ var MapPageComp = function (_React$Component) {
 			for (var side in oob) {
 				var d = {},
 				    t = {};
-				if (side === "left") {
-					d.x = 10, d.y = height.animVal.value / 2 - 10;
-					t.x = 18, t.y = height.animVal.value / 2;
-					d.transform = 180;
-				}
-				if (side === "right") {
-					d.x = width.animVal.value - 10, d.y = height.animVal.value / 2;
-					t.x = width.animVal.value - 18, t.y = height.animVal.value / 2;
-					d.transform = 0;
-				}
-				if (side === "top") {
-					d.x = width.animVal.value / 2 + 5, d.y = 10;
-					t.x = width.animVal.value / 2, t.y = 25;
-					d.transform = -90;
-				}
-				if (side === "bottom") {
-					d.x = width.animVal.value / 2 - 5, d.y = height.animVal.value - 10;
-					t.x = width.animVal.value / 2, t.y = height.animVal.value - 15;
-					d.transform = 90;
-				}
-				d.side = side;
-				d.text = "&#10095;";
-				pointers.push(d);
+				if (oob[side]) {
+					if (side === "left") {
+						d.x = 10, d.y = height.animVal.value / 2 - 10;
+						t.x = 18, t.y = height.animVal.value / 2;
+						d.transform = 180;
+					}
+					if (side === "right") {
+						d.x = width.animVal.value - 10, d.y = height.animVal.value / 2;
+						t.x = width.animVal.value - 18, t.y = height.animVal.value / 2;
+						d.transform = 0;
+					}
+					if (side === "top") {
+						d.x = width.animVal.value / 2 + 5, d.y = 10;
+						t.x = width.animVal.value / 2, t.y = 25;
+						d.transform = -90;
+					}
+					if (side === "bottom") {
+						d.x = width.animVal.value / 2 - 5, d.y = height.animVal.value - 10;
+						t.x = width.animVal.value / 2, t.y = height.animVal.value - 15;
+						d.transform = 90;
+					}
+					d.side = side;
+					d.text = "&#10095;";
+					pointers.push(d);
 
-				t.side = side;
-				t.text = oob[side];
-				counters.push(t);
+					t.side = side;
+					t.text = oob[side];
+					counters.push(t);
+				}
 			}
 
 			//pointers
@@ -32258,6 +32265,7 @@ var MapPageComp = function (_React$Component) {
 			});
 
 			svg.selectAll("g.pointers").on("click", function (d) {
+				console.log("clcik g.pointers");
 				if (!d3.event.defaultPrevented) {
 					d3.event.preventDefault();
 					if (d && _typeof(d.nid) !== undefined) {
@@ -32266,6 +32274,7 @@ var MapPageComp = function (_React$Component) {
 				}
 			});
 			svg.selectAll("g.counters").on("click", function (d) {
+				console.log("clcik g.counters");
 				if (!d3.event.defaultPrevented) {
 					d3.event.preventDefault();
 					if (d && _typeof(d.nid) !== undefined) {

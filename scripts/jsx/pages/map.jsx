@@ -108,7 +108,6 @@ class MapPageComp extends React.Component {
 				this.selectNode(null);
 			}.bind(this));
 		}
-		
 	}
 
 	deleteLink(l){
@@ -189,12 +188,20 @@ class MapPageComp extends React.Component {
 				if(!d3.event.defaultPrevented){
 					if(this.state.mode === 1){
 						this.addNewNode(
-							d3.event.x - (document.getElementById("left-panel").offsetWidth) - width.animVal.value/2, 
-							d3.event.y - height.animVal.value/2
+							d3.event.x - (document.getElementById("left-panel").offsetWidth) - width.animVal.value/2 - this.state.xShift, 
+							d3.event.y - height.animVal.value/2 - this.state.yShift
 						);
 					}
 				}
-			});
+			})
+			.call(d3.drag()
+				.on("drag", (d) => {
+		        	this.setState({
+		        		xShift : this.state.xShift + d3.event.dx,
+		        		yShift : this.state.yShift + d3.event.dy
+		        	});
+				})
+		    );
 		}
 	}
 
@@ -243,33 +250,35 @@ class MapPageComp extends React.Component {
 		let pointers = [], counters = [];
 		for(let side in oob){
 			let d = {}, t = {};
-			if(side === "left"){
-				d.x = 10, d.y = height.animVal.value/2 - 10;
-				t.x = 18, t.y = height.animVal.value/2;
-				d.transform = 180;
+			if(oob[side]){
+				if(side === "left"){
+					d.x = 10, d.y = height.animVal.value/2 - 10;
+					t.x = 18, t.y = height.animVal.value/2;
+					d.transform = 180;
+				}
+				if(side === "right"){
+					d.x = width.animVal.value - 10, d.y = height.animVal.value/2;
+					t.x = width.animVal.value - 18, t.y = height.animVal.value/2;
+					d.transform = 0;
+				}
+				if(side === "top"){
+					d.x = width.animVal.value/2 + 5, d.y = 10;
+					t.x = width.animVal.value/2, t.y = 25;
+					d.transform = -90;
+				}
+				if(side === "bottom"){
+					d.x = width.animVal.value/2 - 5, d.y = height.animVal.value - 10;
+					t.x = width.animVal.value/2, t.y = height.animVal.value - 15;
+					d.transform = 90;
+				}
+				d.side = side;
+				d.text = "&#10095;";
+				pointers.push(d);
+	
+				t.side = side;
+				t.text = oob[side];
+				counters.push(t);
 			}
-			if(side === "right"){
-				d.x = width.animVal.value - 10, d.y = height.animVal.value/2;
-				t.x = width.animVal.value - 18, t.y = height.animVal.value/2;
-				d.transform = 0;
-			}
-			if(side === "top"){
-				d.x = width.animVal.value/2 + 5, d.y = 10;
-				t.x = width.animVal.value/2, t.y = 25;
-				d.transform = -90;
-			}
-			if(side === "bottom"){
-				d.x = width.animVal.value/2 - 5, d.y = height.animVal.value - 10;
-				t.x = width.animVal.value/2, t.y = height.animVal.value - 15;
-				d.transform = 90;
-			}
-			d.side = side;
-			d.text = "&#10095;";
-			pointers.push(d);
-
-			t.side = side;
-			t.text = oob[side];
-			counters.push(t);
 		}
 		
 		//pointers
@@ -318,6 +327,7 @@ class MapPageComp extends React.Component {
 	        .text((d, i) => {return counters[i].text;});
 
 	    svg.selectAll("g.pointers").on("click", (d) => {
+	    	console.log("clcik g.pointers");
 	    	if(!d3.event.defaultPrevented){
 				d3.event.preventDefault();
 				if(d && typeof d.nid !== undefined) {
@@ -326,6 +336,7 @@ class MapPageComp extends React.Component {
 			}
 		});
 		svg.selectAll("g.counters").on("click", (d) => {
+	    	console.log("clcik g.counters");
 	    	if(!d3.event.defaultPrevented){
 				d3.event.preventDefault();
 				if(d && typeof d.nid !== undefined) {
