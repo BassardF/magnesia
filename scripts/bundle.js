@@ -32420,8 +32420,8 @@ var MapPageComp = function (_React$Component) {
 				    height = svg.property("height");
 
 				var r = 40 * (d.scale ? +d.scale : 1);
-				xy.x = width.animVal.value / 2 + (d.x ? +d.x : 0) - r + 5;
-				xy.y = height.animVal.value / 2 + (d.y ? +d.y : 0) - 10;
+				xy.x = width.animVal.value / 2 + (d.x ? +d.x : 0) - r + 5 + thisRef.state.xShift;
+				xy.y = height.animVal.value / 2 + (d.y ? +d.y : 0) - 10 + thisRef.state.yShift;
 
 				var el = d3.select(this);
 				var p_el = d3.select(p);
