@@ -74,6 +74,10 @@ var MapPageComp = function (_React$Component) {
 		_this.changeMode = _this.changeMode.bind(_this);
 		_this.makeSideInView = _this.makeSideInView.bind(_this);
 
+		_this.changeNodeColor = _this.changeNodeColor.bind(_this);
+		_this.changeNodeBcgColor = _this.changeNodeBcgColor.bind(_this);
+		_this.changeNodeBorderColor = _this.changeNodeBorderColor.bind(_this);
+
 		_this.state = {
 			mode: 1,
 			yShift: 0,
@@ -205,6 +209,30 @@ var MapPageComp = function (_React$Component) {
 			var uid = _auth2.default.getUid();
 			var name = this.props.user ? this.props.user.name : "John Doe";
 			this.state.map.sendMessage(msg, uid, name);
+		}
+	}, {
+		key: 'changeNodeColor',
+		value: function changeNodeColor(color) {
+			var map = this.state.map;
+			var node = map.nodes[this.state.selectedNode];
+			node.color = color;
+			node.save();
+		}
+	}, {
+		key: 'changeNodeBcgColor',
+		value: function changeNodeBcgColor(color) {
+			var map = this.state.map;
+			var node = map.nodes[this.state.selectedNode];
+			node.bcg_color = color;
+			node.save();
+		}
+	}, {
+		key: 'changeNodeBorderColor',
+		value: function changeNodeBorderColor(color) {
+			var map = this.state.map;
+			var node = map.nodes[this.state.selectedNode];
+			node.border_color = color;
+			node.save();
 		}
 	}, {
 		key: 'changeNodeScale',
@@ -385,7 +413,6 @@ var MapPageComp = function (_React$Component) {
 			});
 
 			svg.selectAll("g.pointers").on("click", function (d) {
-				console.log("clcik g.pointers");
 				if (!d3.event.defaultPrevented) {
 					d3.event.preventDefault();
 					if (d && _typeof(d.nid) !== undefined) {
@@ -394,7 +421,6 @@ var MapPageComp = function (_React$Component) {
 				}
 			});
 			svg.selectAll("g.counters").on("click", function (d) {
-				console.log("clcik g.counters");
 				if (!d3.event.defaultPrevented) {
 					d3.event.preventDefault();
 					if (d && _typeof(d.nid) !== undefined) {
@@ -419,23 +445,23 @@ var MapPageComp = function (_React$Component) {
 			//Enter
 			var elemtEnter = gs.enter().append("g").attr("class", "node");
 
-			elemtEnter.append("circle").attr("stroke", function (d, i) {
-				return _drawing2.default.defaultCircleStrokeColor;
-			}).attr("stroke-width", function (d, i) {
-				return _drawing2.default.defaultCircleStrokeWidth;
-			}).attr("fill", "white").style("cursor", "pointer").merge(gs.selectAll("circle")).attr("r", function (d, i) {
+			elemtEnter.append("circle").style("cursor", "pointer").merge(gs.selectAll("circle")).attr("fill", function (d, i) {
+				return nodes[i].bcg_color || "white";
+			}).attr("r", function (d, i) {
 				return 40 * (nodes[i].scale ? +nodes[i].scale : 1);
 			}).attr("cy", function (d, i) {
 				return _this7.state.yShift + height.animVal.value / 2 + (nodes[i].y ? +nodes[i].y : 0);
 			}).attr("cx", function (d, i) {
 				return _this7.state.xShift + width.animVal.value / 2 + (nodes[i].x ? +nodes[i].x : 0);
 			}).attr("stroke", function (d, i) {
-				return nodes[i].nid == _this7.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
+				return nodes[i].nid == _this7.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : nodes[i].border_color || _drawing2.default.defaultCircleStrokeColor;
 			}).attr("stroke-width", function (d, i) {
 				return nodes[i].nid == _this7.state.selectedNode ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
 			});
 
-			elemtEnter.append("text").attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").attr("class", "noselect").merge(gs.selectAll("text")).attr("dx", function (d, i) {
+			elemtEnter.append("text").attr("text-anchor", "middle").attr("class", "noselect").merge(gs.selectAll("text")).attr("fill", function (d, i) {
+				return nodes[i].color || _drawing2.default.defaultTextColor;
+			}).attr("dx", function (d, i) {
 				return _this7.state.xShift + width.animVal.value / 2 + (nodes[i].x ? +nodes[i].x : 0);
 			}).attr("dy", function (d, i) {
 				return _this7.state.yShift + height.animVal.value / 2 + (nodes[i].y ? +nodes[i].y : 0) + 5;
@@ -619,6 +645,9 @@ var MapPageComp = function (_React$Component) {
 					_react2.default.createElement(_leftpanel2.default, { map: this.state.map,
 						user: this.props.user,
 						mode: this.state.mode,
+						changeNodeColor: this.changeNodeColor,
+						changeNodeBcgColor: this.changeNodeBcgColor,
+						changeNodeBorderColor: this.changeNodeBorderColor,
 						changeMode: this.changeMode,
 						changeNodeText: this.changeNodeText, changeNodeDescription: this.changeNodeDescription,
 						selectedLink: this.state.selectedLink, selectLink: this.selectLink,

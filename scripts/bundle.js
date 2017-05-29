@@ -28896,6 +28896,10 @@ var _fullbutton = require('./fullbutton');
 
 var _fullbutton2 = _interopRequireDefault(_fullbutton);
 
+var _drawing = require('../../properties/drawing');
+
+var _drawing2 = _interopRequireDefault(_drawing);
+
 var _auth = require('../../services/auth');
 
 var _auth2 = _interopRequireDefault(_auth);
@@ -28920,6 +28924,7 @@ var LeftPanel = function (_React$Component) {
 		_this.resetTutorial = _this.resetTutorial.bind(_this);
 		_this.minimizeOrExpand = _this.minimizeOrExpand.bind(_this);
 		_this.changeMode = _this.changeMode.bind(_this);
+		_this.printWindow = _this.printWindow.bind(_this);
 
 		_this.state = {
 			nav: 0,
@@ -28981,6 +28986,11 @@ var LeftPanel = function (_React$Component) {
 			this.props.changeMode(mode);
 		}
 	}, {
+		key: 'printWindow',
+		value: function printWindow() {
+			window.print();
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 
@@ -29000,6 +29010,9 @@ var LeftPanel = function (_React$Component) {
 					break;
 				case 1:
 					dom = _react2.default.createElement(NodeDetails, { map: this.props.map,
+						changeNodeColor: this.props.changeNodeColor,
+						changeNodeBcgColor: this.props.changeNodeBcgColor,
+						changeNodeBorderColor: this.props.changeNodeBorderColor,
 						changeNodeText: this.props.changeNodeText, changeNodeDescription: this.props.changeNodeDescription,
 						selectedNode: this.props.selectedNode, selectNode: this.props.selectNode,
 						deleteSelectedNode: this.props.deleteSelectedNode,
@@ -29122,8 +29135,13 @@ var LeftPanel = function (_React$Component) {
 							),
 							_react2.default.createElement(
 								'div',
-								{ onClick: this.selectNav.bind(this, 3), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'logs', style: { cursor: "pointer", display: "block" } },
+								{ onClick: this.selectNav.bind(this, 3), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'logs', style: { cursor: "pointer", display: "none" } },
 								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
+							),
+							_react2.default.createElement(
+								'div',
+								{ onClick: this.printWindow, className: 'tippyleftpanel left-panel-nav', title: 'export', style: { cursor: "pointer" } },
+								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/export-white.svg' })
 							),
 							_react2.default.createElement(
 								'div',
@@ -29344,12 +29362,16 @@ var NodeDetails = function (_React$Component5) {
 		_this7.okd = _this7.okd.bind(_this7);
 		_this7.appl2 = _this7.appl2.bind(_this7);
 		_this7.changeNodeScale = _this7.changeNodeScale.bind(_this7);
+		_this7.changeNodeColor = _this7.changeNodeColor.bind(_this7);
+		_this7.changeNodeBcgColor = _this7.changeNodeBcgColor.bind(_this7);
+		_this7.changeNodeBorderColor = _this7.changeNodeBorderColor.bind(_this7);
 
 		var node = _this7.props.map && _this7.props.map.nodes && _this7.props.selectedNode !== undefined && _this7.props.map.nodes[_this7.props.selectedNode];
 
 		_this7.state = {
 			text: node ? node.title : "",
-			description: node ? node.description : ""
+			description: node ? node.description : "",
+			showColor: 1
 		};
 		return _this7;
 	}
@@ -29415,9 +29437,76 @@ var NodeDetails = function (_React$Component5) {
 			this.props.changeNodeScale(this.props.selectedNode, scale);
 		}
 	}, {
+		key: 'changeNodeColor',
+		value: function changeNodeColor(color) {
+			this.props.changeNodeColor(color);
+		}
+	}, {
+		key: 'changeNodeBcgColor',
+		value: function changeNodeBcgColor(color) {
+			this.props.changeNodeBcgColor(color);
+		}
+	}, {
+		key: 'changeNodeBorderColor',
+		value: function changeNodeBorderColor(color) {
+			this.props.changeNodeBorderColor(color);
+		}
+	}, {
+		key: 'changeShowColor',
+		value: function changeShowColor(showColor) {
+			this.setState({
+				showColor: showColor
+			});
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var node = this.props.map && this.props.map.nodes && this.props.selectedNode !== undefined && this.props.map.nodes[this.props.selectedNode];
+			var textColors = [],
+			    bcgColors = [],
+			    borderColors = [],
+			    currentText = [],
+			    currentBcg = [],
+			    currentBorder = [];
+			for (var i = 0; i < _drawing2.default.colors.length; i++) {
+
+				currentText.push(_react2.default.createElement(
+					'div',
+					{ className: 'flex-grow-1', key: "text-color-key-" + i },
+					_react2.default.createElement('div', { onClick: this.changeNodeColor.bind(this, _drawing2.default.colors[i]), style: { backgroundColor: _drawing2.default.colors[i], height: "20px", cursor: "pointer", border: "solid 2px " + (node.color == _drawing2.default.colors[i] ? "white" : _drawing2.default.colors[i]) } })
+				));
+				currentBcg.push(_react2.default.createElement(
+					'div',
+					{ className: 'flex-grow-1', key: "bcg-color-key-" + i },
+					_react2.default.createElement('div', { onClick: this.changeNodeBcgColor.bind(this, _drawing2.default.colors[i]), style: { backgroundColor: _drawing2.default.colors[i], height: "20px", cursor: "pointer", border: "solid 2px " + (node.bcg_color == _drawing2.default.colors[i] ? "white" : _drawing2.default.colors[i]) } })
+				));
+				currentBorder.push(_react2.default.createElement(
+					'div',
+					{ className: 'flex-grow-1', key: "border-color-key-" + i },
+					_react2.default.createElement('div', { onClick: this.changeNodeBorderColor.bind(this, _drawing2.default.colors[i]), style: { backgroundColor: _drawing2.default.colors[i], height: "20px", cursor: "pointer", border: "solid 2px " + (node.border_color == _drawing2.default.colors[i] ? "white" : _drawing2.default.colors[i]) } })
+				));
+
+				if ((i + 1) % 6 == 0 || i == _drawing2.default.colors.length - 1) {
+					textColors.push(_react2.default.createElement(
+						'div',
+						{ key: "flex-key-text-key" + i, className: 'flex' },
+						currentText
+					));
+					bcgColors.push(_react2.default.createElement(
+						'div',
+						{ key: "flex-key-bcg-key" + i, className: 'flex' },
+						currentBcg
+					));
+					borderColors.push(_react2.default.createElement(
+						'div',
+						{ key: "flex-key-border-key" + i, className: 'flex' },
+						currentBorder
+					));
+					currentText = [];
+					currentBcg = [];
+					currentBorder = [];
+				}
+			}
 			if (!node) return null;
 			return _react2.default.createElement(
 				'div',
@@ -29452,6 +29541,59 @@ var NodeDetails = function (_React$Component5) {
 								'\u2713 apply'
 							)
 						)
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'h3',
+						null,
+						'Color'
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { textAlign: "center", marginBottom: "5px" } },
+						_react2.default.createElement(
+							'span',
+							{ style: { cursor: "pointer", color: this.state.showColor === 1 ? "#9C27B0" : "#424242" }, onClick: this.changeShowColor.bind(this, 1) },
+							'title'
+						),
+						_react2.default.createElement(
+							'span',
+							null,
+							' | '
+						),
+						_react2.default.createElement(
+							'span',
+							{ style: { cursor: "pointer", color: this.state.showColor === 2 ? "#9C27B0" : "#424242" }, onClick: this.changeShowColor.bind(this, 2) },
+							'background'
+						),
+						_react2.default.createElement(
+							'span',
+							null,
+							' | '
+						),
+						_react2.default.createElement(
+							'span',
+							{ style: { cursor: "pointer", color: this.state.showColor === 3 ? "#9C27B0" : "#424242" }, onClick: this.changeShowColor.bind(this, 3) },
+							'border'
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { display: this.state.showColor === 1 ? "block" : "none" } },
+						textColors
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { display: this.state.showColor === 2 ? "block" : "none" } },
+						bcgColors
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { display: this.state.showColor === 3 ? "block" : "none" } },
+						borderColors
 					)
 				),
 				_react2.default.createElement(
@@ -29758,7 +29900,7 @@ var LogsBlock = function (_React$Component8) {
 
 ;
 
-},{"../../services/auth":314,"./deletebutton":296,"./fullbutton":297,"react":264,"react-router":233}],300:[function(require,module,exports){
+},{"../../properties/drawing":310,"../../services/auth":314,"./deletebutton":296,"./fullbutton":297,"react":264,"react-router":233}],300:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31954,6 +32096,10 @@ var MapPageComp = function (_React$Component) {
 		_this.changeMode = _this.changeMode.bind(_this);
 		_this.makeSideInView = _this.makeSideInView.bind(_this);
 
+		_this.changeNodeColor = _this.changeNodeColor.bind(_this);
+		_this.changeNodeBcgColor = _this.changeNodeBcgColor.bind(_this);
+		_this.changeNodeBorderColor = _this.changeNodeBorderColor.bind(_this);
+
 		_this.state = {
 			mode: 1,
 			yShift: 0,
@@ -32085,6 +32231,30 @@ var MapPageComp = function (_React$Component) {
 			var uid = _auth2.default.getUid();
 			var name = this.props.user ? this.props.user.name : "John Doe";
 			this.state.map.sendMessage(msg, uid, name);
+		}
+	}, {
+		key: 'changeNodeColor',
+		value: function changeNodeColor(color) {
+			var map = this.state.map;
+			var node = map.nodes[this.state.selectedNode];
+			node.color = color;
+			node.save();
+		}
+	}, {
+		key: 'changeNodeBcgColor',
+		value: function changeNodeBcgColor(color) {
+			var map = this.state.map;
+			var node = map.nodes[this.state.selectedNode];
+			node.bcg_color = color;
+			node.save();
+		}
+	}, {
+		key: 'changeNodeBorderColor',
+		value: function changeNodeBorderColor(color) {
+			var map = this.state.map;
+			var node = map.nodes[this.state.selectedNode];
+			node.border_color = color;
+			node.save();
 		}
 	}, {
 		key: 'changeNodeScale',
@@ -32265,7 +32435,6 @@ var MapPageComp = function (_React$Component) {
 			});
 
 			svg.selectAll("g.pointers").on("click", function (d) {
-				console.log("clcik g.pointers");
 				if (!d3.event.defaultPrevented) {
 					d3.event.preventDefault();
 					if (d && _typeof(d.nid) !== undefined) {
@@ -32274,7 +32443,6 @@ var MapPageComp = function (_React$Component) {
 				}
 			});
 			svg.selectAll("g.counters").on("click", function (d) {
-				console.log("clcik g.counters");
 				if (!d3.event.defaultPrevented) {
 					d3.event.preventDefault();
 					if (d && _typeof(d.nid) !== undefined) {
@@ -32299,23 +32467,23 @@ var MapPageComp = function (_React$Component) {
 			//Enter
 			var elemtEnter = gs.enter().append("g").attr("class", "node");
 
-			elemtEnter.append("circle").attr("stroke", function (d, i) {
-				return _drawing2.default.defaultCircleStrokeColor;
-			}).attr("stroke-width", function (d, i) {
-				return _drawing2.default.defaultCircleStrokeWidth;
-			}).attr("fill", "white").style("cursor", "pointer").merge(gs.selectAll("circle")).attr("r", function (d, i) {
+			elemtEnter.append("circle").style("cursor", "pointer").merge(gs.selectAll("circle")).attr("fill", function (d, i) {
+				return nodes[i].bcg_color || "white";
+			}).attr("r", function (d, i) {
 				return 40 * (nodes[i].scale ? +nodes[i].scale : 1);
 			}).attr("cy", function (d, i) {
 				return _this7.state.yShift + height.animVal.value / 2 + (nodes[i].y ? +nodes[i].y : 0);
 			}).attr("cx", function (d, i) {
 				return _this7.state.xShift + width.animVal.value / 2 + (nodes[i].x ? +nodes[i].x : 0);
 			}).attr("stroke", function (d, i) {
-				return nodes[i].nid == _this7.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : _drawing2.default.defaultCircleStrokeColor;
+				return nodes[i].nid == _this7.state.selectedNode ? _drawing2.default.selectedCircleStrokeColor : nodes[i].border_color || _drawing2.default.defaultCircleStrokeColor;
 			}).attr("stroke-width", function (d, i) {
 				return nodes[i].nid == _this7.state.selectedNode ? _drawing2.default.selectedCircleStrokeWidth : _drawing2.default.defaultCircleStrokeWidth;
 			});
 
-			elemtEnter.append("text").attr("color", _drawing2.default.defaultTextColor).attr("text-anchor", "middle").attr("class", "noselect").merge(gs.selectAll("text")).attr("dx", function (d, i) {
+			elemtEnter.append("text").attr("text-anchor", "middle").attr("class", "noselect").merge(gs.selectAll("text")).attr("fill", function (d, i) {
+				return nodes[i].color || _drawing2.default.defaultTextColor;
+			}).attr("dx", function (d, i) {
 				return _this7.state.xShift + width.animVal.value / 2 + (nodes[i].x ? +nodes[i].x : 0);
 			}).attr("dy", function (d, i) {
 				return _this7.state.yShift + height.animVal.value / 2 + (nodes[i].y ? +nodes[i].y : 0) + 5;
@@ -32499,6 +32667,9 @@ var MapPageComp = function (_React$Component) {
 					_react2.default.createElement(_leftpanel2.default, { map: this.state.map,
 						user: this.props.user,
 						mode: this.state.mode,
+						changeNodeColor: this.changeNodeColor,
+						changeNodeBcgColor: this.changeNodeBcgColor,
+						changeNodeBorderColor: this.changeNodeBorderColor,
 						changeMode: this.changeMode,
 						changeNodeText: this.changeNodeText, changeNodeDescription: this.changeNodeDescription,
 						selectedLink: this.state.selectedLink, selectLink: this.selectLink,
@@ -34206,10 +34377,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = {
 	defaultTextColor: "#424242",
-	defaultCircleStrokeColor: "rgb(200, 200, 200)",
+	defaultCircleStrokeColor: "#c8c8c8",
 	selectedCircleStrokeColor: "#c380ac",
 	defaultCircleStrokeWidth: "2px",
-	selectedCircleStrokeWidth: "4px"
+	selectedCircleStrokeWidth: "4px",
+	colors: ["white", "#D32F2F", "#512DA8", "#303F9F", "#1976D2", "#0288D1", "#0097A7", "#388E3C", "#AFB42B", "#FBC02D", "#FFA000", "#F57C00", "#E64A19", "#5D4037", "#616161", "#424242", "#c8c8c8", "black"]
 };
 
 },{}],311:[function(require,module,exports){

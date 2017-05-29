@@ -4,6 +4,8 @@ import { browserHistory } from 'react-router';
 import DeleteButton from './deletebutton'
 import FullButton from './fullbutton'
 
+import DRAWING from '../../properties/drawing'
+
 import AuthServices from '../../services/auth'
 
 class LeftPanel extends React.Component {
@@ -14,6 +16,7 @@ class LeftPanel extends React.Component {
 	    this.resetTutorial = this.resetTutorial.bind(this);
 	    this.minimizeOrExpand = this.minimizeOrExpand.bind(this);
 	    this.changeMode = this.changeMode.bind(this);
+	    this.printWindow = this.printWindow.bind(this);
 
 	    this.state = {
 	    	nav : 0,
@@ -65,6 +68,10 @@ class LeftPanel extends React.Component {
 		this.props.changeMode(mode);
 	}
 
+	printWindow(){
+		window.print();
+	}
+
 	render() {
 		
 		var dom = null, title = "";
@@ -82,10 +89,13 @@ class LeftPanel extends React.Component {
 		        break;
 		    case 1:
 		    	dom = <NodeDetails map={this.props.map} 
-		    				   changeNodeText={this.props.changeNodeText} changeNodeDescription={this.props.changeNodeDescription}
-		        			   selectedNode={this.props.selectedNode} selectNode={this.props.selectNode} 
-		        			   deleteSelectedNode={this.props.deleteSelectedNode} 
-		        			   changeNodeScale={this.props.changeNodeScale}/>;
+	    						changeNodeColor={this.props.changeNodeColor}
+	    						changeNodeBcgColor={this.props.changeNodeBcgColor}
+	    						changeNodeBorderColor={this.props.changeNodeBorderColor}
+	    				   		changeNodeText={this.props.changeNodeText} changeNodeDescription={this.props.changeNodeDescription}
+	        			   		selectedNode={this.props.selectedNode} selectNode={this.props.selectNode} 
+		        			    deleteSelectedNode={this.props.deleteSelectedNode} 
+		        			    changeNodeScale={this.props.changeNodeScale}/>;
 		        title = "Node Details";
 		        break;
 		    case 2:
@@ -150,13 +160,15 @@ class LeftPanel extends React.Component {
 							<div onClick={this.selectNav.bind(this, 2)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav")} title="chat" style={{cursor : "pointer"}}>
 								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 2 ? "chat.svg" : "chat-white.svg")}/>
 							</div>
-							<div onClick={this.selectNav.bind(this, 3)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav")} title="logs" style={{cursor : "pointer", display: "block"}}>
+							<div onClick={this.selectNav.bind(this, 3)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav")} title="logs" style={{cursor : "pointer", display: "none"}}>
 								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 3 ? "logs.svg" : "logs-white.svg")}/>
+							</div>
+							<div onClick={this.printWindow} className="tippyleftpanel left-panel-nav" title="export" style={{cursor : "pointer"}}>
+								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/export-white.svg"/>
 							</div>
 							<div onClick={this.resetTutorial} className="tippyleftpanel left-panel-nav" title="reset tutorials" style={{cursor : "pointer", display : (this.props.user && this.props.user.advice ? "block" : "none")}}>
 								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/graphic-white.svg"/>
 							</div>
-
 						</div>
 						<div className="flex-grow-1">
 							{ls}
@@ -303,12 +315,17 @@ class NodeDetails extends React.Component {
 		this.okd = this.okd.bind(this);
 		this.appl2 = this.appl2.bind(this);
 		this.changeNodeScale = this.changeNodeScale.bind(this);
+		this.changeNodeColor = this.changeNodeColor.bind(this);
+		this.changeNodeBcgColor = this.changeNodeBcgColor.bind(this);
+		this.changeNodeBorderColor = this.changeNodeBorderColor.bind(this);
+
 
 	    var node = this.props.map && this.props.map.nodes && this.props.selectedNode !== undefined && this.props.map.nodes[this.props.selectedNode];
 	    
 	    this.state = {
 	    	text : node ? node.title : "",
-	    	description : node ? node.description : ""
+	    	description : node ? node.description : "",
+	    	showColor : 1
 	    };
 	}
 
@@ -364,11 +381,61 @@ class NodeDetails extends React.Component {
 		this.props.changeNodeScale(this.props.selectedNode, scale);
 	}
 
+	changeNodeColor(color){
+		this.props.changeNodeColor(color);
+	}
+
+	changeNodeBcgColor(color){
+		this.props.changeNodeBcgColor(color);
+	}
+
+	changeNodeBorderColor(color){
+		this.props.changeNodeBorderColor(color);
+	}
+
+	changeShowColor(showColor){
+		this.setState({
+			showColor : showColor
+		});
+	}
+
 	render() {
 		var node = this.props.map && this.props.map.nodes && this.props.selectedNode !== undefined && this.props.map.nodes[this.props.selectedNode];
+		let textColors = [], bcgColors = [], borderColors = [], currentText = [], currentBcg = [], currentBorder = [];
+		for (var i = 0; i < DRAWING.colors.length; i++) {
+			
+			currentText.push(
+				<div className="flex-grow-1" key={"text-color-key-" + i}>
+					<div onClick={this.changeNodeColor.bind(this, DRAWING.colors[i])} style={{backgroundColor: DRAWING.colors[i], height: "20px", cursor : "pointer", border : "solid 2px " + (node.color == DRAWING.colors[i] ? "white" : DRAWING.colors[i])}}>
+					</div>
+				</div>
+			);
+			currentBcg.push(
+				<div className="flex-grow-1" key={"bcg-color-key-" + i}>
+					<div onClick={this.changeNodeBcgColor.bind(this, DRAWING.colors[i])} style={{backgroundColor: DRAWING.colors[i], height: "20px", cursor : "pointer", border : "solid 2px " + (node.bcg_color == DRAWING.colors[i] ? "white" : DRAWING.colors[i])}}>
+					</div>
+				</div>
+			);
+			currentBorder.push(
+				<div className="flex-grow-1" key={"border-color-key-" + i}>
+					<div onClick={this.changeNodeBorderColor.bind(this, DRAWING.colors[i])} style={{backgroundColor: DRAWING.colors[i], height: "20px", cursor : "pointer", border : "solid 2px " + (node.border_color == DRAWING.colors[i] ? "white" : DRAWING.colors[i])}}>
+					</div>
+				</div>
+			);
+
+			if((i+1)%6 == 0 || i == DRAWING.colors.length - 1) {
+				textColors.push(<div key={"flex-key-text-key" + i} className="flex">{currentText}</div>);
+				bcgColors.push(<div key={"flex-key-bcg-key" + i} className="flex">{currentBcg}</div>);
+				borderColors.push(<div key={"flex-key-border-key" + i} className="flex">{currentBorder}</div>);
+				currentText = [];
+				currentBcg = [];
+				currentBorder = [];
+			}
+		}
 		if(!node) return null;
 		return (
 			<div>
+				
 				<div>
 					<h3 style={{marginTop:'0px'}}>Text</h3>
 					<div className="flex">
@@ -382,6 +449,21 @@ class NodeDetails extends React.Component {
 						</div>
 					</div>
 				</div>
+
+				<div>
+					<h3>Color</h3>
+					<div style={{textAlign: "center", marginBottom:"5px"}}>
+						<span style={{cursor: "pointer", color : (this.state.showColor === 1 ? "#9C27B0" : "#424242")}} onClick={this.changeShowColor.bind(this, 1)}>title</span>
+						<span> | </span>
+						<span style={{cursor: "pointer", color : (this.state.showColor === 2 ? "#9C27B0" : "#424242")}} onClick={this.changeShowColor.bind(this, 2)}>background</span>
+						<span> | </span>
+						<span style={{cursor: "pointer", color : (this.state.showColor === 3 ? "#9C27B0" : "#424242")}} onClick={this.changeShowColor.bind(this, 3)}>border</span>
+					</div>
+					<div style={{display : (this.state.showColor === 1 ? "block" : "none")}}>{textColors}</div>
+					<div style={{display : (this.state.showColor === 2 ? "block" : "none")}}>{bcgColors}</div>
+					<div style={{display : (this.state.showColor === 3 ? "block" : "none")}}>{borderColors}</div>
+				</div>
+
 				<div>
 					<h3>Details</h3>
 					<div className="flex">
@@ -395,6 +477,7 @@ class NodeDetails extends React.Component {
 						</div>
 					</div>
 				</div>
+
 				<div>
 					<h3>Scale</h3>
 					<div className="flex">
@@ -412,6 +495,7 @@ class NodeDetails extends React.Component {
 						</div>
 					</div>
 				</div>
+
 				<div style={{marginTop:"20px", textAlign:"center"}}>
 					<FullButton label="delete this node" action={this.deleteNode}/>
 				</div>

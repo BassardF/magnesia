@@ -34,6 +34,10 @@ class MapPageComp extends React.Component {
 		this.changeMode = this.changeMode.bind(this);
 		this.makeSideInView = this.makeSideInView.bind(this);
 
+		this.changeNodeColor = this.changeNodeColor.bind(this);
+		this.changeNodeBcgColor = this.changeNodeBcgColor.bind(this);
+		this.changeNodeBorderColor = this.changeNodeBorderColor.bind(this);
+
  	    this.state = {
  	    	mode : 1,
  	    	yShift : 0,
@@ -147,6 +151,27 @@ class MapPageComp extends React.Component {
 		var uid = AuthServices.getUid();
 		var name = this.props.user ? this.props.user.name : "John Doe";
 		this.state.map.sendMessage(msg, uid, name);
+	}
+
+	changeNodeColor(color){
+		var map = this.state.map;
+		var node = map.nodes[this.state.selectedNode];
+		node.color = color;
+		node.save();
+	}
+
+	changeNodeBcgColor(color){
+		var map = this.state.map;
+		var node = map.nodes[this.state.selectedNode];
+		node.bcg_color = color;
+		node.save();
+	}
+
+	changeNodeBorderColor(color){
+		var map = this.state.map;
+		var node = map.nodes[this.state.selectedNode];
+		node.border_color = color;
+		node.save();
 	}
 
 	changeNodeScale(nid, scale){
@@ -327,7 +352,6 @@ class MapPageComp extends React.Component {
 	        .text((d, i) => {return counters[i].text;});
 
 	    svg.selectAll("g.pointers").on("click", (d) => {
-	    	console.log("clcik g.pointers");
 	    	if(!d3.event.defaultPrevented){
 				d3.event.preventDefault();
 				if(d && typeof d.nid !== undefined) {
@@ -336,7 +360,6 @@ class MapPageComp extends React.Component {
 			}
 		});
 		svg.selectAll("g.counters").on("click", (d) => {
-	    	console.log("clcik g.counters");
 	    	if(!d3.event.defaultPrevented){
 				d3.event.preventDefault();
 				if(d && typeof d.nid !== undefined) {
@@ -360,22 +383,20 @@ class MapPageComp extends React.Component {
 		let elemtEnter = gs.enter().append("g").attr("class", "node");
 
 		elemtEnter.append("circle")
-		    .attr("stroke", function(d, i){return DRAWING.defaultCircleStrokeColor})
-		    .attr("stroke-width", function(d, i){return DRAWING.defaultCircleStrokeWidth})
-    		.attr("fill", "white")
     		.style("cursor", "pointer")
     	 .merge(gs.selectAll("circle"))
+    	 	.attr("fill", (d, i)=> {return nodes[i].bcg_color || "white"})
     	    .attr("r", function(d, i) {return 40 * (nodes[i].scale ? +nodes[i].scale : 1);}) 
     	  	.attr("cy", (d, i) => {return this.state.yShift + height.animVal.value/2 + (nodes[i].y ? +nodes[i].y : 0)})
 		    .attr("cx", (d, i) => {return this.state.xShift + width.animVal.value/2 + (nodes[i].x ? +nodes[i].x : 0)})
-		    .attr("stroke", (d, i) => {return nodes[i].nid == this.state.selectedNode ? DRAWING.selectedCircleStrokeColor : DRAWING.defaultCircleStrokeColor})
+		    .attr("stroke", (d, i) => {return nodes[i].nid == this.state.selectedNode ? DRAWING.selectedCircleStrokeColor : (nodes[i].border_color || DRAWING.defaultCircleStrokeColor)})
 		    .attr("stroke-width", (d, i) => {return nodes[i].nid == this.state.selectedNode ? DRAWING.selectedCircleStrokeWidth : DRAWING.defaultCircleStrokeWidth});
     		
     	elemtEnter.append("text")
-	        .attr("color", DRAWING.defaultTextColor)
 	        .attr("text-anchor", "middle")
 	        .attr("class", "noselect")
 	      .merge(gs.selectAll("text")) 
+	      	.attr("fill", (d, i) => {return nodes[i].color || DRAWING.defaultTextColor})
 	        .attr("dx", (d, i) => {return this.state.xShift + width.animVal.value/2 + (nodes[i].x ? +nodes[i].x : 0);})
 	        .attr("dy", (d, i) => {return this.state.yShift + height.animVal.value/2 + (nodes[i].y ? +nodes[i].y : 0) + 5;})
 	        .text((d, i) => {return nodes[i].title;});
@@ -565,6 +586,9 @@ class MapPageComp extends React.Component {
 				<LeftPanel map={this.state.map} 
 						   user={this.props.user}
 						   mode={this.state.mode}
+						   changeNodeColor={this.changeNodeColor}
+						   changeNodeBcgColor={this.changeNodeBcgColor}
+						   changeNodeBorderColor={this.changeNodeBorderColor}
 						   changeMode={this.changeMode}
 						   changeNodeText={this.changeNodeText} changeNodeDescription={this.changeNodeDescription}
 						   selectedLink={this.state.selectedLink} selectLink={this.selectLink} 

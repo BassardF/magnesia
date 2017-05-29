@@ -819,6 +819,13 @@ body * {
   margin-top: 30px;
   height: 140px;
 }
+@media print {
+  #pointers,
+  #counters,
+  .advice-wrapper {
+    display: none;
+  }
+}
 .node-text-input {
   outline: none !important;
   border: none;
@@ -858,6 +865,11 @@ svg {
 }
 .advice-wrapper.advice-wrapper-shown {
   right: 10px !important;
+}
+@media print {
+  #left-panel-wrapper {
+    display: none;
+  }
 }
 #left-panel {
   background-color: #FAFAFA;
