@@ -3,6 +3,8 @@ import { browserHistory } from 'react-router';
 
 import AuthServices from '../services/auth'
 
+import EncodeServices from '../services/encode'
+
 class RegisterPage extends React.Component {
 
 	constructor(props) {
@@ -106,11 +108,7 @@ class RegisterPage extends React.Component {
 	      errorMessage : null
 	    }));
 	    if(validEmail){
-	    	var unauthorized = [".", "#", "$", "[", "]"];
-			for (var i = 0; i < unauthorized.length; i++) {
-				email = email.split(unauthorized[i]).join("___");
-			}
-    		firebase.database().ref('emails/' + email).once("value", (snap) => {
+    		firebase.database().ref('emails/' + EncodeServices.encode(email)).once("value", (snap) => {
     			this.setState((prevState) => ({
 			      mailTaken : !!snap.val()
 			    }));

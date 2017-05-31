@@ -76,13 +76,15 @@ var RootPageComp = function (_React$Component) {
 				if (user) {
 					//No state user
 					if (!_this2.props.user) {
-						//Set email for search
-						_auth2.default.uploadEmail(user.uid, user.email);
 						//Check login case
 						_this2.setState({ uid: user.uid });
 						firebase.database().ref('users/' + user.uid).on("value", function (snap) {
 							var fetchedUser = new _user2.default(snap.val());
 							if (snap && snap.val() && fetchedUser) {
+								//Set email for search
+								_auth2.default.uploadEmail(user.uid, fetchedUser.email);
+								if (fetchedUser.email !== user.email) user.updateEmail(fetchedUser.email);
+
 								_this2.props.replaceUser(fetchedUser);
 								if (_reactRouter.browserHistory.getCurrentLocation().pathname == "/") _reactRouter.browserHistory.push('/maps');
 							} else {

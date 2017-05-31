@@ -39,13 +39,15 @@ class RootPageComp extends React.Component {
 			if(user){
 				//No state user
 				if(!this.props.user){
-					//Set email for search
-					AuthServices.uploadEmail(user.uid, user.email);
 					//Check login case
 					this.setState({uid : user.uid});
 					firebase.database().ref('users/' + user.uid).on("value", (snap)=>{
 				      var fetchedUser = new User(snap.val());
 				      if(snap && snap.val() && fetchedUser){
+				      		//Set email for search
+							AuthServices.uploadEmail(user.uid, fetchedUser.email);
+							if(fetchedUser.email !== user.email) user.updateEmail(fetchedUser.email);
+
 							this.props.replaceUser(fetchedUser);
 							if(browserHistory.getCurrentLocation().pathname == "/") browserHistory.push('/maps');
 						} else {

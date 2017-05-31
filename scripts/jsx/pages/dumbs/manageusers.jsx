@@ -2,6 +2,8 @@ import React from 'react'
 
 import AuthServices from '../../services/auth'
 
+import EncodeServices from '../../services/encode'
+
 class ManageUsers extends React.Component {
 
 	constructor(props) {
@@ -44,16 +46,17 @@ class ManageUsers extends React.Component {
 		
 		if(val && val.length >= 3){
 			this.setState({loading : true});
-			firebase.database().ref('emails').orderByKey().startAt(val).limitToFirst(10).once("value", (res)=>{
+			firebase.database().ref('emails').orderByKey().startAt(EncodeServices.encode(val)).limitToFirst(10).once("value", (res)=>{
 				var results = res.val();
 				if(results){
 					let map = this.props.map;
 					for(var email in results){
-						if(email.toLowerCase().indexOf(val.toLowerCase()) === 0){
+						var decoded = EncodeServices.decode(email);
+						if(decoded.toLowerCase().indexOf(val.toLowerCase()) === 0){
 							let uid = results[email];
 							if((!map.invites || !map.invites[uid]) && !map.users[uid]){
 								arr.push({
-									email : email,
+									email : decoded,
 									uid : uid
 								});		
 							}
@@ -75,7 +78,7 @@ class ManageUsers extends React.Component {
 		let map = this.props.map;
 		if(map.invites){
 			for (let uid in map.invites) {
-				if(map.invites[uid].email == email) return true
+				if(map.invites[uid].email == email) return true;
 			}
 		}
 		if(map.externalInvites){
@@ -113,6 +116,7 @@ class ManageUsers extends React.Component {
 			}
 		}
 
+		console.log("results", this.state.results);
 		for (let i = 0; i < this.state.results.length; i++) {
 			let uid = this.state.results[i].uid;
 			let email = this.state.results[i].email;
@@ -220,7 +224,7 @@ class ProspectLine extends React.Component {
 			<div className="selected-user-line">
 				<div className="flex">
 					<div className="flex-grow-1">
-						{this.props.name.split("___").join(".")}
+						{this.props.name}
 					</div>
 					<div style={{textAlign:"right"}} className="flex-grow-1 purple">
 						{rs}
@@ -239,7 +243,7 @@ class ExternalProspectLine extends React.Component {
 			<div className="selected-user-line">
 				<div className="flex">
 					<div className="flex-grow-1">
-						{this.props.name.split("___").join(".")}
+						{this.props.name}
 					</div>
 					<div style={{textAlign:"right"}} className="flex-grow-1 purple">
 						<span className="invite-user-button" onClick={this.props.inviteUser || null}>

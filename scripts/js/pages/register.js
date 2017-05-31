@@ -16,6 +16,10 @@ var _auth = require('../services/auth');
 
 var _auth2 = _interopRequireDefault(_auth);
 
+var _encode = require('../services/encode');
+
+var _encode2 = _interopRequireDefault(_encode);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -144,11 +148,7 @@ var RegisterPage = function (_React$Component) {
 				};
 			});
 			if (validEmail) {
-				var unauthorized = [".", "#", "$", "[", "]"];
-				for (var i = 0; i < unauthorized.length; i++) {
-					email = email.split(unauthorized[i]).join("___");
-				}
-				firebase.database().ref('emails/' + email).once("value", function (snap) {
+				firebase.database().ref('emails/' + _encode2.default.encode(email)).once("value", function (snap) {
 					_this3.setState(function (prevState) {
 						return {
 							mailTaken: !!snap.val()

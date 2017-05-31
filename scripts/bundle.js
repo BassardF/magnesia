@@ -28002,6 +28002,10 @@ var _message = require('./message');
 
 var _message2 = _interopRequireDefault(_message);
 
+var _encode = require('../services/encode');
+
+var _encode2 = _interopRequireDefault(_encode);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28115,7 +28119,7 @@ var Map = function () {
 			this.invites[to] = {
 				from: from,
 				timestamp: new Date().getTime(),
-				email: email.split("___").join(".")
+				email: email
 			};
 			firebase.database().ref('users/' + to + '/invites/' + this.mid).set({
 				from: from,
@@ -28206,7 +28210,7 @@ var Map = function () {
 
 exports.default = Map;
 
-},{"./link":289,"./message":291,"./node":292}],291:[function(require,module,exports){
+},{"../services/encode":315,"./link":289,"./message":291,"./node":292}],291:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29917,6 +29921,10 @@ var _auth = require('../../services/auth');
 
 var _auth2 = _interopRequireDefault(_auth);
 
+var _encode = require('../../services/encode');
+
+var _encode2 = _interopRequireDefault(_encode);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -29978,16 +29986,17 @@ var ManageUsers = function (_React$Component) {
 
 			if (val && val.length >= 3) {
 				this.setState({ loading: true });
-				firebase.database().ref('emails').orderByKey().startAt(val).limitToFirst(10).once("value", function (res) {
+				firebase.database().ref('emails').orderByKey().startAt(_encode2.default.encode(val)).limitToFirst(10).once("value", function (res) {
 					var results = res.val();
 					if (results) {
 						var map = _this2.props.map;
 						for (var email in results) {
-							if (email.toLowerCase().indexOf(val.toLowerCase()) === 0) {
+							var decoded = _encode2.default.decode(email);
+							if (decoded.toLowerCase().indexOf(val.toLowerCase()) === 0) {
 								var uid = results[email];
 								if ((!map.invites || !map.invites[uid]) && !map.users[uid]) {
 									arr.push({
-										email: email,
+										email: decoded,
 										uid: uid
 									});
 								}
@@ -30043,6 +30052,7 @@ var ManageUsers = function (_React$Component) {
 				}
 			}
 
+			console.log("results", this.state.results);
 			for (var _i = 0; _i < this.state.results.length; _i++) {
 				var _uid2 = this.state.results[_i].uid;
 				var email = this.state.results[_i].email;
@@ -30217,7 +30227,7 @@ var ProspectLine = function (_React$Component3) {
 					_react2.default.createElement(
 						'div',
 						{ className: 'flex-grow-1' },
-						this.props.name.split("___").join(".")
+						this.props.name
 					),
 					_react2.default.createElement(
 						'div',
@@ -30256,7 +30266,7 @@ var ExternalProspectLine = function (_React$Component4) {
 					_react2.default.createElement(
 						'div',
 						{ className: 'flex-grow-1' },
-						this.props.name.split("___").join(".")
+						this.props.name
 					),
 					_react2.default.createElement(
 						'div',
@@ -30279,7 +30289,7 @@ var ExternalProspectLine = function (_React$Component4) {
 
 ;
 
-},{"../../services/auth":314,"react":264}],301:[function(require,module,exports){
+},{"../../services/auth":314,"../../services/encode":315,"react":264}],301:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33254,6 +33264,10 @@ var _auth = require('../services/auth');
 
 var _auth2 = _interopRequireDefault(_auth);
 
+var _encode = require('../services/encode');
+
+var _encode2 = _interopRequireDefault(_encode);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -33382,11 +33396,7 @@ var RegisterPage = function (_React$Component) {
 				};
 			});
 			if (validEmail) {
-				var unauthorized = [".", "#", "$", "[", "]"];
-				for (var i = 0; i < unauthorized.length; i++) {
-					email = email.split(unauthorized[i]).join("___");
-				}
-				firebase.database().ref('emails/' + email).once("value", function (snap) {
+				firebase.database().ref('emails/' + _encode2.default.encode(email)).once("value", function (snap) {
 					_this3.setState(function (prevState) {
 						return {
 							mailTaken: !!snap.val()
@@ -33726,7 +33736,7 @@ var RegisterPage = function (_React$Component) {
 
 exports.default = RegisterPage;
 
-},{"../services/auth":314,"react":264,"react-router":233}],307:[function(require,module,exports){
+},{"../services/auth":314,"../services/encode":315,"react":264,"react-router":233}],307:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33805,13 +33815,15 @@ var RootPageComp = function (_React$Component) {
 				if (user) {
 					//No state user
 					if (!_this2.props.user) {
-						//Set email for search
-						_auth2.default.uploadEmail(user.uid, user.email);
 						//Check login case
 						_this2.setState({ uid: user.uid });
 						firebase.database().ref('users/' + user.uid).on("value", function (snap) {
 							var fetchedUser = new _user2.default(snap.val());
 							if (snap && snap.val() && fetchedUser) {
+								//Set email for search
+								_auth2.default.uploadEmail(user.uid, fetchedUser.email);
+								if (fetchedUser.email !== user.email) user.updateEmail(fetchedUser.email);
+
 								_this2.props.replaceUser(fetchedUser);
 								if (_reactRouter.browserHistory.getCurrentLocation().pathname == "/") _reactRouter.browserHistory.push('/maps');
 							} else {
@@ -34449,6 +34461,10 @@ var _user = require('../models/user');
 
 var _user2 = _interopRequireDefault(_user);
 
+var _encode = require('../services/encode');
+
+var _encode2 = _interopRequireDefault(_encode);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -34459,9 +34475,8 @@ var AuthServices = function () {
   }
 
   _createClass(AuthServices, null, [{
-    key: 'createUser',
-    value: function createUser(uid, email, pontentialMap, callback) {
-
+    key: 'innerCreateUser',
+    value: function innerCreateUser(uid, email, pontentialMap, callback) {
       var newUser = new _user2.default({
         email: email,
         register_date: new Date().getTime(),
@@ -34474,6 +34489,30 @@ var AuthServices = function () {
       firebase.database().ref('users/' + uid).set(newUser, function (error) {
         if (callback) callback(error ? null : newUser);
       });
+    }
+  }, {
+    key: 'createUser',
+    value: function createUser(uid, email, pontentialMap, callback) {
+      if (email) {
+        AuthServices.innerCreateUser(uid, email, pontentialMap, callback);
+      } else {
+        swal({
+          title: "Email Address",
+          text: "Sorry but your provider didn't give your email address. Please enter a valid one to enable collaboration.",
+          type: "input",
+          closeOnConfirm: false,
+          inputPlaceholder: "Email Address"
+        }, function (inputValue) {
+          var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          if (!inputValue || !re.test(inputValue)) {
+            swal.showInputError("Please enter a valid email address");
+            return false;
+          } else {
+            AuthServices.innerCreateUser(uid, inputValue, pontentialMap, callback);
+            swal("Thank you !", "You can now be invited by other users.", "success");
+          }
+        });
+      }
     }
   }, {
     key: 'fetchUser',
@@ -34498,10 +34537,7 @@ var AuthServices = function () {
     value: function uploadEmail(uid, email) {
       var unauthorized = [".", "#", "$", "[", "]"];
       if (uid && email) {
-        for (var i = 0; i < unauthorized.length; i++) {
-          email = email.split(unauthorized[i]).join("___");
-        }
-        firebase.database().ref('emails/' + email).set(uid);
+        firebase.database().ref('emails/' + _encode2.default.encode(email)).set(uid);
       }
     }
   }]);
@@ -34511,7 +34547,50 @@ var AuthServices = function () {
 
 exports.default = AuthServices;
 
-},{"../models/user":293}],315:[function(require,module,exports){
+},{"../models/user":293,"../services/encode":315}],315:[function(require,module,exports){
 "use strict";
 
-},{}]},{},[287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315]);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var EncodeServices = function () {
+  function EncodeServices() {
+    _classCallCheck(this, EncodeServices);
+  }
+
+  _createClass(EncodeServices, null, [{
+    key: "encode",
+    value: function encode(text) {
+      if (!text) return "";
+      text = text.split(".").join("___");
+      text = text.split("[").join("____");
+      text = text.split("]").join("_____");
+      text = encodeURIComponent(text);
+      return text;
+    }
+  }, {
+    key: "decode",
+    value: function decode(text) {
+      if (!text) return "";
+      text = decodeURIComponent(text);
+      text = text.split("_____").join("]");
+      text = text.split("____").join("[");
+      text = text.split("___").join(".");
+      return text;
+    }
+  }]);
+
+  return EncodeServices;
+}();
+
+exports.default = EncodeServices;
+
+},{}],316:[function(require,module,exports){
+"use strict";
+
+},{}]},{},[287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316]);

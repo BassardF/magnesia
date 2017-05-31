@@ -2,6 +2,8 @@ import Node from './node'
 import Link from './link'
 import Message from './message'
 
+import EncodeServices from '../services/encode'
+
 class Map {
   
 	constructor(data) {
@@ -106,7 +108,7 @@ class Map {
 		this.invites[to] = {
 			from : from,
 			timestamp : new Date().getTime(),
-			email : email.split("___").join(".")
+			email : email
 		};
 		firebase.database().ref('users/' + to + '/invites/' + this.mid).set({
 			from : from,

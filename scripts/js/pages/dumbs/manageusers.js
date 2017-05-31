@@ -14,6 +14,10 @@ var _auth = require('../../services/auth');
 
 var _auth2 = _interopRequireDefault(_auth);
 
+var _encode = require('../../services/encode');
+
+var _encode2 = _interopRequireDefault(_encode);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -75,16 +79,17 @@ var ManageUsers = function (_React$Component) {
 
 			if (val && val.length >= 3) {
 				this.setState({ loading: true });
-				firebase.database().ref('emails').orderByKey().startAt(val).limitToFirst(10).once("value", function (res) {
+				firebase.database().ref('emails').orderByKey().startAt(_encode2.default.encode(val)).limitToFirst(10).once("value", function (res) {
 					var results = res.val();
 					if (results) {
 						var map = _this2.props.map;
 						for (var email in results) {
-							if (email.toLowerCase().indexOf(val.toLowerCase()) === 0) {
+							var decoded = _encode2.default.decode(email);
+							if (decoded.toLowerCase().indexOf(val.toLowerCase()) === 0) {
 								var uid = results[email];
 								if ((!map.invites || !map.invites[uid]) && !map.users[uid]) {
 									arr.push({
-										email: email,
+										email: decoded,
 										uid: uid
 									});
 								}
@@ -140,6 +145,7 @@ var ManageUsers = function (_React$Component) {
 				}
 			}
 
+			console.log("results", this.state.results);
 			for (var _i = 0; _i < this.state.results.length; _i++) {
 				var _uid2 = this.state.results[_i].uid;
 				var email = this.state.results[_i].email;
@@ -314,7 +320,7 @@ var ProspectLine = function (_React$Component3) {
 					_react2.default.createElement(
 						'div',
 						{ className: 'flex-grow-1' },
-						this.props.name.split("___").join(".")
+						this.props.name
 					),
 					_react2.default.createElement(
 						'div',
@@ -353,7 +359,7 @@ var ExternalProspectLine = function (_React$Component4) {
 					_react2.default.createElement(
 						'div',
 						{ className: 'flex-grow-1' },
-						this.props.name.split("___").join(".")
+						this.props.name
 					),
 					_react2.default.createElement(
 						'div',

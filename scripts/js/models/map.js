@@ -20,6 +20,10 @@ var _message = require('./message');
 
 var _message2 = _interopRequireDefault(_message);
 
+var _encode = require('../services/encode');
+
+var _encode2 = _interopRequireDefault(_encode);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -133,7 +137,7 @@ var Map = function () {
 			this.invites[to] = {
 				from: from,
 				timestamp: new Date().getTime(),
-				email: email.split("___").join(".")
+				email: email
 			};
 			firebase.database().ref('users/' + to + '/invites/' + this.mid).set({
 				from: from,
