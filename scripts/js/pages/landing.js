@@ -53,6 +53,8 @@ var LandingPage = function (_React$Component) {
 		_this.generateAccessCode = _this.generateAccessCode.bind(_this);
 		_this.showRegisterModal = _this.showRegisterModal.bind(_this);
 		_this.hideRegisterModal = _this.hideRegisterModal.bind(_this);
+		_this.showEarlyAccessModal = _this.showEarlyAccessModal.bind(_this);
+		_this.hideEarlyAccessModal = _this.hideEarlyAccessModal.bind(_this);
 
 		_this.state = {
 			drawDone: false,
@@ -61,7 +63,8 @@ var LandingPage = function (_React$Component) {
 			thirdLine3: false,
 			autoScroll: false,
 			showRegisterModal: false,
-			externalInvite: null
+			externalInvite: null,
+			showEarlyAccessModal: false
 		};
 		return _this;
 	}
@@ -81,6 +84,22 @@ var LandingPage = function (_React$Component) {
 			ga('send', 'pageview', "/");
 			this.setState({
 				showRegisterModal: false
+			});
+		}
+	}, {
+		key: 'showEarlyAccessModal',
+		value: function showEarlyAccessModal() {
+			ga('send', 'pageview', "/earlyaccess");
+			this.setState({
+				showEarlyAccessModal: true
+			});
+		}
+	}, {
+		key: 'hideEarlyAccessModal',
+		value: function hideEarlyAccessModal() {
+			ga('send', 'pageview', "/");
+			this.setState({
+				showEarlyAccessModal: false
 			});
 		}
 	}, {
@@ -274,7 +293,9 @@ var LandingPage = function (_React$Component) {
 				'div',
 				{ id: 'landing-page', style: { maxWidth: "1440px", marginLeft: "auto", marginRight: "auto", overflow: "auto", height: "100%" } },
 				_react2.default.createElement(RegisterModal, { externalInvite: this.state.externalInvite, show: this.state.showRegisterModal, showRegisterModal: this.showRegisterModal, hideRegisterModal: this.hideRegisterModal }),
+				_react2.default.createElement(RegisterEarlyAccess, { show: this.state.showEarlyAccessModal, showEarlyAccessModal: this.showEarlyAccessModal, hideEarlyAccessModal: this.hideEarlyAccessModal }),
 				_react2.default.createElement(TopSection, {
+					showEarlyAccessModal: this.showEarlyAccessModal,
 					scrollToSecondBlock: this.scrollToSecondBlock,
 					scrollToSecondBlockMobile: this.scrollToSecondBlockMobile,
 					scrollToThirdBlock: this.scrollToThirdBlock,
@@ -304,7 +325,6 @@ var TopSection = function (_React$Component2) {
 		_this6.draw = _this6.draw.bind(_this6);
 		_this6.drawNodes = _this6.drawNodes.bind(_this6);
 		_this6.drawLinks = _this6.drawLinks.bind(_this6);
-		_this6.earlyAccess = _this6.earlyAccess.bind(_this6);
 		_this6.state = {};
 		return _this6;
 	}
@@ -431,11 +451,6 @@ var TopSection = function (_React$Component2) {
 			}).style("opacity", 0).transition(t).style("opacity", 1);
 		}
 	}, {
-		key: 'earlyAccess',
-		value: function earlyAccess() {
-			console.log("ea");
-		}
-	}, {
 		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
@@ -446,7 +461,7 @@ var TopSection = function (_React$Component2) {
 					{ id: 'landing-page-top-section', className: 'hidden-xs' },
 					_react2.default.createElement(
 						'div',
-						{ className: 'purple-bcg', style: { width: "100%", zIndex: "-1", paddingTop: "50px", paddingBottom: "140px" } },
+						{ onClick: this.props.showEarlyAccessModal, className: 'purple-bcg', style: { width: "100%", zIndex: "-1", paddingTop: "50px", paddingBottom: "140px" } },
 						_react2.default.createElement(
 							'svg',
 							{ id: 'headersvg', style: { width: "100%", height: "300px" } },
@@ -466,18 +481,8 @@ var TopSection = function (_React$Component2) {
 							{ id: 'header-rs-wrapper' },
 							_react2.default.createElement(
 								'div',
-								{ onClick: this.props.scrollToSecondBlock },
+								{ onClick: this.props.showEarlyAccessModal },
 								'Early Access'
-							),
-							_react2.default.createElement(
-								'div',
-								{ onClick: this.props.scrollToThirdBlock },
-								'Pillars'
-							),
-							_react2.default.createElement(
-								'div',
-								{ onClick: this.props.scrollToFourthBlock },
-								'Contact'
 							)
 						)
 					),
@@ -509,8 +514,8 @@ var TopSection = function (_React$Component2) {
 					),
 					_react2.default.createElement(
 						'div',
-						{ onClick: this.earlyAccess, style: { letterSpacing: "1px", cursor: "pointer", fontWeight: "100", color: "white", textAlign: "center", marginLeft: "auto", marginRight: "auto", marginBottom: "40px", fontSize: "20px", width: "180px", borderRadius: "4px" } },
-						'\u276F Early Access'
+						{ onClick: this.props.showEarlyAccessModal, style: { border: "1px solid white", padding: "10px", letterSpacing: "1px", cursor: "pointer", fontWeight: "100", color: "white", textAlign: "center", marginLeft: "auto", marginRight: "auto", marginBottom: "40px", fontSize: "20px", width: "250px", borderRadius: "4px" } },
+						'\u276F Free Early Access'
 					)
 				),
 				_react2.default.createElement(
@@ -588,7 +593,7 @@ var MockupsSection = function (_React$Component3) {
 				null,
 				_react2.default.createElement(
 					'div',
-					{ id: 'landing-page-mockups-section', style: { marginTop: "30px", marginBottom: "30px" }, className: 'hidden-xs' },
+					{ id: 'landing-page-mockups-section', style: { color: "#424242", marginTop: "30px", marginBottom: "30px" }, className: 'hidden-xs' },
 					_react2.default.createElement('img', { className: 'boxshadow', style: { maxWidth: "60%", marginRight: "auto", marginLeft: "auto", display: "block" }, src: '../assets/images/mockup-center.png' }),
 					_react2.default.createElement(
 						'div',
@@ -1340,12 +1345,12 @@ var QuoteSection = function (_React$Component7) {
 					{ id: 'landing-page-quote-section', className: 'hidden-xs', style: { textAlign: "center", paddingTop: "70px", paddingBottom: "60px" } },
 					_react2.default.createElement(
 						'div',
-						{ id: 'landing-page-quote-section-sub', style: { letterSpacing: ".5px", fontSize: "23px", marginBottom: "10px" } },
+						{ id: 'landing-page-quote-section-sub', style: { color: "#424242", letterSpacing: ".5px", fontSize: "23px", marginBottom: "10px" } },
 						'"Mind Maps are the Meta-language of the human race"'
 					),
 					_react2.default.createElement(
 						'div',
-						{ style: { fontSize: "18px" } },
+						{ style: { color: "#424242", fontSize: "18px" } },
 						' -Tony Buzan'
 					)
 				),
@@ -1354,12 +1359,12 @@ var QuoteSection = function (_React$Component7) {
 					{ id: 'mob-landing-page-quote-section', className: 'shown-xs', style: { textAlign: "center", paddingTop: "30px", paddingBottom: "40px" } },
 					_react2.default.createElement(
 						'div',
-						{ id: 'landing-page-quote-section-sub', style: { letterSpacing: ".5px", fontSize: "18px", marginBottom: "10px" } },
+						{ id: 'landing-page-quote-section-sub', style: { color: "#424242", letterSpacing: ".5px", fontSize: "18px", marginBottom: "10px" } },
 						'"Mind Maps are the Meta-language of the human race"'
 					),
 					_react2.default.createElement(
 						'div',
-						{ style: { fontSize: "14px" } },
+						{ style: { color: "#424242", fontSize: "14px" } },
 						' -Tony Buzan'
 					)
 				)
@@ -1424,6 +1429,187 @@ var RegisterModal = function (_React$Component8) {
 	}]);
 
 	return RegisterModal;
+}(_react2.default.Component);
+
+;
+
+var RegisterEarlyAccess = function (_React$Component9) {
+	_inherits(RegisterEarlyAccess, _React$Component9);
+
+	function RegisterEarlyAccess(props) {
+		_classCallCheck(this, RegisterEarlyAccess);
+
+		var _this18 = _possibleConstructorReturn(this, (RegisterEarlyAccess.__proto__ || Object.getPrototypeOf(RegisterEarlyAccess)).call(this, props));
+
+		_this18.showModal = _this18.showModal.bind(_this18);
+		_this18.hideModal = _this18.hideModal.bind(_this18);
+		_this18.isMailValid = _this18.isMailValid.bind(_this18);
+		_this18.changeEmail = _this18.changeEmail.bind(_this18);
+
+		_this18.state = {
+			email: "",
+			validEmail: false
+		};
+		return _this18;
+	}
+
+	_createClass(RegisterEarlyAccess, [{
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(np) {
+			if (np && np.show && !this.props.show) {
+				this.showModal();
+			} else if (!np.show && this.props.show) {
+				this.hideModal();
+			}
+		}
+	}, {
+		key: 'showModal',
+		value: function showModal() {
+			this.refs.modal.show();
+		}
+	}, {
+		key: 'hideModal',
+		value: function hideModal() {
+			this.refs.modal.hide();
+		}
+	}, {
+		key: 'isMailValid',
+		value: function isMailValid(email) {
+			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			return re.test(email);
+		}
+	}, {
+		key: 'changeEmail',
+		value: function changeEmail() {
+			var _this19 = this;
+
+			var email = this.refs.email.value;
+			var validEmail = email && this.isMailValid(email);
+			this.setState(function (prevState) {
+				return {
+					email: _this19.refs.email.value,
+					validEmail: validEmail
+				};
+			});
+			// if(validEmail){
+			// 	firebase.database().ref('emails/' + EncodeServices.encode(email)).once("value", (snap) => {
+			// 		this.setState((prevState) => ({
+			//     mailTaken : !!snap.val()
+			//   }));
+			// 	}, (error) => {
+			// 		console.log("error", error);
+			// 	});
+			// }
+		}
+	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate() {
+			var _this20 = this;
+
+			if (this.props.show && !this.state.tippy) {
+				this.setState({
+					tippy: true
+				}, function () {
+					new Tippy('.tippyearlyaccess', {
+						position: 'bottom',
+						animation: 'shift',
+						duration: 200,
+						arrow: true
+					});
+					_this20.refs.email.focus();
+				});
+			}
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					_DropModal2.default,
+					{ ref: 'modal', onHide: this.props.hideEarlyAccessModal },
+					_react2.default.createElement(
+						'div',
+						{ style: { color: "#424242" } },
+						_react2.default.createElement(
+							'h2',
+							{ style: { textAlign: "center", paddingTop: "30px", paddingBottom: "30px" } },
+							'Get Free Early Access'
+						),
+						_react2.default.createElement(
+							'p',
+							{ style: { paddingLeft: "50px", paddingRight: "50px" } },
+							'Join us now and get an early access to Magnesia as well as one month as a premium user !'
+						),
+						',',
+						_react2.default.createElement(
+							'div',
+							{ style: { width: "195px", marginLeft: "auto", marginRight: "auto" } },
+							_react2.default.createElement('img', { style: { verticalAlign: "middle", maxWidth: "50px", marginRight: "auto", marginLeft: "auto", display: "inline-block" }, src: '../assets/images/eac-hourglass.svg' }),
+							_react2.default.createElement(
+								'div',
+								{ style: { verticalAlign: "middle", display: "inline-block", fontSize: "25px", marginLeft: "40px", marginRight: "40px" } },
+								'+'
+							),
+							_react2.default.createElement('img', { style: { verticalAlign: "middle", maxWidth: "50px", marginRight: "auto", marginLeft: "auto", display: "inline-block" }, src: '../assets/images/eac-diamond.svg' })
+						),
+						_react2.default.createElement(
+							'div',
+							{ style: { width: "265px", marginLeft: "auto", marginRight: "auto", fontSize: "14px", marginTop: "10px", marginBottom: "20px" } },
+							_react2.default.createElement(
+								'div',
+								{ style: { textAlign: "center", verticalAlign: "middle", width: "50%", display: "inline-block" } },
+								'Early Access'
+							),
+							_react2.default.createElement(
+								'div',
+								{ style: { textAlign: "center", verticalAlign: "middle", width: "50%", display: "inline-block" } },
+								'Premium Month'
+							)
+						),
+						_react2.default.createElement('input', { className: "reg-inp " + (this.state.validEmail ? "validated" : ""), ref: 'email', type: 'email', value: this.state.email, onChange: this.changeEmail, placeholder: 'Email Address' }),
+						_react2.default.createElement(
+							'div',
+							{ className: 'eam-email-wrapper' },
+							_react2.default.createElement(
+								'div',
+								{ style: { color: "#9C27B0", fontSize: "13px", marginTop: "-55px", marginRight: "30px", float: "right", display: this.state.validEmail ? "block" : "none" } },
+								_react2.default.createElement(
+									'span',
+									{ className: 'eam-email-wrapper-inner' },
+									'valid email'
+								),
+								' \u2714'
+							),
+							_react2.default.createElement(
+								'div',
+								{ style: { fontSize: "13px", marginTop: "-55px", marginRight: "30px", float: "right", display: this.state.validEmail ? "none" : "block" } },
+								_react2.default.createElement(
+									'span',
+									{ className: 'eam-email-wrapper-inner' },
+									'invalid email'
+								),
+								' \u2715'
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ title: 'Please enter a valid email address', className: 'tippyearlyaccess disabled-fac-button', onClick: this.props.showEarlyAccessModal, style: { display: this.state.validEmail ? "none" : "block", border: "1px solid #9C27B0", padding: "10px", letterSpacing: "1px", cursor: "pointer", fontWeight: "100", color: "#9C27B0", textAlign: "center", marginLeft: "auto", marginRight: "auto", marginBottom: "50px", fontSize: "16px", width: "250px", borderRadius: "4px" } },
+							'\u276F Free Early Access'
+						),
+						_react2.default.createElement(
+							'div',
+							{ title: 'Claim your early acces code !', className: 'tippyearlyaccess', onClick: this.props.showEarlyAccessModal, style: { display: this.state.validEmail ? "block" : "none", border: "1px solid #9C27B0", padding: "10px", letterSpacing: "1px", cursor: "pointer", fontWeight: "100", color: "#9C27B0", textAlign: "center", marginLeft: "auto", marginRight: "auto", marginBottom: "50px", fontSize: "16px", width: "250px", borderRadius: "4px" } },
+							'\u276F Free Early Access'
+						)
+					)
+				)
+			);
+		}
+	}]);
+
+	return RegisterEarlyAccess;
 }(_react2.default.Component);
 
 ;

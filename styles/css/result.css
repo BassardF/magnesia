@@ -297,9 +297,9 @@ body * {
 #landing-page #lp-header-name {
   color: white;
   text-align: center;
-  font-size: 40px;
-  margin-top: 30px;
-  margin-bottom: 10px;
+  font-size: 80px;
+  margin-top: 70px;
+  margin-bottom: 5px;
   font-weight: bold;
   letter-spacing: 5px;
 }
@@ -309,6 +309,7 @@ body * {
   font-size: 25px;
   font-weight: 100;
   letter-spacing: 2px;
+  margin-top: 5px;
   margin-bottom: 40px;
 }
 #landing-page #mob-lp-header-name {
@@ -651,6 +652,37 @@ body * {
   -webkit-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.75);
   box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.75);
+}
+#landing-page .reg-inp {
+  font-size: 14px;
+  border: none;
+  border-bottom: solid 2px #F3E5F5;
+  padding: 5px;
+  text-align: center;
+  margin-bottom: 30px;
+  width: 80%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  outline: none !important;
+  font-size: 16px;
+  -webkit-transition: all .5s ease;
+  transition: all .5s ease;
+}
+#landing-page .reg-inp:focus {
+  border-bottom: solid 2px #9C27B0;
+}
+#landing-page .disabled-fac-button {
+  cursor: not-allowed !important;
+  opacity: .5;
+}
+#landing-page .eam-email-wrapper .eam-email-wrapper-inner {
+  opacity: 0;
+  -webkit-transition: all .5s ease;
+  transition: all .5s ease;
+}
+#landing-page .eam-email-wrapper:hover .eam-email-wrapper-inner {
+  opacity: 1;
 }
 #maps-page {
   color: #424242;
@@ -1034,6 +1066,7 @@ svg {
 }
 #register-page .reg-inp {
   font-size: 14px;
+  color: #424242;
   border: none;
   border-bottom: solid 2px #F3E5F5;
   padding: 5px;

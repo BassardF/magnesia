@@ -23,6 +23,8 @@ class LandingPage extends React.Component {
 		this.generateAccessCode = this.generateAccessCode.bind(this);
 		this.showRegisterModal = this.showRegisterModal.bind(this);
 		this.hideRegisterModal = this.hideRegisterModal.bind(this);
+		this.showEarlyAccessModal = this.showEarlyAccessModal.bind(this);
+		this.hideEarlyAccessModal = this.hideEarlyAccessModal.bind(this);
 
 	    this.state = {
 	    	drawDone : false,
@@ -31,7 +33,8 @@ class LandingPage extends React.Component {
 	    	thirdLine3 : false,
 	    	autoScroll: false,
 	    	showRegisterModal : false,
-	    	externalInvite : null
+	    	externalInvite : null,
+	    	showEarlyAccessModal : false
 	    };
 	}
 
@@ -47,6 +50,20 @@ class LandingPage extends React.Component {
 		ga('send', 'pageview', "/");
 		this.setState({
 			showRegisterModal : false
+		});
+	}
+
+	showEarlyAccessModal(){
+		ga('send', 'pageview', "/earlyaccess");
+		this.setState({
+			showEarlyAccessModal : true
+		});
+	}
+
+	hideEarlyAccessModal(){
+		ga('send', 'pageview', "/");
+		this.setState({
+			showEarlyAccessModal : false
 		});
 	}
 
@@ -213,7 +230,9 @@ class LandingPage extends React.Component {
 		return (
 			<div id="landing-page" style={{maxWidth:"1440px", marginLeft:"auto", marginRight:"auto", overflow:"auto", height:"100%"}}>
 				<RegisterModal externalInvite={this.state.externalInvite} show={this.state.showRegisterModal} showRegisterModal={this.showRegisterModal} hideRegisterModal={this.hideRegisterModal}/>
+				<RegisterEarlyAccess show={this.state.showEarlyAccessModal} showEarlyAccessModal={this.showEarlyAccessModal} hideEarlyAccessModal={this.hideEarlyAccessModal}/>
 				<TopSection 
+					showEarlyAccessModal={this.showEarlyAccessModal}
 					scrollToSecondBlock={this.scrollToSecondBlock} 
 					scrollToSecondBlockMobile={this.scrollToSecondBlockMobile}
 					scrollToThirdBlock={this.scrollToThirdBlock}
@@ -235,7 +254,6 @@ class TopSection extends React.Component {
 	   	this.draw = this.draw.bind(this);
 		this.drawNodes = this.drawNodes.bind(this);
 		this.drawLinks = this.drawLinks.bind(this);
-		this.earlyAccess = this.earlyAccess.bind(this);
 	    this.state = {
 	    };
 	}
@@ -347,15 +365,11 @@ class TopSection extends React.Component {
 	      	.style("opacity", 1);
 	}
 
-	earlyAccess(){
-		console.log("ea");
-	}
-
 	render() {
 		return (
 			<div>
 				<div id="landing-page-top-section" className="hidden-xs">
-					<div className="purple-bcg" style={{width:"100%", zIndex:"-1", paddingTop:"50px", paddingBottom:"140px"}}>
+					<div onClick={this.props.showEarlyAccessModal} className="purple-bcg" style={{width:"100%", zIndex:"-1", paddingTop:"50px", paddingBottom:"140px"}}>
 						<svg id="headersvg" style={{width:"100%", height:"300px"}}>
 							<g id="links1"></g>
 							<g id="links2"></g>
@@ -367,14 +381,14 @@ class TopSection extends React.Component {
 					<div id="lp-header-section">
 						Mg.
 						<div id="header-rs-wrapper">
-							<div onClick={this.props.scrollToSecondBlock}>Early Access</div>
-							<div onClick={this.props.scrollToThirdBlock}>Pillars</div>
-							<div onClick={this.props.scrollToFourthBlock}>Contact</div>
+							<div onClick={this.props.showEarlyAccessModal}>Early Access</div>
 						</div>
 					</div>
 					<h1 id="lp-header-name">Magnesia</h1>
 					<h2 id="lp-header-sub-name"><em>Mind Maps</em> <span style={{fontSize:"20px", marginRight:"5px", marginLeft:"5px"}}>for</span> <em>Creatives</em></h2>
-					<div onClick={this.earlyAccess} style={{letterSpacing:"1px", cursor:"pointer", fontWeight:"100", color:"white", textAlign:"center", marginLeft:"auto", marginRight:"auto", marginBottom:"40px", fontSize:"20px", width : "180px", borderRadius : "4px"}}>&#10095; Early Access</div>
+					<div onClick={this.props.showEarlyAccessModal} style={{border:"1px solid white", padding:"10px", letterSpacing:"1px", cursor:"pointer", fontWeight:"100", color:"white", textAlign:"center", marginLeft:"auto", marginRight:"auto", marginBottom:"40px", fontSize:"20px", width : "250px", borderRadius : "4px"}}>
+						&#10095; Free Early Access
+					</div>
 				</div>
 
 				<div id="mob-landing-page-top-section" className="purple-bcg shown-xs">
@@ -418,7 +432,7 @@ class MockupsSection extends React.Component {
 	render() {
 		return (
 			<div>
-				<div id="landing-page-mockups-section" style={{marginTop:"30px", marginBottom:"30px"}} className="hidden-xs">
+				<div id="landing-page-mockups-section" style={{color: "#424242", marginTop:"30px", marginBottom:"30px"}} className="hidden-xs">
 					
 					<img className="boxshadow" style={{maxWidth:"60%", marginRight:"auto", marginLeft:"auto", display:"block"}} src="../assets/images/mockup-center.png"/>
 
@@ -886,13 +900,13 @@ class QuoteSection extends React.Component {
 		return (
 			<div>
 				<div id="landing-page-quote-section" className="hidden-xs" style={{textAlign:"center", paddingTop:"70px", paddingBottom:"60px"}}>
-					<div id="landing-page-quote-section-sub" style={{letterSpacing:".5px",fontSize:"23px", marginBottom:"10px"}}>"Mind Maps are the Meta-language of the human race"</div>
-					<div style={{fontSize:"18px"}}> -Tony Buzan</div>
+					<div id="landing-page-quote-section-sub" style={{color:"#424242", letterSpacing:".5px",fontSize:"23px", marginBottom:"10px"}}>"Mind Maps are the Meta-language of the human race"</div>
+					<div style={{color:"#424242", fontSize:"18px"}}> -Tony Buzan</div>
 				</div>
 
 				<div id="mob-landing-page-quote-section" className="shown-xs" style={{textAlign:"center", paddingTop:"30px", paddingBottom:"40px"}}>
-					<div id="landing-page-quote-section-sub" style={{letterSpacing:".5px",fontSize:"18px", marginBottom:"10px"}}>"Mind Maps are the Meta-language of the human race"</div>
-					<div style={{fontSize:"14px"}}> -Tony Buzan</div>
+					<div id="landing-page-quote-section-sub" style={{color:"#424242", letterSpacing:".5px",fontSize:"18px", marginBottom:"10px"}}>"Mind Maps are the Meta-language of the human race"</div>
+					<div style={{color:"#424242", fontSize:"14px"}}> -Tony Buzan</div>
 				</div>
 			</div>
 		);
@@ -932,6 +946,117 @@ class RegisterModal extends React.Component {
             <div>
                 <Modal ref="modal" onHide={this.props.hideRegisterModal}>
                     <RegisterPage externalInvite={this.props.externalInvite}/>
+                </Modal>
+            </div>
+        );
+    }
+};
+
+class RegisterEarlyAccess extends React.Component {
+
+	constructor(props) {
+	    super(props);
+	   	this.showModal = this.showModal.bind(this);
+	   	this.hideModal = this.hideModal.bind(this);
+	   	this.isMailValid = this.isMailValid.bind(this);
+		this.changeEmail = this.changeEmail.bind(this);
+
+	    this.state = {
+	    	email : "",
+	    	validEmail : false
+	    };
+	}
+
+	componentWillReceiveProps(np){
+		if(np && np.show && !this.props.show){
+			this.showModal();
+		} else if(!np.show && this.props.show){
+			this.hideModal();
+		}
+	}
+    
+    showModal(){
+        this.refs.modal.show();
+    }
+
+    hideModal(){
+        this.refs.modal.hide();
+    }
+
+    isMailValid(email){
+		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		return re.test(email);
+	}
+
+    changeEmail (){
+		
+    	var email = this.refs.email.value;
+    	var validEmail = email && this.isMailValid(email);
+		this.setState((prevState) => ({
+	      email: this.refs.email.value,
+	      validEmail: validEmail
+	    }));
+	    // if(validEmail){
+    	// 	firebase.database().ref('emails/' + EncodeServices.encode(email)).once("value", (snap) => {
+    	// 		this.setState((prevState) => ({
+			  //     mailTaken : !!snap.val()
+			  //   }));
+    	// 	}, (error) => {
+    	// 		console.log("error", error);
+    	// 	});
+	    // }
+	}
+
+	componentDidUpdate(){
+		if(this.props.show && !this.state.tippy){
+			this.setState({
+				tippy : true
+			}, ()=>{
+				new Tippy('.tippyearlyaccess', {
+				    position: 'bottom',
+				    animation: 'shift',
+				    duration: 200,
+				    arrow: true
+				})
+				this.refs.email.focus();
+			});
+		}
+	}
+
+    render() {
+        return (
+            <div>
+                <Modal ref="modal" onHide={this.props.hideEarlyAccessModal}>
+                	<div style={{color:"#424242"}}>
+	                	<h2 style={{textAlign:"center", paddingTop: "30px", paddingBottom: "30px"}}>Get Free Early Access</h2>
+	                	<p style={{paddingLeft:"50px", paddingRight:"50px"}}>Join us now and get an early access to Magnesia as well as one month as a premium user !</p>,
+
+	                	<div style={{width:"195px", marginLeft: "auto", marginRight:"auto"}}>
+		                	<img style={{verticalAlign:"middle", maxWidth:"50px", marginRight:"auto", marginLeft:"auto", display:"inline-block"}} src="../assets/images/eac-hourglass.svg"/>
+		                	<div style={{verticalAlign:"middle", display : "inline-block", fontSize:"25px", marginLeft:"40px", marginRight:"40px"}}>+</div>
+		                	<img style={{verticalAlign:"middle", maxWidth:"50px", marginRight:"auto", marginLeft:"auto", display:"inline-block"}} src="../assets/images/eac-diamond.svg"/>
+	                	</div>
+	                	<div style={{width:"265px", marginLeft: "auto", marginRight:"auto", fontSize:"14px", marginTop : "10px", marginBottom : "20px"}}>
+	                		<div style={{textAlign:"center", verticalAlign:"middle", width : "50%", display:"inline-block"}}>Early Access</div>
+	                		<div style={{textAlign:"center", verticalAlign:"middle", width : "50%", display:"inline-block"}}>Premium Month</div>
+	                	</div>
+	                	
+	                    <input className={"reg-inp " + (this.state.validEmail ? "validated" : "")} ref="email" type="email" value={this.state.email} onChange={this.changeEmail} placeholder="Email Address"/>
+	                    <div className="eam-email-wrapper">
+	                    	<div style={{color:"#9C27B0", fontSize:"13px", marginTop: "-55px", marginRight: "30px", float:"right", display : (this.state.validEmail ? "block" : "none")}}>
+	                    		<span className="eam-email-wrapper-inner">valid email</span> &#10004;
+	                    	</div>
+	                    	<div style={{fontSize:"13px", marginTop: "-55px", marginRight: "30px", float:"right", display : (this.state.validEmail ? "none" : "block")}}>
+	                    		<span className="eam-email-wrapper-inner">invalid email</span> &#10005;
+	                    	</div>
+	                    </div>
+	                    <div title="Please enter a valid email address" className="tippyearlyaccess disabled-fac-button" onClick={this.props.showEarlyAccessModal} style={{display:(this.state.validEmail ? "none" : "block"), border:"1px solid #9C27B0", padding:"10px", letterSpacing:"1px", cursor:"pointer", fontWeight:"100", color:"#9C27B0", textAlign:"center", marginLeft:"auto", marginRight:"auto", marginBottom:"50px", fontSize:"16px", width : "250px", borderRadius : "4px"}}>
+							&#10095; Free Early Access
+						</div>
+						<div title="Claim your early acces code !" className="tippyearlyaccess" onClick={this.props.showEarlyAccessModal} style={{display:(this.state.validEmail ? "block" : "none"), border:"1px solid #9C27B0", padding:"10px", letterSpacing:"1px", cursor:"pointer", fontWeight:"100", color:"#9C27B0", textAlign:"center", marginLeft:"auto", marginRight:"auto", marginBottom:"50px", fontSize:"16px", width : "250px", borderRadius : "4px"}}>
+							&#10095; Free Early Access
+						</div>
+                    </div>
                 </Modal>
             </div>
         );
