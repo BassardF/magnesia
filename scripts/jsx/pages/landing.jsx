@@ -100,8 +100,6 @@ class LandingPage extends React.Component {
 	    if(elemTop+100 < window.innerHeight && elemBottom >= 0){
 	    	this.setState({
 	    		drawDone: true
-	    	}, ()=>{
-	    		if(scroll && !this.state.autoScroll) this.scrollToSecondBlock();
 	    	});
 	    }
 	}
@@ -220,6 +218,7 @@ class LandingPage extends React.Component {
 					scrollToSecondBlockMobile={this.scrollToSecondBlockMobile}
 					scrollToThirdBlock={this.scrollToThirdBlock}
 					scrollToFourthBlock={this.scrollToFourthBlock}/>
+				<MockupsSection/>
 				<SecondSection generateAccessCode={this.generateAccessCode} sendPropsectMail={this.sendPropsectMail} drawDone={this.state.drawDone}/>
 				<QuoteSection/>
 				<ThirdSection thirdLine1={this.state.thirdLine1} thirdLine2={this.state.thirdLine2} thirdLine3={this.state.thirdLine3}/>
@@ -236,6 +235,7 @@ class TopSection extends React.Component {
 	   	this.draw = this.draw.bind(this);
 		this.drawNodes = this.drawNodes.bind(this);
 		this.drawLinks = this.drawLinks.bind(this);
+		this.earlyAccess = this.earlyAccess.bind(this);
 	    this.state = {
 	    };
 	}
@@ -347,11 +347,23 @@ class TopSection extends React.Component {
 	      	.style("opacity", 1);
 	}
 
+	earlyAccess(){
+		console.log("ea");
+	}
+
 	render() {
 		return (
 			<div>
-				<div id="landing-page-top-section" className="purple-bcg hidden-xs">
-
+				<div id="landing-page-top-section" className="hidden-xs">
+					<div className="purple-bcg" style={{width:"100%", zIndex:"-1", paddingTop:"50px", paddingBottom:"140px"}}>
+						<svg id="headersvg" style={{width:"100%", height:"300px"}}>
+							<g id="links1"></g>
+							<g id="links2"></g>
+							<g id="nodes1"></g>
+							<g id="nodes2"></g>
+							<g id="nodes3"></g>
+						</svg>
+					</div>
 					<div id="lp-header-section">
 						Mg.
 						<div id="header-rs-wrapper">
@@ -361,25 +373,8 @@ class TopSection extends React.Component {
 						</div>
 					</div>
 					<h1 id="lp-header-name">Magnesia</h1>
-					<h2 id="lp-header-sub-name">Nurturing brilliant ideas</h2>
-
-					<svg id="headersvg" style={{width:"100%", height:"300px"}}>
-						<g id="links1"></g>
-						<g id="links2"></g>
-						<g id="nodes1"></g>
-						<g id="nodes2"></g>
-						<g id="nodes3"></g>
-					</svg>
-					<div style={{display:"flex"}}>
-						<div id="triangle-left" style={{flexGrow:0}}></div>
-						<div onClick={this.props.scrollToSecondBlock} id="" style={{flexGrow:1, textAlign:"center", color:"white", cursor:"pointer"}}>
-							<div style={{fontSize:"20px"}}>Get your early access</div>
-							<div style={{height:"20px", width:"20px", marginLeft:"auto", marginRight:"auto"}} className="rotate-90 vertical-bounce">
-								&#10095;
-							</div>
-						</div>
-						<div id="triangle-right" style={{flexGrow:0}}></div>
-					</div>
+					<h2 id="lp-header-sub-name"><em>Mind Maps</em> <span style={{fontSize:"20px", marginRight:"5px", marginLeft:"5px"}}>for</span> <em>Creatives</em></h2>
+					<div onClick={this.earlyAccess} style={{letterSpacing:"1px", cursor:"pointer", fontWeight:"100", color:"white", textAlign:"center", marginLeft:"auto", marginRight:"auto", marginBottom:"40px", fontSize:"20px", width : "180px", borderRadius : "4px"}}>&#10095; Early Access</div>
 				</div>
 
 				<div id="mob-landing-page-top-section" className="purple-bcg shown-xs">
@@ -405,6 +400,64 @@ class TopSection extends React.Component {
 						</div>
 						<div id="mob-triangle-right" style={{flexGrow:0}}></div>
 					</div>
+				</div>
+				
+			</div>
+		);
+	}
+};
+
+class MockupsSection extends React.Component {
+
+	constructor(props) {
+	    super(props);
+
+	    this.state = {};
+	}
+
+	render() {
+		return (
+			<div>
+				<div id="landing-page-mockups-section" style={{marginTop:"30px", marginBottom:"30px"}} className="hidden-xs">
+					
+					<img className="boxshadow" style={{maxWidth:"60%", marginRight:"auto", marginLeft:"auto", display:"block"}} src="../assets/images/mockup-center.png"/>
+
+					<div style={{display:"flex", marginTop : "50px"}}>
+						<div style={{flexGrow:"1"}}>
+							<div style={{maxWidth:"300px", paddingLeft:"15px", paddingRight:"15px", marginLeft:"auto", marginRight:"auto"}}>
+								<h2 style={{display:"flex"}}>
+									<div style={{flexGrow:"0"}}><img style={{width:"40px", marginRight:"5px"}} src="../assets/images/lp-brainstorm.svg"/></div>
+									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "8px"}}>Brainstorm</div>
+								</h2>
+								<div>
+									Don't let valuable ideas go by. 
+									Ideas are volatile by nature, Magnesia offers a place where they cane be remembered and evolve as they deserve.
+								</div>
+							</div>
+						</div>
+						<div style={{flexGrow:"1"}}>
+							<div style={{maxWidth:"300px", paddingLeft:"15px", paddingRight:"15px", marginLeft:"auto", marginRight:"auto"}}>
+								<h2 style={{display:"flex"}}>
+									<div style={{flexGrow:"0"}}><img style={{width:"40px", marginRight:"5px"}} src="../assets/images/lp-social.svg"/></div>
+									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "8px"}}>Easy to use</div>
+								</h2>
+								<div>Magnesia had been made to be easy to use. Keep your whole thinking power for your ideas.</div>
+							</div>
+						</div>
+						<div style={{flexGrow:"1"}}>
+							<div style={{maxWidth:"300px", paddingLeft:"15px", paddingRight:"15px", marginLeft:"auto", marginRight:"auto"}}>
+								<h2 style={{display:"flex"}}>
+									<div style={{flexGrow:"0"}}><img style={{width:"40px", marginRight:"5px"}} src="../assets/images/lp-brainstorming.svg"/></div>
+									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "8px"}}>Collaborative</div>
+								</h2>
+								<div>Weither you're a teams or a lonely wolf, ideas can easily be shared and built upon.</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="mob-landing-page-mockups-section" className="shown-xs">
+					
 				</div>
 				
 			</div>
@@ -833,12 +886,12 @@ class QuoteSection extends React.Component {
 		return (
 			<div>
 				<div id="landing-page-quote-section" className="hidden-xs" style={{textAlign:"center", paddingTop:"70px", paddingBottom:"60px"}}>
-					<div id="landing-page-quote-section-sub" style={{fontWeight:"bold", letterSpacing:".5px",fontSize:"23px", marginBottom:"10px"}}>"Mind Maps are the Meta-language of the human race"</div>
+					<div id="landing-page-quote-section-sub" style={{letterSpacing:".5px",fontSize:"23px", marginBottom:"10px"}}>"Mind Maps are the Meta-language of the human race"</div>
 					<div style={{fontSize:"18px"}}> -Tony Buzan</div>
 				</div>
 
 				<div id="mob-landing-page-quote-section" className="shown-xs" style={{textAlign:"center", paddingTop:"30px", paddingBottom:"40px"}}>
-					<div id="landing-page-quote-section-sub" style={{fontWeight:"bold", letterSpacing:".5px",fontSize:"18px", marginBottom:"10px"}}>"Mind Maps are the Meta-language of the human race"</div>
+					<div id="landing-page-quote-section-sub" style={{letterSpacing:".5px",fontSize:"18px", marginBottom:"10px"}}>"Mind Maps are the Meta-language of the human race"</div>
 					<div style={{fontSize:"14px"}}> -Tony Buzan</div>
 				</div>
 			</div>

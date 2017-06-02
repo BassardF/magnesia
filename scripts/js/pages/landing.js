@@ -134,22 +134,18 @@ var LandingPage = function (_React$Component) {
 	}, {
 		key: 'checkSecondSectionInView',
 		value: function checkSecondSectionInView(view, target, scroll) {
-			var _this3 = this;
-
 			var elemTop = target.getBoundingClientRect().top;
 			var elemBottom = target.getBoundingClientRect().bottom;
 			if (elemTop + 100 < window.innerHeight && elemBottom >= 0) {
 				this.setState({
 					drawDone: true
-				}, function () {
-					if (scroll && !_this3.state.autoScroll) _this3.scrollToSecondBlock();
 				});
 			}
 		}
 	}, {
 		key: 'scrollToSecondBlock',
 		value: function scrollToSecondBlock() {
-			var _this4 = this;
+			var _this3 = this;
 
 			ga('send', {
 				hitType: 'event',
@@ -160,7 +156,7 @@ var LandingPage = function (_React$Component) {
 			this.setState({ autoScroll: true });
 			this.scrollToId("landing-page-second-section");
 			setTimeout(function () {
-				_this4.setState({ autoScroll: false });
+				_this3.setState({ autoScroll: false });
 			}, 2000);
 		}
 	}, {
@@ -177,7 +173,7 @@ var LandingPage = function (_React$Component) {
 	}, {
 		key: 'scrollToThirdBlock',
 		value: function scrollToThirdBlock() {
-			var _this5 = this;
+			var _this4 = this;
 
 			ga('send', {
 				hitType: 'event',
@@ -189,13 +185,13 @@ var LandingPage = function (_React$Component) {
 			//this.scrollToId("landing-page-third-section");
 			this.scrollToId("landing-page-quote-section-sub");
 			setTimeout(function () {
-				_this5.setState({ autoScroll: false });
+				_this4.setState({ autoScroll: false });
 			}, 2000);
 		}
 	}, {
 		key: 'scrollToFourthBlock',
 		value: function scrollToFourthBlock() {
-			var _this6 = this;
+			var _this5 = this;
 
 			ga('send', {
 				hitType: 'event',
@@ -206,7 +202,7 @@ var LandingPage = function (_React$Component) {
 			this.setState({ autoScroll: true });
 			this.scrollToId("landing-page-fourth-section");
 			setTimeout(function () {
-				_this6.setState({ autoScroll: false });
+				_this5.setState({ autoScroll: false });
 			}, 2000);
 		}
 	}, {
@@ -283,6 +279,7 @@ var LandingPage = function (_React$Component) {
 					scrollToSecondBlockMobile: this.scrollToSecondBlockMobile,
 					scrollToThirdBlock: this.scrollToThirdBlock,
 					scrollToFourthBlock: this.scrollToFourthBlock }),
+				_react2.default.createElement(MockupsSection, null),
 				_react2.default.createElement(SecondSection, { generateAccessCode: this.generateAccessCode, sendPropsectMail: this.sendPropsectMail, drawDone: this.state.drawDone }),
 				_react2.default.createElement(QuoteSection, null),
 				_react2.default.createElement(ThirdSection, { thirdLine1: this.state.thirdLine1, thirdLine2: this.state.thirdLine2, thirdLine3: this.state.thirdLine3 }),
@@ -302,13 +299,14 @@ var TopSection = function (_React$Component2) {
 	function TopSection(props) {
 		_classCallCheck(this, TopSection);
 
-		var _this7 = _possibleConstructorReturn(this, (TopSection.__proto__ || Object.getPrototypeOf(TopSection)).call(this, props));
+		var _this6 = _possibleConstructorReturn(this, (TopSection.__proto__ || Object.getPrototypeOf(TopSection)).call(this, props));
 
-		_this7.draw = _this7.draw.bind(_this7);
-		_this7.drawNodes = _this7.drawNodes.bind(_this7);
-		_this7.drawLinks = _this7.drawLinks.bind(_this7);
-		_this7.state = {};
-		return _this7;
+		_this6.draw = _this6.draw.bind(_this6);
+		_this6.drawNodes = _this6.drawNodes.bind(_this6);
+		_this6.drawLinks = _this6.drawLinks.bind(_this6);
+		_this6.earlyAccess = _this6.earlyAccess.bind(_this6);
+		_this6.state = {};
+		return _this6;
 	}
 
 	_createClass(TopSection, [{
@@ -320,7 +318,7 @@ var TopSection = function (_React$Component2) {
 	}, {
 		key: 'draw',
 		value: function draw() {
-			var _this8 = this;
+			var _this7 = this;
 
 			var svg = d3.select("#headersvg"),
 			    width = svg.property("width"),
@@ -329,23 +327,23 @@ var TopSection = function (_React$Component2) {
 			var wd = document.getElementById("landing-page-top-section").offsetWidth;
 			this.drawNodes(svg, wd, 300, _demonodes2.default.mainNode, 1);
 			setTimeout(function () {
-				_this8.drawNodes(svg, wd, 300, _demonodes2.default.secondaryNodes, 2);
+				_this7.drawNodes(svg, wd, 300, _demonodes2.default.secondaryNodes, 2);
 			}, 1000);
 			setTimeout(function () {
-				_this8.drawNodes(svg, wd, 300, _demonodes2.default.tertiaryNodes, 3);
+				_this7.drawNodes(svg, wd, 300, _demonodes2.default.tertiaryNodes, 3);
 			}, 2000);
 
 			setTimeout(function () {
-				_this8.drawLinks(svg, wd, 300, _demonodes2.default.firstLinks, 1, true);
+				_this7.drawLinks(svg, wd, 300, _demonodes2.default.firstLinks, 1, true);
 			}, 1500);
 			setTimeout(function () {
-				_this8.drawLinks(svg, wd, 300, _demonodes2.default.secondaryLinks, 2, true);
+				_this7.drawLinks(svg, wd, 300, _demonodes2.default.secondaryLinks, 2, true);
 			}, 2500);
 		}
 	}, {
 		key: 'drawMob',
 		value: function drawMob() {
-			var _this9 = this;
+			var _this8 = this;
 
 			var svg = d3.select("#mobheadersvg"),
 			    width = svg.property("width"),
@@ -354,17 +352,17 @@ var TopSection = function (_React$Component2) {
 			var wd = document.getElementById("mob-landing-page-top-section").offsetWidth;
 			this.drawNodes(svg, wd, 300, _demonodes2.default.mobMainNode, 1);
 			setTimeout(function () {
-				_this9.drawNodes(svg, wd, 300, _demonodes2.default.mobSecondaryNodes, 2);
+				_this8.drawNodes(svg, wd, 300, _demonodes2.default.mobSecondaryNodes, 2);
 			}, 1000);
 
 			setTimeout(function () {
-				_this9.drawLinks(svg, wd, 300, _demonodes2.default.mobFirstLinks, 1, false);
+				_this8.drawLinks(svg, wd, 300, _demonodes2.default.mobFirstLinks, 1, false);
 			}, 1500);
 		}
 	}, {
 		key: 'drawNodes',
 		value: function drawNodes(svg, width, height, nodes, nb) {
-			var _this10 = this;
+			var _this9 = this;
 
 			var gs = svg.select("g#nodes" + nb).selectAll("g.node").data(nodes, function (d, ind) {
 				return d;
@@ -386,9 +384,9 @@ var TopSection = function (_React$Component2) {
 			}).attr("cx", function (d, i) {
 				return width / 2 + (nodes[i].x ? +nodes[i].x : 0);
 			}).attr("stroke", function (d, i) {
-				return nodes[i].nid == _this10.state.selectedNode ? _demodrawing2.default.selectedCircleStrokeColor : _demodrawing2.default.defaultCircleStrokeColor;
+				return nodes[i].nid == _this9.state.selectedNode ? _demodrawing2.default.selectedCircleStrokeColor : _demodrawing2.default.defaultCircleStrokeColor;
 			}).attr("stroke-width", function (d, i) {
-				return nodes[i].nid == _this10.state.selectedNode ? _demodrawing2.default.selectedCircleStrokeWidth : _demodrawing2.default.defaultCircleStrokeWidth;
+				return nodes[i].nid == _this9.state.selectedNode ? _demodrawing2.default.selectedCircleStrokeWidth : _demodrawing2.default.defaultCircleStrokeWidth;
 			}).style("opacity", 0).transition(t).style("opacity", 1);
 
 			elemtEnter.append("text").attr("fill", _demodrawing2.default.defaultTextColor).attr("text-anchor", "middle").attr("class", "noselect").attr("dx", function (d, i) {
@@ -433,6 +431,11 @@ var TopSection = function (_React$Component2) {
 			}).style("opacity", 0).transition(t).style("opacity", 1);
 		}
 	}, {
+		key: 'earlyAccess',
+		value: function earlyAccess() {
+			console.log("ea");
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
@@ -440,7 +443,20 @@ var TopSection = function (_React$Component2) {
 				null,
 				_react2.default.createElement(
 					'div',
-					{ id: 'landing-page-top-section', className: 'purple-bcg hidden-xs' },
+					{ id: 'landing-page-top-section', className: 'hidden-xs' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'purple-bcg', style: { width: "100%", zIndex: "-1", paddingTop: "50px", paddingBottom: "140px" } },
+						_react2.default.createElement(
+							'svg',
+							{ id: 'headersvg', style: { width: "100%", height: "300px" } },
+							_react2.default.createElement('g', { id: 'links1' }),
+							_react2.default.createElement('g', { id: 'links2' }),
+							_react2.default.createElement('g', { id: 'nodes1' }),
+							_react2.default.createElement('g', { id: 'nodes2' }),
+							_react2.default.createElement('g', { id: 'nodes3' })
+						)
+					),
 					_react2.default.createElement(
 						'div',
 						{ id: 'lp-header-section' },
@@ -473,36 +489,28 @@ var TopSection = function (_React$Component2) {
 					_react2.default.createElement(
 						'h2',
 						{ id: 'lp-header-sub-name' },
-						'Nurturing brilliant ideas'
-					),
-					_react2.default.createElement(
-						'svg',
-						{ id: 'headersvg', style: { width: "100%", height: "300px" } },
-						_react2.default.createElement('g', { id: 'links1' }),
-						_react2.default.createElement('g', { id: 'links2' }),
-						_react2.default.createElement('g', { id: 'nodes1' }),
-						_react2.default.createElement('g', { id: 'nodes2' }),
-						_react2.default.createElement('g', { id: 'nodes3' })
+						_react2.default.createElement(
+							'em',
+							null,
+							'Mind Maps'
+						),
+						' ',
+						_react2.default.createElement(
+							'span',
+							{ style: { fontSize: "20px", marginRight: "5px", marginLeft: "5px" } },
+							'for'
+						),
+						' ',
+						_react2.default.createElement(
+							'em',
+							null,
+							'Creatives'
+						)
 					),
 					_react2.default.createElement(
 						'div',
-						{ style: { display: "flex" } },
-						_react2.default.createElement('div', { id: 'triangle-left', style: { flexGrow: 0 } }),
-						_react2.default.createElement(
-							'div',
-							{ onClick: this.props.scrollToSecondBlock, id: '', style: { flexGrow: 1, textAlign: "center", color: "white", cursor: "pointer" } },
-							_react2.default.createElement(
-								'div',
-								{ style: { fontSize: "20px" } },
-								'Get your early access'
-							),
-							_react2.default.createElement(
-								'div',
-								{ style: { height: "20px", width: "20px", marginLeft: "auto", marginRight: "auto" }, className: 'rotate-90 vertical-bounce' },
-								'\u276F'
-							)
-						),
-						_react2.default.createElement('div', { id: 'triangle-right', style: { flexGrow: 0 } })
+						{ onClick: this.earlyAccess, style: { letterSpacing: "1px", cursor: "pointer", fontWeight: "100", color: "white", textAlign: "center", marginLeft: "auto", marginRight: "auto", marginBottom: "40px", fontSize: "20px", width: "180px", borderRadius: "4px" } },
+						'\u276F Early Access'
 					)
 				),
 				_react2.default.createElement(
@@ -560,8 +568,126 @@ var TopSection = function (_React$Component2) {
 
 ;
 
-var SecondSection = function (_React$Component3) {
-	_inherits(SecondSection, _React$Component3);
+var MockupsSection = function (_React$Component3) {
+	_inherits(MockupsSection, _React$Component3);
+
+	function MockupsSection(props) {
+		_classCallCheck(this, MockupsSection);
+
+		var _this10 = _possibleConstructorReturn(this, (MockupsSection.__proto__ || Object.getPrototypeOf(MockupsSection)).call(this, props));
+
+		_this10.state = {};
+		return _this10;
+	}
+
+	_createClass(MockupsSection, [{
+		key: 'render',
+		value: function render() {
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'div',
+					{ id: 'landing-page-mockups-section', style: { marginTop: "30px", marginBottom: "30px" }, className: 'hidden-xs' },
+					_react2.default.createElement('img', { className: 'boxshadow', style: { maxWidth: "60%", marginRight: "auto", marginLeft: "auto", display: "block" }, src: '../assets/images/mockup-center.png' }),
+					_react2.default.createElement(
+						'div',
+						{ style: { display: "flex", marginTop: "50px" } },
+						_react2.default.createElement(
+							'div',
+							{ style: { flexGrow: "1" } },
+							_react2.default.createElement(
+								'div',
+								{ style: { maxWidth: "300px", paddingLeft: "15px", paddingRight: "15px", marginLeft: "auto", marginRight: "auto" } },
+								_react2.default.createElement(
+									'h2',
+									{ style: { display: "flex" } },
+									_react2.default.createElement(
+										'div',
+										{ style: { flexGrow: "0" } },
+										_react2.default.createElement('img', { style: { width: "40px", marginRight: "5px" }, src: '../assets/images/lp-brainstorm.svg' })
+									),
+									_react2.default.createElement(
+										'div',
+										{ style: { flexGrow: "1", fontWeight: "100", paddingTop: "8px" } },
+										'Brainstorm'
+									)
+								),
+								_react2.default.createElement(
+									'div',
+									null,
+									'Don\'t let valuable ideas go by. Ideas are volatile by nature, Magnesia offers a place where they cane be remembered and evolve as they deserve.'
+								)
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ style: { flexGrow: "1" } },
+							_react2.default.createElement(
+								'div',
+								{ style: { maxWidth: "300px", paddingLeft: "15px", paddingRight: "15px", marginLeft: "auto", marginRight: "auto" } },
+								_react2.default.createElement(
+									'h2',
+									{ style: { display: "flex" } },
+									_react2.default.createElement(
+										'div',
+										{ style: { flexGrow: "0" } },
+										_react2.default.createElement('img', { style: { width: "40px", marginRight: "5px" }, src: '../assets/images/lp-social.svg' })
+									),
+									_react2.default.createElement(
+										'div',
+										{ style: { flexGrow: "1", fontWeight: "100", paddingTop: "8px" } },
+										'Easy to use'
+									)
+								),
+								_react2.default.createElement(
+									'div',
+									null,
+									'Magnesia had been made to be easy to use. Keep your whole thinking power for your ideas.'
+								)
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ style: { flexGrow: "1" } },
+							_react2.default.createElement(
+								'div',
+								{ style: { maxWidth: "300px", paddingLeft: "15px", paddingRight: "15px", marginLeft: "auto", marginRight: "auto" } },
+								_react2.default.createElement(
+									'h2',
+									{ style: { display: "flex" } },
+									_react2.default.createElement(
+										'div',
+										{ style: { flexGrow: "0" } },
+										_react2.default.createElement('img', { style: { width: "40px", marginRight: "5px" }, src: '../assets/images/lp-brainstorming.svg' })
+									),
+									_react2.default.createElement(
+										'div',
+										{ style: { flexGrow: "1", fontWeight: "100", paddingTop: "8px" } },
+										'Collaborative'
+									)
+								),
+								_react2.default.createElement(
+									'div',
+									null,
+									'Weither you\'re a teams or a lonely wolf, ideas can easily be shared and built upon.'
+								)
+							)
+						)
+					)
+				),
+				_react2.default.createElement('div', { id: 'mob-landing-page-mockups-section', className: 'shown-xs' })
+			);
+		}
+	}]);
+
+	return MockupsSection;
+}(_react2.default.Component);
+
+;
+
+var SecondSection = function (_React$Component4) {
+	_inherits(SecondSection, _React$Component4);
 
 	function SecondSection(props) {
 		_classCallCheck(this, SecondSection);
@@ -832,8 +958,8 @@ var SecondSection = function (_React$Component3) {
 
 ;
 
-var ThirdSection = function (_React$Component4) {
-	_inherits(ThirdSection, _React$Component4);
+var ThirdSection = function (_React$Component5) {
+	_inherits(ThirdSection, _React$Component5);
 
 	function ThirdSection() {
 		_classCallCheck(this, ThirdSection);
@@ -1038,8 +1164,8 @@ var ThirdSection = function (_React$Component4) {
 
 ;
 
-var FourthSection = function (_React$Component5) {
-	_inherits(FourthSection, _React$Component5);
+var FourthSection = function (_React$Component6) {
+	_inherits(FourthSection, _React$Component6);
 
 	function FourthSection(props) {
 		_classCallCheck(this, FourthSection);
@@ -1194,8 +1320,8 @@ var FourthSection = function (_React$Component5) {
 
 ;
 
-var QuoteSection = function (_React$Component6) {
-	_inherits(QuoteSection, _React$Component6);
+var QuoteSection = function (_React$Component7) {
+	_inherits(QuoteSection, _React$Component7);
 
 	function QuoteSection() {
 		_classCallCheck(this, QuoteSection);
@@ -1214,7 +1340,7 @@ var QuoteSection = function (_React$Component6) {
 					{ id: 'landing-page-quote-section', className: 'hidden-xs', style: { textAlign: "center", paddingTop: "70px", paddingBottom: "60px" } },
 					_react2.default.createElement(
 						'div',
-						{ id: 'landing-page-quote-section-sub', style: { fontWeight: "bold", letterSpacing: ".5px", fontSize: "23px", marginBottom: "10px" } },
+						{ id: 'landing-page-quote-section-sub', style: { letterSpacing: ".5px", fontSize: "23px", marginBottom: "10px" } },
 						'"Mind Maps are the Meta-language of the human race"'
 					),
 					_react2.default.createElement(
@@ -1228,7 +1354,7 @@ var QuoteSection = function (_React$Component6) {
 					{ id: 'mob-landing-page-quote-section', className: 'shown-xs', style: { textAlign: "center", paddingTop: "30px", paddingBottom: "40px" } },
 					_react2.default.createElement(
 						'div',
-						{ id: 'landing-page-quote-section-sub', style: { fontWeight: "bold", letterSpacing: ".5px", fontSize: "18px", marginBottom: "10px" } },
+						{ id: 'landing-page-quote-section-sub', style: { letterSpacing: ".5px", fontSize: "18px", marginBottom: "10px" } },
 						'"Mind Maps are the Meta-language of the human race"'
 					),
 					_react2.default.createElement(
@@ -1246,8 +1372,8 @@ var QuoteSection = function (_React$Component6) {
 
 ;
 
-var RegisterModal = function (_React$Component7) {
-	_inherits(RegisterModal, _React$Component7);
+var RegisterModal = function (_React$Component8) {
+	_inherits(RegisterModal, _React$Component8);
 
 	function RegisterModal(props) {
 		_classCallCheck(this, RegisterModal);
