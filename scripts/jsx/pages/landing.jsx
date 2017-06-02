@@ -230,7 +230,7 @@ class LandingPage extends React.Component {
 		return (
 			<div id="landing-page" style={{maxWidth:"1440px", marginLeft:"auto", marginRight:"auto", overflow:"auto", height:"100%"}}>
 				<RegisterModal externalInvite={this.state.externalInvite} show={this.state.showRegisterModal} showRegisterModal={this.showRegisterModal} hideRegisterModal={this.hideRegisterModal}/>
-				<RegisterEarlyAccess show={this.state.showEarlyAccessModal} showEarlyAccessModal={this.showEarlyAccessModal} hideEarlyAccessModal={this.hideEarlyAccessModal}/>
+				<RegisterEarlyAccess sendPropsectMail={this.sendPropsectMail} generateAccessCode={this.generateAccessCode} show={this.state.showEarlyAccessModal} showEarlyAccessModal={this.showEarlyAccessModal} hideEarlyAccessModal={this.hideEarlyAccessModal}/>
 				<TopSection 
 					showEarlyAccessModal={this.showEarlyAccessModal}
 					scrollToSecondBlock={this.scrollToSecondBlock} 
@@ -960,6 +960,7 @@ class RegisterEarlyAccess extends React.Component {
 	   	this.hideModal = this.hideModal.bind(this);
 	   	this.isMailValid = this.isMailValid.bind(this);
 		this.changeEmail = this.changeEmail.bind(this);
+		this.send = this.send.bind(this);
 
 	    this.state = {
 	    	email : "",
@@ -1007,6 +1008,27 @@ class RegisterEarlyAccess extends React.Component {
 	    // }
 	}
 
+	send(){
+		ga('send', {
+			hitType: 'event',
+			eventCategory: "early access modal page",
+			eventAction: "clicked on free early access",
+			eventLabel: ""
+		});
+		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    	if(this.state.email && this.state.validEmail){
+    		var code = this.props.generateAccessCode();
+    		firebase.database().ref("prospects").push({
+    			email : this.state.email,
+    			date : new Date().getTime(),
+    			code : code
+    		});
+    		this.props.sendPropsectMail(this.state.email, code);
+    		this.props.hideEarlyAccessModal();
+    		swal("Thank You", "We are glad to count you in !", "success");
+    	}
+	}
+
 	componentDidUpdate(){
 		if(this.props.show && !this.state.tippy){
 			this.setState({
@@ -1050,11 +1072,13 @@ class RegisterEarlyAccess extends React.Component {
 	                    		<span className="eam-email-wrapper-inner">invalid email</span> &#10005;
 	                    	</div>
 	                    </div>
-	                    <div title="Please enter a valid email address" className="tippyearlyaccess disabled-fac-button" onClick={this.props.showEarlyAccessModal} style={{display:(this.state.validEmail ? "none" : "block"), border:"1px solid #9C27B0", padding:"10px", letterSpacing:"1px", cursor:"pointer", fontWeight:"100", color:"#9C27B0", textAlign:"center", marginLeft:"auto", marginRight:"auto", marginBottom:"50px", fontSize:"16px", width : "250px", borderRadius : "4px"}}>
-							&#10095; Free Early Access
-						</div>
-						<div title="Claim your early acces code !" className="tippyearlyaccess" onClick={this.props.showEarlyAccessModal} style={{display:(this.state.validEmail ? "block" : "none"), border:"1px solid #9C27B0", padding:"10px", letterSpacing:"1px", cursor:"pointer", fontWeight:"100", color:"#9C27B0", textAlign:"center", marginLeft:"auto", marginRight:"auto", marginBottom:"50px", fontSize:"16px", width : "250px", borderRadius : "4px"}}>
-							&#10095; Free Early Access
+	                    <div onClick={this.send}>
+		                    <div title="Please enter a valid email address" className="tippyearlyaccess disabled-fac-button" onClick={this.props.showEarlyAccessModal} style={{display:(this.state.validEmail ? "none" : "block"), border:"1px solid #9C27B0", padding:"10px", letterSpacing:"1px", cursor:"pointer", fontWeight:"100", color:"#9C27B0", textAlign:"center", marginLeft:"auto", marginRight:"auto", marginBottom:"50px", fontSize:"16px", width : "250px", borderRadius : "4px"}}>
+								&#10095; Free Early Access
+							</div>
+							<div title="Claim your early acces code !" className="tippyearlyaccess" onClick={this.props.showEarlyAccessModal} style={{display:(this.state.validEmail ? "block" : "none"), border:"1px solid #9C27B0", padding:"10px", letterSpacing:"1px", cursor:"pointer", fontWeight:"100", color:"#9C27B0", textAlign:"center", marginLeft:"auto", marginRight:"auto", marginBottom:"50px", fontSize:"16px", width : "250px", borderRadius : "4px"}}>
+								&#10095; Free Early Access
+							</div>
 						</div>
                     </div>
                 </Modal>

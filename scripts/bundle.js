@@ -31018,7 +31018,7 @@ var LandingPage = function (_React$Component) {
 				'div',
 				{ id: 'landing-page', style: { maxWidth: "1440px", marginLeft: "auto", marginRight: "auto", overflow: "auto", height: "100%" } },
 				_react2.default.createElement(RegisterModal, { externalInvite: this.state.externalInvite, show: this.state.showRegisterModal, showRegisterModal: this.showRegisterModal, hideRegisterModal: this.hideRegisterModal }),
-				_react2.default.createElement(RegisterEarlyAccess, { show: this.state.showEarlyAccessModal, showEarlyAccessModal: this.showEarlyAccessModal, hideEarlyAccessModal: this.hideEarlyAccessModal }),
+				_react2.default.createElement(RegisterEarlyAccess, { sendPropsectMail: this.sendPropsectMail, generateAccessCode: this.generateAccessCode, show: this.state.showEarlyAccessModal, showEarlyAccessModal: this.showEarlyAccessModal, hideEarlyAccessModal: this.hideEarlyAccessModal }),
 				_react2.default.createElement(TopSection, {
 					showEarlyAccessModal: this.showEarlyAccessModal,
 					scrollToSecondBlock: this.scrollToSecondBlock,
@@ -32170,6 +32170,7 @@ var RegisterEarlyAccess = function (_React$Component9) {
 		_this18.hideModal = _this18.hideModal.bind(_this18);
 		_this18.isMailValid = _this18.isMailValid.bind(_this18);
 		_this18.changeEmail = _this18.changeEmail.bind(_this18);
+		_this18.send = _this18.send.bind(_this18);
 
 		_this18.state = {
 			email: "",
@@ -32225,6 +32226,28 @@ var RegisterEarlyAccess = function (_React$Component9) {
 			// 		console.log("error", error);
 			// 	});
 			// }
+		}
+	}, {
+		key: 'send',
+		value: function send() {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: "early access modal page",
+				eventAction: "clicked on free early access",
+				eventLabel: ""
+			});
+			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			if (this.state.email && this.state.validEmail) {
+				var code = this.props.generateAccessCode();
+				firebase.database().ref("prospects").push({
+					email: this.state.email,
+					date: new Date().getTime(),
+					code: code
+				});
+				this.props.sendPropsectMail(this.state.email, code);
+				this.props.hideEarlyAccessModal();
+				swal("Thank You", "We are glad to count you in !", "success");
+			}
 		}
 	}, {
 		key: 'componentDidUpdate',
@@ -32320,13 +32343,17 @@ var RegisterEarlyAccess = function (_React$Component9) {
 						),
 						_react2.default.createElement(
 							'div',
-							{ title: 'Please enter a valid email address', className: 'tippyearlyaccess disabled-fac-button', onClick: this.props.showEarlyAccessModal, style: { display: this.state.validEmail ? "none" : "block", border: "1px solid #9C27B0", padding: "10px", letterSpacing: "1px", cursor: "pointer", fontWeight: "100", color: "#9C27B0", textAlign: "center", marginLeft: "auto", marginRight: "auto", marginBottom: "50px", fontSize: "16px", width: "250px", borderRadius: "4px" } },
-							'\u276F Free Early Access'
-						),
-						_react2.default.createElement(
-							'div',
-							{ title: 'Claim your early acces code !', className: 'tippyearlyaccess', onClick: this.props.showEarlyAccessModal, style: { display: this.state.validEmail ? "block" : "none", border: "1px solid #9C27B0", padding: "10px", letterSpacing: "1px", cursor: "pointer", fontWeight: "100", color: "#9C27B0", textAlign: "center", marginLeft: "auto", marginRight: "auto", marginBottom: "50px", fontSize: "16px", width: "250px", borderRadius: "4px" } },
-							'\u276F Free Early Access'
+							{ onClick: this.send },
+							_react2.default.createElement(
+								'div',
+								{ title: 'Please enter a valid email address', className: 'tippyearlyaccess disabled-fac-button', onClick: this.props.showEarlyAccessModal, style: { display: this.state.validEmail ? "none" : "block", border: "1px solid #9C27B0", padding: "10px", letterSpacing: "1px", cursor: "pointer", fontWeight: "100", color: "#9C27B0", textAlign: "center", marginLeft: "auto", marginRight: "auto", marginBottom: "50px", fontSize: "16px", width: "250px", borderRadius: "4px" } },
+								'\u276F Free Early Access'
+							),
+							_react2.default.createElement(
+								'div',
+								{ title: 'Claim your early acces code !', className: 'tippyearlyaccess', onClick: this.props.showEarlyAccessModal, style: { display: this.state.validEmail ? "block" : "none", border: "1px solid #9C27B0", padding: "10px", letterSpacing: "1px", cursor: "pointer", fontWeight: "100", color: "#9C27B0", textAlign: "center", marginLeft: "auto", marginRight: "auto", marginBottom: "50px", fontSize: "16px", width: "250px", borderRadius: "4px" } },
+								'\u276F Free Early Access'
+							)
 						)
 					)
 				)
