@@ -87,16 +87,13 @@ class LandingPage extends React.Component {
 		let target = document.getElementById('landing-page-second-section');
 		let tl1 = document.getElementById('third-line-1');
 		let tl2 = document.getElementById('third-line-2');
-		let tl3 = document.getElementById('third-line-3');
 		this.checkSecondSectionInView(view, target, false);
 		this.checkTlInVew(view, tl1, false, "thirdLine1");
 		this.checkTlInVew(view, tl2, false, "thirdLine2");
-		this.checkTlInVew(view, tl3, false, "thirdLine3");
 		view.addEventListener('scroll', () => {
 			if(!this.state.drawDone) this.checkSecondSectionInView(view, target, true);
 			if(!this.state.thirdLine1) this.checkTlInVew(view, tl1, true, "thirdLine1");
 			if(!this.state.thirdLine2) this.checkTlInVew(view, tl2, true, "thirdLine2");
-			if(!this.state.thirdLine3) this.checkTlInVew(view, tl3, true, "thirdLine3");
 		});
 	}
 
@@ -260,7 +257,7 @@ class TopSection extends React.Component {
 
 	componentDidMount(){
 		this.draw();
-		this.drawMob();
+		//this.drawMob();
 	}
 
 	draw(){
@@ -283,10 +280,10 @@ class TopSection extends React.Component {
     		height = svg.property("height");
 
     	var wd = document.getElementById("mob-landing-page-top-section").offsetWidth;
-    	this.drawNodes(svg, wd, 300, DEMONODES.mobMainNode, 1);
-    	setTimeout(()=>{ this.drawNodes(svg, wd, 300, DEMONODES.mobSecondaryNodes, 2); }, 1000);
+    	this.drawNodes(svg, wd, 200, DEMONODES.mobMainNode, 1);
+    	setTimeout(()=>{ this.drawNodes(svg, wd, 200, DEMONODES.mobSecondaryNodes, 2); }, 1000);
 
-    	setTimeout(()=>{ this.drawLinks(svg, wd, 300, DEMONODES.mobFirstLinks, 1, false); }, 1500);
+    	setTimeout(()=>{ this.drawLinks(svg, wd, 200, DEMONODES.mobFirstLinks, 1, false); }, 1500);
 	}
 
 	drawNodes(svg, width, height, nodes, nb){
@@ -397,22 +394,12 @@ class TopSection extends React.Component {
 						Mg.
 					</div>
 					<h1 id="mob-lp-header-name">Magnesia</h1>
-					<h2 id="mob-lp-header-sub-name">Nurturing brilliant ideas</h2>
+					<h2 id="mob-lp-header-sub-name"><em>Mind Maps</em> <span style={{fontSize:"20px", marginRight:"5px", marginLeft:"5px"}}>for</span> <em>Creatives</em></h2>
 
-					<svg id="mobheadersvg" style={{width:"100%", height:"250px"}}>
-						<g id="links1"></g>
-						<g id="nodes1"></g>
-						<g id="nodes2"></g>
-					</svg>
-					<div style={{display:"flex"}}>
-						<div id="mob-triangle-left" style={{flexGrow:0}}></div>
-						<div onClick={this.props.scrollToSecondBlockMobile} id="" style={{flexGrow:1, textAlign:"center", color:"white", cursor:"pointer"}}>
-							<div style={{fontSize:"14px"}}>Get your early access</div>
-							<div style={{height:"20px", width:"20px", marginLeft:"auto", marginRight:"auto"}} className="rotate-90 vertical-bounce">
-								&#10095;
-							</div>
+					<div className="mobile-drawing-bcg" style={{height:"140px", paddingTop:"70px"}}>
+						<div onClick={this.props.showEarlyAccessModal} style={{border:"1px solid white", padding:"10px", letterSpacing:"1px", cursor:"pointer", fontWeight:"100", color:"white", textAlign:"center", marginLeft:"auto", marginRight:"auto", fontSize:"20px", width : "250px", borderRadius : "4px"}}>
+							&#10095; Free Early Access
 						</div>
-						<div id="mob-triangle-right" style={{flexGrow:0}}></div>
 					</div>
 				</div>
 				
@@ -444,8 +431,8 @@ class MockupsSection extends React.Component {
 									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "8px"}}>Brainstorm</div>
 								</h2>
 								<div>
-									Don't let valuable ideas go by. 
-									Ideas are volatile by nature, Magnesia offers a place where they cane be remembered and evolve as they deserve.
+									Magnesia is a safe place for volatile ideas. 
+									We have made a place for ideas to evolve as they deserve.
 								</div>
 							</div>
 						</div>
@@ -455,7 +442,7 @@ class MockupsSection extends React.Component {
 									<div style={{flexGrow:"0"}}><img style={{width:"40px", marginRight:"5px"}} src="../assets/images/lp-social.svg"/></div>
 									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "8px"}}>Easy to use</div>
 								</h2>
-								<div>Magnesia had been made to be easy to use. Keep your whole thinking power for your ideas.</div>
+								<div>Magnesia has been made to be easy to use. Keep your whole thinking power for your ideas.</div>
 							</div>
 						</div>
 						<div style={{flexGrow:"1"}}>
@@ -464,7 +451,7 @@ class MockupsSection extends React.Component {
 									<div style={{flexGrow:"0"}}><img style={{width:"40px", marginRight:"5px"}} src="../assets/images/lp-brainstorming.svg"/></div>
 									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "8px"}}>Collaborative</div>
 								</h2>
-								<div>Weither you're a teams or a lonely wolf, ideas can easily be shared and built upon.</div>
+								<div>Weither you're a team or a lonely wolf, ideas can easily be shared and built upon.</div>
 							</div>
 						</div>
 					</div>
@@ -472,6 +459,40 @@ class MockupsSection extends React.Component {
 
 				<div id="mob-landing-page-mockups-section" className="shown-xs">
 					
+					<img className="boxshadow" style={{marginTop: "-50px", maxWidth:"95%", marginRight:"auto", marginLeft:"auto", display:"block"}} src="../assets/images/mockup-center.png"/>
+
+					<div>
+						<div style={{marginTop:"60px"}}>
+							<div style={{maxWidth:"300px", paddingLeft:"15px", paddingRight:"15px", marginLeft:"auto", marginRight:"auto"}}>
+								<h2 style={{display:"flex"}}>
+									<div style={{flexGrow:"0"}}><img style={{width:"40px", marginRight:"5px"}} src="../assets/images/lp-brainstorm.svg"/></div>
+									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "8px"}}>Brainstorm</div>
+								</h2>
+								<div>
+									Magnesia is a safe place for volatile ideas. 
+									We have made a place for ideas to evolve as they deserve.
+								</div>
+							</div>
+						</div>
+						<div style={{marginTop:"60px"}}>
+							<div style={{textAlign:"right", maxWidth:"300px", paddingLeft:"15px", paddingRight:"15px", marginLeft:"auto", marginRight:"auto"}}>
+								<h2 style={{display:"flex"}}>
+									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "4px", marginRight:"5px"}}>Easy to use</div>
+									<div style={{flexGrow:"0"}}><img style={{width:"40px"}} src="../assets/images/lp-social.svg"/></div>
+								</h2>
+								<div>Magnesia has been made to be easy to use. Keep your whole thinking power for your ideas.</div>
+							</div>
+						</div>
+						<div style={{marginTop:"60px", marginBottom:"60px"}}>
+							<div style={{maxWidth:"300px", paddingLeft:"15px", paddingRight:"15px", marginLeft:"auto", marginRight:"auto"}}>
+								<h2 style={{display:"flex"}}>
+									<div style={{flexGrow:"0"}}><img style={{width:"40px", marginRight:"5px"}} src="../assets/images/lp-brainstorming.svg"/></div>
+									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "8px"}}>Collaborative</div>
+								</h2>
+								<div>Weither you're a team or a lonely wolf, ideas can easily be shared and built upon.</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				
 			</div>
@@ -712,80 +733,44 @@ class ThirdSection extends React.Component {
 			<div>
 				<div id="landing-page-third-section" className="hidden-xs">
 					<div id="third-line-1" className={this.props.thirdLine1 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex"}}>
-						<div className="fg0 ls" style={{flexGrow:0}}>
-							<div className="value-wrapper">Team</div>
-						</div>
-						<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
-							<h2 style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"5px", marginBottom:"5px"}}>Stronger in teams</h2>
+						<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px', borderLeft : "solid 4px #2196F3"}}>
+							<h2 style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"5px", marginBottom:"5px"}}>Mind Maps ?</h2>
 							<div style={{fontSize:"16px", marginTop:"5px"}}>
-								Concepts are born in one mind and grown by groups.
-								Magnesia has been made to maximize user experience as teams.
+								A <em>Mind Map</em> is a visual representation of an idea or a concept. 
+								It uses the human tendency to be dominantly visual to structure thoughts.
+								Extract complexity from your mind, free neurones to nurture your ideas !
 							</div>
 						</div>
 					</div>
 					<div id="third-line-2" className={this.props.thirdLine2 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex", marginTop:"70px", marginBottom:"70px"}}>
-						<div className="fg1 ls" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
-							<h2 style={{fontSize:"22px", letterSpacing:"1px", textAlign:"right", fontWeight:"bold", marginTop:"15px", marginBottom:"5px"}}>The Power of Vizualisation</h2>
+						<div className="fg1 ls" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px', borderRight : "solid 4px #2196F3"}}>
+							<h2 style={{fontSize:"22px", letterSpacing:"1px", textAlign:"right", fontWeight:"bold", marginTop:"15px", marginBottom:"5px"}}>Why <em>"Magnesia"</em> ?</h2>
 							<div style={{fontSize:"16px", marginTop:"5px", textAlign:"right"}}>
-								Mouvement makes team work easier than ever before. Vizualisation doesn't have to be static !
-							</div>
-						</div>
-						<div  className="fg0 rs" style={{flexGrow:0}}>
-							<div className="value-wrapper">Live</div>
-						</div>
-					</div>
-					<div id="third-line-3" className={this.props.thirdLine3 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex"}}>
-						<div className="fg0 ls" style={{flexGrow:0}}>
-							<div className="value-wrapper">Simple</div>
-						</div>
-						<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
-							<h2 style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"9px", marginBottom:"5px"}}>Simplicity as a priority</h2>
-							<div style={{fontSize:"16px", marginTop:"5px"}}>
-								Keep all your brain power for your ideas. We envision our plateform as a tool to grow your ideas, minimizing usage complexity. 
+								Magnesia is a mythical city-state in Plato's Laws. It's my vision of blank state <em>"Tabula Rasa"</em> which allow creation of an ideal. 
+								The blank page of a new Mind Map is the best foundation for brilliant ideas ! 
 							</div>
 						</div>
 					</div>
 				</div>
 
 				<div id="mob-landing-page-third-section" className="shown-xs">
-					<div>
-						<div id="mob-third-line-1" className={this.props.thirdLine1 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex"}}>
-							<div className="fg0 ls" style={{flexGrow:0}}>
-								<div className="value-wrapper">Team</div>
+					<div id="mob-third-line-1" className={this.props.thirdLine1 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex"}}>
+						<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px', borderLeft : "solid 4px #2196F3"}}>
+							<h2 style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"5px", marginBottom:"5px"}}>Mind Maps ?</h2>
+							<div style={{fontSize:"16px", marginTop:"5px"}}>
+								A <em>Mind Map</em> is a visual representation of an idea or a concept. 
+								It uses the human tendency to be dominantly visual to structure thoughts.
+								Extract complexity from your mind, free neurones to nurture your ideas !
 							</div>
-							<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
-								<h2 style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"9px"}}>Stronger in teams</h2>
-							</div>
-						</div>
-						<div style={{fontSize:"16px", marginTop:"10px"}}>
-							Concepts are born in one mind and grown by groups.
-							Magnesia has been made to maximize user experience as teams.
 						</div>
 					</div>
-					<div style={{marginTop:"70px", marginBottom:"70px"}}>
-						<div id="mob-third-line-2" className={this.props.thirdLine2 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex"}}>
-							<div className="fg1 ls" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
-								<h2 style={{fontSize:"22px", letterSpacing:"1px", textAlign:"right", fontWeight:"bold", marginTop:"27px"}}>The Power of Vizualisation</h2>
+					<div id="mob-third-line-2" className={this.props.thirdLine2 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex", marginTop:"70px", marginBottom:"0px"}}>
+						<div className="fg1 ls" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px', borderRight : "solid 4px #2196F3"}}>
+							<h2 style={{fontSize:"22px", letterSpacing:"1px", textAlign:"right", fontWeight:"bold", marginTop:"15px", marginBottom:"5px"}}>Why <em>"Magnesia"</em> ?</h2>
+							<div style={{fontSize:"16px", marginTop:"5px", textAlign:"right"}}>
+								Magnesia is a mythical city-state in Plato's Laws. It's my vision of blank state <em>"Tabula Rasa"</em> which allow creation of an ideal. 
+								The blank page of a new Mind Map is the best foundation for brilliant ideas ! 
 							</div>
-							<div  className="fg0 rs" style={{flexGrow:0}}>
-								<h2 className="value-wrapper">Live</h2>
-							</div>
-						</div>
-						<div style={{fontSize:"16px", marginTop:"10px", textAlign:"right"}}>
-							Mouvement makes team work easier than ever before. Vizualisation doesn't have to be static !
-						</div>
-					</div>
-					<div>
-						<div id="mob-third-line-3" className={this.props.thirdLine3 ? "sel-full-third-line full-third-line" : "full-third-line"} style={{display:"flex"}}>
-							<div className="fg0 ls" style={{flexGrow:0}}>
-								<div className="value-wrapper">Simple</div>
-							</div>
-							<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px'}}>
-								<div style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"9px"}}>Simplicity as a priority</div>
-							</div>
-						</div>
-						<div style={{fontSize:"16px", marginTop:"10px"}}>
-							Keep all your brain power for your ideas. We envision our plateform as a tool to grow your ideas, minimizing usage complexity. 
 						</div>
 					</div>
 				</div>
@@ -1047,11 +1032,11 @@ class RegisterEarlyAccess extends React.Component {
 
     render() {
         return (
-            <div>
+            <div id="early-access-modal-wrapper">
                 <Modal ref="modal" onHide={this.props.hideEarlyAccessModal}>
                 	<div style={{color:"#424242"}}>
 	                	<h2 style={{textAlign:"center", paddingTop: "30px", paddingBottom: "30px"}}>Get Free Early Access</h2>
-	                	<p style={{paddingLeft:"50px", paddingRight:"50px"}}>Join us now and get an early access to Magnesia as well as one month as a premium user !</p>,
+	                	<p style={{paddingLeft:"50px", paddingRight:"50px"}}>Join us now and get an early access to Magnesia as well as a month as a premium user !</p>,
 
 	                	<div style={{width:"195px", marginLeft: "auto", marginRight:"auto"}}>
 		                	<img style={{verticalAlign:"middle", maxWidth:"50px", marginRight:"auto", marginLeft:"auto", display:"inline-block"}} src="../assets/images/eac-hourglass.svg"/>

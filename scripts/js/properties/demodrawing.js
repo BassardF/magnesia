@@ -4,9 +4,9 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.default = {
-	defaultTextColor: "#a541b7",
-	defaultCircleStrokeColor: "#a541b7",
-	selectedCircleStrokeColor: "#a541b7",
+	defaultTextColor: "#a23eb4",
+	defaultCircleStrokeColor: "#a23eb4",
+	selectedCircleStrokeColor: "#a23eb4",
 	defaultCircleStrokeWidth: "2px",
 	selectedCircleStrokeWidth: "4px",
 	defaultCircleFillColor: "#9C27B0"

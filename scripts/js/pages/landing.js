@@ -126,16 +126,13 @@ var LandingPage = function (_React$Component) {
 			var target = document.getElementById('landing-page-second-section');
 			var tl1 = document.getElementById('third-line-1');
 			var tl2 = document.getElementById('third-line-2');
-			var tl3 = document.getElementById('third-line-3');
 			this.checkSecondSectionInView(view, target, false);
 			this.checkTlInVew(view, tl1, false, "thirdLine1");
 			this.checkTlInVew(view, tl2, false, "thirdLine2");
-			this.checkTlInVew(view, tl3, false, "thirdLine3");
 			view.addEventListener('scroll', function () {
 				if (!_this2.state.drawDone) _this2.checkSecondSectionInView(view, target, true);
 				if (!_this2.state.thirdLine1) _this2.checkTlInVew(view, tl1, true, "thirdLine1");
 				if (!_this2.state.thirdLine2) _this2.checkTlInVew(view, tl2, true, "thirdLine2");
-				if (!_this2.state.thirdLine3) _this2.checkTlInVew(view, tl3, true, "thirdLine3");
 			});
 		}
 	}, {
@@ -333,7 +330,7 @@ var TopSection = function (_React$Component2) {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
 			this.draw();
-			this.drawMob();
+			//this.drawMob();
 		}
 	}, {
 		key: 'draw',
@@ -370,13 +367,13 @@ var TopSection = function (_React$Component2) {
 			    height = svg.property("height");
 
 			var wd = document.getElementById("mob-landing-page-top-section").offsetWidth;
-			this.drawNodes(svg, wd, 300, _demonodes2.default.mobMainNode, 1);
+			this.drawNodes(svg, wd, 200, _demonodes2.default.mobMainNode, 1);
 			setTimeout(function () {
-				_this8.drawNodes(svg, wd, 300, _demonodes2.default.mobSecondaryNodes, 2);
+				_this8.drawNodes(svg, wd, 200, _demonodes2.default.mobSecondaryNodes, 2);
 			}, 1000);
 
 			setTimeout(function () {
-				_this8.drawLinks(svg, wd, 300, _demonodes2.default.mobFirstLinks, 1, false);
+				_this8.drawLinks(svg, wd, 200, _demonodes2.default.mobFirstLinks, 1, false);
 			}, 1500);
 		}
 	}, {
@@ -534,34 +531,32 @@ var TopSection = function (_React$Component2) {
 					_react2.default.createElement(
 						'h2',
 						{ id: 'mob-lp-header-sub-name' },
-						'Nurturing brilliant ideas'
-					),
-					_react2.default.createElement(
-						'svg',
-						{ id: 'mobheadersvg', style: { width: "100%", height: "250px" } },
-						_react2.default.createElement('g', { id: 'links1' }),
-						_react2.default.createElement('g', { id: 'nodes1' }),
-						_react2.default.createElement('g', { id: 'nodes2' })
+						_react2.default.createElement(
+							'em',
+							null,
+							'Mind Maps'
+						),
+						' ',
+						_react2.default.createElement(
+							'span',
+							{ style: { fontSize: "20px", marginRight: "5px", marginLeft: "5px" } },
+							'for'
+						),
+						' ',
+						_react2.default.createElement(
+							'em',
+							null,
+							'Creatives'
+						)
 					),
 					_react2.default.createElement(
 						'div',
-						{ style: { display: "flex" } },
-						_react2.default.createElement('div', { id: 'mob-triangle-left', style: { flexGrow: 0 } }),
+						{ className: 'mobile-drawing-bcg', style: { height: "140px", paddingTop: "70px" } },
 						_react2.default.createElement(
 							'div',
-							{ onClick: this.props.scrollToSecondBlockMobile, id: '', style: { flexGrow: 1, textAlign: "center", color: "white", cursor: "pointer" } },
-							_react2.default.createElement(
-								'div',
-								{ style: { fontSize: "14px" } },
-								'Get your early access'
-							),
-							_react2.default.createElement(
-								'div',
-								{ style: { height: "20px", width: "20px", marginLeft: "auto", marginRight: "auto" }, className: 'rotate-90 vertical-bounce' },
-								'\u276F'
-							)
-						),
-						_react2.default.createElement('div', { id: 'mob-triangle-right', style: { flexGrow: 0 } })
+							{ onClick: this.props.showEarlyAccessModal, style: { border: "1px solid white", padding: "10px", letterSpacing: "1px", cursor: "pointer", fontWeight: "100", color: "white", textAlign: "center", marginLeft: "auto", marginRight: "auto", fontSize: "20px", width: "250px", borderRadius: "4px" } },
+							'\u276F Free Early Access'
+						)
 					)
 				)
 			);
@@ -621,7 +616,7 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'Don\'t let valuable ideas go by. Ideas are volatile by nature, Magnesia offers a place where they cane be remembered and evolve as they deserve.'
+									'Magnesia is a safe place for volatile ideas. We have made a place for ideas to evolve as they deserve.'
 								)
 							)
 						),
@@ -648,7 +643,7 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'Magnesia had been made to be easy to use. Keep your whole thinking power for your ideas.'
+									'Magnesia has been made to be easy to use. Keep your whole thinking power for your ideas.'
 								)
 							)
 						),
@@ -675,13 +670,102 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'Weither you\'re a teams or a lonely wolf, ideas can easily be shared and built upon.'
+									'Weither you\'re a team or a lonely wolf, ideas can easily be shared and built upon.'
 								)
 							)
 						)
 					)
 				),
-				_react2.default.createElement('div', { id: 'mob-landing-page-mockups-section', className: 'shown-xs' })
+				_react2.default.createElement(
+					'div',
+					{ id: 'mob-landing-page-mockups-section', className: 'shown-xs' },
+					_react2.default.createElement('img', { className: 'boxshadow', style: { marginTop: "-50px", maxWidth: "95%", marginRight: "auto", marginLeft: "auto", display: "block" }, src: '../assets/images/mockup-center.png' }),
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'div',
+							{ style: { marginTop: "60px" } },
+							_react2.default.createElement(
+								'div',
+								{ style: { maxWidth: "300px", paddingLeft: "15px", paddingRight: "15px", marginLeft: "auto", marginRight: "auto" } },
+								_react2.default.createElement(
+									'h2',
+									{ style: { display: "flex" } },
+									_react2.default.createElement(
+										'div',
+										{ style: { flexGrow: "0" } },
+										_react2.default.createElement('img', { style: { width: "40px", marginRight: "5px" }, src: '../assets/images/lp-brainstorm.svg' })
+									),
+									_react2.default.createElement(
+										'div',
+										{ style: { flexGrow: "1", fontWeight: "100", paddingTop: "8px" } },
+										'Brainstorm'
+									)
+								),
+								_react2.default.createElement(
+									'div',
+									null,
+									'Magnesia is a safe place for volatile ideas. We have made a place for ideas to evolve as they deserve.'
+								)
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ style: { marginTop: "60px" } },
+							_react2.default.createElement(
+								'div',
+								{ style: { textAlign: "right", maxWidth: "300px", paddingLeft: "15px", paddingRight: "15px", marginLeft: "auto", marginRight: "auto" } },
+								_react2.default.createElement(
+									'h2',
+									{ style: { display: "flex" } },
+									_react2.default.createElement(
+										'div',
+										{ style: { flexGrow: "1", fontWeight: "100", paddingTop: "4px", marginRight: "5px" } },
+										'Easy to use'
+									),
+									_react2.default.createElement(
+										'div',
+										{ style: { flexGrow: "0" } },
+										_react2.default.createElement('img', { style: { width: "40px" }, src: '../assets/images/lp-social.svg' })
+									)
+								),
+								_react2.default.createElement(
+									'div',
+									null,
+									'Magnesia has been made to be easy to use. Keep your whole thinking power for your ideas.'
+								)
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ style: { marginTop: "60px", marginBottom: "60px" } },
+							_react2.default.createElement(
+								'div',
+								{ style: { maxWidth: "300px", paddingLeft: "15px", paddingRight: "15px", marginLeft: "auto", marginRight: "auto" } },
+								_react2.default.createElement(
+									'h2',
+									{ style: { display: "flex" } },
+									_react2.default.createElement(
+										'div',
+										{ style: { flexGrow: "0" } },
+										_react2.default.createElement('img', { style: { width: "40px", marginRight: "5px" }, src: '../assets/images/lp-brainstorming.svg' })
+									),
+									_react2.default.createElement(
+										'div',
+										{ style: { flexGrow: "1", fontWeight: "100", paddingTop: "8px" } },
+										'Collaborative'
+									)
+								),
+								_react2.default.createElement(
+									'div',
+									null,
+									'Weither you\'re a team or a lonely wolf, ideas can easily be shared and built upon.'
+								)
+							)
+						)
+					)
+				)
 			);
 		}
 	}]);
@@ -986,25 +1070,22 @@ var ThirdSection = function (_React$Component5) {
 						{ id: 'third-line-1', className: this.props.thirdLine1 ? "sel-full-third-line full-third-line" : "full-third-line", style: { display: "flex" } },
 						_react2.default.createElement(
 							'div',
-							{ className: 'fg0 ls', style: { flexGrow: 0 } },
-							_react2.default.createElement(
-								'div',
-								{ className: 'value-wrapper' },
-								'Team'
-							)
-						),
-						_react2.default.createElement(
-							'div',
-							{ className: 'fg1 rs', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
+							{ className: 'fg1 rs', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px', borderLeft: "solid 4px #2196F3" } },
 							_react2.default.createElement(
 								'h2',
 								{ style: { fontSize: "22px", letterSpacing: "1px", fontWeight: "bold", marginTop: "5px", marginBottom: "5px" } },
-								'Stronger in teams'
+								'Mind Maps ?'
 							),
 							_react2.default.createElement(
 								'div',
 								{ style: { fontSize: "16px", marginTop: "5px" } },
-								'Concepts are born in one mind and grown by groups. Magnesia has been made to maximize user experience as teams.'
+								'A ',
+								_react2.default.createElement(
+									'em',
+									null,
+									'Mind Map'
+								),
+								' is a visual representation of an idea or a concept. It uses the human tendency to be dominantly visual to structure thoughts. Extract complexity from your mind, free neurones to nurture your ideas !'
 							)
 						)
 					),
@@ -1013,52 +1094,28 @@ var ThirdSection = function (_React$Component5) {
 						{ id: 'third-line-2', className: this.props.thirdLine2 ? "sel-full-third-line full-third-line" : "full-third-line", style: { display: "flex", marginTop: "70px", marginBottom: "70px" } },
 						_react2.default.createElement(
 							'div',
-							{ className: 'fg1 ls', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
+							{ className: 'fg1 ls', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px', borderRight: "solid 4px #2196F3" } },
 							_react2.default.createElement(
 								'h2',
 								{ style: { fontSize: "22px", letterSpacing: "1px", textAlign: "right", fontWeight: "bold", marginTop: "15px", marginBottom: "5px" } },
-								'The Power of Vizualisation'
+								'Why ',
+								_react2.default.createElement(
+									'em',
+									null,
+									'"Magnesia"'
+								),
+								' ?'
 							),
 							_react2.default.createElement(
 								'div',
 								{ style: { fontSize: "16px", marginTop: "5px", textAlign: "right" } },
-								'Mouvement makes team work easier than ever before. Vizualisation doesn\'t have to be static !'
-							)
-						),
-						_react2.default.createElement(
-							'div',
-							{ className: 'fg0 rs', style: { flexGrow: 0 } },
-							_react2.default.createElement(
-								'div',
-								{ className: 'value-wrapper' },
-								'Live'
-							)
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ id: 'third-line-3', className: this.props.thirdLine3 ? "sel-full-third-line full-third-line" : "full-third-line", style: { display: "flex" } },
-						_react2.default.createElement(
-							'div',
-							{ className: 'fg0 ls', style: { flexGrow: 0 } },
-							_react2.default.createElement(
-								'div',
-								{ className: 'value-wrapper' },
-								'Simple'
-							)
-						),
-						_react2.default.createElement(
-							'div',
-							{ className: 'fg1 rs', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
-							_react2.default.createElement(
-								'h2',
-								{ style: { fontSize: "22px", letterSpacing: "1px", fontWeight: "bold", marginTop: "9px", marginBottom: "5px" } },
-								'Simplicity as a priority'
-							),
-							_react2.default.createElement(
-								'div',
-								{ style: { fontSize: "16px", marginTop: "5px" } },
-								'Keep all your brain power for your ideas. We envision our plateform as a tool to grow your ideas, minimizing usage complexity.'
+								'Magnesia is a mythical city-state in Plato\'s Laws. It\'s my vision of blank state ',
+								_react2.default.createElement(
+									'em',
+									null,
+									'"Tabula Rasa"'
+								),
+								' which allow creation of an ideal. The blank page of a new Mind Map is the best foundation for brilliant ideas !'
 							)
 						)
 					)
@@ -1068,95 +1125,56 @@ var ThirdSection = function (_React$Component5) {
 					{ id: 'mob-landing-page-third-section', className: 'shown-xs' },
 					_react2.default.createElement(
 						'div',
-						null,
+						{ id: 'mob-third-line-1', className: this.props.thirdLine1 ? "sel-full-third-line full-third-line" : "full-third-line", style: { display: "flex" } },
 						_react2.default.createElement(
 							'div',
-							{ id: 'mob-third-line-1', className: this.props.thirdLine1 ? "sel-full-third-line full-third-line" : "full-third-line", style: { display: "flex" } },
+							{ className: 'fg1 rs', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px', borderLeft: "solid 4px #2196F3" } },
 							_react2.default.createElement(
-								'div',
-								{ className: 'fg0 ls', style: { flexGrow: 0 } },
-								_react2.default.createElement(
-									'div',
-									{ className: 'value-wrapper' },
-									'Team'
-								)
+								'h2',
+								{ style: { fontSize: "22px", letterSpacing: "1px", fontWeight: "bold", marginTop: "5px", marginBottom: "5px" } },
+								'Mind Maps ?'
 							),
 							_react2.default.createElement(
 								'div',
-								{ className: 'fg1 rs', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
+								{ style: { fontSize: "16px", marginTop: "5px" } },
+								'A ',
 								_react2.default.createElement(
-									'h2',
-									{ style: { fontSize: "22px", letterSpacing: "1px", fontWeight: "bold", marginTop: "9px" } },
-									'Stronger in teams'
-								)
+									'em',
+									null,
+									'Mind Map'
+								),
+								' is a visual representation of an idea or a concept. It uses the human tendency to be dominantly visual to structure thoughts. Extract complexity from your mind, free neurones to nurture your ideas !'
 							)
-						),
-						_react2.default.createElement(
-							'div',
-							{ style: { fontSize: "16px", marginTop: "10px" } },
-							'Concepts are born in one mind and grown by groups. Magnesia has been made to maximize user experience as teams.'
 						)
 					),
 					_react2.default.createElement(
 						'div',
-						{ style: { marginTop: "70px", marginBottom: "70px" } },
+						{ id: 'mob-third-line-2', className: this.props.thirdLine2 ? "sel-full-third-line full-third-line" : "full-third-line", style: { display: "flex", marginTop: "70px", marginBottom: "0px" } },
 						_react2.default.createElement(
 							'div',
-							{ id: 'mob-third-line-2', className: this.props.thirdLine2 ? "sel-full-third-line full-third-line" : "full-third-line", style: { display: "flex" } },
+							{ className: 'fg1 ls', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px', borderRight: "solid 4px #2196F3" } },
 							_react2.default.createElement(
-								'div',
-								{ className: 'fg1 ls', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
+								'h2',
+								{ style: { fontSize: "22px", letterSpacing: "1px", textAlign: "right", fontWeight: "bold", marginTop: "15px", marginBottom: "5px" } },
+								'Why ',
 								_react2.default.createElement(
-									'h2',
-									{ style: { fontSize: "22px", letterSpacing: "1px", textAlign: "right", fontWeight: "bold", marginTop: "27px" } },
-									'The Power of Vizualisation'
-								)
+									'em',
+									null,
+									'"Magnesia"'
+								),
+								' ?'
 							),
 							_react2.default.createElement(
 								'div',
-								{ className: 'fg0 rs', style: { flexGrow: 0 } },
+								{ style: { fontSize: "16px", marginTop: "5px", textAlign: "right" } },
+								'Magnesia is a mythical city-state in Plato\'s Laws. It\'s my vision of blank state ',
 								_react2.default.createElement(
-									'h2',
-									{ className: 'value-wrapper' },
-									'Live'
-								)
+									'em',
+									null,
+									'"Tabula Rasa"'
+								),
+								' which allow creation of an ideal. The blank page of a new Mind Map is the best foundation for brilliant ideas !'
 							)
-						),
-						_react2.default.createElement(
-							'div',
-							{ style: { fontSize: "16px", marginTop: "10px", textAlign: "right" } },
-							'Mouvement makes team work easier than ever before. Vizualisation doesn\'t have to be static !'
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						null,
-						_react2.default.createElement(
-							'div',
-							{ id: 'mob-third-line-3', className: this.props.thirdLine3 ? "sel-full-third-line full-third-line" : "full-third-line", style: { display: "flex" } },
-							_react2.default.createElement(
-								'div',
-								{ className: 'fg0 ls', style: { flexGrow: 0 } },
-								_react2.default.createElement(
-									'div',
-									{ className: 'value-wrapper' },
-									'Simple'
-								)
-							),
-							_react2.default.createElement(
-								'div',
-								{ className: 'fg1 rs', style: { flexGrow: 1, paddingLeft: '20px', paddingRight: '20px' } },
-								_react2.default.createElement(
-									'div',
-									{ style: { fontSize: "22px", letterSpacing: "1px", fontWeight: "bold", marginTop: "9px" } },
-									'Simplicity as a priority'
-								)
-							)
-						),
-						_react2.default.createElement(
-							'div',
-							{ style: { fontSize: "16px", marginTop: "10px" } },
-							'Keep all your brain power for your ideas. We envision our plateform as a tool to grow your ideas, minimizing usage complexity.'
 						)
 					)
 				)
@@ -1548,7 +1566,7 @@ var RegisterEarlyAccess = function (_React$Component9) {
 		value: function render() {
 			return _react2.default.createElement(
 				'div',
-				null,
+				{ id: 'early-access-modal-wrapper' },
 				_react2.default.createElement(
 					_DropModal2.default,
 					{ ref: 'modal', onHide: this.props.hideEarlyAccessModal },
@@ -1563,7 +1581,7 @@ var RegisterEarlyAccess = function (_React$Component9) {
 						_react2.default.createElement(
 							'p',
 							{ style: { paddingLeft: "50px", paddingRight: "50px" } },
-							'Join us now and get an early access to Magnesia as well as one month as a premium user !'
+							'Join us now and get an early access to Magnesia as well as a month as a premium user !'
 						),
 						',',
 						_react2.default.createElement(
