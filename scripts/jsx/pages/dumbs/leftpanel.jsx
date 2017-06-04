@@ -242,7 +242,9 @@ class NodeLine extends React.Component {
 			<div>
 				<div onClick={this.selectNode} className={ selected ? "selected-node-line" : "node-line" }>
 					<div className="arrow-right v-align-middle inline-block"></div>
-					<span className="v-align-middle" style={{marginLeft : (selected ? "4px" : "5px")}}>{this.props.node.title}</span>
+					<div className="v-align-middle" style={{maxWidth:"100px", overflow:"hidden", display:"inline-block", marginLeft : (selected ? "4px" : "5px")}}>
+						{this.props.node.title}
+					</div>
 					<DeleteButton label="delete" action={this.deleteNode}/>
 				</div>
 				<div>
@@ -293,9 +295,9 @@ class LinkLine extends React.Component {
 			<div>
 				<div onClick={this.selectLink} className={ selected ? "selected-link-line" : "link-line" }>
 					<div className="arrow-right v-align-middle inline-block">&#8212;</div>
-					<span className="v-align-middle" style={{marginLeft : "5px"}}>
+					<div className="v-align-middle" style={{display:"inline-block", maxWidth:"100px", overflow:"hidden", marginLeft : "5px"}}>
 						{this.props.nodes && this.props.nodes[targetNid] ? this.props.nodes[targetNid].title : "" }
-					</span>
+					</div>
 					<DeleteButton label="unlink" action={this.deleteLink}/>
 				</div>
 			</div>

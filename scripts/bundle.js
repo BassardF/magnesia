@@ -29256,8 +29256,8 @@ var NodeLine = function (_React$Component3) {
 					{ onClick: this.selectNode, className: selected ? "selected-node-line" : "node-line" },
 					_react2.default.createElement('div', { className: 'arrow-right v-align-middle inline-block' }),
 					_react2.default.createElement(
-						'span',
-						{ className: 'v-align-middle', style: { marginLeft: selected ? "4px" : "5px" } },
+						'div',
+						{ className: 'v-align-middle', style: { maxWidth: "100px", overflow: "hidden", display: "inline-block", marginLeft: selected ? "4px" : "5px" } },
 						this.props.node.title
 					),
 					_react2.default.createElement(_deletebutton2.default, { label: 'delete', action: this.deleteNode })
@@ -29336,8 +29336,8 @@ var LinkLine = function (_React$Component4) {
 						'\u2014'
 					),
 					_react2.default.createElement(
-						'span',
-						{ className: 'v-align-middle', style: { marginLeft: "5px" } },
+						'div',
+						{ className: 'v-align-middle', style: { display: "inline-block", maxWidth: "100px", overflow: "hidden", marginLeft: "5px" } },
 						this.props.nodes && this.props.nodes[targetNid] ? this.props.nodes[targetNid].title : ""
 					),
 					_react2.default.createElement(_deletebutton2.default, { label: 'unlink', action: this.deleteLink })
@@ -31809,7 +31809,7 @@ var ThirdSection = function (_React$Component5) {
 									null,
 									'Mind Map'
 								),
-								' is a visual representation of an idea or a concept. It uses the human tendency to be dominantly visual to structure thoughts. Extract complexity from your mind, free neurones to nurture your ideas !'
+								' is a visual representation of an idea or a concept. It is based on the human tendency to structure thoughts visually. Free your mind from any unnecessary workload and give full expression to your creativity !'
 							)
 						)
 					),
@@ -31833,13 +31833,19 @@ var ThirdSection = function (_React$Component5) {
 							_react2.default.createElement(
 								'div',
 								{ style: { fontSize: "16px", marginTop: "5px", textAlign: "right" } },
-								'Magnesia is a mythical city-state in Plato\'s Laws. It\'s my vision of blank state ',
+								'Magnesia is an fictional and ideal city-state depicted in ',
+								_react2.default.createElement(
+									'em',
+									null,
+									'Plato\'s Laws'
+								),
+								'. It represents the state of ',
 								_react2.default.createElement(
 									'em',
 									null,
 									'"Tabula Rasa"'
 								),
-								' which allow creation of an ideal. The blank page of a new Mind Map is the best foundation for brilliant ideas !'
+								', which allows the creation of an ideal without restriction. The blank sheet for a new Mind Map is the best foundation for brilliant ideas !'
 							)
 						)
 					)
@@ -31867,7 +31873,7 @@ var ThirdSection = function (_React$Component5) {
 									null,
 									'Mind Map'
 								),
-								' is a visual representation of an idea or a concept. It uses the human tendency to be dominantly visual to structure thoughts. Extract complexity from your mind, free neurones to nurture your ideas !'
+								' is a visual representation of an idea or a concept. It is based on the human tendency to structure thoughts visually. Free your mind from any unnecessary workload and give full expression to your creativity !'
 							)
 						)
 					),
@@ -31891,13 +31897,19 @@ var ThirdSection = function (_React$Component5) {
 							_react2.default.createElement(
 								'div',
 								{ style: { fontSize: "16px", marginTop: "5px", textAlign: "right" } },
-								'Magnesia is a mythical city-state in Plato\'s Laws. It\'s my vision of blank state ',
+								'Magnesia is an fictional and ideal city-state depicted in ',
+								_react2.default.createElement(
+									'em',
+									null,
+									'Plato\'s Laws'
+								),
+								'. It represents the state of ',
 								_react2.default.createElement(
 									'em',
 									null,
 									'"Tabula Rasa"'
 								),
-								' which allow creation of an ideal. The blank page of a new Mind Map is the best foundation for brilliant ideas !'
+								', which allows the creation of an ideal without restriction. The blank sheet for a new Mind Map is the best foundation for brilliant ideas !'
 							)
 						)
 					)
@@ -32832,10 +32844,14 @@ var MapPageComp = function (_React$Component) {
 			//Enter
 			var elemtEnter = gs.enter().append("g").attr("class", "node");
 
-			elemtEnter.append("circle").style("cursor", "pointer").merge(gs.selectAll("circle")).attr("fill", function (d, i) {
+			elemtEnter.append("ellipse").style("cursor", "pointer").merge(gs.selectAll("ellipse")).attr("fill", function (d, i) {
 				return nodes[i].bcg_color || "white";
-			}).attr("r", function (d, i) {
+			}).attr("ry", function (d, i) {
 				return 40 * (nodes[i].scale ? +nodes[i].scale : 1);
+			}).attr("rx", function (d, i) {
+				var naturalWidth = 40 * (nodes[i].scale ? +nodes[i].scale : 1);
+				var textWidth = nodes[i].title ? nodes[i].title.length * 7 / 2 + 10 : 0;
+				return naturalWidth > textWidth ? naturalWidth : textWidth;
 			}).attr("cy", function (d, i) {
 				return _this7.state.yShift + height.animVal.value / 2 + (nodes[i].y ? +nodes[i].y : 0);
 			}).attr("cx", function (d, i) {
@@ -32952,7 +32968,9 @@ var MapPageComp = function (_React$Component) {
 				    width = svg.property("width"),
 				    height = svg.property("height");
 
-				var r = 40 * (d.scale ? +d.scale : 1);
+				var textWidth = d.title ? d.title.length * 7 / 2 + 10 : 0;
+				var naturalWidth = 40 * (d.scale ? +d.scale : 1);
+				var r = textWidth > naturalWidth ? textWidth : naturalWidth;
 				xy.x = width.animVal.value / 2 + (d.x ? +d.x : 0) - r + 5 + thisRef.state.xShift;
 				xy.y = height.animVal.value / 2 + (d.y ? +d.y : 0) - 10 + thisRef.state.yShift;
 

@@ -734,9 +734,7 @@ class ThirdSection extends React.Component {
 						<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px', borderLeft : "solid 4px #2196F3"}}>
 							<h2 style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"5px", marginBottom:"5px"}}>Mind Maps ?</h2>
 							<div style={{fontSize:"16px", marginTop:"5px"}}>
-								A <em>Mind Map</em> is a visual representation of an idea or a concept. 
-								It uses the human tendency to be dominantly visual to structure thoughts.
-								Extract complexity from your mind, free neurones to nurture your ideas !
+								A <em>Mind Map</em> is a visual representation of an idea or a concept. It is based on the human tendency to structure thoughts visually. Free your mind from any unnecessary workload and give full expression to your creativity !
 							</div>
 						</div>
 					</div>
@@ -744,8 +742,7 @@ class ThirdSection extends React.Component {
 						<div className="fg1 ls" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px', borderRight : "solid 4px #2196F3"}}>
 							<h2 style={{fontSize:"22px", letterSpacing:"1px", textAlign:"right", fontWeight:"bold", marginTop:"15px", marginBottom:"5px"}}>Why <em>"Magnesia"</em> ?</h2>
 							<div style={{fontSize:"16px", marginTop:"5px", textAlign:"right"}}>
-								Magnesia is a mythical city-state in Plato's Laws. It's my vision of blank state <em>"Tabula Rasa"</em> which allow creation of an ideal. 
-								The blank page of a new Mind Map is the best foundation for brilliant ideas ! 
+								Magnesia is an fictional and ideal city-state depicted in <em>Plato's Laws</em>. It represents the state of <em>"Tabula Rasa"</em>, which allows the creation of an ideal without restriction. The blank sheet for a new Mind Map is the best foundation for brilliant ideas !
 							</div>
 						</div>
 					</div>
@@ -756,9 +753,7 @@ class ThirdSection extends React.Component {
 						<div className="fg1 rs" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px', borderLeft : "solid 4px #2196F3"}}>
 							<h2 style={{fontSize:"22px", letterSpacing:"1px", fontWeight:"bold", marginTop:"5px", marginBottom:"5px"}}>Mind Maps ?</h2>
 							<div style={{fontSize:"16px", marginTop:"5px"}}>
-								A <em>Mind Map</em> is a visual representation of an idea or a concept. 
-								It uses the human tendency to be dominantly visual to structure thoughts.
-								Extract complexity from your mind, free neurones to nurture your ideas !
+								A <em>Mind Map</em> is a visual representation of an idea or a concept. It is based on the human tendency to structure thoughts visually. Free your mind from any unnecessary workload and give full expression to your creativity !
 							</div>
 						</div>
 					</div>
@@ -766,8 +761,7 @@ class ThirdSection extends React.Component {
 						<div className="fg1 ls" style={{flexGrow:1, paddingLeft:'20px', paddingRight:'20px', borderRight : "solid 4px #2196F3"}}>
 							<h2 style={{fontSize:"22px", letterSpacing:"1px", textAlign:"right", fontWeight:"bold", marginTop:"15px", marginBottom:"5px"}}>Why <em>"Magnesia"</em> ?</h2>
 							<div style={{fontSize:"16px", marginTop:"5px", textAlign:"right"}}>
-								Magnesia is a mythical city-state in Plato's Laws. It's my vision of blank state <em>"Tabula Rasa"</em> which allow creation of an ideal. 
-								The blank page of a new Mind Map is the best foundation for brilliant ideas ! 
+								Magnesia is an fictional and ideal city-state depicted in <em>Plato's Laws</em>. It represents the state of <em>"Tabula Rasa"</em>, which allows the creation of an ideal without restriction. The blank sheet for a new Mind Map is the best foundation for brilliant ideas !
 							</div>
 						</div>
 					</div>

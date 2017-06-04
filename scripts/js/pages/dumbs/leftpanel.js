@@ -376,8 +376,8 @@ var NodeLine = function (_React$Component3) {
 					{ onClick: this.selectNode, className: selected ? "selected-node-line" : "node-line" },
 					_react2.default.createElement('div', { className: 'arrow-right v-align-middle inline-block' }),
 					_react2.default.createElement(
-						'span',
-						{ className: 'v-align-middle', style: { marginLeft: selected ? "4px" : "5px" } },
+						'div',
+						{ className: 'v-align-middle', style: { maxWidth: "100px", overflow: "hidden", display: "inline-block", marginLeft: selected ? "4px" : "5px" } },
 						this.props.node.title
 					),
 					_react2.default.createElement(_deletebutton2.default, { label: 'delete', action: this.deleteNode })
@@ -456,8 +456,8 @@ var LinkLine = function (_React$Component4) {
 						'\u2014'
 					),
 					_react2.default.createElement(
-						'span',
-						{ className: 'v-align-middle', style: { marginLeft: "5px" } },
+						'div',
+						{ className: 'v-align-middle', style: { display: "inline-block", maxWidth: "100px", overflow: "hidden", marginLeft: "5px" } },
 						this.props.nodes && this.props.nodes[targetNid] ? this.props.nodes[targetNid].title : ""
 					),
 					_react2.default.createElement(_deletebutton2.default, { label: 'unlink', action: this.deleteLink })

@@ -445,10 +445,14 @@ var MapPageComp = function (_React$Component) {
 			//Enter
 			var elemtEnter = gs.enter().append("g").attr("class", "node");
 
-			elemtEnter.append("circle").style("cursor", "pointer").merge(gs.selectAll("circle")).attr("fill", function (d, i) {
+			elemtEnter.append("ellipse").style("cursor", "pointer").merge(gs.selectAll("ellipse")).attr("fill", function (d, i) {
 				return nodes[i].bcg_color || "white";
-			}).attr("r", function (d, i) {
+			}).attr("ry", function (d, i) {
 				return 40 * (nodes[i].scale ? +nodes[i].scale : 1);
+			}).attr("rx", function (d, i) {
+				var naturalWidth = 40 * (nodes[i].scale ? +nodes[i].scale : 1);
+				var textWidth = nodes[i].title ? nodes[i].title.length * 7 / 2 + 10 : 0;
+				return naturalWidth > textWidth ? naturalWidth : textWidth;
 			}).attr("cy", function (d, i) {
 				return _this7.state.yShift + height.animVal.value / 2 + (nodes[i].y ? +nodes[i].y : 0);
 			}).attr("cx", function (d, i) {
@@ -565,7 +569,9 @@ var MapPageComp = function (_React$Component) {
 				    width = svg.property("width"),
 				    height = svg.property("height");
 
-				var r = 40 * (d.scale ? +d.scale : 1);
+				var textWidth = d.title ? d.title.length * 7 / 2 + 10 : 0;
+				var naturalWidth = 40 * (d.scale ? +d.scale : 1);
+				var r = textWidth > naturalWidth ? textWidth : naturalWidth;
 				xy.x = width.animVal.value / 2 + (d.x ? +d.x : 0) - r + 5 + thisRef.state.xShift;
 				xy.y = height.animVal.value / 2 + (d.y ? +d.y : 0) - 10 + thisRef.state.yShift;
 

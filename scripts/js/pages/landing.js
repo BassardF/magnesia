@@ -1085,7 +1085,7 @@ var ThirdSection = function (_React$Component5) {
 									null,
 									'Mind Map'
 								),
-								' is a visual representation of an idea or a concept. It uses the human tendency to be dominantly visual to structure thoughts. Extract complexity from your mind, free neurones to nurture your ideas !'
+								' is a visual representation of an idea or a concept. It is based on the human tendency to structure thoughts visually. Free your mind from any unnecessary workload and give full expression to your creativity !'
 							)
 						)
 					),
@@ -1109,13 +1109,19 @@ var ThirdSection = function (_React$Component5) {
 							_react2.default.createElement(
 								'div',
 								{ style: { fontSize: "16px", marginTop: "5px", textAlign: "right" } },
-								'Magnesia is a mythical city-state in Plato\'s Laws. It\'s my vision of blank state ',
+								'Magnesia is an fictional and ideal city-state depicted in ',
+								_react2.default.createElement(
+									'em',
+									null,
+									'Plato\'s Laws'
+								),
+								'. It represents the state of ',
 								_react2.default.createElement(
 									'em',
 									null,
 									'"Tabula Rasa"'
 								),
-								' which allow creation of an ideal. The blank page of a new Mind Map is the best foundation for brilliant ideas !'
+								', which allows the creation of an ideal without restriction. The blank sheet for a new Mind Map is the best foundation for brilliant ideas !'
 							)
 						)
 					)
@@ -1143,7 +1149,7 @@ var ThirdSection = function (_React$Component5) {
 									null,
 									'Mind Map'
 								),
-								' is a visual representation of an idea or a concept. It uses the human tendency to be dominantly visual to structure thoughts. Extract complexity from your mind, free neurones to nurture your ideas !'
+								' is a visual representation of an idea or a concept. It is based on the human tendency to structure thoughts visually. Free your mind from any unnecessary workload and give full expression to your creativity !'
 							)
 						)
 					),
@@ -1167,13 +1173,19 @@ var ThirdSection = function (_React$Component5) {
 							_react2.default.createElement(
 								'div',
 								{ style: { fontSize: "16px", marginTop: "5px", textAlign: "right" } },
-								'Magnesia is a mythical city-state in Plato\'s Laws. It\'s my vision of blank state ',
+								'Magnesia is an fictional and ideal city-state depicted in ',
+								_react2.default.createElement(
+									'em',
+									null,
+									'Plato\'s Laws'
+								),
+								'. It represents the state of ',
 								_react2.default.createElement(
 									'em',
 									null,
 									'"Tabula Rasa"'
 								),
-								' which allow creation of an ideal. The blank page of a new Mind Map is the best foundation for brilliant ideas !'
+								', which allows the creation of an ideal without restriction. The blank sheet for a new Mind Map is the best foundation for brilliant ideas !'
 							)
 						)
 					)

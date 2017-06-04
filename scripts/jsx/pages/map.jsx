@@ -382,11 +382,16 @@ class MapPageComp extends React.Component {
 		//Enter
 		let elemtEnter = gs.enter().append("g").attr("class", "node");
 
-		elemtEnter.append("circle")
+		elemtEnter.append("ellipse")
     		.style("cursor", "pointer")
-    	 .merge(gs.selectAll("circle"))
+    	 .merge(gs.selectAll("ellipse"))
     	 	.attr("fill", (d, i)=> {return nodes[i].bcg_color || "white"})
-    	    .attr("r", function(d, i) {return 40 * (nodes[i].scale ? +nodes[i].scale : 1);}) 
+    	 	.attr("ry", function(d, i) {return 40 * (nodes[i].scale ? +nodes[i].scale : 1);})
+    	    .attr("rx", function(d, i) {
+    	    	let naturalWidth = 40 * (nodes[i].scale ? +nodes[i].scale : 1);
+    	    	let textWidth = nodes[i].title ? (nodes[i].title.length * 7 / 2) + 10 : 0;
+    	    	return naturalWidth > textWidth ? naturalWidth : textWidth;
+    	    })
     	  	.attr("cy", (d, i) => {return this.state.yShift + height.animVal.value/2 + (nodes[i].y ? +nodes[i].y : 0)})
 		    .attr("cx", (d, i) => {return this.state.xShift + width.animVal.value/2 + (nodes[i].x ? +nodes[i].x : 0)})
 		    .attr("stroke", (d, i) => {return nodes[i].nid == this.state.selectedNode ? DRAWING.selectedCircleStrokeColor : (nodes[i].border_color || DRAWING.defaultCircleStrokeColor)})
@@ -503,7 +508,9 @@ class MapPageComp extends React.Component {
 				width = svg.property("width"),
 	    		height = svg.property("height");
 
-	    	var r = 40 * (d.scale ? +d.scale : 1);
+	    	let textWidth = d.title ? (d.title.length * 7 / 2) + 10 : 0;
+	    	let naturalWidth = 40 * (d.scale ? +d.scale : 1);
+	    	let r = textWidth > naturalWidth ? textWidth : naturalWidth;
 	        xy.x = width.animVal.value/2 + (d.x ? +d.x : 0) - r + 5 + thisRef.state.xShift;
 	        xy.y = height.animVal.value/2 + (d.y ? +d.y : 0) - 10 + thisRef.state.yShift;
 	        
