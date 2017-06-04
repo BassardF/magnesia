@@ -441,7 +441,7 @@ class MockupsSection extends React.Component {
 									<div style={{flexGrow:"0"}}><img style={{width:"40px", marginRight:"5px"}} src="../assets/images/lp-social.svg"/></div>
 									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "8px"}}>Easy to use</div>
 								</h2>
-								<div>We committed to deliver a quick and simple to use tool, allowing to dedicate all focus to emerging ideas.</div>
+								<div>We are committed to deliver a quick and simple to use tool, allowing to dedicate all focus to emerging ideas.</div>
 							</div>
 						</div>
 						<div style={{flexGrow:"1"}}>
@@ -478,7 +478,7 @@ class MockupsSection extends React.Component {
 									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "4px", marginRight:"5px"}}>Easy to use</div>
 									<div style={{flexGrow:"0"}}><img style={{width:"40px"}} src="../assets/images/lp-social.svg"/></div>
 								</h2>
-								<div>We committed to deliver a quick and simple to use tool, allowing to dedicate all focus to emerging ideas.</div>
+								<div>We are committed to deliver a quick and simple to use tool, allowing to dedicate all focus to emerging ideas.</div>
 							</div>
 						</div>
 						<div style={{marginTop:"60px", marginBottom:"60px"}}>

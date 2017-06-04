@@ -31367,7 +31367,7 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'We committed to deliver a quick and simple to use tool, allowing to dedicate all focus to emerging ideas.'
+									'We are committed to deliver a quick and simple to use tool, allowing to dedicate all focus to emerging ideas.'
 								)
 							)
 						),
@@ -31457,7 +31457,7 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'We committed to deliver a quick and simple to use tool, allowing to dedicate all focus to emerging ideas.'
+									'We are committed to deliver a quick and simple to use tool, allowing to dedicate all focus to emerging ideas.'
 								)
 							)
 						),
