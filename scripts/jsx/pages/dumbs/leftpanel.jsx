@@ -325,7 +325,7 @@ class NodeDetails extends React.Component {
 	    this.state = {
 	    	text : node ? node.title : "",
 	    	description : node ? node.description : "",
-	    	showColor : 1
+	    	showColor : 2
 	    };
 	}
 
@@ -453,9 +453,9 @@ class NodeDetails extends React.Component {
 				<div>
 					<h3>Color</h3>
 					<div style={{textAlign: "center", marginBottom:"5px"}}>
-						<span style={{cursor: "pointer", color : (this.state.showColor === 1 ? "#9C27B0" : "#424242")}} onClick={this.changeShowColor.bind(this, 1)}>title</span>
-						<span> | </span>
 						<span style={{cursor: "pointer", color : (this.state.showColor === 2 ? "#9C27B0" : "#424242")}} onClick={this.changeShowColor.bind(this, 2)}>background</span>
+						<span> | </span>
+						<span style={{cursor: "pointer", color : (this.state.showColor === 1 ? "#9C27B0" : "#424242")}} onClick={this.changeShowColor.bind(this, 1)}>title</span>
 						<span> | </span>
 						<span style={{cursor: "pointer", color : (this.state.showColor === 3 ? "#9C27B0" : "#424242")}} onClick={this.changeShowColor.bind(this, 3)}>border</span>
 					</div>

@@ -116,7 +116,6 @@ class ManageUsers extends React.Component {
 			}
 		}
 
-		console.log("results", this.state.results);
 		for (let i = 0; i < this.state.results.length; i++) {
 			let uid = this.state.results[i].uid;
 			let email = this.state.results[i].email;

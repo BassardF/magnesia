@@ -145,7 +145,6 @@ var ManageUsers = function (_React$Component) {
 				}
 			}
 
-			console.log("results", this.state.results);
 			for (var _i = 0; _i < this.state.results.length; _i++) {
 				var _uid2 = this.state.results[_i].uid;
 				var email = this.state.results[_i].email;

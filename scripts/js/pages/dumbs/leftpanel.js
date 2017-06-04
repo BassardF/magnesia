@@ -495,7 +495,7 @@ var NodeDetails = function (_React$Component5) {
 		_this7.state = {
 			text: node ? node.title : "",
 			description: node ? node.description : "",
-			showColor: 1
+			showColor: 2
 		};
 		return _this7;
 	}
@@ -680,8 +680,8 @@ var NodeDetails = function (_React$Component5) {
 						{ style: { textAlign: "center", marginBottom: "5px" } },
 						_react2.default.createElement(
 							'span',
-							{ style: { cursor: "pointer", color: this.state.showColor === 1 ? "#9C27B0" : "#424242" }, onClick: this.changeShowColor.bind(this, 1) },
-							'title'
+							{ style: { cursor: "pointer", color: this.state.showColor === 2 ? "#9C27B0" : "#424242" }, onClick: this.changeShowColor.bind(this, 2) },
+							'background'
 						),
 						_react2.default.createElement(
 							'span',
@@ -690,8 +690,8 @@ var NodeDetails = function (_React$Component5) {
 						),
 						_react2.default.createElement(
 							'span',
-							{ style: { cursor: "pointer", color: this.state.showColor === 2 ? "#9C27B0" : "#424242" }, onClick: this.changeShowColor.bind(this, 2) },
-							'background'
+							{ style: { cursor: "pointer", color: this.state.showColor === 1 ? "#9C27B0" : "#424242" }, onClick: this.changeShowColor.bind(this, 1) },
+							'title'
 						),
 						_react2.default.createElement(
 							'span',

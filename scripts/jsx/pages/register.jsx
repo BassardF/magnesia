@@ -57,7 +57,6 @@ class RegisterPage extends React.Component {
 
 	withGoogle (){
 		firebase.auth().signInWithPopup(googleProvider).then(function(result) {
-			console.log("result", result);
 			var token = result.credential.accessToken;
 			var user = result.user;
 		}).catch(function(error) {
@@ -71,7 +70,6 @@ class RegisterPage extends React.Component {
 
 	withFacebook(){
 		firebase.auth().signInWithPopup(facebookProvider).then(function(result) {
-			console.log("result", result);
 			var token = result.credential.accessToken;
 			var user = result.user;
 		}).catch(function(error) {
@@ -85,7 +83,6 @@ class RegisterPage extends React.Component {
 
 	withTwitter(){
 		firebase.auth().signInWithPopup(twitterProvider).then(function(result) {
-			console.log("result", result);
 			var token = result.credential.accessToken;
 			var user = result.user;
 		}).catch(function(error) {

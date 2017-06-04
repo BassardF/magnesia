@@ -616,7 +616,7 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'Magnesia is a safe place for volatile ideas. We have made a place for ideas to evolve as they deserve.'
+									'Magnesia is a safe place for volatile ideas. It was designed to provide developing ideas the environment they deserve.'
 								)
 							)
 						),
@@ -643,7 +643,7 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'Magnesia has been made to be easy to use. Keep your whole thinking power for your ideas.'
+									'We committed to deliver a quick and simple to use tool, allowing to dedicate all focus to emerging ideas.'
 								)
 							)
 						),
@@ -670,7 +670,7 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'Weither you\'re a team or a lonely wolf, ideas can easily be shared and built upon.'
+									'Whether you are lone wolf or playing within a team, Magnesia promotes the sharing of ideas as well as provides a solid structure for further development.'
 								)
 							)
 						)
@@ -706,7 +706,7 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'Magnesia is a safe place for volatile ideas. We have made a place for ideas to evolve as they deserve.'
+									'Magnesia is a safe place for volatile ideas. It was designed to provide developing ideas the environment they deserve.'
 								)
 							)
 						),
@@ -733,7 +733,7 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'Magnesia has been made to be easy to use. Keep your whole thinking power for your ideas.'
+									'We committed to deliver a quick and simple to use tool, allowing to dedicate all focus to emerging ideas.'
 								)
 							)
 						),
@@ -760,7 +760,7 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'Weither you\'re a team or a lonely wolf, ideas can easily be shared and built upon.'
+									'Whether you are lone wolf or playing within a team, Magnesia promotes the sharing of ideas as well as provides a solid structure for further development.'
 								)
 							)
 						)
@@ -1464,7 +1464,6 @@ var RegisterEarlyAccess = function (_React$Component9) {
 		_this18.isMailValid = _this18.isMailValid.bind(_this18);
 		_this18.changeEmail = _this18.changeEmail.bind(_this18);
 		_this18.send = _this18.send.bind(_this18);
-
 		_this18.state = {
 			email: "",
 			validEmail: false

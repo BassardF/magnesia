@@ -91,7 +91,6 @@ var RegisterPage = function (_React$Component) {
 		key: 'withGoogle',
 		value: function withGoogle() {
 			firebase.auth().signInWithPopup(googleProvider).then(function (result) {
-				console.log("result", result);
 				var token = result.credential.accessToken;
 				var user = result.user;
 			}).catch(function (error) {
@@ -106,7 +105,6 @@ var RegisterPage = function (_React$Component) {
 		key: 'withFacebook',
 		value: function withFacebook() {
 			firebase.auth().signInWithPopup(facebookProvider).then(function (result) {
-				console.log("result", result);
 				var token = result.credential.accessToken;
 				var user = result.user;
 			}).catch(function (error) {
@@ -121,7 +119,6 @@ var RegisterPage = function (_React$Component) {
 		key: 'withTwitter',
 		value: function withTwitter() {
 			firebase.auth().signInWithPopup(twitterProvider).then(function (result) {
-				console.log("result", result);
 				var token = result.credential.accessToken;
 				var user = result.user;
 			}).catch(function (error) {

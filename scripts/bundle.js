@@ -29375,7 +29375,7 @@ var NodeDetails = function (_React$Component5) {
 		_this7.state = {
 			text: node ? node.title : "",
 			description: node ? node.description : "",
-			showColor: 1
+			showColor: 2
 		};
 		return _this7;
 	}
@@ -29560,8 +29560,8 @@ var NodeDetails = function (_React$Component5) {
 						{ style: { textAlign: "center", marginBottom: "5px" } },
 						_react2.default.createElement(
 							'span',
-							{ style: { cursor: "pointer", color: this.state.showColor === 1 ? "#9C27B0" : "#424242" }, onClick: this.changeShowColor.bind(this, 1) },
-							'title'
+							{ style: { cursor: "pointer", color: this.state.showColor === 2 ? "#9C27B0" : "#424242" }, onClick: this.changeShowColor.bind(this, 2) },
+							'background'
 						),
 						_react2.default.createElement(
 							'span',
@@ -29570,8 +29570,8 @@ var NodeDetails = function (_React$Component5) {
 						),
 						_react2.default.createElement(
 							'span',
-							{ style: { cursor: "pointer", color: this.state.showColor === 2 ? "#9C27B0" : "#424242" }, onClick: this.changeShowColor.bind(this, 2) },
-							'background'
+							{ style: { cursor: "pointer", color: this.state.showColor === 1 ? "#9C27B0" : "#424242" }, onClick: this.changeShowColor.bind(this, 1) },
+							'title'
 						),
 						_react2.default.createElement(
 							'span',
@@ -30052,7 +30052,6 @@ var ManageUsers = function (_React$Component) {
 				}
 			}
 
-			console.log("results", this.state.results);
 			for (var _i = 0; _i < this.state.results.length; _i++) {
 				var _uid2 = this.state.results[_i].uid;
 				var email = this.state.results[_i].email;
@@ -31341,7 +31340,7 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'Magnesia is a safe place for volatile ideas. We have made a place for ideas to evolve as they deserve.'
+									'Magnesia is a safe place for volatile ideas. It was designed to provide developing ideas the environment they deserve.'
 								)
 							)
 						),
@@ -31368,7 +31367,7 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'Magnesia has been made to be easy to use. Keep your whole thinking power for your ideas.'
+									'We committed to deliver a quick and simple to use tool, allowing to dedicate all focus to emerging ideas.'
 								)
 							)
 						),
@@ -31395,7 +31394,7 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'Weither you\'re a team or a lonely wolf, ideas can easily be shared and built upon.'
+									'Whether you are lone wolf or playing within a team, Magnesia promotes the sharing of ideas as well as provides a solid structure for further development.'
 								)
 							)
 						)
@@ -31431,7 +31430,7 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'Magnesia is a safe place for volatile ideas. We have made a place for ideas to evolve as they deserve.'
+									'Magnesia is a safe place for volatile ideas. It was designed to provide developing ideas the environment they deserve.'
 								)
 							)
 						),
@@ -31458,7 +31457,7 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'Magnesia has been made to be easy to use. Keep your whole thinking power for your ideas.'
+									'We committed to deliver a quick and simple to use tool, allowing to dedicate all focus to emerging ideas.'
 								)
 							)
 						),
@@ -31485,7 +31484,7 @@ var MockupsSection = function (_React$Component3) {
 								_react2.default.createElement(
 									'div',
 									null,
-									'Weither you\'re a team or a lonely wolf, ideas can easily be shared and built upon.'
+									'Whether you are lone wolf or playing within a team, Magnesia promotes the sharing of ideas as well as provides a solid structure for further development.'
 								)
 							)
 						)
@@ -32189,7 +32188,6 @@ var RegisterEarlyAccess = function (_React$Component9) {
 		_this18.isMailValid = _this18.isMailValid.bind(_this18);
 		_this18.changeEmail = _this18.changeEmail.bind(_this18);
 		_this18.send = _this18.send.bind(_this18);
-
 		_this18.state = {
 			email: "",
 			validEmail: false
@@ -33696,7 +33694,6 @@ var RegisterPage = function (_React$Component) {
 		key: 'withGoogle',
 		value: function withGoogle() {
 			firebase.auth().signInWithPopup(googleProvider).then(function (result) {
-				console.log("result", result);
 				var token = result.credential.accessToken;
 				var user = result.user;
 			}).catch(function (error) {
@@ -33711,7 +33708,6 @@ var RegisterPage = function (_React$Component) {
 		key: 'withFacebook',
 		value: function withFacebook() {
 			firebase.auth().signInWithPopup(facebookProvider).then(function (result) {
-				console.log("result", result);
 				var token = result.credential.accessToken;
 				var user = result.user;
 			}).catch(function (error) {
@@ -33726,7 +33722,6 @@ var RegisterPage = function (_React$Component) {
 		key: 'withTwitter',
 		value: function withTwitter() {
 			firebase.auth().signInWithPopup(twitterProvider).then(function (result) {
-				console.log("result", result);
 				var token = result.credential.accessToken;
 				var user = result.user;
 			}).catch(function (error) {

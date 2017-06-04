@@ -431,8 +431,7 @@ class MockupsSection extends React.Component {
 									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "8px"}}>Brainstorm</div>
 								</h2>
 								<div>
-									Magnesia is a safe place for volatile ideas. 
-									We have made a place for ideas to evolve as they deserve.
+									Magnesia is a safe place for volatile ideas. It was designed to provide developing ideas the environment they deserve.
 								</div>
 							</div>
 						</div>
@@ -442,7 +441,7 @@ class MockupsSection extends React.Component {
 									<div style={{flexGrow:"0"}}><img style={{width:"40px", marginRight:"5px"}} src="../assets/images/lp-social.svg"/></div>
 									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "8px"}}>Easy to use</div>
 								</h2>
-								<div>Magnesia has been made to be easy to use. Keep your whole thinking power for your ideas.</div>
+								<div>We committed to deliver a quick and simple to use tool, allowing to dedicate all focus to emerging ideas.</div>
 							</div>
 						</div>
 						<div style={{flexGrow:"1"}}>
@@ -451,7 +450,7 @@ class MockupsSection extends React.Component {
 									<div style={{flexGrow:"0"}}><img style={{width:"40px", marginRight:"5px"}} src="../assets/images/lp-brainstorming.svg"/></div>
 									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "8px"}}>Collaborative</div>
 								</h2>
-								<div>Weither you're a team or a lonely wolf, ideas can easily be shared and built upon.</div>
+								<div>Whether you are lone wolf or playing within a team, Magnesia promotes the sharing of ideas as well as provides a solid structure for further development.</div>
 							</div>
 						</div>
 					</div>
@@ -469,8 +468,7 @@ class MockupsSection extends React.Component {
 									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "8px"}}>Brainstorm</div>
 								</h2>
 								<div>
-									Magnesia is a safe place for volatile ideas. 
-									We have made a place for ideas to evolve as they deserve.
+									Magnesia is a safe place for volatile ideas. It was designed to provide developing ideas the environment they deserve.
 								</div>
 							</div>
 						</div>
@@ -480,7 +478,7 @@ class MockupsSection extends React.Component {
 									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "4px", marginRight:"5px"}}>Easy to use</div>
 									<div style={{flexGrow:"0"}}><img style={{width:"40px"}} src="../assets/images/lp-social.svg"/></div>
 								</h2>
-								<div>Magnesia has been made to be easy to use. Keep your whole thinking power for your ideas.</div>
+								<div>We committed to deliver a quick and simple to use tool, allowing to dedicate all focus to emerging ideas.</div>
 							</div>
 						</div>
 						<div style={{marginTop:"60px", marginBottom:"60px"}}>
@@ -489,7 +487,7 @@ class MockupsSection extends React.Component {
 									<div style={{flexGrow:"0"}}><img style={{width:"40px", marginRight:"5px"}} src="../assets/images/lp-brainstorming.svg"/></div>
 									<div style={{flexGrow:"1", fontWeight:"100", paddingTop : "8px"}}>Collaborative</div>
 								</h2>
-								<div>Weither you're a team or a lonely wolf, ideas can easily be shared and built upon.</div>
+								<div>Whether you are lone wolf or playing within a team, Magnesia promotes the sharing of ideas as well as provides a solid structure for further development.</div>
 							</div>
 						</div>
 					</div>
@@ -946,7 +944,6 @@ class RegisterEarlyAccess extends React.Component {
 	   	this.isMailValid = this.isMailValid.bind(this);
 		this.changeEmail = this.changeEmail.bind(this);
 		this.send = this.send.bind(this);
-
 	    this.state = {
 	    	email : "",
 	    	validEmail : false
