@@ -9,7 +9,7 @@ import Map from '../models/map'
 
 import MapBlock from './dumbs/mapblock'
 import MapDetails from './dumbs/mapdetails'
-import ManageUsers from './dumbs/manageusers'
+import {ManageUsers} from './dumbs/manageusers'
 import InviteLine from './dumbs/invite'
 
 class MapsPageComp extends React.Component {

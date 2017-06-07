@@ -28908,6 +28908,12 @@ var _auth = require('../../services/auth');
 
 var _auth2 = _interopRequireDefault(_auth);
 
+var _manageusers = require('./manageusers');
+
+var _DropModal = require('boron/DropModal');
+
+var _DropModal2 = _interopRequireDefault(_DropModal);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28929,10 +28935,13 @@ var LeftPanel = function (_React$Component) {
 		_this.minimizeOrExpand = _this.minimizeOrExpand.bind(_this);
 		_this.changeMode = _this.changeMode.bind(_this);
 		_this.printWindow = _this.printWindow.bind(_this);
+		_this.showInviteModal = _this.showInviteModal.bind(_this);
+		_this.hideInviteModal = _this.hideInviteModal.bind(_this);
 
 		_this.state = {
 			nav: 0,
-			minimize: false
+			minimize: false,
+			showManageUserModal: false
 		};
 		return _this;
 	}
@@ -28995,6 +29004,25 @@ var LeftPanel = function (_React$Component) {
 			window.print();
 		}
 	}, {
+		key: 'hideInviteModal',
+		value: function hideInviteModal() {
+			console.log("hideInviteModal");
+			this.refs.manageusermodal.hide();
+			this.setState({
+				showManageUserModal: false
+			});
+		}
+	}, {
+		key: 'showInviteModal',
+		value: function showInviteModal() {
+			console.log("showInviteModal");
+			console.log(this.refs.manageusermodal);
+			this.refs.manageusermodal.show();
+			this.setState({
+				showManageUserModal: true
+			});
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 
@@ -29050,113 +29078,150 @@ var LeftPanel = function (_React$Component) {
 
 			return _react2.default.createElement(
 				'div',
-				{ id: 'left-panel-wrapper', ref: 'left-panel-wrapper', style: { width: this.state.minimize ? "auto" : "250px", height: "100%" }, className: 'flex-grow-0' },
+				null,
 				_react2.default.createElement(
-					'div',
-					{ id: 'left-panel' },
+					_DropModal2.default,
+					{ ref: 'manageusermodal', onHide: this.hideInviteModal },
 					_react2.default.createElement(
 						'div',
-						{ className: 'flex', style: { paddingTop: "10px", paddingBottom: "10px" } },
+						{ style: { paddingLeft: "30px", paddingRight: "30px", marginTop: "20px", marginBottom: "20px", display: "flex" } },
 						_react2.default.createElement(
 							'div',
-							{ className: 'flex-grow-0', style: { paddingTop: "10px", paddingLeft: this.state.minimize ? "2px" : "10px", paddingRight: this.state.minimize ? "2px" : "10px" }, id: 'logo' },
-							'Mg.'
+							{ style: { flexGrow: 1 } },
+							_react2.default.createElement('hr', { style: { opacity: ".3", borderTop: "solid 1px #424242", borderBottom: "none" } })
 						),
 						_react2.default.createElement(
 							'div',
-							{ id: 'lp-node-block', className: 'flex-grow-1', style: { textAlign: "right", display: this.state.minimize ? "none" : "block" } },
+							{ style: { flexGrow: 0, fontSize: "14px", paddingLeft: "10px", paddingRight: "10px" } },
 							_react2.default.createElement(
 								'div',
-								{ title: 'create and modify nodes', className: "tippyleftpanel " + (this.props.mode === 1 ? "selected-mode-line" : "un-selected-mode-line"), onClick: this.changeMode.bind(this, 1) },
-								_react2.default.createElement(
-									'span',
-									{ style: { verticalAlign: "middle" } },
-									'Creation'
-								),
-								_react2.default.createElement('img', { style: { verticalAlign: "middle", marginLeft: "5px", marginRight: "5px", width: "30px", marginTop: "3px" }, src: "../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg") })
+								null,
+								'Manage Map Users'
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ style: { flexGrow: 1 } },
+							_react2.default.createElement('hr', { style: { opacity: ".3", borderTop: "solid 1px #424242", borderBottom: "none" } })
+						)
+					),
+					_react2.default.createElement(_manageusers.InnerManageUser, { map: this.props.map, user: this.props.user })
+				),
+				_react2.default.createElement(
+					'div',
+					{ id: 'left-panel-wrapper', ref: 'left-panel-wrapper', style: { width: this.state.minimize ? "auto" : "250px", height: "100%" }, className: 'flex-grow-0' },
+					_react2.default.createElement(
+						'div',
+						{ id: 'left-panel' },
+						_react2.default.createElement(
+							'div',
+							{ className: 'flex', style: { paddingTop: "10px", paddingBottom: "10px" } },
+							_react2.default.createElement(
+								'div',
+								{ className: 'flex-grow-0', style: { paddingTop: "10px", paddingLeft: this.state.minimize ? "2px" : "10px", paddingRight: this.state.minimize ? "2px" : "10px" }, id: 'logo' },
+								'Mg.'
 							),
 							_react2.default.createElement(
 								'div',
-								{ title: 'create relations between nodes', className: "tippyleftpanel " + (this.props.mode === 2 ? "selected-mode-line" : "un-selected-mode-line"), onClick: this.changeMode.bind(this, 2) },
-								_react2.default.createElement(
-									'span',
-									{ style: { verticalAlign: "middle" } },
-									'Relation'
-								),
-								_react2.default.createElement('img', { style: { verticalAlign: "middle", marginLeft: "5px", marginRight: "5px", width: "30px", marginTop: "3px" }, src: "../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg") })
-							)
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'flex' },
-						_react2.default.createElement(
-							'div',
-							{ className: 'flex-grow-0' },
-							_react2.default.createElement(
-								'div',
-								{ style: { display: this.state.minimize ? "block" : "none" } },
+								{ id: 'lp-node-block', className: 'flex-grow-1', style: { textAlign: "right", display: this.state.minimize ? "none" : "block" } },
 								_react2.default.createElement(
 									'div',
 									{ title: 'create and modify nodes', className: "tippyleftpanel " + (this.props.mode === 1 ? "selected-mode-line" : "un-selected-mode-line"), onClick: this.changeMode.bind(this, 1) },
-									_react2.default.createElement('img', { style: { cursor: "pointer", display: "block", marginLeft: "auto", marginRight: "auto", width: "20px", marginBottom: "10px" }, src: "../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg") })
+									_react2.default.createElement(
+										'span',
+										{ style: { verticalAlign: "middle" } },
+										'Creation'
+									),
+									_react2.default.createElement('img', { style: { verticalAlign: "middle", marginLeft: "5px", marginRight: "5px", width: "30px", marginTop: "3px" }, src: "../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg") })
 								),
 								_react2.default.createElement(
 									'div',
 									{ title: 'create relations between nodes', className: "tippyleftpanel " + (this.props.mode === 2 ? "selected-mode-line" : "un-selected-mode-line"), onClick: this.changeMode.bind(this, 2) },
-									_react2.default.createElement('img', { style: { cursor: "pointer", display: "block", marginLeft: "auto", marginRight: "auto", width: "20px", marginBottom: "10px" }, src: "../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg") })
+									_react2.default.createElement(
+										'span',
+										{ style: { verticalAlign: "middle" } },
+										'Relation'
+									),
+									_react2.default.createElement('img', { style: { verticalAlign: "middle", marginLeft: "5px", marginRight: "5px", width: "30px", marginTop: "3px" }, src: "../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg") })
 								)
-							),
-							_react2.default.createElement(
-								'div',
-								{ onClick: this.backToMyMaps, className: "left-panel-nav tippyleftpanel", title: 'back to my maps', style: { cursor: "pointer" } },
-								_react2.default.createElement('img', { className: 'rotate-180', style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/arrow-right-white.svg' })
-							),
-							_react2.default.createElement(
-								'div',
-								{ onClick: this.minimizeOrExpand, className: "left-panel-nav tippyleftpanel", title: 'minimize', style: { cursor: "pointer", display: this.state.minimize ? "none" : "block" } },
-								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/minimize-white.svg' })
-							),
-							_react2.default.createElement(
-								'div',
-								{ onClick: this.minimizeOrExpand, className: "left-panel-nav tippyleftpanel", title: 'expand', style: { cursor: "pointer", display: this.state.minimize ? "block" : "none" } },
-								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/expand-white.svg' })
-							),
-							_react2.default.createElement(
-								'div',
-								{ onClick: this.selectNav.bind(this, 0), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'navigation tree', style: { cursor: "pointer" } },
-								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 0 ? "tree.svg" : "tree-white.svg") })
-							),
-							_react2.default.createElement(
-								'div',
-								{ onClick: nodeSelected ? this.selectNav.bind(this, 1) : null, className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'modify node', style: { cursor: nodeSelected ? "pointer" : "not-allowed" } },
-								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 1 ? "node.svg" : "node-white.svg") })
-							),
-							_react2.default.createElement(
-								'div',
-								{ onClick: this.selectNav.bind(this, 2), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'chat', style: { cursor: "pointer" } },
-								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 2 ? "chat.svg" : "chat-white.svg") })
-							),
-							_react2.default.createElement(
-								'div',
-								{ onClick: this.selectNav.bind(this, 3), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'logs', style: { cursor: "pointer", display: "none" } },
-								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
-							),
-							_react2.default.createElement(
-								'div',
-								{ onClick: this.printWindow, className: 'tippyleftpanel left-panel-nav', title: 'export', style: { cursor: "pointer" } },
-								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/export-white.svg' })
-							),
-							_react2.default.createElement(
-								'div',
-								{ onClick: this.resetTutorial, className: 'tippyleftpanel left-panel-nav', title: 'reset tutorials', style: { cursor: "pointer", display: this.props.user && this.props.user.advice ? "block" : "none" } },
-								_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/graphic-white.svg' })
 							)
 						),
 						_react2.default.createElement(
 							'div',
-							{ className: 'flex-grow-1' },
-							ls
+							{ className: 'flex' },
+							_react2.default.createElement(
+								'div',
+								{ className: 'flex-grow-0' },
+								_react2.default.createElement(
+									'div',
+									{ style: { display: this.state.minimize ? "block" : "none" } },
+									_react2.default.createElement(
+										'div',
+										{ title: 'create and modify nodes', className: "tippyleftpanel " + (this.props.mode === 1 ? "selected-mode-line" : "un-selected-mode-line"), onClick: this.changeMode.bind(this, 1) },
+										_react2.default.createElement('img', { style: { cursor: "pointer", display: "block", marginLeft: "auto", marginRight: "auto", width: "20px", marginBottom: "10px" }, src: "../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg") })
+									),
+									_react2.default.createElement(
+										'div',
+										{ title: 'create relations between nodes', className: "tippyleftpanel " + (this.props.mode === 2 ? "selected-mode-line" : "un-selected-mode-line"), onClick: this.changeMode.bind(this, 2) },
+										_react2.default.createElement('img', { style: { cursor: "pointer", display: "block", marginLeft: "auto", marginRight: "auto", width: "20px", marginBottom: "10px" }, src: "../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg") })
+									)
+								),
+								_react2.default.createElement(
+									'div',
+									{ onClick: this.backToMyMaps, className: "left-panel-nav tippyleftpanel", title: 'back to my maps', style: { cursor: "pointer" } },
+									_react2.default.createElement('img', { className: 'rotate-180', style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/arrow-right-white.svg' })
+								),
+								_react2.default.createElement(
+									'div',
+									{ onClick: this.minimizeOrExpand, className: "left-panel-nav tippyleftpanel", title: 'minimize', style: { cursor: "pointer", display: this.state.minimize ? "none" : "block" } },
+									_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/minimize-white.svg' })
+								),
+								_react2.default.createElement(
+									'div',
+									{ onClick: this.minimizeOrExpand, className: "left-panel-nav tippyleftpanel", title: 'expand', style: { cursor: "pointer", display: this.state.minimize ? "block" : "none" } },
+									_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/expand-white.svg' })
+								),
+								_react2.default.createElement(
+									'div',
+									{ onClick: this.selectNav.bind(this, 0), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'navigation tree', style: { cursor: "pointer" } },
+									_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 0 ? "tree.svg" : "tree-white.svg") })
+								),
+								_react2.default.createElement(
+									'div',
+									{ onClick: nodeSelected ? this.selectNav.bind(this, 1) : null, className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'modify node', style: { cursor: nodeSelected ? "pointer" : "not-allowed" } },
+									_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto", opacity: nodeSelected ? "1" : ".5" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 1 ? "node.svg" : "node-white.svg") })
+								),
+								_react2.default.createElement(
+									'div',
+									{ onClick: this.selectNav.bind(this, 2), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'chat', style: { cursor: "pointer" } },
+									_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 2 ? "chat.svg" : "chat-white.svg") })
+								),
+								_react2.default.createElement(
+									'div',
+									{ onClick: this.selectNav.bind(this, 3), className: "tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav"), title: 'logs', style: { cursor: "pointer", display: "none" } },
+									_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: "../assets/images/" + (!this.state.minimize && this.state.nav == 3 ? "logs.svg" : "logs-white.svg") })
+								),
+								_react2.default.createElement(
+									'div',
+									{ onClick: this.showInviteModal, className: 'tippyleftpanel left-panel-nav', title: 'manage users', style: { cursor: "pointer" } },
+									_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/invite-white.svg' })
+								),
+								_react2.default.createElement(
+									'div',
+									{ onClick: this.printWindow, className: 'tippyleftpanel left-panel-nav', title: 'export', style: { cursor: "pointer" } },
+									_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/export-white.svg' })
+								),
+								_react2.default.createElement(
+									'div',
+									{ onClick: this.resetTutorial, className: 'tippyleftpanel left-panel-nav', title: 'reset tutorials', style: { cursor: "pointer", display: this.props.user && this.props.user.advice ? "block" : "none" } },
+									_react2.default.createElement('img', { style: { display: "block", marginLeft: "auto", marginRight: "auto" }, src: '../assets/images/graphic-white.svg' })
+								)
+							),
+							_react2.default.createElement(
+								'div',
+								{ className: 'flex-grow-1' },
+								ls
+							)
 						)
 					)
 				)
@@ -29904,12 +29969,13 @@ var LogsBlock = function (_React$Component8) {
 
 ;
 
-},{"../../properties/drawing":310,"../../services/auth":314,"./deletebutton":296,"./fullbutton":297,"react":264,"react-router":233}],300:[function(require,module,exports){
+},{"../../properties/drawing":310,"../../services/auth":314,"./deletebutton":296,"./fullbutton":297,"./manageusers":300,"boron/DropModal":1,"react":264,"react-router":233}],300:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.InnerManageUser = exports.ManageUsers = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -29933,7 +29999,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var ManageUsers = function (_React$Component) {
+var ManageUsers = exports.ManageUsers = function (_React$Component) {
 	_inherits(ManageUsers, _React$Component);
 
 	function ManageUsers(props) {
@@ -29941,20 +30007,93 @@ var ManageUsers = function (_React$Component) {
 
 		var _this = _possibleConstructorReturn(this, (ManageUsers.__proto__ || Object.getPrototypeOf(ManageUsers)).call(this, props));
 
-		_this.changeSearch = _this.changeSearch.bind(_this);
-		_this.inviteUser = _this.inviteUser.bind(_this);
-		_this.inviteExternalUser = _this.inviteExternalUser.bind(_this);
-		_this.isInvited = _this.isInvited.bind(_this);
-
-		_this.state = {
-			search: "",
-			results: [],
-			loading: false
-		};
+		_this.state = {};
 		return _this;
 	}
 
 	_createClass(ManageUsers, [{
+		key: 'render',
+		value: function render() {
+			return _react2.default.createElement(
+				'div',
+				{ className: 'map-details' },
+				_react2.default.createElement(
+					'div',
+					{ id: 'map-details-title', onClick: this.props.promptChangeTitle },
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'span',
+							{ id: 'map-details-title-content' },
+							this.props.map.title
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { marginTop: "7px" } },
+						_react2.default.createElement(
+							'span',
+							{ id: 'map-details-title-sub' },
+							_react2.default.createElement('img', { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/edit.svg' }),
+							_react2.default.createElement(
+								'span',
+								{ style: { verticalAlign: "middle" } },
+								'edit'
+							)
+						)
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { maxWidth: "500px", marginRight: "auto", marginLeft: "auto" } },
+					_react2.default.createElement(
+						'div',
+						{ style: { fontSize: "14px", height: "20px" } },
+						_react2.default.createElement(
+							'div',
+							{ onClick: this.props.toggleManageUsers, className: 'purple-unerlined-hover', style: { cursor: "pointer", display: "inline-block", marginLeft: "10px", float: "right" } },
+							_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/arrow-right.svg' }),
+							_react2.default.createElement(
+								'span',
+								{ style: { verticalAlign: "middle" } },
+								'back to my maps'
+							)
+						)
+					)
+				),
+				_react2.default.createElement(InnerManageUser, { map: this.props.map, user: this.props.user })
+			);
+		}
+	}]);
+
+	return ManageUsers;
+}(_react2.default.Component);
+
+;
+
+var InnerManageUser = exports.InnerManageUser = function (_React$Component2) {
+	_inherits(InnerManageUser, _React$Component2);
+
+	function InnerManageUser(props) {
+		_classCallCheck(this, InnerManageUser);
+
+		var _this2 = _possibleConstructorReturn(this, (InnerManageUser.__proto__ || Object.getPrototypeOf(InnerManageUser)).call(this, props));
+
+		_this2.changeSearch = _this2.changeSearch.bind(_this2);
+		_this2.inviteUser = _this2.inviteUser.bind(_this2);
+		_this2.inviteExternalUser = _this2.inviteExternalUser.bind(_this2);
+		_this2.isInvited = _this2.isInvited.bind(_this2);
+
+		_this2.state = {
+			search: "",
+			results: [],
+			loading: false
+		};
+		return _this2;
+	}
+
+	_createClass(InnerManageUser, [{
 		key: 'inviteExternalUser',
 		value: function inviteExternalUser(email) {
 			var map = this.props.map;
@@ -29979,7 +30118,7 @@ var ManageUsers = function (_React$Component) {
 	}, {
 		key: 'changeSearch',
 		value: function changeSearch(e) {
-			var _this2 = this;
+			var _this3 = this;
 
 			var val = e.target.value;
 			var arr = [];
@@ -29989,7 +30128,7 @@ var ManageUsers = function (_React$Component) {
 				firebase.database().ref('emails').orderByKey().startAt(_encode2.default.encode(val)).limitToFirst(10).once("value", function (res) {
 					var results = res.val();
 					if (results) {
-						var map = _this2.props.map;
+						var map = _this3.props.map;
 						for (var email in results) {
 							var decoded = _encode2.default.decode(email);
 							if (decoded.toLowerCase().indexOf(val.toLowerCase()) === 0) {
@@ -30003,7 +30142,7 @@ var ManageUsers = function (_React$Component) {
 							}
 						}
 					}
-					_this2.setState({
+					_this3.setState({
 						results: arr,
 						loading: false
 					});
@@ -30070,52 +30209,7 @@ var ManageUsers = function (_React$Component) {
 
 			return _react2.default.createElement(
 				'div',
-				{ className: 'map-details' },
-				_react2.default.createElement(
-					'div',
-					{ id: 'map-details-title', onClick: this.props.promptChangeTitle },
-					_react2.default.createElement(
-						'div',
-						null,
-						_react2.default.createElement(
-							'span',
-							{ id: 'map-details-title-content' },
-							this.props.map.title
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ style: { marginTop: "7px" } },
-						_react2.default.createElement(
-							'span',
-							{ id: 'map-details-title-sub' },
-							_react2.default.createElement('img', { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/edit.svg' }),
-							_react2.default.createElement(
-								'span',
-								{ style: { verticalAlign: "middle" } },
-								'edit'
-							)
-						)
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					{ style: { maxWidth: "500px", marginRight: "auto", marginLeft: "auto" } },
-					_react2.default.createElement(
-						'div',
-						{ style: { fontSize: "14px", height: "20px" } },
-						_react2.default.createElement(
-							'div',
-							{ onClick: this.props.toggleManageUsers, className: 'purple-unerlined-hover', style: { cursor: "pointer", display: "inline-block", marginLeft: "10px", float: "right" } },
-							_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/arrow-right.svg' }),
-							_react2.default.createElement(
-								'span',
-								{ style: { verticalAlign: "middle" } },
-								'back to my maps'
-							)
-						)
-					)
-				),
+				null,
 				_react2.default.createElement(
 					'div',
 					{ className: 'search-user-input-wrapper', style: { maxWidth: "280px", marginTop: "30px", marginRight: "auto", marginLeft: "auto" } },
@@ -30146,15 +30240,13 @@ var ManageUsers = function (_React$Component) {
 		}
 	}]);
 
-	return ManageUsers;
+	return InnerManageUser;
 }(_react2.default.Component);
 
 ;
 
-exports.default = ManageUsers;
-
-var UserLine = function (_React$Component2) {
-	_inherits(UserLine, _React$Component2);
+var UserLine = function (_React$Component3) {
+	_inherits(UserLine, _React$Component3);
 
 	function UserLine() {
 		_classCallCheck(this, UserLine);
@@ -30191,8 +30283,8 @@ var UserLine = function (_React$Component2) {
 
 ;
 
-var ProspectLine = function (_React$Component3) {
-	_inherits(ProspectLine, _React$Component3);
+var ProspectLine = function (_React$Component4) {
+	_inherits(ProspectLine, _React$Component4);
 
 	function ProspectLine() {
 		_classCallCheck(this, ProspectLine);
@@ -30243,8 +30335,8 @@ var ProspectLine = function (_React$Component3) {
 
 ;
 
-var ExternalProspectLine = function (_React$Component4) {
-	_inherits(ExternalProspectLine, _React$Component4);
+var ExternalProspectLine = function (_React$Component5) {
+	_inherits(ExternalProspectLine, _React$Component5);
 
 	function ExternalProspectLine() {
 		_classCallCheck(this, ExternalProspectLine);
@@ -33153,8 +33245,6 @@ var _mapdetails2 = _interopRequireDefault(_mapdetails);
 
 var _manageusers = require('./dumbs/manageusers');
 
-var _manageusers2 = _interopRequireDefault(_manageusers);
-
 var _invite = require('./dumbs/invite');
 
 var _invite2 = _interopRequireDefault(_invite);
@@ -33495,7 +33585,7 @@ var MapsPageComp = function (_React$Component) {
 					_react2.default.createElement(
 						'div',
 						{ style: { display: this.state.manageUsers ? "block" : "none" } },
-						_react2.default.createElement(_manageusers2.default, {
+						_react2.default.createElement(_manageusers.ManageUsers, {
 							map: selectedMap, promptChangeTitle: this.promptChangeTitle,
 							toggleManageUsers: this.toggleManageUsers,
 							user: this.props.user })

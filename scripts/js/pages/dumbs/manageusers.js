@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.InnerManageUser = exports.ManageUsers = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -26,7 +27,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var ManageUsers = function (_React$Component) {
+var ManageUsers = exports.ManageUsers = function (_React$Component) {
 	_inherits(ManageUsers, _React$Component);
 
 	function ManageUsers(props) {
@@ -34,20 +35,93 @@ var ManageUsers = function (_React$Component) {
 
 		var _this = _possibleConstructorReturn(this, (ManageUsers.__proto__ || Object.getPrototypeOf(ManageUsers)).call(this, props));
 
-		_this.changeSearch = _this.changeSearch.bind(_this);
-		_this.inviteUser = _this.inviteUser.bind(_this);
-		_this.inviteExternalUser = _this.inviteExternalUser.bind(_this);
-		_this.isInvited = _this.isInvited.bind(_this);
-
-		_this.state = {
-			search: "",
-			results: [],
-			loading: false
-		};
+		_this.state = {};
 		return _this;
 	}
 
 	_createClass(ManageUsers, [{
+		key: 'render',
+		value: function render() {
+			return _react2.default.createElement(
+				'div',
+				{ className: 'map-details' },
+				_react2.default.createElement(
+					'div',
+					{ id: 'map-details-title', onClick: this.props.promptChangeTitle },
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'span',
+							{ id: 'map-details-title-content' },
+							this.props.map.title
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { marginTop: "7px" } },
+						_react2.default.createElement(
+							'span',
+							{ id: 'map-details-title-sub' },
+							_react2.default.createElement('img', { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/edit.svg' }),
+							_react2.default.createElement(
+								'span',
+								{ style: { verticalAlign: "middle" } },
+								'edit'
+							)
+						)
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ style: { maxWidth: "500px", marginRight: "auto", marginLeft: "auto" } },
+					_react2.default.createElement(
+						'div',
+						{ style: { fontSize: "14px", height: "20px" } },
+						_react2.default.createElement(
+							'div',
+							{ onClick: this.props.toggleManageUsers, className: 'purple-unerlined-hover', style: { cursor: "pointer", display: "inline-block", marginLeft: "10px", float: "right" } },
+							_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/arrow-right.svg' }),
+							_react2.default.createElement(
+								'span',
+								{ style: { verticalAlign: "middle" } },
+								'back to my maps'
+							)
+						)
+					)
+				),
+				_react2.default.createElement(InnerManageUser, { map: this.props.map, user: this.props.user })
+			);
+		}
+	}]);
+
+	return ManageUsers;
+}(_react2.default.Component);
+
+;
+
+var InnerManageUser = exports.InnerManageUser = function (_React$Component2) {
+	_inherits(InnerManageUser, _React$Component2);
+
+	function InnerManageUser(props) {
+		_classCallCheck(this, InnerManageUser);
+
+		var _this2 = _possibleConstructorReturn(this, (InnerManageUser.__proto__ || Object.getPrototypeOf(InnerManageUser)).call(this, props));
+
+		_this2.changeSearch = _this2.changeSearch.bind(_this2);
+		_this2.inviteUser = _this2.inviteUser.bind(_this2);
+		_this2.inviteExternalUser = _this2.inviteExternalUser.bind(_this2);
+		_this2.isInvited = _this2.isInvited.bind(_this2);
+
+		_this2.state = {
+			search: "",
+			results: [],
+			loading: false
+		};
+		return _this2;
+	}
+
+	_createClass(InnerManageUser, [{
 		key: 'inviteExternalUser',
 		value: function inviteExternalUser(email) {
 			var map = this.props.map;
@@ -72,7 +146,7 @@ var ManageUsers = function (_React$Component) {
 	}, {
 		key: 'changeSearch',
 		value: function changeSearch(e) {
-			var _this2 = this;
+			var _this3 = this;
 
 			var val = e.target.value;
 			var arr = [];
@@ -82,7 +156,7 @@ var ManageUsers = function (_React$Component) {
 				firebase.database().ref('emails').orderByKey().startAt(_encode2.default.encode(val)).limitToFirst(10).once("value", function (res) {
 					var results = res.val();
 					if (results) {
-						var map = _this2.props.map;
+						var map = _this3.props.map;
 						for (var email in results) {
 							var decoded = _encode2.default.decode(email);
 							if (decoded.toLowerCase().indexOf(val.toLowerCase()) === 0) {
@@ -96,7 +170,7 @@ var ManageUsers = function (_React$Component) {
 							}
 						}
 					}
-					_this2.setState({
+					_this3.setState({
 						results: arr,
 						loading: false
 					});
@@ -163,52 +237,7 @@ var ManageUsers = function (_React$Component) {
 
 			return _react2.default.createElement(
 				'div',
-				{ className: 'map-details' },
-				_react2.default.createElement(
-					'div',
-					{ id: 'map-details-title', onClick: this.props.promptChangeTitle },
-					_react2.default.createElement(
-						'div',
-						null,
-						_react2.default.createElement(
-							'span',
-							{ id: 'map-details-title-content' },
-							this.props.map.title
-						)
-					),
-					_react2.default.createElement(
-						'div',
-						{ style: { marginTop: "7px" } },
-						_react2.default.createElement(
-							'span',
-							{ id: 'map-details-title-sub' },
-							_react2.default.createElement('img', { style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/edit.svg' }),
-							_react2.default.createElement(
-								'span',
-								{ style: { verticalAlign: "middle" } },
-								'edit'
-							)
-						)
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					{ style: { maxWidth: "500px", marginRight: "auto", marginLeft: "auto" } },
-					_react2.default.createElement(
-						'div',
-						{ style: { fontSize: "14px", height: "20px" } },
-						_react2.default.createElement(
-							'div',
-							{ onClick: this.props.toggleManageUsers, className: 'purple-unerlined-hover', style: { cursor: "pointer", display: "inline-block", marginLeft: "10px", float: "right" } },
-							_react2.default.createElement('img', { className: 'rotate-180', style: { verticalAlign: "middle", width: "10px", marginRight: "5px" }, src: '../assets/images/arrow-right.svg' }),
-							_react2.default.createElement(
-								'span',
-								{ style: { verticalAlign: "middle" } },
-								'back to my maps'
-							)
-						)
-					)
-				),
+				null,
 				_react2.default.createElement(
 					'div',
 					{ className: 'search-user-input-wrapper', style: { maxWidth: "280px", marginTop: "30px", marginRight: "auto", marginLeft: "auto" } },
@@ -239,15 +268,13 @@ var ManageUsers = function (_React$Component) {
 		}
 	}]);
 
-	return ManageUsers;
+	return InnerManageUser;
 }(_react2.default.Component);
 
 ;
 
-exports.default = ManageUsers;
-
-var UserLine = function (_React$Component2) {
-	_inherits(UserLine, _React$Component2);
+var UserLine = function (_React$Component3) {
+	_inherits(UserLine, _React$Component3);
 
 	function UserLine() {
 		_classCallCheck(this, UserLine);
@@ -284,8 +311,8 @@ var UserLine = function (_React$Component2) {
 
 ;
 
-var ProspectLine = function (_React$Component3) {
-	_inherits(ProspectLine, _React$Component3);
+var ProspectLine = function (_React$Component4) {
+	_inherits(ProspectLine, _React$Component4);
 
 	function ProspectLine() {
 		_classCallCheck(this, ProspectLine);
@@ -336,8 +363,8 @@ var ProspectLine = function (_React$Component3) {
 
 ;
 
-var ExternalProspectLine = function (_React$Component4) {
-	_inherits(ExternalProspectLine, _React$Component4);
+var ExternalProspectLine = function (_React$Component5) {
+	_inherits(ExternalProspectLine, _React$Component5);
 
 	function ExternalProspectLine() {
 		_classCallCheck(this, ExternalProspectLine);

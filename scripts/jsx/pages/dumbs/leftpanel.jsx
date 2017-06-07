@@ -1,12 +1,16 @@
-import React from 'react'
+import React from 'react';
 import { browserHistory } from 'react-router';
 
-import DeleteButton from './deletebutton'
-import FullButton from './fullbutton'
+import DeleteButton from './deletebutton';
+import FullButton from './fullbutton';
 
-import DRAWING from '../../properties/drawing'
+import DRAWING from '../../properties/drawing';
 
-import AuthServices from '../../services/auth'
+import AuthServices from '../../services/auth';
+
+import {InnerManageUser} from './manageusers';
+
+import Modal from 'boron/DropModal';
 
 class LeftPanel extends React.Component {
 
@@ -17,10 +21,13 @@ class LeftPanel extends React.Component {
 	    this.minimizeOrExpand = this.minimizeOrExpand.bind(this);
 	    this.changeMode = this.changeMode.bind(this);
 	    this.printWindow = this.printWindow.bind(this);
-
+	    this.showInviteModal = this.showInviteModal.bind(this);
+	    this.hideInviteModal = this.hideInviteModal.bind(this);
+	    
 	    this.state = {
 	    	nav : 0,
-	    	minimize : false
+	    	minimize : false,
+	    	showManageUserModal : false
 	    };
 	}
 
@@ -72,6 +79,23 @@ class LeftPanel extends React.Component {
 		window.print();
 	}
 
+	hideInviteModal(){
+		console.log("hideInviteModal");
+		this.refs.manageusermodal.hide();
+		this.setState({
+			showManageUserModal : false
+		});
+	}
+
+	showInviteModal(){
+		console.log("showInviteModal");
+		console.log(this.refs.manageusermodal);
+		this.refs.manageusermodal.show();
+		this.setState({
+			showManageUserModal : true
+		});
+	}
+
 	render() {
 		
 		var dom = null, title = "";
@@ -81,21 +105,21 @@ class LeftPanel extends React.Component {
 		switch(this.state.nav) {
 		    case 0:
 		        dom = <NodeTree map={this.props.map} 
-		        				selectedNode={this.props.selectedNode} selectNode={this.props.selectNode} 
-		        				selectedLink={this.props.selectedLink} selectLink={this.props.selectLink}
-		        				deleteSelectedNode={this.props.deleteSelectedNode} 
-		        				deleteLink={this.props.deleteLink}/>;
+        				selectedNode={this.props.selectedNode} selectNode={this.props.selectNode} 
+        				selectedLink={this.props.selectedLink} selectLink={this.props.selectLink}
+        				deleteSelectedNode={this.props.deleteSelectedNode} 
+        				deleteLink={this.props.deleteLink}/>;
 		        title = "Navigation Tree";
 		        break;
 		    case 1:
 		    	dom = <NodeDetails map={this.props.map} 
-	    						changeNodeColor={this.props.changeNodeColor}
-	    						changeNodeBcgColor={this.props.changeNodeBcgColor}
-	    						changeNodeBorderColor={this.props.changeNodeBorderColor}
-	    				   		changeNodeText={this.props.changeNodeText} changeNodeDescription={this.props.changeNodeDescription}
-	        			   		selectedNode={this.props.selectedNode} selectNode={this.props.selectNode} 
-		        			    deleteSelectedNode={this.props.deleteSelectedNode} 
-		        			    changeNodeScale={this.props.changeNodeScale}/>;
+						changeNodeColor={this.props.changeNodeColor}
+						changeNodeBcgColor={this.props.changeNodeBcgColor}
+						changeNodeBorderColor={this.props.changeNodeBorderColor}
+				   		changeNodeText={this.props.changeNodeText} changeNodeDescription={this.props.changeNodeDescription}
+    			   		selectedNode={this.props.selectedNode} selectNode={this.props.selectNode} 
+        			    deleteSelectedNode={this.props.deleteSelectedNode} 
+        			    changeNodeScale={this.props.changeNodeScale}/>;
 		        title = "Node Details";
 		        break;
 		    case 2:
@@ -116,62 +140,75 @@ class LeftPanel extends React.Component {
 		 	) : null;
 
 		return (
-			<div id="left-panel-wrapper" ref="left-panel-wrapper" style={{width: (this.state.minimize ? "auto" : "250px"), height:"100%"}} className="flex-grow-0">
-				<div id="left-panel">
-					<div className="flex" style={{paddingTop:"10px", paddingBottom:"10px"}}>
-						<div className="flex-grow-0" style={{paddingTop:"10px", paddingLeft : (this.state.minimize ? "2px" : "10px"), paddingRight : (this.state.minimize ? "2px" : "10px")}} id="logo">Mg.</div>
-						<div id="lp-node-block" className="flex-grow-1" style={{textAlign:"right", display : (this.state.minimize ? "none" : "block")}}>
-							<div title="create and modify nodes" className={"tippyleftpanel " + (this.props.mode === 1 ? "selected-mode-line" : "un-selected-mode-line")} onClick={this.changeMode.bind(this, 1)}>
-								<span style={{verticalAlign:"middle"}}>Creation</span>
-								<img style={{verticalAlign:"middle", marginLeft:"5px", marginRight:"5px", width:"30px", marginTop:"3px"}} src={"../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg")}/>
-							</div>
-							<div title="create relations between nodes" className={"tippyleftpanel " + (this.props.mode === 2 ? "selected-mode-line" : "un-selected-mode-line")} onClick={this.changeMode.bind(this, 2)}>
-								<span style={{verticalAlign:"middle"}}>Relation</span>
-								<img style={{verticalAlign:"middle", marginLeft:"5px", marginRight:"5px", width:"30px", marginTop:"3px"}} src={"../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg")}/>
-							</div>
-						</div>
+			<div>
+				<Modal ref="manageusermodal" onHide={this.hideInviteModal}>
+					<div style={{paddingLeft:"30px", paddingRight:"30px", marginTop: "20px", marginBottom: "20px", display:"flex"}}>
+						<div style={{flexGrow:1}}><hr style={{opacity:".3", borderTop:"solid 1px #424242", borderBottom:"none"}}/></div>
+						<div style={{flexGrow:0, fontSize:"14px", paddingLeft:"10px", paddingRight:"10px"}}><div>Manage Map Users</div></div>
+						<div style={{flexGrow:1}}><hr style={{opacity:".3", borderTop:"solid 1px #424242", borderBottom:"none"}}/></div>
 					</div>
-					
-					<div className="flex">
-						<div className="flex-grow-0">
-							<div style={{display : this.state.minimize ? "block" : "none"}}>
+                    <InnerManageUser map={this.props.map} user={this.props.user}/>
+                </Modal>
+				<div id="left-panel-wrapper" ref="left-panel-wrapper" style={{width: (this.state.minimize ? "auto" : "250px"), height:"100%"}} className="flex-grow-0">
+					<div id="left-panel">
+						<div className="flex" style={{paddingTop:"10px", paddingBottom:"10px"}}>
+							<div className="flex-grow-0" style={{paddingTop:"10px", paddingLeft : (this.state.minimize ? "2px" : "10px"), paddingRight : (this.state.minimize ? "2px" : "10px")}} id="logo">Mg.</div>
+							<div id="lp-node-block" className="flex-grow-1" style={{textAlign:"right", display : (this.state.minimize ? "none" : "block")}}>
 								<div title="create and modify nodes" className={"tippyleftpanel " + (this.props.mode === 1 ? "selected-mode-line" : "un-selected-mode-line")} onClick={this.changeMode.bind(this, 1)}>
-									<img style={{cursor:"pointer", display:"block", marginLeft:"auto", marginRight:"auto", width:"20px", marginBottom:"10px"}} src={"../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg")}/>
+									<span style={{verticalAlign:"middle"}}>Creation</span>
+									<img style={{verticalAlign:"middle", marginLeft:"5px", marginRight:"5px", width:"30px", marginTop:"3px"}} src={"../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg")}/>
 								</div>
 								<div title="create relations between nodes" className={"tippyleftpanel " + (this.props.mode === 2 ? "selected-mode-line" : "un-selected-mode-line")} onClick={this.changeMode.bind(this, 2)}>
-									<img style={{cursor:"pointer", display:"block", marginLeft:"auto", marginRight:"auto", width:"20px", marginBottom:"10px"}} src={"../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg")}/>
+									<span style={{verticalAlign:"middle"}}>Relation</span>
+									<img style={{verticalAlign:"middle", marginLeft:"5px", marginRight:"5px", width:"30px", marginTop:"3px"}} src={"../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg")}/>
 								</div>
 							</div>
-							<div onClick={this.backToMyMaps} className={"left-panel-nav tippyleftpanel"} title="back to my maps" style={{cursor : "pointer"}}>
-								<img className="rotate-180" style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/arrow-right-white.svg"/>
-							</div>
-							<div onClick={this.minimizeOrExpand} className={"left-panel-nav tippyleftpanel"} title="minimize" style={{cursor : "pointer", display : (this.state.minimize ? "none" : "block")}}>
-								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/minimize-white.svg"/>
-							</div>
-							<div onClick={this.minimizeOrExpand} className={"left-panel-nav tippyleftpanel"} title="expand" style={{cursor : "pointer", display : (this.state.minimize ? "block" : "none")}}>
-								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/expand-white.svg"/>
-							</div>
-							<div onClick={this.selectNav.bind(this, 0)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav")} title="navigation tree" style={{cursor : "pointer"}}>
-								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 0 ? "tree.svg" : "tree-white.svg")}/>
-							</div>
-							<div onClick={nodeSelected ? this.selectNav.bind(this, 1) : null} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav")} title="modify node" style={{cursor : (nodeSelected ? "pointer" : "not-allowed")}}>
-								<img style={{display : "block", marginLeft:"auto", marginRight:"auto", opacity : (nodeSelected ? "1" : ".5")}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 1 ? "node.svg" : "node-white.svg")}/>
-							</div>
-							<div onClick={this.selectNav.bind(this, 2)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav")} title="chat" style={{cursor : "pointer"}}>
-								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 2 ? "chat.svg" : "chat-white.svg")}/>
-							</div>
-							<div onClick={this.selectNav.bind(this, 3)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav")} title="logs" style={{cursor : "pointer", display: "none"}}>
-								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 3 ? "logs.svg" : "logs-white.svg")}/>
-							</div>
-							<div onClick={this.printWindow} className="tippyleftpanel left-panel-nav" title="export" style={{cursor : "pointer"}}>
-								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/export-white.svg"/>
-							</div>
-							<div onClick={this.resetTutorial} className="tippyleftpanel left-panel-nav" title="reset tutorials" style={{cursor : "pointer", display : (this.props.user && this.props.user.advice ? "block" : "none")}}>
-								<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/graphic-white.svg"/>
-							</div>
 						</div>
-						<div className="flex-grow-1">
-							{ls}
+						
+						<div className="flex">
+							<div className="flex-grow-0">
+								<div style={{display : this.state.minimize ? "block" : "none"}}>
+									<div title="create and modify nodes" className={"tippyleftpanel " + (this.props.mode === 1 ? "selected-mode-line" : "un-selected-mode-line")} onClick={this.changeMode.bind(this, 1)}>
+										<img style={{cursor:"pointer", display:"block", marginLeft:"auto", marginRight:"auto", width:"20px", marginBottom:"10px"}} src={"../assets/images/mode-creation" + (this.props.mode === 1 ? "-purple.svg" : ".svg")}/>
+									</div>
+									<div title="create relations between nodes" className={"tippyleftpanel " + (this.props.mode === 2 ? "selected-mode-line" : "un-selected-mode-line")} onClick={this.changeMode.bind(this, 2)}>
+										<img style={{cursor:"pointer", display:"block", marginLeft:"auto", marginRight:"auto", width:"20px", marginBottom:"10px"}} src={"../assets/images/mode-relation" + (this.props.mode === 2 ? "-purple.svg" : ".svg")}/>
+									</div>
+								</div>
+								<div onClick={this.backToMyMaps} className={"left-panel-nav tippyleftpanel"} title="back to my maps" style={{cursor : "pointer"}}>
+									<img className="rotate-180" style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/arrow-right-white.svg"/>
+								</div>
+								<div onClick={this.minimizeOrExpand} className={"left-panel-nav tippyleftpanel"} title="minimize" style={{cursor : "pointer", display : (this.state.minimize ? "none" : "block")}}>
+									<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/minimize-white.svg"/>
+								</div>
+								<div onClick={this.minimizeOrExpand} className={"left-panel-nav tippyleftpanel"} title="expand" style={{cursor : "pointer", display : (this.state.minimize ? "block" : "none")}}>
+									<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/expand-white.svg"/>
+								</div>
+								<div onClick={this.selectNav.bind(this, 0)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 0 ? "left-panel-nav-selected" : "left-panel-nav")} title="navigation tree" style={{cursor : "pointer"}}>
+									<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 0 ? "tree.svg" : "tree-white.svg")}/>
+								</div>
+								<div onClick={nodeSelected ? this.selectNav.bind(this, 1) : null} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 1 ? "left-panel-nav-selected" : "left-panel-nav")} title="modify node" style={{cursor : (nodeSelected ? "pointer" : "not-allowed")}}>
+									<img style={{display : "block", marginLeft:"auto", marginRight:"auto", opacity : (nodeSelected ? "1" : ".5")}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 1 ? "node.svg" : "node-white.svg")}/>
+								</div>
+								<div onClick={this.selectNav.bind(this, 2)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 2 ? "left-panel-nav-selected" : "left-panel-nav")} title="chat" style={{cursor : "pointer"}}>
+									<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 2 ? "chat.svg" : "chat-white.svg")}/>
+								</div>
+								<div onClick={this.selectNav.bind(this, 3)} className={"tippyleftpanel " + (!this.state.minimize && this.state.nav == 3 ? "left-panel-nav-selected" : "left-panel-nav")} title="logs" style={{cursor : "pointer", display: "none"}}>
+									<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src={"../assets/images/"+ (!this.state.minimize && this.state.nav == 3 ? "logs.svg" : "logs-white.svg")}/>
+								</div>
+								<div onClick={this.showInviteModal} className="tippyleftpanel left-panel-nav" title="manage users" style={{cursor : "pointer"}}>
+									<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/invite-white.svg"/>
+								</div>
+								<div onClick={this.printWindow} className="tippyleftpanel left-panel-nav" title="export" style={{cursor : "pointer"}}>
+									<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/export-white.svg"/>
+								</div>
+								<div onClick={this.resetTutorial} className="tippyleftpanel left-panel-nav" title="reset tutorials" style={{cursor : "pointer", display : (this.props.user && this.props.user.advice ? "block" : "none")}}>
+									<img style={{display : "block", marginLeft:"auto", marginRight:"auto"}} src="../assets/images/graphic-white.svg"/>
+								</div>
+							</div>
+							<div className="flex-grow-1">
+								{ls}
+							</div>
 						</div>
 					</div>
 				</div>

@@ -38,8 +38,6 @@ var _mapdetails2 = _interopRequireDefault(_mapdetails);
 
 var _manageusers = require('./dumbs/manageusers');
 
-var _manageusers2 = _interopRequireDefault(_manageusers);
-
 var _invite = require('./dumbs/invite');
 
 var _invite2 = _interopRequireDefault(_invite);
@@ -380,7 +378,7 @@ var MapsPageComp = function (_React$Component) {
 					_react2.default.createElement(
 						'div',
 						{ style: { display: this.state.manageUsers ? "block" : "none" } },
-						_react2.default.createElement(_manageusers2.default, {
+						_react2.default.createElement(_manageusers.ManageUsers, {
 							map: selectedMap, promptChangeTitle: this.promptChangeTitle,
 							toggleManageUsers: this.toggleManageUsers,
 							user: this.props.user })

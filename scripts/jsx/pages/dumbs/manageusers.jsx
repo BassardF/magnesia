@@ -4,7 +4,45 @@ import AuthServices from '../../services/auth'
 
 import EncodeServices from '../../services/encode'
 
-class ManageUsers extends React.Component {
+export class ManageUsers extends React.Component {
+
+	constructor(props) {
+	    super(props);
+
+	    this.state = {};
+	}
+
+	render() {
+		return (
+			<div className="map-details">
+				<div id="map-details-title" onClick={this.props.promptChangeTitle}>
+					<div>
+						<span id="map-details-title-content">{this.props.map.title}</span>
+					</div>
+					<div style={{marginTop:"7px"}}>
+						<span id="map-details-title-sub">
+							<img style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/edit.svg"/>
+							<span style={{verticalAlign:"middle"}}>edit</span>
+						</span>
+					</div>
+				</div>
+
+				<div style={{maxWidth:"500px", marginRight:"auto", marginLeft:"auto"}}>
+					<div style={{fontSize:"14px", height:"20px"}}>
+						<div onClick={this.props.toggleManageUsers} className="purple-unerlined-hover" style={{cursor:"pointer", display:"inline-block", marginLeft: "10px", float:"right"}}>
+							<img className="rotate-180" style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/arrow-right.svg"/>
+							<span style={{verticalAlign:"middle"}}>back to my maps</span>
+						</div>
+					</div>
+				</div>
+
+				<InnerManageUser map={this.props.map} user={this.props.user}/>
+			</div>
+		);
+	}
+};
+
+export class InnerManageUser extends React.Component {
 
 	constructor(props) {
 	    super(props);
@@ -137,28 +175,7 @@ class ManageUsers extends React.Component {
 			<img src="../assets/images/spinner-purple.svg" className="rotate" style={{verticalAlign:"middle", width:"20px", height:"20px", marginRight : "5px"}}/>;
 
 		return (
-			<div className="map-details">
-				<div id="map-details-title" onClick={this.props.promptChangeTitle}>
-					<div>
-						<span id="map-details-title-content">{this.props.map.title}</span>
-					</div>
-					<div style={{marginTop:"7px"}}>
-						<span id="map-details-title-sub">
-							<img style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/edit.svg"/>
-							<span style={{verticalAlign:"middle"}}>edit</span>
-						</span>
-					</div>
-				</div>
-
-				<div style={{maxWidth:"500px", marginRight:"auto", marginLeft:"auto"}}>
-					<div style={{fontSize:"14px", height:"20px"}}>
-						<div onClick={this.props.toggleManageUsers} className="purple-unerlined-hover" style={{cursor:"pointer", display:"inline-block", marginLeft: "10px", float:"right"}}>
-							<img className="rotate-180" style={{verticalAlign:"middle", width:"10px", marginRight : "5px"}} src="../assets/images/arrow-right.svg"/>
-							<span style={{verticalAlign:"middle"}}>back to my maps</span>
-						</div>
-					</div>
-				</div>
-
+			<div>
 				<div className="search-user-input-wrapper" style={{maxWidth: "280px", marginTop: "30px", marginRight:"auto", marginLeft:"auto"}}>
 					{loadIcon}
 					<input value={this.state.value} onChange={this.changeSearch} placeholder="email address" style={{verticalAlign:"middle", width:"250px", fontSize : "17px", border : "none", outline : "none"}}/>
@@ -182,9 +199,7 @@ class ManageUsers extends React.Component {
 			</div>
 		);
 	}
-};
-
-export default ManageUsers;
+};		
 
 class UserLine extends React.Component {
 
@@ -256,4 +271,3 @@ class ExternalProspectLine extends React.Component {
 		);
 	}
 };
-
