@@ -28210,7 +28210,7 @@ var Map = function () {
 
 exports.default = Map;
 
-},{"../services/encode":315,"./link":289,"./message":291,"./node":292}],291:[function(require,module,exports){
+},{"../services/encode":316,"./link":289,"./message":291,"./node":292}],291:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28396,6 +28396,13 @@ var User = function () {
         }
       }
     }
+  }, {
+    key: "getPlan",
+    value: function getPlan() {
+      if (this.rights == 1) return "Standard";
+      if (this.rights == 2) return "Ultimate";
+      return "Starter";
+    }
   }]);
 
   return User;
@@ -28475,7 +28482,7 @@ var store = (0, _redux.createStore)((0, _redux.combineReducers)({
 		)
 ), document.getElementById('root'));
 
-},{"../reducers/maps":312,"../reducers/users":313,"./landing":303,"./map":304,"./maps":305,"./register":306,"./root":307,"react":264,"react-dom":55,"react-redux":191,"react-router":233,"redux":270}],295:[function(require,module,exports){
+},{"../reducers/maps":313,"../reducers/users":314,"./landing":303,"./map":304,"./maps":305,"./register":307,"./root":308,"react":264,"react-dom":55,"react-redux":191,"react-router":233,"redux":270}],295:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28681,7 +28688,7 @@ var Advice = function (_React$Component) {
 
 exports.default = Advice;
 
-},{"../../services/auth":314,"react":264}],296:[function(require,module,exports){
+},{"../../services/auth":315,"react":264}],296:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29969,7 +29976,7 @@ var LogsBlock = function (_React$Component8) {
 
 ;
 
-},{"../../properties/drawing":310,"../../services/auth":314,"./deletebutton":296,"./fullbutton":297,"./manageusers":300,"boron/DropModal":1,"react":264,"react-router":233}],300:[function(require,module,exports){
+},{"../../properties/drawing":311,"../../services/auth":315,"./deletebutton":296,"./fullbutton":297,"./manageusers":300,"boron/DropModal":1,"react":264,"react-router":233}],300:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30380,7 +30387,7 @@ var ExternalProspectLine = function (_React$Component5) {
 
 ;
 
-},{"../../services/auth":314,"../../services/encode":315,"react":264}],301:[function(require,module,exports){
+},{"../../services/auth":315,"../../services/encode":316,"react":264}],301:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32488,7 +32495,7 @@ var RegisterEarlyAccess = function (_React$Component9) {
 
 exports.default = LandingPage;
 
-},{"../properties/demodrawing":308,"../properties/demonodes":309,"./register":306,"boron/DropModal":1,"react":264}],304:[function(require,module,exports){
+},{"../properties/demodrawing":309,"../properties/demonodes":310,"./register":307,"boron/DropModal":1,"react":264}],304:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33204,7 +33211,7 @@ var MapPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MapP
 
 exports.default = MapPage;
 
-},{"../models/map":290,"../properties/drawing":310,"../services/auth":314,"./dumbs/advice":295,"./dumbs/leftpanel":299,"react":264,"react-redux":191,"react-router":233}],305:[function(require,module,exports){
+},{"../models/map":290,"../properties/drawing":311,"../services/auth":315,"./dumbs/advice":295,"./dumbs/leftpanel":299,"react":264,"react-redux":191,"react-router":233}],305:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33234,6 +33241,10 @@ var _auth2 = _interopRequireDefault(_auth);
 var _map = require('../models/map');
 
 var _map2 = _interopRequireDefault(_map);
+
+var _plans = require('./plans');
+
+var _plans2 = _interopRequireDefault(_plans);
 
 var _mapblock = require('./dumbs/mapblock');
 
@@ -33276,6 +33287,8 @@ var MapsPageComp = function (_React$Component) {
 		_this.validateInvite = _this.validateInvite.bind(_this);
 		_this.cancelInvite = _this.cancelInvite.bind(_this);
 		_this.changeName = _this.changeName.bind(_this);
+		_this.openPlansModal = _this.openPlansModal.bind(_this);
+		_this.hidePlansModal = _this.hidePlansModal.bind(_this);
 
 		_this.state = {
 			selected: 0,
@@ -33298,6 +33311,16 @@ var MapsPageComp = function (_React$Component) {
 				if (_this2.props.user && _this2.props.user.name == "placeholder") {
 					_this2.changeName(true, _this2.props.user.name);
 				}
+			});
+		}
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			new Tippy('.tippymaps', {
+				position: 'bottom',
+				animation: 'shift',
+				duration: 200,
+				arrow: true
 			});
 		}
 	}, {
@@ -33557,6 +33580,20 @@ var MapsPageComp = function (_React$Component) {
 			}.bind(this));
 		}
 	}, {
+		key: 'openPlansModal',
+		value: function openPlansModal() {
+			this.setState({
+				showPlansModal: true
+			});
+		}
+	}, {
+		key: 'hidePlansModal',
+		value: function hidePlansModal() {
+			this.setState({
+				showPlansModal: false
+			});
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var maps = [],
@@ -33618,9 +33655,12 @@ var MapsPageComp = function (_React$Component) {
 				}
 			}
 			var subSpace = window.innerHeight - 103;
+			var plan = this.props.user ? this.props.user.getPlan() : "Starter";
+
 			return _react2.default.createElement(
 				'div',
 				{ id: 'maps-page' },
+				_react2.default.createElement(_plans2.default, { user: this.props.user, hideModal: this.hidePlansModal, show: this.state.showPlansModal }),
 				_react2.default.createElement(
 					'div',
 					{ style: { maxWidth: "900px", marginLeft: "auto", marginRight: "auto" } },
@@ -33634,16 +33674,21 @@ var MapsPageComp = function (_React$Component) {
 						),
 						_react2.default.createElement(
 							'div',
-							{ style: { float: "right", marginRight: "20px", marginTop: "-50px" } },
+							{ style: { float: "right", marginRight: "20px", marginTop: "-45px" } },
 							_react2.default.createElement(
 								'div',
-								{ className: 'purple-unerlined-hover', style: { fontSize: "14px", cursor: "pointer", display: "inline-block", marginRight: "20px" }, onClick: this.props.user ? this.changeName.bind(this, false, this.props.user.name) : null },
+								{ title: 'change name', className: 'tippymaps purple-unerlined-hover', style: { fontSize: "14px", cursor: "pointer", display: "inline-block", marginRight: "20px" }, onClick: this.props.user ? this.changeName.bind(this, false, this.props.user.name) : null },
 								this.props.user ? this.props.user.name : "John Doe"
 							),
 							_react2.default.createElement(
 								'div',
+								{ title: 'manage plan', className: 'tippymaps purple-unerlined-hover purple', style: { fontSize: "14px", display: "inline-block", cursor: "pointer", marginRight: "20px" }, onClick: this.openPlansModal },
+								plan
+							),
+							_react2.default.createElement(
+								'div',
 								{ className: 'purple-unerlined-hover', style: { fontSize: "14px", display: "inline-block", cursor: "pointer" }, onClick: this.logout },
-								'logout'
+								'Logout'
 							)
 						)
 					),
@@ -33708,7 +33753,320 @@ var MapsPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Map
 
 exports.default = MapsPage;
 
-},{"../actions/maps":287,"../actions/users":288,"../models/map":290,"../services/auth":314,"./dumbs/invite":298,"./dumbs/manageusers":300,"./dumbs/mapblock":301,"./dumbs/mapdetails":302,"react":264,"react-redux":191,"react-router":233}],306:[function(require,module,exports){
+},{"../actions/maps":287,"../actions/users":288,"../models/map":290,"../services/auth":315,"./dumbs/invite":298,"./dumbs/manageusers":300,"./dumbs/mapblock":301,"./dumbs/mapdetails":302,"./plans":306,"react":264,"react-redux":191,"react-router":233}],306:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _DropModal = require('boron/DropModal');
+
+var _DropModal2 = _interopRequireDefault(_DropModal);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var PlansModal = function (_React$Component) {
+	_inherits(PlansModal, _React$Component);
+
+	function PlansModal(props) {
+		_classCallCheck(this, PlansModal);
+
+		var _this = _possibleConstructorReturn(this, (PlansModal.__proto__ || Object.getPrototypeOf(PlansModal)).call(this, props));
+
+		_this.showModal = _this.showModal.bind(_this);
+		_this.hideModal = _this.hideModal.bind(_this);
+
+		_this.state = {};
+		return _this;
+	}
+
+	_createClass(PlansModal, [{
+		key: 'componentWillReceiveProps',
+		value: function componentWillReceiveProps(np) {
+			if (np && np.show && !this.props.show) {
+				this.showModal();
+			} else if (!np.show && this.props.show) {
+				this.hideModal();
+			}
+		}
+	}, {
+		key: 'showModal',
+		value: function showModal() {
+			this.refs.modal.show();
+		}
+	}, {
+		key: 'hideModal',
+		value: function hideModal() {
+			this.refs.modal.hide();
+		}
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			new Tippy('.tippyPlansModal', {
+				position: 'bottom',
+				animation: 'shift',
+				duration: 200,
+				arrow: true
+			});
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var rights = this.props.user ? this.props.user.rights : 0;
+			return _react2.default.createElement(
+				'div',
+				{ id: 'early-access-modal-wrapper' },
+				_react2.default.createElement(
+					_DropModal2.default,
+					{ ref: 'modal', onHide: this.props.hideModal },
+					_react2.default.createElement(
+						'h2',
+						{ style: { textAlign: "center", paddingTop: "20px", paddingBottom: "15px" } },
+						_react2.default.createElement(
+							'span',
+							{ style: { fontWeight: "200" } },
+							'Current plan : '
+						),
+						' ',
+						_react2.default.createElement(
+							'span',
+							{ className: 'purple' },
+							this.props.user ? this.props.user.getPlan() : ""
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							'div',
+							{ style: { verticalAlign: "top", width: "33%", display: "inline-block", flexGrow: 1, textAlign: "center" } },
+							_react2.default.createElement(
+								'div',
+								{ style: { paddingLeft: "10px", paddingRight: "10px" } },
+								_react2.default.createElement(
+									'h3',
+									{ style: { marginTop: "10px", marginBottom: "10px", textAlign: "left", fontWeight: "200" } },
+									'Starter'
+								),
+								_react2.default.createElement(
+									'div',
+									{ style: { marginTop: "-45px", float: "right", marginRight: "auto", width: "50px", height: "50px", borderRadius: "50px", backgroundColor: "#F3E5F5" } },
+									_react2.default.createElement('img', { style: { marginTop: "10px", width: "30px", height: "30px" }, src: '../assets/images/view-white.svg' })
+								),
+								_react2.default.createElement(
+									'div',
+									{ style: { borderTop: "solid 3px #F3E5F5" } },
+									_react2.default.createElement(
+										'div',
+										{ style: { marginTop: "20px", marginBottom: "20px" } },
+										_react2.default.createElement(
+											'span',
+											{ style: { fontWeight: "100", fontSize: "30px" } },
+											'Free'
+										)
+									),
+									_react2.default.createElement(
+										'div',
+										null,
+										_react2.default.createElement(
+											'div',
+											{ className: "purple " + (rights == 0 ? "disabled-button" : "pointer"), style: { marginBottom: "10px", backgroundColor: "#9C27B0", borderRadius: "4px", padding: "5px", fontSize: "14px", color: "white" } },
+											rights == 0 ? "Current" : "Select"
+										)
+									),
+									_react2.default.createElement(
+										'div',
+										null,
+										_react2.default.createElement(
+											'div',
+											{ style: { marginBottom: "15px", fontSize: "14px" } },
+											_react2.default.createElement(
+												'b',
+												null,
+												'3'
+											),
+											' maps'
+										)
+									)
+								)
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ style: { verticalAlign: "top", width: "33%", display: "inline-block", flexGrow: 1, textAlign: "center" } },
+							_react2.default.createElement(
+								'div',
+								{ style: { paddingLeft: "10px", paddingRight: "10px" } },
+								_react2.default.createElement(
+									'h3',
+									{ style: { marginTop: "10px", marginBottom: "10px", textAlign: "left", fontWeight: "200" } },
+									'Standard'
+								),
+								_react2.default.createElement(
+									'div',
+									{ style: { marginTop: "-45px", float: "right", marginRight: "auto", width: "50px", height: "50px", borderRadius: "50px", backgroundColor: "#CE93D8" } },
+									_react2.default.createElement('img', { style: { marginTop: "10px", width: "30px", height: "30px" }, src: '../assets/images/quality-badge-white.svg' })
+								),
+								_react2.default.createElement(
+									'div',
+									{ style: { borderTop: "solid 3px #CE93D8" } },
+									_react2.default.createElement(
+										'div',
+										{ style: { marginTop: "20px", marginBottom: "20px" } },
+										_react2.default.createElement(
+											'span',
+											{ style: { fontWeight: "100", fontSize: "30px" } },
+											'$10'
+										),
+										' / mo'
+									),
+									_react2.default.createElement(
+										'div',
+										null,
+										_react2.default.createElement(
+											'div',
+											{ className: "purple " + (rights == 1 ? "disabled-button" : "pointer"), style: { marginBottom: "10px", backgroundColor: "#9C27B0", borderRadius: "4px", padding: "5px", fontSize: "14px", color: "white" } },
+											rights == 1 ? "Current" : "Select"
+										)
+									),
+									_react2.default.createElement(
+										'div',
+										null,
+										_react2.default.createElement(
+											'div',
+											{ style: { marginBottom: "15px", fontSize: "14px" } },
+											_react2.default.createElement(
+												'b',
+												null,
+												'unlimited'
+											),
+											' maps'
+										),
+										_react2.default.createElement(
+											'div',
+											{ style: { marginBottom: "15px", fontSize: "14px" } },
+											_react2.default.createElement(
+												'b',
+												null,
+												'3 invites'
+											),
+											' p.m.'
+										)
+									)
+								)
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ style: { verticalAlign: "top", width: "33%", display: "inline-block", flexGrow: 1, textAlign: "center" } },
+							_react2.default.createElement(
+								'div',
+								{ style: { paddingLeft: "10px", paddingRight: "10px" } },
+								_react2.default.createElement(
+									'h3',
+									{ style: { marginTop: "10px", marginBottom: "10px", textAlign: "left", fontWeight: "200" } },
+									'Ultimate'
+								),
+								_react2.default.createElement(
+									'div',
+									{ style: { marginTop: "-45px", float: "right", marginRight: "auto", width: "50px", height: "50px", borderRadius: "50px", backgroundColor: "#9C27B0" } },
+									_react2.default.createElement('img', { style: { marginTop: "10px", width: "30px", height: "30px" }, src: '../assets/images/eac-diamond-white.svg' })
+								),
+								_react2.default.createElement(
+									'div',
+									{ style: { borderTop: "solid 3px #9C27B0" } },
+									_react2.default.createElement(
+										'div',
+										{ style: { marginTop: "20px", marginBottom: "20px" } },
+										_react2.default.createElement(
+											'span',
+											{ style: { fontWeight: "100", fontSize: "30px" } },
+											'$25'
+										),
+										' / mo'
+									),
+									_react2.default.createElement(
+										'div',
+										null,
+										_react2.default.createElement(
+											'div',
+											{ className: "purple " + (rights == 2 ? "disabled-button" : "pointer"), style: { marginBottom: "10px", backgroundColor: "#9C27B0", borderRadius: "4px", padding: "5px", fontSize: "14px", color: "white" } },
+											rights == 2 ? "Current" : "Select"
+										)
+									),
+									_react2.default.createElement(
+										'div',
+										null,
+										_react2.default.createElement(
+											'div',
+											{ style: { marginBottom: "15px", fontSize: "14px" } },
+											_react2.default.createElement(
+												'b',
+												null,
+												'unlimited'
+											),
+											' maps'
+										),
+										_react2.default.createElement(
+											'div',
+											{ style: { marginBottom: "15px", fontSize: "14px" } },
+											_react2.default.createElement(
+												'b',
+												null,
+												'unlimited invites'
+											),
+											' p.m.'
+										)
+									)
+								)
+							)
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						{ style: { textAlign: "center", fontSize: "14px", marginBottom: "10px", marginTop: "10px" } },
+						_react2.default.createElement(
+							'div',
+							null,
+							'Any problem, question or suggestion ?'
+						),
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement(
+								'a',
+								{ className: 'purple', href: 'mailto:f.bassard@gmail.com' },
+								'Contact'
+							),
+							' me directly'
+						)
+					)
+				)
+			);
+		}
+	}]);
+
+	return PlansModal;
+}(_react2.default.Component);
+
+;
+
+exports.default = PlansModal;
+
+},{"boron/DropModal":1,"react":264}],307:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34196,7 +34554,7 @@ var RegisterPage = function (_React$Component) {
 
 exports.default = RegisterPage;
 
-},{"../services/auth":314,"../services/encode":315,"react":264,"react-router":233}],307:[function(require,module,exports){
+},{"../services/auth":315,"../services/encode":316,"react":264,"react-router":233}],308:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34341,7 +34699,7 @@ var RootPage = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Roo
 
 exports.default = RootPage;
 
-},{"../actions/users":288,"../models/user":293,"../services/auth":314,"react":264,"react-redux":191,"react-router":233}],308:[function(require,module,exports){
+},{"../actions/users":288,"../models/user":293,"../services/auth":315,"react":264,"react-redux":191,"react-router":233}],309:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34356,7 +34714,7 @@ exports.default = {
 	defaultCircleFillColor: "#9C27B0"
 };
 
-},{}],309:[function(require,module,exports){
+},{}],310:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34841,7 +35199,7 @@ exports.default = {
 	}]
 };
 
-},{}],310:[function(require,module,exports){
+},{}],311:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34856,7 +35214,7 @@ exports.default = {
 	colors: ["white", "#D32F2F", "#512DA8", "#303F9F", "#1976D2", "#0288D1", "#0097A7", "#388E3C", "#AFB42B", "#FBC02D", "#FFA000", "#F57C00", "#E64A19", "#5D4037", "#616161", "#424242", "#c8c8c8", "black"]
 };
 
-},{}],311:[function(require,module,exports){
+},{}],312:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34868,7 +35226,7 @@ exports.default = {
 	2: "Link created"
 };
 
-},{}],312:[function(require,module,exports){
+},{}],313:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34889,7 +35247,7 @@ function mapsReducers() {
 	}
 }
 
-},{}],313:[function(require,module,exports){
+},{}],314:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34908,7 +35266,7 @@ function usersReducers() {
 	}
 }
 
-},{}],314:[function(require,module,exports){
+},{}],315:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35007,7 +35365,7 @@ var AuthServices = function () {
 
 exports.default = AuthServices;
 
-},{"../models/user":293,"../services/encode":315}],315:[function(require,module,exports){
+},{"../models/user":293,"../services/encode":316}],316:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -35050,7 +35408,7 @@ var EncodeServices = function () {
 
 exports.default = EncodeServices;
 
-},{}],316:[function(require,module,exports){
+},{}],317:[function(require,module,exports){
 "use strict";
 
-},{}]},{},[287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316]);
+},{}]},{},[287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317]);

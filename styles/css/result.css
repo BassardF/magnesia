@@ -163,6 +163,9 @@ body * {
 .hide {
   display: none;
 }
+.pointer {
+  cursor: pointer;
+}
 .delete-button {
   float: right;
   color: #424242;
@@ -273,6 +276,10 @@ body * {
   -ms-transform: rotate(180deg);
   -webkit-transform: rotate(180deg);
   transform: rotate(180deg);
+}
+.disabled-button {
+  cursor: not-allowed;
+  opacity: .5;
 }
 #landing-page {
   -webkit-overflow-scrolling: touch;

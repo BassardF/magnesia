@@ -52,6 +52,12 @@ class User {
     }
   }
 
+  getPlan(){
+    if (this.rights == 1) return "Standard";
+    if (this.rights == 2) return "Ultimate";
+    return "Starter";
+  }
+
 }
 
 export default User;

@@ -7,6 +7,7 @@ import replaceUser from '../actions/users'
 import AuthServices from '../services/auth'
 import Map from '../models/map'
 
+import PlansModal from './plans'
 import MapBlock from './dumbs/mapblock'
 import MapDetails from './dumbs/mapdetails'
 import {ManageUsers} from './dumbs/manageusers'
@@ -27,6 +28,8 @@ class MapsPageComp extends React.Component {
 	    this.validateInvite = this.validateInvite.bind(this);
 	    this.cancelInvite = this.cancelInvite.bind(this);
 	    this.changeName = this.changeName.bind(this);
+	    this.openPlansModal = this.openPlansModal.bind(this);
+	    this.hidePlansModal = this.hidePlansModal.bind(this);
 
 	    this.state = {
 	    	selected : 0,
@@ -45,6 +48,15 @@ class MapsPageComp extends React.Component {
 				this.changeName(true, this.props.user.name);
 			}
 		});
+	}
+
+	componentDidMount(){
+		new Tippy('.tippymaps', {
+		    position: 'bottom',
+		    animation: 'shift',
+		    duration: 200,
+		    arrow: true
+		})
 	}
 
 	componentWillUnMount(){
@@ -278,6 +290,18 @@ class MapsPageComp extends React.Component {
 		}.bind(this));
 	}
 
+	openPlansModal(){
+		this.setState({
+			showPlansModal : true
+		})
+	}
+
+	hidePlansModal(){
+		this.setState({
+			showPlansModal : false
+		})
+	}
+
 	render() {
 		var maps = [], invitesDom = [], pendingInvites = 0;
 		if(this.props.user && this.props.user.invites){
@@ -329,17 +353,26 @@ class MapsPageComp extends React.Component {
 			}
 		}
 		let subSpace = window.innerHeight - 103;
+		let plan = this.props.user ? this.props.user.getPlan() : "Starter";
+
 		return (
 			<div id="maps-page">
+				<PlansModal user={this.props.user} hideModal={this.hidePlansModal} show={this.state.showPlansModal}/>
 				<div style={{maxWidth:"900px", marginLeft:"auto", marginRight:"auto"}}>
 					<div id="logo-wrapper">
 						<div id="logo">Mg.</div>
-						<div style={{float:"right", marginRight:"20px", marginTop:"-50px"}}>
-							<div className="purple-unerlined-hover" style={{fontSize:"14px", cursor:"pointer", display:"inline-block", marginRight:"20px"}} onClick={this.props.user ? this.changeName.bind(this, false, this.props.user.name) : null}>
+						<div style={{float:"right", marginRight:"20px", marginTop:"-45px"}}>
+							
+							<div title="change name" className="tippymaps purple-unerlined-hover" style={{fontSize:"14px", cursor:"pointer", display:"inline-block", marginRight:"20px"}} onClick={this.props.user ? this.changeName.bind(this, false, this.props.user.name) : null}>
 								{this.props.user ? this.props.user.name : "John Doe"}
 							</div>
+
+							<div title="manage plan" className="tippymaps purple-unerlined-hover purple" style={{fontSize:"14px", display:"inline-block", cursor : "pointer", marginRight:"20px"}} onClick={this.openPlansModal}>
+								{plan}
+							</div>
+
 							<div className="purple-unerlined-hover" style={{fontSize:"14px", display:"inline-block", cursor : "pointer"}} onClick={this.logout}>
-								logout
+								Logout
 							</div>
 						</div>
 					</div>

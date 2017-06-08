@@ -28,6 +28,10 @@ var _map = require('../models/map');
 
 var _map2 = _interopRequireDefault(_map);
 
+var _plans = require('./plans');
+
+var _plans2 = _interopRequireDefault(_plans);
+
 var _mapblock = require('./dumbs/mapblock');
 
 var _mapblock2 = _interopRequireDefault(_mapblock);
@@ -69,6 +73,8 @@ var MapsPageComp = function (_React$Component) {
 		_this.validateInvite = _this.validateInvite.bind(_this);
 		_this.cancelInvite = _this.cancelInvite.bind(_this);
 		_this.changeName = _this.changeName.bind(_this);
+		_this.openPlansModal = _this.openPlansModal.bind(_this);
+		_this.hidePlansModal = _this.hidePlansModal.bind(_this);
 
 		_this.state = {
 			selected: 0,
@@ -91,6 +97,16 @@ var MapsPageComp = function (_React$Component) {
 				if (_this2.props.user && _this2.props.user.name == "placeholder") {
 					_this2.changeName(true, _this2.props.user.name);
 				}
+			});
+		}
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			new Tippy('.tippymaps', {
+				position: 'bottom',
+				animation: 'shift',
+				duration: 200,
+				arrow: true
 			});
 		}
 	}, {
@@ -350,6 +366,20 @@ var MapsPageComp = function (_React$Component) {
 			}.bind(this));
 		}
 	}, {
+		key: 'openPlansModal',
+		value: function openPlansModal() {
+			this.setState({
+				showPlansModal: true
+			});
+		}
+	}, {
+		key: 'hidePlansModal',
+		value: function hidePlansModal() {
+			this.setState({
+				showPlansModal: false
+			});
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			var maps = [],
@@ -411,9 +441,12 @@ var MapsPageComp = function (_React$Component) {
 				}
 			}
 			var subSpace = window.innerHeight - 103;
+			var plan = this.props.user ? this.props.user.getPlan() : "Starter";
+
 			return _react2.default.createElement(
 				'div',
 				{ id: 'maps-page' },
+				_react2.default.createElement(_plans2.default, { user: this.props.user, hideModal: this.hidePlansModal, show: this.state.showPlansModal }),
 				_react2.default.createElement(
 					'div',
 					{ style: { maxWidth: "900px", marginLeft: "auto", marginRight: "auto" } },
@@ -427,16 +460,21 @@ var MapsPageComp = function (_React$Component) {
 						),
 						_react2.default.createElement(
 							'div',
-							{ style: { float: "right", marginRight: "20px", marginTop: "-50px" } },
+							{ style: { float: "right", marginRight: "20px", marginTop: "-45px" } },
 							_react2.default.createElement(
 								'div',
-								{ className: 'purple-unerlined-hover', style: { fontSize: "14px", cursor: "pointer", display: "inline-block", marginRight: "20px" }, onClick: this.props.user ? this.changeName.bind(this, false, this.props.user.name) : null },
+								{ title: 'change name', className: 'tippymaps purple-unerlined-hover', style: { fontSize: "14px", cursor: "pointer", display: "inline-block", marginRight: "20px" }, onClick: this.props.user ? this.changeName.bind(this, false, this.props.user.name) : null },
 								this.props.user ? this.props.user.name : "John Doe"
 							),
 							_react2.default.createElement(
 								'div',
+								{ title: 'manage plan', className: 'tippymaps purple-unerlined-hover purple', style: { fontSize: "14px", display: "inline-block", cursor: "pointer", marginRight: "20px" }, onClick: this.openPlansModal },
+								plan
+							),
+							_react2.default.createElement(
+								'div',
 								{ className: 'purple-unerlined-hover', style: { fontSize: "14px", display: "inline-block", cursor: "pointer" }, onClick: this.logout },
-								'logout'
+								'Logout'
 							)
 						)
 					),
