@@ -43,28 +43,28 @@ var _root2 = _interopRequireDefault(_root);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var store = (0, _redux.createStore)((0, _redux.combineReducers)({
-		user: _users2.default,
-		maps: _maps2.default
+	user: _users2.default,
+	maps: _maps2.default
 }));
 
 (0, _reactDom.render)(_react2.default.createElement(
-		_reactRedux.Provider,
-		{ store: store },
+	_reactRedux.Provider,
+	{ store: store },
+	_react2.default.createElement(
+		_reactRouter.Router,
+		{ history: _reactRouter.browserHistory, onUpdate: function onUpdate() {
+				if (typeof ga !== "undefined" && location && location.pathname) {
+					ga('send', 'pageview', location.pathname);
+				}
+			} },
 		_react2.default.createElement(
-				_reactRouter.Router,
-				{ history: _reactRouter.browserHistory, onUpdate: function onUpdate() {
-								if (typeof ga !== "undefined" && location && location.pathname) {
-										ga('send', 'pageview', location.pathname);
-								}
-						} },
-				_react2.default.createElement(
-						_reactRouter.Route,
-						{ component: _root2.default },
-						_react2.default.createElement(_reactRouter.Route, { path: '/', component: _landing2.default }),
-						_react2.default.createElement(_reactRouter.Route, { path: '/landing', component: _landing2.default }),
-						_react2.default.createElement(_reactRouter.Route, { path: '/maps', component: _maps4.default }),
-						_react2.default.createElement(_reactRouter.Route, { path: '/map/:mid', component: _map2.default }),
-						_react2.default.createElement(_reactRouter.Route, { path: '*', component: _register2.default })
-				)
+			_reactRouter.Route,
+			{ component: _root2.default },
+			_react2.default.createElement(_reactRouter.Route, { path: '/', component: _landing2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: '/landing', component: _landing2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: '/maps', component: _maps4.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: '/map/:mid', component: _map2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: '*', component: _register2.default })
 		)
+	)
 ), document.getElementById('root'));

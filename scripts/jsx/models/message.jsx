@@ -1,5 +1,5 @@
 class Message {
-  
+
   constructor(data, mid) {
 	if(mid) this.mid = mid;
 		if(data){
@@ -8,8 +8,6 @@ class Message {
 			}
 		}
 	}
-
-  
 
 }
 

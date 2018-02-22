@@ -1,17 +1,17 @@
-import React from 'react'
-import { connect } from 'react-redux'
+import React 						  from 'react'
+import { connect } 			  from 'react-redux'
 import { browserHistory } from 'react-router';
 
-import {replaceMaps, addMap} from '../actions/maps'
-import replaceUser from '../actions/users'
-import AuthServices from '../services/auth'
-import Map from '../models/map'
+import { replaceMaps, addMap } from '../actions/maps'
+import replaceUser 						 from '../actions/users'
+import AuthServices 					 from '../services/auth'
+import Map 										 from '../models/map'
 
-import PlansModal from './plans'
-import MapBlock from './dumbs/mapblock'
-import MapDetails from './dumbs/mapdetails'
-import {ManageUsers} from './dumbs/manageusers'
-import InviteLine from './dumbs/invite'
+import PlansModal 		 from './plans'
+import MapBlock 			 from './dumbs/mapblock'
+import MapDetails 		 from './dumbs/mapdetails'
+import { ManageUsers } from './dumbs/manageusers'
+import InviteLine   	 from './dumbs/invite'
 
 class MapsPageComp extends React.Component {
 
@@ -89,7 +89,7 @@ class MapsPageComp extends React.Component {
 		  } else {
 		  	var usr = this.props.user;
 		  	usr.changeName(AuthServices.getUid(), inputValue);
-		  	swal("Nice!", "Your name has been changed", "success");	
+		  	swal("Nice!", "Your name has been changed", "success");
 		  }
 		});
 	}
@@ -137,7 +137,7 @@ class MapsPageComp extends React.Component {
 							invites : invites
 						});
 					});
-					
+
 				}
 			}
 		}
@@ -260,7 +260,7 @@ class MapsPageComp extends React.Component {
 		},
 		function(inputValue){
 		  if (inputValue === false) return false;
-		  
+
 		  if (inputValue === "") {
 		    swal.showInputError("Choose a new title!");
 		    return false
@@ -311,7 +311,7 @@ class MapsPageComp extends React.Component {
 		}
 		for (var i = 0; i < this.props.maps.length + 1; i++) {
 			maps.push(
-				<MapBlock 
+				<MapBlock
 					key={"map-block-" + i}
 					map={this.props.maps[i]}
 					selected={this.state.selected == i}
@@ -323,18 +323,18 @@ class MapsPageComp extends React.Component {
 		var selectedMap = this.props.maps[this.state.selected],
 			rightSide = null;
 		if(selectedMap){
-			rightSide = 
+			rightSide =
 				<div>
 					<div style={{display : this.state.manageUsers ? "block" : "none"}}>
-						<ManageUsers 
+						<ManageUsers
 							map={selectedMap} promptChangeTitle={this.promptChangeTitle}
 							toggleManageUsers={this.toggleManageUsers}
-							user={this.props.user}/> 
+							user={this.props.user}/>
 					</div>
 					<div style={{display : this.state.manageUsers ? "none" : "block"}}>
-						<MapDetails 
+						<MapDetails
 							goToMap={this.goToMap.bind(this, selectedMap.mid)}
-							map={selectedMap} promptChangeTitle={this.promptChangeTitle} 
+							map={selectedMap} promptChangeTitle={this.promptChangeTitle}
 							leaveMap={this.promptLeaveMap} toggleManageUsers={this.toggleManageUsers}/>
 					</div>
 				</div>;
@@ -349,7 +349,7 @@ class MapsPageComp extends React.Component {
 			for (var i = 0; i < this.state.invites.length; i++) {
 				invitesDom.push(
 					<InviteLine key={"invite-key-" + i} cancel={this.cancelInvite.bind(this, i)} validate={this.validateInvite.bind(this, i)} invite={this.state.invites[i]}/>
-				);	
+				);
 			}
 		}
 		let subSpace = window.innerHeight - 103;
@@ -362,7 +362,7 @@ class MapsPageComp extends React.Component {
 					<div id="logo-wrapper">
 						<div id="logo">Mg.</div>
 						<div style={{float:"right", marginRight:"20px", marginTop:"-45px"}}>
-							
+
 							<div title="change name" className="tippymaps purple-unerlined-hover" style={{fontSize:"14px", cursor:"pointer", display:"inline-block", marginRight:"20px"}} onClick={this.props.user ? this.changeName.bind(this, false, this.props.user.name) : null}>
 								{this.props.user ? this.props.user.name : "John Doe"}
 							</div>

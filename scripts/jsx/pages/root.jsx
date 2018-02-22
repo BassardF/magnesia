@@ -1,8 +1,8 @@
-import React from 'react'
-import { connect } from 'react-redux'
+import React 						  from 'react'
+import { connect } 				from 'react-redux'
 import { browserHistory } from 'react-router';
 
-import replaceUser from '../actions/users'
+import replaceUser  from '../actions/users'
 import AuthServices from '../services/auth'
 
 import User from '../models/user'
@@ -44,7 +44,7 @@ class RootPageComp extends React.Component {
 					firebase.database().ref('users/' + user.uid).on("value", (snap)=>{
 				      var fetchedUser = new User(snap.val());
 				      if(snap && snap.val() && fetchedUser){
-				      		//Set email for search
+				      //Set email for search
 							AuthServices.uploadEmail(user.uid, fetchedUser.email);
 							if(fetchedUser.email !== user.email) user.updateEmail(fetchedUser.email);
 
@@ -56,7 +56,7 @@ class RootPageComp extends React.Component {
 							AuthServices.createUser(user.uid, user.email, joinMap, (createdUser)=>{
 								this.props.replaceUser(createdUser);
 								browserHistory.push('/maps');
-							});	
+							});
 						}
 				    });
 				}

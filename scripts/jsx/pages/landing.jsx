@@ -14,17 +14,17 @@ class LandingPage extends React.Component {
 
 	    this.scrollToId = this.scrollToId.bind(this);
 	    this.scrollToSecondBlock = this.scrollToSecondBlock.bind(this);
-		this.scrollToSecondBlockMobile = this.scrollToSecondBlockMobile.bind(this);
+			this.scrollToSecondBlockMobile = this.scrollToSecondBlockMobile.bind(this);
 	    this.scrollToThirdBlock = this.scrollToThirdBlock.bind(this);
-		this.scrollToFourthBlock = this.scrollToFourthBlock.bind(this);
-		this.checkTlInVew = this.checkTlInVew.bind(this);
-		this.checkSecondSectionInView = this.checkSecondSectionInView.bind(this);
-		this.sendPropsectMail = this.sendPropsectMail.bind(this);
-		this.generateAccessCode = this.generateAccessCode.bind(this);
-		this.showRegisterModal = this.showRegisterModal.bind(this);
-		this.hideRegisterModal = this.hideRegisterModal.bind(this);
-		this.showEarlyAccessModal = this.showEarlyAccessModal.bind(this);
-		this.hideEarlyAccessModal = this.hideEarlyAccessModal.bind(this);
+			this.scrollToFourthBlock = this.scrollToFourthBlock.bind(this);
+			this.checkTlInVew = this.checkTlInVew.bind(this);
+			this.checkSecondSectionInView = this.checkSecondSectionInView.bind(this);
+			this.sendPropsectMail = this.sendPropsectMail.bind(this);
+			this.generateAccessCode = this.generateAccessCode.bind(this);
+			this.showRegisterModal = this.showRegisterModal.bind(this);
+			this.hideRegisterModal = this.hideRegisterModal.bind(this);
+			this.showEarlyAccessModal = this.showEarlyAccessModal.bind(this);
+			this.hideEarlyAccessModal = this.hideEarlyAccessModal.bind(this);
 
 	    this.state = {
 	    	drawDone : false,
@@ -228,9 +228,9 @@ class LandingPage extends React.Component {
 			<div id="landing-page" style={{maxWidth:"1440px", marginLeft:"auto", marginRight:"auto", overflow:"auto", height:"100%"}}>
 				<RegisterModal externalInvite={this.state.externalInvite} show={this.state.showRegisterModal} showRegisterModal={this.showRegisterModal} hideRegisterModal={this.hideRegisterModal}/>
 				<RegisterEarlyAccess sendPropsectMail={this.sendPropsectMail} generateAccessCode={this.generateAccessCode} show={this.state.showEarlyAccessModal} showEarlyAccessModal={this.showEarlyAccessModal} hideEarlyAccessModal={this.hideEarlyAccessModal}/>
-				<TopSection 
+				<TopSection
 					showEarlyAccessModal={this.showEarlyAccessModal}
-					scrollToSecondBlock={this.scrollToSecondBlock} 
+					scrollToSecondBlock={this.scrollToSecondBlock}
 					scrollToSecondBlockMobile={this.scrollToSecondBlockMobile}
 					scrollToThirdBlock={this.scrollToThirdBlock}
 					scrollToFourthBlock={this.scrollToFourthBlock}/>
@@ -249,8 +249,8 @@ class TopSection extends React.Component {
 	constructor(props) {
 	    super(props);
 	   	this.draw = this.draw.bind(this);
-		this.drawNodes = this.drawNodes.bind(this);
-		this.drawLinks = this.drawLinks.bind(this);
+			this.drawNodes = this.drawNodes.bind(this);
+			this.drawLinks = this.drawLinks.bind(this);
 	    this.state = {
 	    };
 	}
@@ -263,21 +263,21 @@ class TopSection extends React.Component {
 	draw(){
 		let svg = d3.select("#headersvg"),
 			width = svg.property("width"),
-    		height = svg.property("height");
+    	height = svg.property("height");
 
-    	var wd = document.getElementById("landing-page-top-section").offsetWidth;
-    	this.drawNodes(svg, wd, 300, DEMONODES.mainNode, 1);
-    	setTimeout(()=>{ this.drawNodes(svg, wd, 300, DEMONODES.secondaryNodes, 2); }, 1000);
-    	setTimeout(()=>{ this.drawNodes(svg, wd, 300, DEMONODES.tertiaryNodes, 3); }, 2000);
+  	var wd = document.getElementById("landing-page-top-section").offsetWidth;
+  	this.drawNodes(svg, wd, 300, DEMONODES.mainNode, 1);
+  	setTimeout(()=>{ this.drawNodes(svg, wd, 300, DEMONODES.secondaryNodes, 2); }, 1000);
+  	setTimeout(()=>{ this.drawNodes(svg, wd, 300, DEMONODES.tertiaryNodes, 3); }, 2000);
 
-    	setTimeout(()=>{ this.drawLinks(svg, wd, 300, DEMONODES.firstLinks, 1, true); }, 1500);
-    	setTimeout(()=>{ this.drawLinks(svg, wd, 300, DEMONODES.secondaryLinks, 2, true); }, 2500);
+  	setTimeout(()=>{ this.drawLinks(svg, wd, 300, DEMONODES.firstLinks, 1, true); }, 1500);
+  	setTimeout(()=>{ this.drawLinks(svg, wd, 300, DEMONODES.secondaryLinks, 2, true); }, 2500);
 	}
 
 	drawMob(){
 		let svg = d3.select("#mobheadersvg"),
 			width = svg.property("width"),
-    		height = svg.property("height");
+    	height = svg.property("height");
 
     	var wd = document.getElementById("mob-landing-page-top-section").offsetWidth;
     	this.drawNodes(svg, wd, 200, DEMONODES.mobMainNode, 1);
@@ -287,7 +287,7 @@ class TopSection extends React.Component {
 	}
 
 	drawNodes(svg, width, height, nodes, nb){
-		
+
 		let gs = svg.select("g#nodes" + nb).selectAll("g.node").data(nodes, function(d, ind) {
 			return d;
 		});
@@ -301,7 +301,7 @@ class TopSection extends React.Component {
 		    .attr("stroke", function(d, i){return DRAWING.defaultCircleStrokeColor})
 		    .attr("stroke-width", function(d, i){return DRAWING.defaultCircleStrokeWidth})
     		.attr("fill", DRAWING.defaultCircleFillColor)
-    	    .attr("r", function(d, i) {return 40 * (nodes[i].scale ? +nodes[i].scale : 1);}) 
+    	    .attr("r", function(d, i) {return 40 * (nodes[i].scale ? +nodes[i].scale : 1);})
     	  	.attr("cy", function(d, i) {return height/2 + (nodes[i].y ? +nodes[i].y : 0)})
 		    .attr("cx", function(d, i) {return width/2 + (nodes[i].x ? +nodes[i].x : 0)})
 		    .attr("stroke", (d, i) => {return nodes[i].nid == this.state.selectedNode ? DRAWING.selectedCircleStrokeColor : DRAWING.defaultCircleStrokeColor})
@@ -309,7 +309,7 @@ class TopSection extends React.Component {
 		    .style("opacity", 0)
 	      .transition(t)
 	      	.style("opacity", 1);
-    		
+
     	elemtEnter.append("text")
 	        .attr("fill", DRAWING.defaultTextColor)
 	        .attr("text-anchor", "middle")
@@ -324,7 +324,7 @@ class TopSection extends React.Component {
 	}
 
 	drawLinks(svg, width, height, links, nb, isDesktop){
-		
+
 		let gs = svg.select("g#links" + nb).selectAll("g.link").data(links, function(d) { return d; });
 
 		//Enter
@@ -402,7 +402,7 @@ class TopSection extends React.Component {
 						</div>
 					</div>
 				</div>
-				
+
 			</div>
 		);
 	}
@@ -420,7 +420,7 @@ class MockupsSection extends React.Component {
 		return (
 			<div>
 				<div id="landing-page-mockups-section" style={{color: "#424242", marginTop:"30px", marginBottom:"30px"}} className="hidden-xs">
-					
+
 					<img className="boxshadow" style={{maxWidth:"60%", marginRight:"auto", marginLeft:"auto", display:"block"}} src="../assets/images/mockup-center.png"/>
 
 					<div style={{display:"flex", marginTop : "50px"}}>
@@ -457,7 +457,7 @@ class MockupsSection extends React.Component {
 				</div>
 
 				<div id="mob-landing-page-mockups-section" className="shown-xs">
-					
+
 					<img className="boxshadow" style={{marginTop: "-50px", maxWidth:"95%", marginRight:"auto", marginLeft:"auto", display:"block"}} src="../assets/images/mockup-center.png"/>
 
 					<div>
@@ -492,7 +492,7 @@ class MockupsSection extends React.Component {
 						</div>
 					</div>
 				</div>
-				
+
 			</div>
 		);
 	}
@@ -538,7 +538,7 @@ class SecondSection extends React.Component {
 	draw(){
 		let svg = d3.select("#secondsvg"),
 			width = svg.property("width"),
-    		height = svg.property("height");
+    	height = svg.property("height");
 
     	var wd = document.getElementById("landing-page-second-section").offsetWidth;
     	//The idea
@@ -546,8 +546,8 @@ class SecondSection extends React.Component {
     	this.drawText(svg, wd, 300, [{x : 0, y: 20, text:"The Journey Began"}], 1, "#424242");
     	this.drawLine(svg, wd, 300, [[50, 150]], "#424242");
     	//Version 0
-    	setTimeout(()=>{ 
-    		this.drawNodes(svg, wd, 300, [150], 1, "#424242"); 
+    	setTimeout(()=>{
+    		this.drawNodes(svg, wd, 300, [150], 1, "#424242");
     		this.drawText(svg, wd, 300, [{x : 80, y: 155, text:"Closed Beta"}], 2, "#424242");
     		this.drawLine(svg, wd, 300, [[150, 250]], "#424242");
     	}, 500);
@@ -560,7 +560,7 @@ class SecondSection extends React.Component {
     	//Release
     	setTimeout(()=>{
     		this.drawNodes(svg, wd, 300, [350], 1, "#BDBDBD");
-    		this.drawText(svg, wd, 300, [{x : 0, y: 390, text:"Release"}], 4, "#BDBDBD"); 
+    		this.drawText(svg, wd, 300, [{x : 0, y: 390, text:"Release"}], 4, "#BDBDBD");
     		if(this.refs.getaccessblock) this.refs.getaccessblock.className = "show";
     	}, 1500);
 	}
@@ -576,8 +576,8 @@ class SecondSection extends React.Component {
     	this.drawText(svg, wd, 300, [{x : 0, y: 20, text:"The Journey Began"}], 1, "#424242", true);
     	this.drawLine(svg, wd, 300, [[50, 150]], "#424242", true);
     	//Version 0
-    	setTimeout(()=>{ 
-    		this.drawNodes(svg, wd, 300, [150], 1, "#424242", true); 
+    	setTimeout(()=>{
+    		this.drawNodes(svg, wd, 300, [150], 1, "#424242", true);
     		this.drawText(svg, wd, 300, [{x : 80, y: 155, text:"Closed Beta"}], 2, "#424242", true);
     		this.drawLine(svg, wd, 300, [[150, 250]], "#424242", true);
     	}, 500);
@@ -590,7 +590,7 @@ class SecondSection extends React.Component {
     	//Release
     	setTimeout(()=>{
     		this.drawNodes(svg, wd, 300, [350], 1, "#BDBDBD", true);
-    		this.drawText(svg, wd, 300, [{x : 0, y: 390, text:"Release"}], 4, "#BDBDBD", true); 
+    		this.drawText(svg, wd, 300, [{x : 0, y: 390, text:"Release"}], 4, "#BDBDBD", true);
     	}, 1500);
 	}
 
@@ -619,7 +619,7 @@ class SecondSection extends React.Component {
 	}
 
 	drawNodes(svg, width, height, node, nb, color, isMobile){
-		
+
 		let gs = svg.select("g#snodes" + nb).selectAll("g.node").data(node, function(d, ind) {
 			return d;
 		});
@@ -631,7 +631,7 @@ class SecondSection extends React.Component {
 
 		elemtEnter.append("circle")
     		.attr("fill", color)
-    	    .attr("r", function(d, i) {return 10;}) 
+    	    .attr("r", function(d, i) {return 10;})
     	  	.attr("cy", function(d, i) {return node[0]})
 		    .attr("cx", function(d, i) {return (isMobile ? width/2 : 150)})
 		    .style("opacity", 0)
@@ -641,7 +641,7 @@ class SecondSection extends React.Component {
 	}
 
 	drawLine(svg, width, height, line, color, isMobile){
-		
+
 		let gs = svg.select("g#sline").selectAll("g.link").data(line, function(d) { return d; });
 
 		//Enter
@@ -718,7 +718,7 @@ class SecondSection extends React.Component {
 						<div onClick={this.send} id="mob-i-m-in">I'm in !</div>
 					</div>
 				</div>
-				
+
 			</div>
 		);
 	}
@@ -909,7 +909,7 @@ class RegisterModal extends React.Component {
 			this.hideModal();
 		}
 	}
-    
+
     showModal(){
         this.refs.modal.show();
     }
@@ -936,8 +936,8 @@ class RegisterEarlyAccess extends React.Component {
 	   	this.showModal = this.showModal.bind(this);
 	   	this.hideModal = this.hideModal.bind(this);
 	   	this.isMailValid = this.isMailValid.bind(this);
-		this.changeEmail = this.changeEmail.bind(this);
-		this.send = this.send.bind(this);
+			this.changeEmail = this.changeEmail.bind(this);
+			this.send = this.send.bind(this);
 	    this.state = {
 	    	email : "",
 	    	validEmail : false
@@ -951,7 +951,7 @@ class RegisterEarlyAccess extends React.Component {
 			this.hideModal();
 		}
 	}
-    
+
     showModal(){
         this.refs.modal.show();
     }
@@ -961,18 +961,18 @@ class RegisterEarlyAccess extends React.Component {
     }
 
     isMailValid(email){
-		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		return re.test(email);
-	}
+			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			return re.test(email);
+		}
 
     changeEmail (){
-		
+
     	var email = this.refs.email.value;
     	var validEmail = email && this.isMailValid(email);
-		this.setState((prevState) => ({
-	      email: this.refs.email.value,
-	      validEmail: validEmail
-	    }));
+			this.setState((prevState) => ({
+		      email: this.refs.email.value,
+		      validEmail: validEmail
+		   }));
 	    // if(validEmail){
     	// 	firebase.database().ref('emails/' + EncodeServices.encode(email)).once("value", (snap) => {
     	// 		this.setState((prevState) => ({
@@ -1038,7 +1038,7 @@ class RegisterEarlyAccess extends React.Component {
 	                		<div style={{textAlign:"center", verticalAlign:"middle", width : "50%", display:"inline-block"}}>Early Access</div>
 	                		<div style={{textAlign:"center", verticalAlign:"middle", width : "50%", display:"inline-block"}}>Premium Month</div>
 	                	</div>
-	                	
+
 	                    <input className={"reg-inp " + (this.state.validEmail ? "validated" : "")} ref="email" type="email" value={this.state.email} onChange={this.changeEmail} placeholder="Email Address"/>
 	                    <div className="eam-email-wrapper">
 	                    	<div style={{color:"#9C27B0", fontSize:"13px", marginTop: "-55px", marginRight: "30px", float:"right", display : (this.state.validEmail ? "block" : "none")}}>

@@ -28456,30 +28456,30 @@ var _root2 = _interopRequireDefault(_root);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var store = (0, _redux.createStore)((0, _redux.combineReducers)({
-		user: _users2.default,
-		maps: _maps2.default
+	user: _users2.default,
+	maps: _maps2.default
 }));
 
 (0, _reactDom.render)(_react2.default.createElement(
-		_reactRedux.Provider,
-		{ store: store },
+	_reactRedux.Provider,
+	{ store: store },
+	_react2.default.createElement(
+		_reactRouter.Router,
+		{ history: _reactRouter.browserHistory, onUpdate: function onUpdate() {
+				if (typeof ga !== "undefined" && location && location.pathname) {
+					ga('send', 'pageview', location.pathname);
+				}
+			} },
 		_react2.default.createElement(
-				_reactRouter.Router,
-				{ history: _reactRouter.browserHistory, onUpdate: function onUpdate() {
-								if (typeof ga !== "undefined" && location && location.pathname) {
-										ga('send', 'pageview', location.pathname);
-								}
-						} },
-				_react2.default.createElement(
-						_reactRouter.Route,
-						{ component: _root2.default },
-						_react2.default.createElement(_reactRouter.Route, { path: '/', component: _landing2.default }),
-						_react2.default.createElement(_reactRouter.Route, { path: '/landing', component: _landing2.default }),
-						_react2.default.createElement(_reactRouter.Route, { path: '/maps', component: _maps4.default }),
-						_react2.default.createElement(_reactRouter.Route, { path: '/map/:mid', component: _map2.default }),
-						_react2.default.createElement(_reactRouter.Route, { path: '*', component: _register2.default })
-				)
+			_reactRouter.Route,
+			{ component: _root2.default },
+			_react2.default.createElement(_reactRouter.Route, { path: '/', component: _landing2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: '/landing', component: _landing2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: '/maps', component: _maps4.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: '/map/:mid', component: _map2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: '*', component: _register2.default })
 		)
+	)
 ), document.getElementById('root'));
 
 },{"../reducers/maps":313,"../reducers/users":314,"./landing":303,"./map":304,"./maps":305,"./register":307,"./root":308,"react":264,"react-dom":55,"react-redux":191,"react-router":233,"redux":270}],295:[function(require,module,exports){
@@ -29013,7 +29013,6 @@ var LeftPanel = function (_React$Component) {
 	}, {
 		key: 'hideInviteModal',
 		value: function hideInviteModal() {
-			console.log("hideInviteModal");
 			this.refs.manageusermodal.hide();
 			this.setState({
 				showManageUserModal: false
@@ -29022,8 +29021,6 @@ var LeftPanel = function (_React$Component) {
 	}, {
 		key: 'showInviteModal',
 		value: function showInviteModal() {
-			console.log("showInviteModal");
-			console.log(this.refs.manageusermodal);
 			this.refs.manageusermodal.show();
 			this.setState({
 				showManageUserModal: true
@@ -29052,8 +29049,10 @@ var LeftPanel = function (_React$Component) {
 						changeNodeColor: this.props.changeNodeColor,
 						changeNodeBcgColor: this.props.changeNodeBcgColor,
 						changeNodeBorderColor: this.props.changeNodeBorderColor,
-						changeNodeText: this.props.changeNodeText, changeNodeDescription: this.props.changeNodeDescription,
-						selectedNode: this.props.selectedNode, selectNode: this.props.selectNode,
+						changeNodeText: this.props.changeNodeText,
+						changeNodeDescription: this.props.changeNodeDescription,
+						selectedNode: this.props.selectedNode,
+						selectNode: this.props.selectNode,
 						deleteSelectedNode: this.props.deleteSelectedNode,
 						changeNodeScale: this.props.changeNodeScale });
 					title = "Node Details";

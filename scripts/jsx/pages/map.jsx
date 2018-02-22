@@ -1,11 +1,11 @@
-import React from 'react'
-import { connect } from 'react-redux'
+import React 					    from 'react'
+import { connect } 				from 'react-redux'
 import { browserHistory } from 'react-router';
 
-import Map from '../models/map'
-import LeftPanel from './dumbs/leftpanel'
-import Advice from './dumbs/advice'
-import DRAWING from '../properties/drawing'
+import Map 					from '../models/map'
+import LeftPanel 		from './dumbs/leftpanel'
+import Advice 			from './dumbs/advice'
+import DRAWING 			from '../properties/drawing'
 import AuthServices from '../services/auth'
 
 class MapPageComp extends React.Component {
@@ -13,30 +13,30 @@ class MapPageComp extends React.Component {
 	constructor(props) {
 	    super(props);
 	    this.selectNode = this.selectNode.bind(this);
-		this.addNewNode = this.addNewNode.bind(this);
-		this.draw = this.draw.bind(this);
-		this.drawNodes = this.drawNodes.bind(this);
-		this.drawLinks = this.drawLinks.bind(this);
-		this.selectLink = this.selectLink.bind(this);
-		this.sendMessage = this.sendMessage.bind(this);
-		this.resizeSvg = this.resizeSvg.bind(this);
-		this.addNewLink = this.addNewLink.bind(this);
+			this.addNewNode = this.addNewNode.bind(this);
+			this.draw = this.draw.bind(this);
+			this.drawNodes = this.drawNodes.bind(this);
+			this.drawLinks = this.drawLinks.bind(this);
+			this.selectLink = this.selectLink.bind(this);
+			this.sendMessage = this.sendMessage.bind(this);
+			this.resizeSvg = this.resizeSvg.bind(this);
+			this.addNewLink = this.addNewLink.bind(this);
 
-		this.changeNodeText = this.changeNodeText.bind(this);
-		this.changeNodeDescription = this.changeNodeDescription.bind(this);
-		this.changeNodeScale = this.changeNodeScale.bind(this);
-		
-		this.deleteSelectedNode = this.deleteSelectedNode.bind(this);
-		this.deleteLink = this.deleteLink.bind(this);
+			this.changeNodeText = this.changeNodeText.bind(this);
+			this.changeNodeDescription = this.changeNodeDescription.bind(this);
+			this.changeNodeScale = this.changeNodeScale.bind(this);
 
-		this.drawPointers = this.drawPointers.bind(this);
+			this.deleteSelectedNode = this.deleteSelectedNode.bind(this);
+			this.deleteLink = this.deleteLink.bind(this);
 
-		this.changeMode = this.changeMode.bind(this);
-		this.makeSideInView = this.makeSideInView.bind(this);
+			this.drawPointers = this.drawPointers.bind(this);
 
-		this.changeNodeColor = this.changeNodeColor.bind(this);
-		this.changeNodeBcgColor = this.changeNodeBcgColor.bind(this);
-		this.changeNodeBorderColor = this.changeNodeBorderColor.bind(this);
+			this.changeMode = this.changeMode.bind(this);
+			this.makeSideInView = this.makeSideInView.bind(this);
+
+			this.changeNodeColor = this.changeNodeColor.bind(this);
+			this.changeNodeBcgColor = this.changeNodeBcgColor.bind(this);
+			this.changeNodeBorderColor = this.changeNodeBorderColor.bind(this);
 
  	    this.state = {
  	    	mode : 1,
@@ -73,10 +73,10 @@ class MapPageComp extends React.Component {
 	componentDidMount(){
 		document.body.onkeydown = (e) => {
 		    if(e.keyCode == 8){
-		    	if(!document.activeElement || (document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA")) 
+		    	if(!document.activeElement || (document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA"))
 		    		this.deleteSelectedNode();
 		    }
-		};	
+		};
 	}
 
 	componentWillUnMount(){
@@ -90,7 +90,7 @@ class MapPageComp extends React.Component {
 	}
 
 	resizeSvg(){
-		setTimeout(() => { 
+		setTimeout(() => {
 			this.draw();
 		}, 0);
 	}
@@ -199,7 +199,7 @@ class MapPageComp extends React.Component {
 		if(this.state.map){
 			let svg = d3.select("svg"),
 				width = svg.property("width"),
-	    		height = svg.property("height");
+	    	height = svg.property("height");
 
 			if(this.state.map.links)
 				this.drawLinks(svg, width, height);
@@ -213,7 +213,7 @@ class MapPageComp extends React.Component {
 				if(!d3.event.defaultPrevented){
 					if(this.state.mode === 1){
 						this.addNewNode(
-							d3.event.x - (document.getElementById("left-panel").offsetWidth) - width.animVal.value/2 - this.state.xShift, 
+							d3.event.x - (document.getElementById("left-panel").offsetWidth) - width.animVal.value/2 - this.state.xShift,
 							d3.event.y - height.animVal.value/2 - this.state.yShift
 						);
 					}
@@ -221,12 +221,12 @@ class MapPageComp extends React.Component {
 			})
 			.call(d3.drag()
 				.on("drag", (d) => {
-		        	this.setState({
-		        		xShift : this.state.xShift + d3.event.dx,
-		        		yShift : this.state.yShift + d3.event.dy
-		        	});
+	        	this.setState({
+	        		xShift : this.state.xShift + d3.event.dx,
+	        		yShift : this.state.yShift + d3.event.dy
+	        	});
 				})
-		    );
+		  );
 		}
 	}
 
@@ -236,7 +236,7 @@ class MapPageComp extends React.Component {
     		height = svg.property("height");
     	let nodes = this.state.map.nodes;
     	let extreme = 0;
-    	
+
     	if(side && side == "top"){
     		for (var i = 0; i < nodes.length; i++) {
     			if(-nodes[i].y > height.animVal.value/2 && -nodes[i].y - height.animVal.value/3 > extreme) extreme = -nodes[i].y - height.animVal.value/3;
@@ -299,13 +299,13 @@ class MapPageComp extends React.Component {
 				d.side = side;
 				d.text = "&#10095;";
 				pointers.push(d);
-	
+
 				t.side = side;
 				t.text = oob[side];
 				counters.push(t);
 			}
 		}
-		
+
 		//pointers
 		let gs = svg.select("g#pointers").selectAll("g.pointers").data(pointers, function(d, ind) {
 			return d;
@@ -322,7 +322,7 @@ class MapPageComp extends React.Component {
 	        .attr("text-anchor", "middle")
 	        .attr("class", "noselect")
 	        .attr("cursor", "pointer")
-	      .merge(gs.selectAll("text")) 
+	      .merge(gs.selectAll("text"))
 	        .attr("dx", function(d, i) {return 0})
 	        .attr("dy", function(d, i) {return 0})
 	        .html((d, i) => {return pointers[i].text;})
@@ -346,7 +346,7 @@ class MapPageComp extends React.Component {
 	        .attr("text-anchor", "middle")
 	        .attr("class", "noselect")
 	        .attr("cursor", "pointer")
-	      .merge(gs2.selectAll("text")) 
+	      .merge(gs2.selectAll("text"))
 	        .attr("dx", function(d, i) {return counters[i].x})
 	        .attr("dy", function(d, i) {return counters[i].y})
 	        .text((d, i) => {return counters[i].text;});
@@ -370,7 +370,7 @@ class MapPageComp extends React.Component {
 	}
 
 	drawNodes(svg, width, height){
-		
+
 		let nodes = this.state.map.nodes;
 		let gs = svg.select("g#nodes").selectAll("g.node").data(nodes, function(d, ind) {
 			return d;
@@ -387,20 +387,20 @@ class MapPageComp extends React.Component {
     	 .merge(gs.selectAll("ellipse"))
     	 	.attr("fill", (d, i)=> {return nodes[i].bcg_color || "white"})
     	 	.attr("ry", function(d, i) {return 40 * (nodes[i].scale ? +nodes[i].scale : 1);})
-    	    .attr("rx", function(d, i) {
-    	    	let naturalWidth = 40 * (nodes[i].scale ? +nodes[i].scale : 1);
-    	    	let textWidth = nodes[i].title ? (nodes[i].title.length * 7 / 2) + 10 : 0;
-    	    	return naturalWidth > textWidth ? naturalWidth : textWidth;
-    	    })
-    	  	.attr("cy", (d, i) => {return this.state.yShift + height.animVal.value/2 + (nodes[i].y ? +nodes[i].y : 0)})
+  	    .attr("rx", function(d, i) {
+  	    	let naturalWidth = 40 * (nodes[i].scale ? +nodes[i].scale : 1);
+  	    	let textWidth = nodes[i].title ? (nodes[i].title.length * 7 / 2) + 10 : 0;
+  	    	return naturalWidth > textWidth ? naturalWidth : textWidth;
+  	    })
+  	  	.attr("cy", (d, i) => {return this.state.yShift + height.animVal.value/2 + (nodes[i].y ? +nodes[i].y : 0)})
 		    .attr("cx", (d, i) => {return this.state.xShift + width.animVal.value/2 + (nodes[i].x ? +nodes[i].x : 0)})
 		    .attr("stroke", (d, i) => {return nodes[i].nid == this.state.selectedNode ? DRAWING.selectedCircleStrokeColor : (nodes[i].border_color || DRAWING.defaultCircleStrokeColor)})
 		    .attr("stroke-width", (d, i) => {return nodes[i].nid == this.state.selectedNode ? DRAWING.selectedCircleStrokeWidth : DRAWING.defaultCircleStrokeWidth});
-    		
+
     	elemtEnter.append("text")
 	        .attr("text-anchor", "middle")
 	        .attr("class", "noselect")
-	      .merge(gs.selectAll("text")) 
+	      .merge(gs.selectAll("text"))
 	      	.attr("fill", (d, i) => {return nodes[i].color || DRAWING.defaultTextColor})
 	        .attr("dx", (d, i) => {return this.state.xShift + width.animVal.value/2 + (nodes[i].x ? +nodes[i].x : 0);})
 	        .attr("dy", (d, i) => {return this.state.yShift + height.animVal.value/2 + (nodes[i].y ? +nodes[i].y : 0) + 5;})
@@ -424,8 +424,7 @@ class MapPageComp extends React.Component {
 	    	if(!d3.event.defaultPrevented){
 				d3.event.preventDefault();
 			}
-		})
-	    .call(d3.drag()
+		}).call(d3.drag()
 	        .on("drag", (d) => {
 	        	d.active = true;
 	        	var imap = this.state.map;
@@ -434,8 +433,7 @@ class MapPageComp extends React.Component {
 			  	this.setState({
 			  		map : imap
 			  	});
-			})
-	        .on("end", (d) => {
+			}).on("end", (d) => {
 	        	if(d.active){
 	        		var imap = this.state.map;
 		        	d.active = false;
@@ -443,12 +441,12 @@ class MapPageComp extends React.Component {
 				  	imap.changeNodeLocation(d.nid, d3.event.x, d3.event.y);
 				  	imap.save();
 	        	}
-			})
-	    );   
+				})
+	    );
 	}
 
 	drawLinks(svg, width, height){
-		
+
 		let links = this.state.map.links;
 		let gs = svg.select("g#links").selectAll("g.link").data(links, function(d) { return d; });
 
@@ -460,7 +458,7 @@ class MapPageComp extends React.Component {
 
 		elemtEnter.append("line")
 		    .attr("stroke-width", function(d, i){return DRAWING.defaultCircleStrokeWidth})
-    	  .merge(gs.selectAll("line")) 
+    	  .merge(gs.selectAll("line"))
     	  	.attr("stroke", (d, i) => {
     	  		let id = Object.keys(links[i].nodes).join("");
     	  		let selected = this.state.selectedLink && id == this.state.selectedLink;
@@ -505,15 +503,15 @@ class MapPageComp extends React.Component {
 	        var p_xy = p.getBBox();
 
 	        let svg = d3.select("svg"),
-				width = svg.property("width"),
+					width = svg.property("width"),
 	    		height = svg.property("height");
 
-	    	let textWidth = d.title ? (d.title.length * 7 / 2) + 10 : 0;
-	    	let naturalWidth = 40 * (d.scale ? +d.scale : 1);
-	    	let r = textWidth > naturalWidth ? textWidth : naturalWidth;
-	        xy.x = width.animVal.value/2 + (d.x ? +d.x : 0) - r + 5 + thisRef.state.xShift;
-	        xy.y = height.animVal.value/2 + (d.y ? +d.y : 0) - 10 + thisRef.state.yShift;
-	        
+		    	let textWidth = d.title ? (d.title.length * 7 / 2) + 10 : 0;
+		    	let naturalWidth = 40 * (d.scale ? +d.scale : 1);
+		    	let r = textWidth > naturalWidth ? textWidth : naturalWidth;
+		      xy.x = width.animVal.value/2 + (d.x ? +d.x : 0) - r + 5 + thisRef.state.xShift;
+		      xy.y = height.animVal.value/2 + (d.y ? +d.y : 0) - 10 + thisRef.state.yShift;
+
 	        var el = d3.select(this);
 	        var p_el = d3.select(p);
 
@@ -536,7 +534,7 @@ class MapPageComp extends React.Component {
 	                        .attr("style", "width: " + (r*2 - 10) + "px;")
 	                        // make the form go away when you jump out (form looses focus) or hit ENTER:
 	                        .on("blur", function() {
-	                            
+
 	                            var txt = inp.node().value;
 	                            d[field] = txt;
 	                            el.text(function(d) { return d[field]; });
@@ -570,7 +568,7 @@ class MapPageComp extends React.Component {
 	                                try {
 	                                	p_el.select("foreignObject").remove();
 	                                } catch(e) {}
-	                                
+
 	                            }
 	                        });
 	      });
@@ -590,7 +588,7 @@ class MapPageComp extends React.Component {
 			<div id="maps-page" style={{height:"100%"}}>
 				<Advice user={this.props.user} map={this.state.map}  selectedNode={this.state.selectedNode}/>
 				<div className="flex" style={{height:"100%"}}>
-				<LeftPanel map={this.state.map} 
+				<LeftPanel map={this.state.map}
 						   user={this.props.user}
 						   mode={this.state.mode}
 						   changeNodeColor={this.changeNodeColor}
@@ -598,7 +596,7 @@ class MapPageComp extends React.Component {
 						   changeNodeBorderColor={this.changeNodeBorderColor}
 						   changeMode={this.changeMode}
 						   changeNodeText={this.changeNodeText} changeNodeDescription={this.changeNodeDescription}
-						   selectedLink={this.state.selectedLink} selectLink={this.selectLink} 
+						   selectedLink={this.state.selectedLink} selectLink={this.selectLink}
 						   selectedNode={this.state.selectedNode} selectNode={this.selectNode}
 						   changeNodeScale={this.changeNodeScale}
 						   resizeSvg={this.resizeSvg}
@@ -615,7 +613,7 @@ class MapPageComp extends React.Component {
 						</svg>
 					</div>
 				</div>
-				
+
 			</div>
 		);
 	}

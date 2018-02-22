@@ -126,7 +126,6 @@ var LeftPanel = function (_React$Component) {
 	}, {
 		key: 'hideInviteModal',
 		value: function hideInviteModal() {
-			console.log("hideInviteModal");
 			this.refs.manageusermodal.hide();
 			this.setState({
 				showManageUserModal: false
@@ -135,8 +134,6 @@ var LeftPanel = function (_React$Component) {
 	}, {
 		key: 'showInviteModal',
 		value: function showInviteModal() {
-			console.log("showInviteModal");
-			console.log(this.refs.manageusermodal);
 			this.refs.manageusermodal.show();
 			this.setState({
 				showManageUserModal: true
@@ -165,8 +162,10 @@ var LeftPanel = function (_React$Component) {
 						changeNodeColor: this.props.changeNodeColor,
 						changeNodeBcgColor: this.props.changeNodeBcgColor,
 						changeNodeBorderColor: this.props.changeNodeBorderColor,
-						changeNodeText: this.props.changeNodeText, changeNodeDescription: this.props.changeNodeDescription,
-						selectedNode: this.props.selectedNode, selectNode: this.props.selectNode,
+						changeNodeText: this.props.changeNodeText,
+						changeNodeDescription: this.props.changeNodeDescription,
+						selectedNode: this.props.selectedNode,
+						selectNode: this.props.selectNode,
 						deleteSelectedNode: this.props.deleteSelectedNode,
 						changeNodeScale: this.props.changeNodeScale });
 					title = "Node Details";

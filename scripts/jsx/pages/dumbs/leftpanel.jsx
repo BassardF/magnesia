@@ -23,7 +23,7 @@ class LeftPanel extends React.Component {
 	    this.printWindow = this.printWindow.bind(this);
 	    this.showInviteModal = this.showInviteModal.bind(this);
 	    this.hideInviteModal = this.hideInviteModal.bind(this);
-	    
+
 	    this.state = {
 	    	nav : 0,
 	    	minimize : false,
@@ -63,7 +63,7 @@ class LeftPanel extends React.Component {
 
 	backToMyMaps(){
 		this.props.selectNode(null, ()=>{
-			browserHistory.push('/maps');	
+			browserHistory.push('/maps');
 		});
 	}
 
@@ -80,7 +80,6 @@ class LeftPanel extends React.Component {
 	}
 
 	hideInviteModal(){
-		console.log("hideInviteModal");
 		this.refs.manageusermodal.hide();
 		this.setState({
 			showManageUserModal : false
@@ -88,8 +87,6 @@ class LeftPanel extends React.Component {
 	}
 
 	showInviteModal(){
-		console.log("showInviteModal");
-		console.log(this.refs.manageusermodal);
 		this.refs.manageusermodal.show();
 		this.setState({
 			showManageUserModal : true
@@ -97,29 +94,31 @@ class LeftPanel extends React.Component {
 	}
 
 	render() {
-		
+
 		var dom = null, title = "";
 		var nodeSelected = !(this.props.selectedNode === undefined || this.props.selectedNode === null);
 		if(!nodeSelected && this.state.nav == 1) this.state.nav = 0;
 		let subSpace = window.innerHeight - (65);
 		switch(this.state.nav) {
 		    case 0:
-		        dom = <NodeTree map={this.props.map} 
-        				selectedNode={this.props.selectedNode} selectNode={this.props.selectNode} 
+		        dom = <NodeTree map={this.props.map}
+        				selectedNode={this.props.selectedNode} selectNode={this.props.selectNode}
         				selectedLink={this.props.selectedLink} selectLink={this.props.selectLink}
-        				deleteSelectedNode={this.props.deleteSelectedNode} 
+        				deleteSelectedNode={this.props.deleteSelectedNode}
         				deleteLink={this.props.deleteLink}/>;
 		        title = "Navigation Tree";
 		        break;
 		    case 1:
-		    	dom = <NodeDetails map={this.props.map} 
-						changeNodeColor={this.props.changeNodeColor}
-						changeNodeBcgColor={this.props.changeNodeBcgColor}
-						changeNodeBorderColor={this.props.changeNodeBorderColor}
-				   		changeNodeText={this.props.changeNodeText} changeNodeDescription={this.props.changeNodeDescription}
-    			   		selectedNode={this.props.selectedNode} selectNode={this.props.selectNode} 
-        			    deleteSelectedNode={this.props.deleteSelectedNode} 
-        			    changeNodeScale={this.props.changeNodeScale}/>;
+		    	dom = <NodeDetails map={this.props.map}
+							changeNodeColor={this.props.changeNodeColor}
+							changeNodeBcgColor={this.props.changeNodeBcgColor}
+							changeNodeBorderColor={this.props.changeNodeBorderColor}
+					   	changeNodeText={this.props.changeNodeText}
+							changeNodeDescription={this.props.changeNodeDescription}
+	    			  selectedNode={this.props.selectedNode}
+							selectNode={this.props.selectNode}
+							deleteSelectedNode={this.props.deleteSelectedNode}
+	        		changeNodeScale={this.props.changeNodeScale}/>;
 		        title = "Node Details";
 		        break;
 		    case 2:
@@ -164,7 +163,7 @@ class LeftPanel extends React.Component {
 								</div>
 							</div>
 						</div>
-						
+
 						<div className="flex">
 							<div className="flex-grow-0">
 								<div style={{display : this.state.minimize ? "block" : "none"}}>
@@ -226,8 +225,8 @@ class NodeTree extends React.Component {
 		if(this.props.map && this.props.map.nodes){
 			domNodes = this.props.map.nodes.map((n, ind) => {
 				return n && (n.nid || n.nid == 0) ?
-					<NodeLine key={"key-lp-node-line-" + n.nid} nodes={this.props.map.nodes} 
-							  links={this.props.map.links} selectedLink={this.props.selectedLink} selectLink={this.props.selectLink} 
+					<NodeLine key={"key-lp-node-line-" + n.nid} nodes={this.props.map.nodes}
+							  links={this.props.map.links} selectedLink={this.props.selectedLink} selectLink={this.props.selectLink}
 							  node={n} selectedNode={this.props.selectedNode} selectNode={this.props.selectNode}
 							  deleteSelectedNode={this.props.deleteSelectedNode}
 							  deleteLink={this.props.deleteLink}/>
@@ -268,7 +267,7 @@ class NodeLine extends React.Component {
 				var link = this.props.links[i];
 				if(link && link.nodes && link.nodes[this.props.node.nid]){
 					domLinks.push(
-						<LinkLine key={"key-node-" + this.props.node.nid + "-link-" + i} link={link} nodes={this.props.nodes} 
+						<LinkLine key={"key-node-" + this.props.node.nid + "-link-" + i} link={link} nodes={this.props.nodes}
 								  selectedNode={this.props.selectedNode} selectedLink={this.props.selectedLink} selectLink={this.props.selectLink}
 								  deleteLink={this.props.deleteLink}/>
 					);
@@ -346,7 +345,7 @@ class NodeDetails extends React.Component {
 
 	constructor(props) {
 	    super(props);
-	    
+
 	    this.deleteNode = this.deleteNode.bind(this);
 	    this.changeText = this.changeText.bind(this);
 	    this.changeDescription = this.changeDescription.bind(this);
@@ -360,7 +359,7 @@ class NodeDetails extends React.Component {
 
 
 	    var node = this.props.map && this.props.map.nodes && this.props.selectedNode !== undefined && this.props.map.nodes[this.props.selectedNode];
-	    
+
 	    this.state = {
 	    	text : node ? node.title : "",
 	    	description : node ? node.description : "",
@@ -401,7 +400,7 @@ class NodeDetails extends React.Component {
 			}, 0);
 		});
 	}
-	
+
 	okd(e){
 		if(e.keyCode == 13 && this.state.text) this.appl();
 	}
@@ -442,7 +441,7 @@ class NodeDetails extends React.Component {
 		var node = this.props.map && this.props.map.nodes && this.props.selectedNode !== undefined && this.props.map.nodes[this.props.selectedNode];
 		let textColors = [], bcgColors = [], borderColors = [], currentText = [], currentBcg = [], currentBorder = [];
 		for (var i = 0; i < DRAWING.colors.length; i++) {
-			
+
 			currentText.push(
 				<div className="flex-grow-1" key={"text-color-key-" + i}>
 					<div onClick={this.changeNodeColor.bind(this, DRAWING.colors[i])} style={{backgroundColor: DRAWING.colors[i], height: "20px", cursor : "pointer", border : "solid 2px " + (node.color == DRAWING.colors[i] ? "white" : DRAWING.colors[i])}}>
@@ -474,7 +473,7 @@ class NodeDetails extends React.Component {
 		if(!node) return null;
 		return (
 			<div>
-				
+
 				<div>
 					<h3 style={{marginTop:'0px'}}>Text</h3>
 					<div className="flex">
@@ -604,7 +603,7 @@ class MessageBlock extends React.Component {
 		let headerHeight = 41;
 		let headerNode = this.refs.msgactionwrapper;
 		if(headerNode){
-			headerHeight = headerNode.offsetHeight;	
+			headerHeight = headerNode.offsetHeight;
 		}
 
 		let msgHeight = this.props.vspace - 70 - headerHeight;
@@ -653,7 +652,7 @@ class MessageLine extends React.Component {
 					<div style={{fontSize:"11px", textAlign:"right"}}>{time}</div>
 				</div>
 				<div style={{fontSize:"13px"}}>
-					{this.props.message.content} 
+					{this.props.message.content}
 				</div>
 			</div>
 		);
